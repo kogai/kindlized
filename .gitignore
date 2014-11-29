@@ -1,0 +1,8 @@
+bower_components
+node_modules
+public/.sass-cache
+*.sublime-*
+credential.js
+
+logs
+*.log

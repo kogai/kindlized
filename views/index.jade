@@ -1,0 +1,12 @@
+extends layout
+
+block content
+	h1= title
+	p Welcome , #{users}
+	form( action='/process/logout' , method='POST' )
+		.btn-group
+			button(type='submit' , class='btn btn-default btn-sm') ログアウト
+	form( action='/process/upload' , method='POST' )
+		.btn-group
+			input(type='file' , name='imgUpload')
+			button(type='submit' , class='btn btn-default btn-sm') 画像をアップロード
