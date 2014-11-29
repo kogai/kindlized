@@ -1,12 +1,7 @@
 var Books = require('../models/db.books.js');
 var credential = require('../credential');
 var crypto = require('crypto');
-var hash = crypto.createHmac('SHA256', "secret").update("Message").digest('base64');
-
-module.exports = function(){
-	console.log(hash);
-	encodeUrl();
-}
+var app = require('express')()
 
 function getISO8601Timestamp(){
 	var d = new Date();
@@ -25,7 +20,9 @@ function zeroPlus(value){
   return ("0" + value).slice(-2);
 }
 
-function encodeUrl(){
+module.exports = function (){
+	var ciphers = crypto.getHashes();
+	
 	var timeStamp = getISO8601Timestamp();
 	var getAwsProducts = 'http://webservices.amazon.com/onca/xml?';
 	var productsReqArray = [];
@@ -35,7 +32,7 @@ function encodeUrl(){
 	  "Operation":"ItemLookup",
 	  "ItemId":"0679722769",
 	  "ResponseGroup":"ItemAttributes,Offers,Images,Reviews",
-	  "Version":"2014-11-01",
+	  "Version":"2009-07-01",
 	  "Timestamp": timeStamp
 	};
 
@@ -45,5 +42,11 @@ function encodeUrl(){
 	productsReqArray.sort();
 	var str_para = productsReqArray.join('&');
 	var str_signature = "GET" + "¥n" + "webservices.amazon.com" + "¥n" + "/onca/xml" + "¥n" + str_para;
-	console.log(str_signature);
+
+	var hashObj = crypto.createHmac( 'sha256' , credential.amazon.AWSSecretAccessKey ).update(str_signature)/*.digest('base64')*/;
+	console.log(hashObj);
+	var para_signature = "&Signature=" + encodeURIComponent(hashObj);
+
+	var result = "http://webservices.amazon.com/onca/xml?" + str_para + para_signature;
+	return result;
 }
