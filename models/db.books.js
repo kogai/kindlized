@@ -6,8 +6,9 @@ var booksSchema = new mongoose.Schema({
     title : String ,
     imgUrl : String,
     is_kindlized : Boolean,
-    votedId : Array
+    votedId : Array,
+    checkDate : Array
 });
 
-Books = db.model('Books', userSchema);
+Books = db.model('Books', booksSchema);
 module.exports = Books;

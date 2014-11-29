@@ -17,6 +17,8 @@ var auth = require('./routes/auth');
 var process = require('./models/process');
 var credential = require('./credential');
 
+var books = require('./models/exec.books');
+
 var app = express();
 
 // view engine setup
@@ -39,6 +41,8 @@ app.use(passport.session());
 // app.use(multer(
 //     { dest: './uploads/'})
 // );
+
+books();
 
 app.use('/', routes);
 app.use('/users', users);
