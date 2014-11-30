@@ -1,5 +1,5 @@
 var credential = require('../credential');
-var MongoDB = require('../models/mongodef');
+var MongoDB = require('../models/db.user');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;

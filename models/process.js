@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var MongoDB = require('../models/mongodef');
+var MongoDB = require('../models/db.user');
 var mailer = require('../models/mailer');
 var uuid = require('node-uuid');
 var passportStrategy = require('../models/auth');

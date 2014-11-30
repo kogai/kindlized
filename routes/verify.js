@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var MongoDB = require('../models/mongodef');
+var MongoDB = require('../models/db.user');
 
 router.get('/', function(req, res) {
     MongoDB.User.update(
