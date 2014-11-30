@@ -10,20 +10,18 @@ var MongoDB = {};
 var userSchema = new mongoose.Schema({
     mail : {
     	type : String ,
-    	// required : true ,
     	index : {
 	    	unique: true 
     	}
     },
-    pwd : {
-    	type : String ,
-    	// required : true
-    },
+    pwd : String,
     twitterId : String,
     twitterName : String,
     uuid : String,
+    votedBooks : Array,
+    sendBooks : Array,
     is_verify : String,
-    is_seller : Boolean,
+    is_seller : Boolean
 });
 
 userSchema.pre( 'save' , function(next) {
@@ -53,8 +51,6 @@ userSchema.methods.comparePassword = function( candidatePassword , cb) {
         cb( null , isMatch);
     });
 };
-
-// create object
 
 userSchema.plugin( uniqueValidator , { message: 'すでに登録されているメールアドレスです' });
 MongoDB.User = db.model('User', userSchema);

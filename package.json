@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "debug" : "node --debug bin/www",
     "start": "node bin/www",
     "build": "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js"
   },

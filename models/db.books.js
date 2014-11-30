@@ -4,12 +4,13 @@ var db = mongoose.createConnection(credential.mongodb);
 
 var booksSchema = new mongoose.Schema({
     title : String ,
-    imgUrl : String,
+    img : Object,
     author : String,
     publisher : String,
     ASIN : String,
     DetailPageURL : String,
-    value : Number,
+    DetailPageURL_kindle : String,
+    price : String,
     is_kindlized : Boolean,
     votedId : Array,
     checkDate : Array
@@ -18,8 +19,3 @@ var booksSchema = new mongoose.Schema({
 Books = db.model('Books', booksSchema);
 module.exports = Books;
 
-	// type : String ,
-	// // required : true ,
-	// index : {
-    // 	unique: true 
-	// }
