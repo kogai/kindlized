@@ -42,8 +42,6 @@ app.use(passport.session());
 //     { dest: './uploads/'})
 // );
 
-books();
-
 app.use('/', routes);
 app.use('/users', users);
 app.use('/login', login);
