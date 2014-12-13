@@ -21,7 +21,7 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
-            files: ['public/javascripts/*.js'],
+            files: ['public/javascripts/*.js','models/*.js' , '*.js' ],
             options: {
                 globals: {
                     jQuery: true,
@@ -131,8 +131,8 @@ module.exports = function(grunt) {
         'grunt-contrib-csslint'
     ].forEach(function (task) {
     grunt.loadNpmTasks(task);
-    })
+    });
 
-    grunt.registerTask('build', [ 'haml' , 'jshint' , 'concat', 'uglify' , 'compass:check' , 'csslint' , 'compass:dist' ]);
+    grunt.registerTask('server', [ 'jshint']);
     grunt.registerTask('default', [ 'jshint' , 'command:build' , 'compass:check' , 'csslint' , 'compass:dist' , 'command:dev' , 'watch' ]);
 };

@@ -9,7 +9,7 @@ var formidable = require('formidable');
 var fs = require('fs');
 var path = require('path');
 
-passportStrategy
+// passportStrategy;
 
 router.post('/regist/' , function( req , res ){
     

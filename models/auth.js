@@ -23,7 +23,7 @@ passport.use(new LocalStrategy({
                 	return done( null , user );
                 }else{
                 	return done(null, false, { message: 'パスワードが間違っています。' });
-                };
+                }
             });
 		});
 	}

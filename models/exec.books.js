@@ -1,70 +1,74 @@
 var MongoDB = require('../models/db.books.js');
 var credential = require('../credential');
+var booksSearchObj = require('../models/constractor.booksSearchObj.js');
+var Q = require('q');
 var OperationHelper = require('apac').OperationHelper;
 var OperatonConfig = {
 	endPoint :'ecs.amazonaws.jp', 
 	awsId : credential.amazon.AWSAccessKeyId, 
 	awsSecret :	credential.amazon.AWSSecretAccessKey,
 	assocId : credential.amazon.AWSassociatesId 
-}
+};
+
 var delay = 1000 * 60 ; // 1minutes
-
-function booksSearchObj( Author ){
-	// 検索条件オブジェクトのコンストラクター
-	// Author , itemPages , sort
-	this.SearchIndex = 'Books';
-	this.BrowseNode = 465392;
-	this.Condition = 'New';
-	if( arguments[1] ){
-		this.itemPages = arguments[1];
+var callNextFn = function ( fn, times , delay ) {
+	if ( arguments[3] ){
+		var obj = arguments[3];
 	}
-	this.Author = Author;
-	this.ResponseGroup = 'Small , ItemAttributes , Images';
-	if( arguments[2] ){
-		this.Sort = arguments[2];
-	}else{
-		this.Sort = 'titlerank'
-	}
-}
+	// 再帰処理定義
+	var cb = function( callback ){
+		// 遅延処理
+		setTimeout( function(){
+			callback(obj);
+			obj--;
+			count++;
+			if( count === times ) {
+				// 規定回数実行して第四引数で受けた関数を実行
+				if( next ){
+					setTimeout( next, delay );
+				}else{
+					return;
+				}
+			} else {
+				// 再帰処理を実行
+				cb(fn);
+			}
+		} , delay );
+	};
 
-module.exports = countPages;
+	// 初回処理
+	var count = 1;
+	fn(obj);
 
-function countPages(Author){
+	// 再帰処理開始
+	cb(fn);
+};
+
+function countPages( Author ){
 	var opHelperCountPages = new OperationHelper(OperatonConfig);
 	var ItemSearchObj = new booksSearchObj( Author );
 
 	opHelperCountPages.execute( 'ItemSearch' , ItemSearchObj , function(error, results){
 		if(error){
 			console.error(error);
+			return;
 		}else{
+			// 検索結果のページ数で処理を振り分け
 			var pages = Number(results.ItemSearchResponse.Items[0].TotalPages[0]);
-			console.log('All pages is ' + pages);
+			console.log( Author + 'has ' + pages);
 			var ItemSearchObj = new booksSearchObj( Author , 1 );
-			if( 20 < pages ){
-				var currentYear = new Date();
-				currentYear = currentYear.getFullYear();
+			if( 10 < pages ){
+				// 10P以上の処理
+				var currentYear = new Date().getFullYear();
 				var startYear = 1950;
-				for (var i = currentYear; i >= startYear; i--) {
-					(function(local){
-						setTimeout(function(){
-							var ItemSearchObj = new booksSearchObj( Author , 1 );
-							var fillterdYear = 'pubdate:during%20' + local;
-							ItemSearchObj.Power = fillterdYear;
-							getBooks(ItemSearchObj);
-						} , delay * (currentYear - local));
-					})(i);
-				}
-			}else if( 10 < pages ){
-				console.log('10< executed onece');
-				getBooks(ItemSearchObj);
-				// ItemSearchObj.Sort = '-titlerank';
-				console.log('10< executed twice');
-				setTimeout(function(){
-					var ItemSearchObj = new booksSearchObj( Author , 1 , '-titlerank' );
-					getBooks(ItemSearchObj);
-				} , delay );
+				var times = currentYear - startYear;
+
+				var ItemSearchObj = new booksSearchObj( Author , 1 );
+				var fillterdYear = 'pubdate:during%20' + currentYear;
+				ItemSearchObj.Power = fillterdYear;
+				callNextFn( getBooks, times, delay, ItemSearchObj );
 			}else{
-				console.log('<10');
+				// 10P以下の処理
 				getBooks(ItemSearchObj);
 			}
 		}
@@ -72,8 +76,6 @@ function countPages(Author){
 }
 
 function getBooks(ItemSearchObj){
-	console.log(ItemSearchObj);
-	console.log('getBooks');
 	var opHelper = new OperationHelper(OperatonConfig);
 
 	opHelper.execute( 'ItemSearch' , ItemSearchObj , function(error, results){
@@ -84,16 +86,15 @@ function getBooks(ItemSearchObj){
 			if(results.ItemSearchResponse.Items){
 				var pages = Number(results.ItemSearchResponse.Items[0].TotalPages[0]);
 				var items = results.ItemSearchResponse.Items[0].Item;
-				console.log(pages);
 				if(pages === 0) return ;
-				for(var i = 0; i < pages; ++i){
-					(function(local){
-						// console.log(local);
-						setTimeout(function(){
-							getBooksInner( ItemSearchObj , local + 1 );
-						}, delay * local);
-					})(i);
-				}
+				callNextFn( getBooksInner, pages, delay, ItemSearchObj );
+				// for(var i = 0; i < pages; ++i){
+				// 	(function(local){
+				// 		setTimeout(function(){
+				// 			getBooksInner( ItemSearchObj , local + 1 );
+				// 		}, delay * local);
+				// 	})(i);
+				// }
 			}else{
 				var errorlog = results.ItemSearchResponse.Items[0].Request[0].Errors[0].Error[0];
 				console.log(errorlog);
@@ -104,7 +105,6 @@ function getBooks(ItemSearchObj){
 }
 
 function getBooksInner( ItemSearchObj , pages ){
-	console.log(pages);
 	var opHelper = new OperationHelper(OperatonConfig);
 	var ItemSearchObjInner = new booksSearchObj( ItemSearchObj.Author , pages , 'titlerank' );
 	if(ItemSearchObj.Power){
@@ -114,6 +114,7 @@ function getBooksInner( ItemSearchObj , pages ){
 		if(results.ItemSearchErrorResponse){
 			console.log('getBooksInner is error');
 			console.log(results.ItemSearchErrorResponse.Error[0].Message[0]);
+			return;
 		}else{
 			if(results.ItemSearchResponse.Items){
 				var items = results.ItemSearchResponse.Items[0].Item;
@@ -123,11 +124,12 @@ function getBooksInner( ItemSearchObj , pages ){
 					}
 				}else{
 					console.log('getBooksInner has no length');
-					console.log(results.ItemSearchResponse.Items[0].Request[0].Erros[0].Error);
+					return;
 				}
 			}else{
 				var errorlog = results.ItemSearchResponse.Items[0].Request[0].Errors[0].Error[0];
 				console.log(errorlog);
+				return;
 			}
 
 		}
@@ -136,18 +138,18 @@ function getBooksInner( ItemSearchObj , pages ){
 
 function saveBooks(item){
 	var itemAttr = item.ItemAttributes[0];
-
+	var imgObjStore;
 	if(item.ImageSets !== undefined ){
 		var imgObj = item.ImageSets[0].ImageSet[0];
-		var imgObjStore = parseBooksImg(imgObj);
+		imgObjStore = parseBooksImg(imgObj);
 	}else{
-		var imgObjStore = [{ has_img : false }];
+		imgObjStore = [{ has_img : false }];
 	}
-
+	var price;
 	if(itemAttr.ListPrice){
-		var price = itemAttr.ListPrice[0].FormattedPrice[0];
+		price = itemAttr.ListPrice[0].FormattedPrice[0];
 	}else{
-		var price = undefined;
+		price = undefined;
 	}
 
 	MongoDB.findOne( { ASIN : item.ASIN[0] } , function(err, books) {
@@ -188,3 +190,4 @@ function parseBooksImg(imgObj){
 	return imgObjStore;
 }
 
+module.exports = countPages;
