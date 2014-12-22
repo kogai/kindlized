@@ -20,7 +20,8 @@ var callNextFn = function ( fn, times , delay ) {
 		// 遅延処理
 		setTimeout( function(){
 			callback(obj);
-			obj--;
+			obj.Power--;
+			console.log(obj);
 			count++;
 			if( count === times ) {
 				// 規定回数実行して第四引数で受けた関数を実行
@@ -56,19 +57,23 @@ function countPages( Author ){
 			// 検索結果のページ数で処理を振り分け
 			var pages = Number(results.ItemSearchResponse.Items[0].TotalPages[0]);
 			console.log( Author + 'has ' + pages);
-			var ItemSearchObj = new booksSearchObj( Author , 1 );
 			if( 10 < pages ){
 				// 10P以上の処理
+				var ItemSearchObj = new booksSearchObj( Author , 1 );
+
+				// 実行回数を決定
 				var currentYear = new Date().getFullYear();
 				var startYear = 1950;
 				var times = currentYear - startYear;
 
-				var ItemSearchObj = new booksSearchObj( Author , 1 );
+				// 年毎の処理
 				var fillterdYear = 'pubdate:during%20' + currentYear;
 				ItemSearchObj.Power = fillterdYear;
+
 				callNextFn( getBooks, times, delay, ItemSearchObj );
 			}else{
 				// 10P以下の処理
+				var ItemSearchObj = new booksSearchObj( Author , 1 );
 				getBooks(ItemSearchObj);
 			}
 		}
@@ -76,8 +81,8 @@ function countPages( Author ){
 }
 
 function getBooks(ItemSearchObj){
+	console.log('ItemSearchObj is ', ItemSearchObj);
 	var opHelper = new OperationHelper(OperatonConfig);
-
 	opHelper.execute( 'ItemSearch' , ItemSearchObj , function(error, results){
 		if(results.ItemSearchErrorResponse){
 			console.log('getBooks is error');
@@ -88,13 +93,13 @@ function getBooks(ItemSearchObj){
 				var items = results.ItemSearchResponse.Items[0].Item;
 				if(pages === 0) return ;
 				callNextFn( getBooksInner, pages, delay, ItemSearchObj );
-				// for(var i = 0; i < pages; ++i){
-				// 	(function(local){
-				// 		setTimeout(function(){
-				// 			getBooksInner( ItemSearchObj , local + 1 );
-				// 		}, delay * local);
-				// 	})(i);
-				// }
+				for(var i = 0; i < pages; ++i){
+					(function(local){
+						setTimeout(function(){
+							getBooksInner( ItemSearchObj , local + 1 );
+						}, delay * local);
+					})(i);
+				}
 			}else{
 				var errorlog = results.ItemSearchResponse.Items[0].Request[0].Errors[0].Error[0];
 				console.log(errorlog);
