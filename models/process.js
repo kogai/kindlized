@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var MongoDB = require('../models/db.user');
-var saveAuthor = require('../models/exec.authors');
 var mailer = require('../models/mailer');
 var uuid = require('node-uuid');
 var passportStrategy = require('../models/auth');
@@ -10,7 +9,8 @@ var formidable = require('formidable');
 var fs = require('fs');
 var path = require('path');
 
-// passportStrategy;
+var logout = require('../models/process/logout')
+var author = require('../models/process/author')
 
 router.post('/regist/' , function( req , res ){
     
@@ -23,6 +23,7 @@ router.post('/regist/' , function( req , res ){
         is_verify : 'UNVERIFIED',
         is_seller : false,
     });
+
     // save to mongodb
     newUser.save(function(err){
         if(err){
@@ -57,14 +58,7 @@ router.post('/login/',
     )
 );
 
-router.post('/logout/' , function(req,res){
-    delete req.session.passport.user;
-    res.redirect( 303, '/login');
-});
-
-router.post('/author/' , function( req, res ){
-    saveAuthor(req.body.authorRegist);
-    res.redirect( 303, '/');
-});
+router.post('/logout/', logout);
+router.post('/author/', authors );
 
 module.exports = router;

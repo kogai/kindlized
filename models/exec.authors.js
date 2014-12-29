@@ -7,7 +7,6 @@ module.exports = function(name){
 		wroteBooks: 0,
 		checkDate: [today]
 	});
-
 	newAuthor.save(function(err){
 		if(err){
 			console.log(err);
