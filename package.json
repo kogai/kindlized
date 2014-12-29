@@ -10,6 +10,7 @@
     "db": "node-dev --all-deps db.js",
     "build": "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js"
   },
+  "git repository": "https://github.com/kogai/kindlized",
   "author": "",
   "license": "ISC",
   "dependencies": {
