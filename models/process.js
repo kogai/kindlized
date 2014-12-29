@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var MongoDB = require('../models/db.user');
+var saveAuthor = require('../models/exec.authors');
 var mailer = require('../models/mailer');
 var uuid = require('node-uuid');
 var passportStrategy = require('../models/auth');
@@ -61,20 +62,8 @@ router.post('/logout/' , function(req,res){
     res.redirect( 303, '/login');
 });
 
-router.post('/upload/' , function( request , res ){
-    // var form = new formidable.IncomingForm();
-    var form = new formidable.IncomingForm();
-        // form.encoding = "utf-8";
-        // form.uploadDir = "./uploads/";
-    console.log(form);
-    form.parse( request , function( err , fields , files ) {
-        console.log(request);
-        console.log(err);
-        console.log(fields);
-        console.log(files);
-    });
-    console.log(form.parse);
-    // form.onPart(req);
+router.post('/author/' , function( req, res ){
+    saveAuthor(req.body.authorRegist);
     res.redirect( 303, '/');
 });
 

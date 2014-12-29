@@ -5,14 +5,12 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "node --debug bin/www",
-    "db": "node-dev --all-deps db.js",
-    "start": "node bin/www",
+    "app": "node --debug bin/www",
     "db": "node-dev --all-deps db.js",
     "build": "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js"
   },
   "git repository": "https://github.com/kogai/kindlized",
-  "author": "",
+  "author": "https://twitter.com/iamchawan",
   "license": "ISC",
   "dependencies": {
     "apac": "^1.0.0",

@@ -33,7 +33,7 @@ passport.use(new TwitterStrategy(
 	{
 		consumerKey: credential.twitter.consumerKey,
 		consumerSecret: credential.twitter.consumerSecret,
-		callbackURL: "http://192.168.10.7:3000/auth/twitter/callback"
+		callbackURL: credential.twitter.callbackURL
 	},
 	function(token, tokenSecret, profile, done) {
 		MongoDB.User.findOne( { twitterId: profile.id } , function(err, user) {

@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var MongoDB = require('../models/db.user');
-var books = require('../models/exec.books');
+// var books = require('../models/exec.books');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-	url = books();
-	res.redirect(303,url)
+	// url = books();
+	// res.redirect(303,url)
 	if(!req.session.passport.user){
 		res.redirect( 303 , '/regist' );
 	}else{
