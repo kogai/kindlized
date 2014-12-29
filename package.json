@@ -9,7 +9,14 @@
     "db": "node-dev --all-deps db.js",
     "build": "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js"
   },
-  "git repository": "https://github.com/kogai/kindlized",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kogai/kindlized.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kogai/kindlized/issues"
+  },
+  "homepage": "https://github.com/kogai/kindlized",
   "author": "https://twitter.com/iamchawan",
   "license": "ISC",
   "dependencies": {
