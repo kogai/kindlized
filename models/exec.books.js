@@ -16,7 +16,7 @@ function booksSearchObj( Author ){
 	this.BrowseNode = 465392;
 	this.Condition = 'New';
 	if( arguments[1] ){
-		this.itemPages = arguments[1];
+		this.ItemPage = arguments[1];
 	}
 	this.Author = Author;
 	this.ResponseGroup = 'Small , ItemAttributes , Images';
@@ -29,7 +29,7 @@ function booksSearchObj( Author ){
 
 module.exports = countPages;
 
-function countPages(Author){
+function countPages( Author ){
 	var opHelperCountPages = new OperationHelper(OperatonConfig);
 	var ItemSearchObj = new booksSearchObj( Author );
 
@@ -41,9 +41,11 @@ function countPages(Author){
 			console.log('All pages is ' + pages);
 			var ItemSearchObj = new booksSearchObj( Author , 1 );
 			if( 20 < pages ){
-				var currentYear = new Date();
-				currentYear = currentYear.getFullYear();
+
+				// 調べる年度を算出
+				var currentYear = new Date().getFullYear();
 				var startYear = 1950;
+
 				for (var i = currentYear; i >= startYear; i--) {
 					(function(local){
 						setTimeout(function(){
@@ -54,15 +56,6 @@ function countPages(Author){
 						} , delay * (currentYear - local));
 					})(i);
 				}
-			}else if( 10 < pages ){
-				console.log('10< executed onece');
-				getBooks(ItemSearchObj);
-				// ItemSearchObj.Sort = '-titlerank';
-				console.log('10< executed twice');
-				setTimeout(function(){
-					var ItemSearchObj = new booksSearchObj( Author , 1 , '-titlerank' );
-					getBooks(ItemSearchObj);
-				} , delay );
 			}else{
 				console.log('<10');
 				getBooks(ItemSearchObj);
@@ -72,10 +65,7 @@ function countPages(Author){
 }
 
 function getBooks(ItemSearchObj){
-	console.log(ItemSearchObj);
-	console.log('getBooks');
 	var opHelper = new OperationHelper(OperatonConfig);
-
 	opHelper.execute( 'ItemSearch' , ItemSearchObj , function(error, results){
 		if(results.ItemSearchErrorResponse){
 			console.log('getBooks is error');
@@ -88,7 +78,6 @@ function getBooks(ItemSearchObj){
 				if(pages === 0) return ;
 				for(var i = 0; i < pages; ++i){
 					(function(local){
-						// console.log(local);
 						setTimeout(function(){
 							getBooksInner( ItemSearchObj , local + 1 );
 						}, delay * local);
@@ -104,7 +93,7 @@ function getBooks(ItemSearchObj){
 }
 
 function getBooksInner( ItemSearchObj , pages ){
-	console.log(pages);
+	console.log('getBooksInner ' + pages);
 	var opHelper = new OperationHelper(OperatonConfig);
 	var ItemSearchObjInner = new booksSearchObj( ItemSearchObj.Author , pages , 'titlerank' );
 	if(ItemSearchObj.Power){
@@ -112,8 +101,7 @@ function getBooksInner( ItemSearchObj , pages ){
 	}
 	opHelper.execute( 'ItemSearch' , ItemSearchObjInner , function(error, results){
 		if(results.ItemSearchErrorResponse){
-			console.log('getBooksInner is error');
-			console.log(results.ItemSearchErrorResponse.Error[0].Message[0]);
+			console.log('getBooksInner is error' , results.ItemSearchErrorResponse.Error[0].Message[0]);
 		}else{
 			if(results.ItemSearchResponse.Items){
 				var items = results.ItemSearchResponse.Items[0].Item;
@@ -172,7 +160,7 @@ function saveBooks(item){
 				if(err){
 					console.log(err);
 				}else{
-					console.log('regist is success');
+					console.log( itemAttr.Title + ' regist is success' );
 				}
 			});
 		}

@@ -1,5 +1,5 @@
 {
-  "name": "cardmk",
+  "name": "kindlized",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "node --debug bin/www",
     "start": "node bin/www",
+    "db": "node-dev --all-deps db.js",
     "build": "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js"
   },
   "author": "",
@@ -16,6 +17,7 @@
     "bcrypt": "^0.8.0",
     "body-parser": "~1.8.1",
     "cookie-parser": "~1.3.3",
+    "cron": "^1.0.5",
     "debowerify": "^0.9.1",
     "debug": "~2.0.0",
     "express": "^4.9.0",
@@ -53,6 +55,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-exec": "^0.4.6",
     "grunt-express-server": "^0.4.19",
+    "node-dev": "^2.6.0",
     "should": "^4.3.0",
     "supertest": "^0.15.0"
   }

@@ -1,29 +1,19 @@
-var Q = require('q');
-var books = require('../models/exec.books-deffered');
-// var authorsTest = [ '高山しのぶ' , '高屋奈月' , '高河ゆん'];
-var authorsTest = [ '岩明均' , '豊田徹也' , '谷口ジロー' , '高山しのぶ' , '高屋奈月' , '高河ゆん'];
-var inc = 0;
+var Authors = require('../models/db.authors.js');
 
-function defferd (){
-	Q.when(inc)
-	.then(step)
-	.then(step)
-	.then(step)
-	.then(step)
-	.then(step)
-	.then(step)
-	.catch(function(err){
-		console.log(err);
-	})
-	.done();
+module.exports = function(name){
+	var today = new Date();
+	var newAuthor = new Authors({
+		name: name,
+		wroteBooks: 0,
+		checkDate: [today]
+	});
+
+	newAuthor.save(function(err){
+		if(err){
+			console.log(err);
+			return;
+		}else{
+			console.log( 'regist is success' );
+		}
+	});
 }
-
-function step(inc){
-	books(authorsTest[inc]);
-	var d = Q.defer();
-	inc++;
-	d.resolve(inc);
-	return d.promise;
-}
-
-module.exports = defferd;
