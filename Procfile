@@ -1,1 +1,1 @@
-web: node deb.js
+web: node db.js
