@@ -3,9 +3,9 @@ var MongoDB = require('../models/db.books.js');
 var OperationHelper = require('apac').OperationHelper;
 var OperatonConfig = {
 	endPoint :'ecs.amazonaws.jp', 
-	awsId : ENV['AWSAccessKeyId'], 
-	awsSecret :	ENV['AWSSecretAccessKey'],
-	assocId : ENV['AWSassociatesId'] 
+	awsId : process.env['AWSAccessKeyId'], 
+	awsSecret :	process.env['AWSSecretAccessKey'],
+	assocId : process.env['AWSassociatesId'] 
 }
 var delay = 1000 * 60 ; // 1minutes
 

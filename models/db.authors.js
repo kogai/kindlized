@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 // var credential = require('../credential');
-var db = mongoose.createConnection(ENV['mongodb']);
+var db = mongoose.createConnection(process.env['mongodb']);
 
 var authorSchema = new mongoose.Schema({
 	name : {
