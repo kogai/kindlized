@@ -1,5 +1,4 @@
 var MongoDB = require('../models/db.books.js');
-// var credential = require('../credential');
 var OperationHelper = require('apac').OperationHelper;
 var OperatonConfig = {
 	endPoint :'ecs.amazonaws.jp', 
