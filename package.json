@@ -1,5 +1,5 @@
 {
-  "name": "cardmk",
+  "name": "kindlized",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -8,8 +8,10 @@
     "debug": "node --debug bin/www",
     "db": "node-dev --all-deps db.js",
     "start": "node bin/www",
+    "db": "node-dev --all-deps db.js",
     "build": "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js"
   },
+  "git repository": "https://github.com/kogai/kindlized",
   "author": "",
   "license": "ISC",
   "dependencies": {

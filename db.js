@@ -1,26 +1,53 @@
-var CronJob = require('cron').CronJob;
-// 3時間に一度DB登録処理を実行
-// var cronTime = "0 0 */3 * * *";
-var cronTime = "* * * * * *";
-
-var count = 0;
 var books = require('./models/exec.books');
-var authors = [ '尾田栄一郎' ];
-// var authors = [ '尾田栄一郎' , '豊田徹也' , '谷口ジロー' , '岩明均' , '高屋奈月' , '高河ゆん'];
+var AuthorsModel = require('./models/db.authors');
+var Q = require('q');
+var cronjob = require('cron').CronJob;
+var cronTime = "0 0 * * * *";
 
-books(authors[0]);
+var authors = [];
+var num = 0;
 
-// var job = new CronJob({
-// 	cronTime: cronTime,
-// 	onTick: function(){
-// 		var date = new Date();
-// 		console.log('this job excuted on ', date);
-// 		books(authors[count]);
-// 		count++;
-// 		if( count === authors.length ){
-// 			count = 0;
-// 		}
-// 	}
-// });
+function getAuthors(){
+	// DBから著者リストを非同期に取得する
+	var d = Q.defer();
+	AuthorsModel.find( {}, function(err, result){
+		for (var i = 0; i < result.length; i++) {
+			authors.push(result[i].name);
+		}
+		console.log(authors);
+		d.resolve(authors);
+	});
+	return d.promise;
+}
 
-// job.start();
+function cronJobExec (){
+	job = new cronjob({
+		cronTime : cronTime,
+		onTick: function () {
+			// books(authors[num]);
+			num++;
+			if( authors.length <= num ){
+				//初期化処理
+				num = 0;
+				authors = [];
+				job.stop();
+				
+				//再帰処理
+				allProcess();
+			}
+		},
+		start: false
+	});
+	job.start();
+}
+
+function allProcess(){
+	console.log('allProcess is start');
+	Q.when(authors)
+	.then(getAuthors)
+	.then(cronJobExec)
+	.done();
+};
+
+//初回処理
+allProcess();

@@ -1,6 +1,8 @@
 var MongoDB = require('../models/db.books.js');
 var credential = require('../credential');
 var OperationHelper = require('apac').OperationHelper;
+var Q = require('q');
+
 var OperatonConfig = {
 	endPoint :'ecs.amazonaws.jp', 
 	awsId : credential.amazon.AWSAccessKeyId, 
@@ -27,7 +29,15 @@ function booksSearchObj( Author ){
 	}
 }
 
-module.exports = countPages;
+module.exports = function(){
+	Q.when()
+	//検索対象のページ数を算出
+	.then(countPages)
+	//年度ごとの検索対象のページ数を算出
+	.then(getBooks)
+	//ページ毎のアイテムを算出
+	.then(getBooksInner)
+};
 
 function countPages( Author ){
 	var opHelperCountPages = new OperationHelper(OperatonConfig);
@@ -41,11 +51,9 @@ function countPages( Author ){
 			console.log('All pages is ' + pages);
 			var ItemSearchObj = new booksSearchObj( Author , 1 );
 			if( 20 < pages ){
-
 				// 調べる年度を算出
 				var currentYear = new Date().getFullYear();
 				var startYear = 1950;
-
 				for (var i = currentYear; i >= startYear; i--) {
 					(function(local){
 						setTimeout(function(){
@@ -74,7 +82,6 @@ function getBooks(ItemSearchObj){
 			if(results.ItemSearchResponse.Items){
 				var pages = Number(results.ItemSearchResponse.Items[0].TotalPages[0]);
 				var items = results.ItemSearchResponse.Items[0].Item;
-				console.log(pages);
 				if(pages === 0) return ;
 				for(var i = 0; i < pages; ++i){
 					(function(local){
@@ -117,6 +124,7 @@ function getBooksInner( ItemSearchObj , pages ){
 				var errorlog = results.ItemSearchResponse.Items[0].Request[0].Errors[0].Error[0];
 				console.log(errorlog);
 			}
+
 		}
 	});
 }

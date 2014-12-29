@@ -1,17 +1,19 @@
-var Q = require('q');
-var books = require('../models/exec.books');
-var authors = [ '岩明均' , '豊田徹也' , '谷口ジロー' , '高山しのぶ' , '高屋奈月' , '高河ゆん'];
+var Authors = require('../models/db.authors.js');
 
-// var func = function( author ){
-// 	var d = Q.defer();
-// 		books(author);
-// 		d.resolve( author );
-// 	return d.promise;
-// };
+module.exports = function(name){
+	var today = new Date();
+	var newAuthor = new Authors({
+		name: name,
+		wroteBooks: 0,
+		checkDate: [today]
+	});
 
-// module.exports = function(){
-// 	Q.all( authors.map( func ) )
-// 	.then(function(data){
-// 		console.log('all promise is resolved.');
-// 	});
-// }
+	newAuthor.save(function(err){
+		if(err){
+			console.log(err);
+			return;
+		}else{
+			console.log( 'regist is success' );
+		}
+	});
+}
