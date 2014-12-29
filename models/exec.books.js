@@ -117,7 +117,6 @@ function getBooksInner( ItemSearchObj , pages ){
 				var errorlog = results.ItemSearchResponse.Items[0].Request[0].Errors[0].Error[0];
 				console.log(errorlog);
 			}
-
 		}
 	});
 }
