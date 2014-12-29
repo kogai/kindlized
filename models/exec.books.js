@@ -3,9 +3,9 @@ var credential = require('../credential');
 var OperationHelper = require('apac').OperationHelper;
 var OperatonConfig = {
 	endPoint :'ecs.amazonaws.jp', 
-	awsId : credential.amazon.AWSAccessKeyId, 
-	awsSecret :	credential.amazon.AWSSecretAccessKey,
-	assocId : credential.amazon.AWSassociatesId 
+	awsId : ENV['AWSAccessKeyId'], 
+	awsSecret :	ENV['AWSSecretAccessKey'],
+	assocId : ENV['AWSassociatesId'] 
 }
 var delay = 1000 * 60 ; // 1minutes
 
@@ -174,4 +174,3 @@ function parseBooksImg(imgObj){
 	}
 	return imgObjStore;
 }
-

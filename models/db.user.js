@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
 var credential = require('../credential');
-var db       = mongoose.createConnection(credential.mongodb);
+var db = mongoose.createConnection(credential.mongodb);
 var bcrypt = require('bcrypt');
 var SALT_WORK_FACTOR = 10;
 

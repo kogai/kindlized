@@ -3,7 +3,6 @@ extends layout
 block content
 	h1= title
 	p Login to #{title}
-	//- a(href="/auth/twitter" , class='btn btn-default btn-sm') Twitterでログイン
 	form( action='/process/login' , method='POST' , id='login-wrap' )
 		.input-group.input-group-sm
 			input.form-control(type='text', placeholder='Username' , name='mail')
