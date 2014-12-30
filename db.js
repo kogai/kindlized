@@ -51,3 +51,4 @@ function allProcess(){
 
 //初回処理
 allProcess();
+books('藤沢周平');

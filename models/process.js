@@ -59,6 +59,6 @@ router.post('/login/',
 );
 
 router.post('/logout/', logout);
-router.post('/author/', authors );
+router.post('/author/', author );
 
 module.exports = router;

@@ -1,9 +1,23 @@
 #!/usr/bin/env node
 var debug = require('debug')('init');
 var app = require('../app');
+var Books = require('../models/db.books');
+var Authors = require('../models/db.authors');
 
 app.set('port', process.env.PORT || 3000);
 
 var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
+});
+
+var io = require('socket.io').listen( server );
+io.on( 'connection', function( socket ){
+	Books.find({}, function(err, data){
+		if(err) console.log(err);
+		socket.emit('books', data);
+	});
+	Authors.find({}, function(err, data){
+		if(err) console.log(err);
+		socket.emit('authors', data);
+	})
 });

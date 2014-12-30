@@ -1,11 +1,24 @@
 var MongoDB = require('../models/db.books.js');
 var OperationHelper = require('apac').OperationHelper;
+
+if(process.env['AWSAccessKeyId']){
+	AWSAccessKeyId = process.env['AWSAccessKeyId'];
+	AWSSecretAccessKey = process.env['AWSSecretAccessKey'];
+	AWSassociatesId = process.env['AWSassociatesId'];
+}else{
+	var credential = require('../credential');
+	AWSAccessKeyId  = credential.amazon.AWSAccessKeyId;
+	AWSSecretAccessKey  = credential.amazon.AWSSecretAccessKey;
+	AWSassociatesId  = credential.amazon.AWSassociatesId;
+}
+
 var OperatonConfig = {
 	endPoint :'ecs.amazonaws.jp', 
-	awsId : process.env['AWSAccessKeyId'], 
-	awsSecret :	process.env['AWSSecretAccessKey'],
-	assocId : process.env['AWSassociatesId'] 
+	awsId : AWSAccessKeyId, 
+	awsSecret :	AWSSecretAccessKey,
+	assocId : AWSassociatesId
 }
+
 var delay = 1000 * 60 ; // 1minutes
 
 function booksSearchObj( Author ){
