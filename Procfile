@@ -1,1 +1,1 @@
-web: node db.js
+db: node db.js -p $PORT

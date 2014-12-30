@@ -24,7 +24,7 @@ function cronJobExec (){
 	job = new cronjob({
 		cronTime : cronTime,
 		onTick: function () {
-			// books(authors[num]);
+			books(authors[num]);
 			num++;
 			if( authors.length <= num ){
 				//初期化処理
