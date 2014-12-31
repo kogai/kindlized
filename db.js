@@ -47,7 +47,7 @@ function allProcess(){
 	.then(getAuthors)
 	.then(cronJobExec)
 	.done();
-};
+}
 
 //初回処理
 allProcess();

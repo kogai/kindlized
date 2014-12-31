@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
-if(process.env['mongodb']){
-	mongodb = process.env['mongodb'];
+if(process.env.mongodb){
+	mongodb = process.env.mongodb;
 }else{
 	var credential = require('../credential');
 	mongodb = credential.mongodb;

@@ -9,8 +9,8 @@ var formidable = require('formidable');
 var fs = require('fs');
 var path = require('path');
 
-var logout = require('../models/process/logout')
-var author = require('../models/process/author')
+var logout = require('../models/process/logout');
+var author = require('../models/process/author');
 
 router.post('/regist/' , function( req , res ){
     
