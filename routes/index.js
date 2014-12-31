@@ -1,8 +1,9 @@
 var Q = require('q');
 var express = require('express');
 var router = express.Router();
-var User = require('../models/db.user');
+var Mongodb = require('../models/db.user');
 var Books = require('../models/db.books');
+// var io = require('../bin/www');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -10,11 +11,16 @@ router.get('/', function(req, res) {
 		//未ログインならregist画面に遷移
 		res.redirect( 303 , '/regist' );
 	}else{
-		User.User.findOne( { "_id": req.session.passport.user }, function( err, user ){
+		//ログイン済時の処理
+		Mongodb.User.findOne( { "_id": req.session.passport.user }, function( err, user ){
 			if(err) console.log(err);
+			// console.log(res);
+			var data = user.sendBooks
+			console.log(data);
 			res.render('index', {
 				title : 'ホーム',
-				users: user.mail
+				users: user.mail,
+				authors: user.sendBooks
 			});
 		});
 	}
