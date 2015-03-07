@@ -14,4 +14,4 @@ module.exports = function ( Author ){
 	}else{
 		this.Sort = 'titlerank';
 	}
-}
+};

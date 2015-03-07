@@ -11,22 +11,23 @@ var regularInterval = function( data ){
   var countExec = data.countExec;
 
   setTimeout( function(){
-
-    // 実行の実体
-    try{
-      callBack( countExec, obj );
-    }
-    catch( err ){
-      throw err;
-    }
-
-    countExec++;
     if( countExec <  times ){
-      // times回実行されるまで再帰実行
-      data.countExec = countExec;
-      regularInterval( data );
+      // 実行の実体
+      try{
+        data.regularInterval = regularInterval;
+        callBack( data );
+        // countExec++;
+        // data.countExec = countExec;
+        //
+        // // times回実行されるまで再帰実行
+        // regularInterval( data );
+      }
+      catch( err ){
+        throw err;
+      }
     }else{
       // times回実行されたら終了
+      if( data.authorData ) data.d.resolve( data.authorData );
       console.log( 'complete.');
     }
   }, interval );

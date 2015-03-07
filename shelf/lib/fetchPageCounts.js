@@ -3,7 +3,8 @@ var makeOpConfig 				 = require( './makeOpConfig' );
 var makeSearchExpression = require( './makeSearchExpression' );
 var Q 									 = require( 'q' );
 
-module.exports = function( Author ){
+module.exports = function( authorData ){
+	var Author 						= authorData.author;
 	var opConfig 					= new makeOpConfig();
 	var opCountPages 			= new opHelper( opConfig );
 	var searchExpression 	= new makeSearchExpression( Author );
@@ -14,8 +15,8 @@ module.exports = function( Author ){
 		if( err ) throw err;
 		try{
 			pageCount = res.ItemSearchResponse.Items[0].TotalPages[0];
-			pageCount = Number( pageCount );
-			d.resolve( pageCount );
+			authorData.pageCount = Number( pageCount );
+			d.resolve( authorData );
 		}catch( err ){
 			console.log( 'fetchPageCountsのエラー', err );
 			throw err;

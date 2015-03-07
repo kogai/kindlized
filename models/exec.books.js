@@ -1,82 +1,82 @@
 var MongoDB = require('../models/db.books.js');
 var OperationHelper = require('apac').OperationHelper;
 
-if(process.env.AWSAccessKeyId){
-	//heroku用変数
-	AWSAccessKeyId = process.env.AWSAccessKeyId;
-	AWSSecretAccessKey = process.env.AWSSecretAccessKey;
-	AWSassociatesId = process.env.AWSassociatesId;
-}else{
-	//サービスサーバー用変数
-	var credential = require('../credential');
-	AWSAccessKeyId  = credential.amazon.AWSAccessKeyId;
-	AWSSecretAccessKey  = credential.amazon.AWSSecretAccessKey;
-	AWSassociatesId  = credential.amazon.AWSassociatesId;
-}
+// if(process.env.AWSAccessKeyId){
+// 	//heroku用変数
+// 	AWSAccessKeyId = process.env.AWSAccessKeyId;
+// 	AWSSecretAccessKey = process.env.AWSSecretAccessKey;
+// 	AWSassociatesId = process.env.AWSassociatesId;
+// }else{
+// 	//サービスサーバー用変数
+// 	var credential = require('../credential');
+// 	AWSAccessKeyId  = credential.amazon.AWSAccessKeyId;
+// 	AWSSecretAccessKey  = credential.amazon.AWSSecretAccessKey;
+// 	AWSassociatesId  = credential.amazon.AWSassociatesId;
+// }
 
-var OperatonConfig = {
-	endPoint :'ecs.amazonaws.jp',
-	awsId : AWSAccessKeyId,
-	awsSecret :	AWSSecretAccessKey,
-	assocId : AWSassociatesId
-};
+// var OperatonConfig = {
+// 	endPoint :'ecs.amazonaws.jp',
+// 	awsId : AWSAccessKeyId,
+// 	awsSecret :	AWSSecretAccessKey,
+// 	assocId : AWSassociatesId
+// };
+//
+// var delay = 1000 * 60 ; // 1minutes
 
-var delay = 1000 * 60 ; // 1minutes
+// function booksSearchObj( Author ){
+// 	// 検索条件オブジェクトのコンストラクター
+// 	// Author , itemPages , sort
+// 	this.SearchIndex = 'Books';
+// 	this.BrowseNode = 465392;
+// 	this.Condition = 'New';
+// 	if( arguments[1] ){
+// 		this.ItemPage = arguments[1];
+// 	}
+// 	this.Author = Author;
+// 	this.ResponseGroup = 'Small , ItemAttributes , Images';
+// 	if( arguments[2] ){
+// 		this.Sort = arguments[2];
+// 	}else{
+// 		this.Sort = 'titlerank';
+// 	}
+// }
 
-function booksSearchObj( Author ){
-	// 検索条件オブジェクトのコンストラクター
-	// Author , itemPages , sort
-	this.SearchIndex = 'Books';
-	this.BrowseNode = 465392;
-	this.Condition = 'New';
-	if( arguments[1] ){
-		this.ItemPage = arguments[1];
-	}
-	this.Author = Author;
-	this.ResponseGroup = 'Small , ItemAttributes , Images';
-	if( arguments[2] ){
-		this.Sort = arguments[2];
-	}else{
-		this.Sort = 'titlerank';
-	}
-}
+// module.exports = countPages;
 
-module.exports = countPages;
-
-function countPages( Author ){
-	var opHelperCountPages = new OperationHelper(OperatonConfig);
-	var ItemSearchObj = new booksSearchObj( Author );
-
-	opHelperCountPages.execute( 'ItemSearch' , ItemSearchObj , function(error, results){
-		if(error){
-			console.error(error);
-		}else{
-			var pages = Number(results.ItemSearchResponse.Items[0].TotalPages[0]);
-			console.log('All pages is ' + pages);
-			var ItemSearchObj = new booksSearchObj( Author , 1 );
-			if( 20 < pages ){
-
-				// 調べる年度を算出
-				var currentYear = new Date().getFullYear();
-				var startYear 	= 1950;
-
-				for (var i = currentYear; i >= startYear; i--) {
-					(function(local){
-						setTimeout(function(){
-							var ItemSearchObj 	= new booksSearchObj( Author , 1 );
-							var fillterdYear 		= 'pubdate:during%20' + local;
-							ItemSearchObj.Power = fillterdYear;
-							getBooks(ItemSearchObj);
-						} , delay * (currentYear - local));
-					})(i);
-				}
-			}else{
-				console.log('<10');
-				getBooks(ItemSearchObj);
-			}
-		}
-	});
-}
+// function countPages( Author ){
+// 	var opHelperCountPages = new OperationHelper(OperatonConfig);
+// 	var ItemSearchObj = new booksSearchObj( Author );
+//
+// 	opHelperCountPages.execute( 'ItemSearch' , ItemSearchObj , function(error, results){
+// 		if(error){
+// 			console.error(error);
+// 		}else{
+// 			var pages = Number(results.ItemSearchResponse.Items[0].TotalPages[0]);
+// 			console.log('All pages is ' + pages);
+// 			var ItemSearchObj = new booksSearchObj( Author , 1 );
+// 			if( 20 < pages ){
+//
+// 				// 調べる年度を算出
+// 				var currentYear = new Date().getFullYear();
+// 				var startYear 	= 1950;
+//
+// 				for (var i = currentYear; i >= startYear; i--) {
+// 					(function(local){
+// 						setTimeout(function(){
+// 							var ItemSearchObj 	= new booksSearchObj( Author , 1 );
+// 							var fillterdYear 		= 'pubdate:during%20' + local;
+// 							ItemSearchObj.Power = fillterdYear;
+// 							getBooks(ItemSearchObj);
+// 						} , delay * (currentYear - local));
+// 					})(i);
+// 				}
+// 			}else{
+// 				console.log('<10');
+// 				getBooks(ItemSearchObj);
+// 			}
+// 		}
+// 	});
+// }
 
 function getBooks(ItemSearchObj){
 	var opHelper = new OperationHelper(OperatonConfig);
