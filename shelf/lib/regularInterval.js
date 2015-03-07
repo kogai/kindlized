@@ -9,12 +9,13 @@ var regularInterval = function( data ){
   var searchExpression  = data.searchExpression;
   var callBack          = data.callBack;
   var countExec         = data.countExec;
+  var d                 = data.d;
 
   setTimeout( function(){
 
     // 実行の実体
     try{
-      callBack( countExec );
+      callBack( countExec, searchExpression );
     }
     catch( err ){
       throw err;
@@ -28,6 +29,7 @@ var regularInterval = function( data ){
     }else{
       // times回実行されたら終了
       console.log( 'complete.');
+      d.resolve();
     }
   }, interval );
 };

@@ -15,8 +15,8 @@ if(process.env.AWSAccessKeyId){
 }
 
 var OperatonConfig = {
-	endPoint :'ecs.amazonaws.jp', 
-	awsId : AWSAccessKeyId, 
+	endPoint :'ecs.amazonaws.jp',
+	awsId : AWSAccessKeyId,
 	awsSecret :	AWSSecretAccessKey,
 	assocId : AWSassociatesId
 };
@@ -58,13 +58,13 @@ function countPages( Author ){
 
 				// 調べる年度を算出
 				var currentYear = new Date().getFullYear();
-				var startYear = 1950;
+				var startYear 	= 1950;
 
 				for (var i = currentYear; i >= startYear; i--) {
 					(function(local){
 						setTimeout(function(){
-							var ItemSearchObj = new booksSearchObj( Author , 1 );
-							var fillterdYear = 'pubdate:during%20' + local;
+							var ItemSearchObj 	= new booksSearchObj( Author , 1 );
+							var fillterdYear 		= 'pubdate:during%20' + local;
 							ItemSearchObj.Power = fillterdYear;
 							getBooks(ItemSearchObj);
 						} , delay * (currentYear - local));
@@ -119,7 +119,7 @@ function getBooksInner( ItemSearchObj , pages ){
 		}else{
 			if(results.ItemSearchResponse.Items){
 				var items = results.ItemSearchResponse.Items[0].Item;
-				if(items){		
+				if(items){
 					for(var i = 0; i < items.length; ++i){
 						saveBooks(items[i]);
 					}
