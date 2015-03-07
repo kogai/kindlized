@@ -1,11 +1,12 @@
 var regInt = require('./lib/regInt');
 
 var data = {};
+    data.depth    = 3;
     data.times    = 5;
     data.interval = 300;
-    data.Obj      = {};
-    data.callBack = function( countExec, Obj ){
-      console.log( 'executed', countExec, Obj );
+    data.obj      = {};
+    data.callBack = function( countExec, obj ){
+      console.log( 'executed', countExec, obj );
     };
 
 regInt( data );
