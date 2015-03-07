@@ -3,8 +3,8 @@ var data = {
   times: 10,
   interval: 300,
   searchExpression: {},
-  callBack: function( countExec, searchExpression ){
-    console.log( 'executed', countExec, searchExpression );
+  callBack: function( countExec ){
+    console.log( 'executed', countExec );
   }
 }
 

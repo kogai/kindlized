@@ -14,7 +14,7 @@ var regularInterval = function( data ){
 
     // 実行の実体
     try{
-      callBack( countExec, searchExpression );
+      callBack( countExec );
     }
     catch( err ){
       throw err;
