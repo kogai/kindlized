@@ -16,11 +16,6 @@ var regularInterval = function( data ){
       try{
         data.regularInterval = regularInterval;
         callBack( data );
-        // countExec++;
-        // data.countExec = countExec;
-        //
-        // // times回実行されるまで再帰実行
-        // regularInterval( data );
       }
       catch( err ){
         throw err;

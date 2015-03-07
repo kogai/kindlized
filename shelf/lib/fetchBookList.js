@@ -55,14 +55,17 @@ module.exports = function( authorData ){
     		if( err ) throw err;
     		try{
           var resBookListPerPage = res.ItemSearchResponse.Items[0].Item;
-              resBookListPerPage = JSON.parse( resBookListPerPage );
-          data.authorData.bookList.concat( resBookListPerPage );
-          data.countExec++;
-          data.regularInterval( data );
+              // resBookListPerPage = JSON.parse( resBookListPerPage );
+              Array.isArray( resBookListPerPage );
+          data.authorData.bookList.push( resBookListPerPage );
     		}catch( err ){
     			console.log( 'fetchBookListのエラー', err );
     			throw err;
     		}
+        finally{
+          data.countExec++;
+          data.regularInterval( data );
+        }
     	});
     }
   };

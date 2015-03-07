@@ -176,7 +176,7 @@ var arr2 = [
   ]
 }];
 
-console.log( arr.length );
+console.log( Array.isArray( arr ) );
 console.log( arr.concat( arr2 ).length );
 
 // var books = require('./models/exec.books');
