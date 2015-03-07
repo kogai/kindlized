@@ -1,30 +1,15 @@
-var Q = require('q');
+var regInt = require('./lib/regInt');
 
-var regularInterval = require('./lib/regularInterval');
+var data = {};
+    data.times    = 5;
+    data.interval = 300;
+    data.Obj      = {};
+    data.callBack = function( countExec, Obj ){
+      console.log( 'executed', countExec, Obj );
+    };
 
-var handleRegularInterval = function(){
-  var d = Q.defer();
+regInt( data );
 
-  var data = {
-    times            : 5,
-    interval         : 300,
-    searchExpression : {},
-    callBack         : function( countExec, searchExpression ){
-      console.log( 'executed', countExec, searchExpression );
-    },
-    d: d
-  }
-  regularInterval( data );
-
-  return d.promise;
-};
-
-Q.when()
-.then( handleRegularInterval )
-.then( handleRegularInterval )
-.done( function(){
-  console.log( 'all is done.' );
-});
 
 // # 制限
 // 1P毎に10冊
@@ -34,7 +19,7 @@ Q.when()
 // 書籍の冊数を数える 1回
 // 年度毎の書籍の冊数を出す
 
-// 20P以上なら
+// 10P以上なら
   // リクエストが10P以内に納まるように検索条件を分割
 
   // 例:1950年~現在までの検索リクエスト
@@ -47,7 +32,7 @@ Q.when()
     // 1冊ずつリクエスト
     // regularInterval( data );
 
-// 20P以下なら
+// 10P以下なら
   // 10P毎に分割してリクエスト
     // 1冊ずつリクエスト
     // regularInterval( data );

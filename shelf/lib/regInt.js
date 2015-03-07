@@ -4,18 +4,17 @@ var regularInterval = function( data ){
   if( !data.countExec ) data.countExec = 0;
 
   // dataオブジェクトから変数を取り出し
-  var times             = data.times;
-  var interval          = data.interval;
-  var searchExpression  = data.searchExpression;
-  var callBack          = data.callBack;
-  var countExec         = data.countExec;
-  var d                 = data.d;
+  var times     = data.times;
+  var interval  = data.interval;
+  var obj       = data.obj;
+  var callBack  = data.callBack;
+  var countExec = data.countExec;
 
   setTimeout( function(){
 
     // 実行の実体
     try{
-      callBack( countExec, searchExpression );
+      callBack( countExec, obj );
     }
     catch( err ){
       throw err;
@@ -29,7 +28,6 @@ var regularInterval = function( data ){
     }else{
       // times回実行されたら終了
       console.log( 'complete.');
-      d.resolve();
     }
   }, interval );
 };
