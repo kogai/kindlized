@@ -1,5 +1,12 @@
 var regularInterval = require('./lib/regularInterval');
-var callBack = function( countExec, searchExpression ){
-  console.log( 'executed', countExec, searchExpression );
-};
-regularInterval( 10, 300, {}, callBack );
+var data = {
+  times: 10,
+  interval: 300,
+  searchExpression: {},
+  callBack: function( countExec, searchExpression ){
+    console.log( 'executed', countExec, searchExpression );
+  }
+}
+
+regularInterval( data );
+regularInterval( data );

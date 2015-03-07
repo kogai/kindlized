@@ -1,7 +1,15 @@
-// 実行前に現在の実行回数を定義
-var countExec = 0;
+var regularInterval = function( data ){
 
-var regularInterval = function( times, interval,  searchExpression, callBack ){
+  // 実行回数を初期化
+  if( !data.countExec ) data.countExec = 0;
+
+  // dataオブジェクトから変数を取り出し
+  var times             = data.times;
+  var interval          = data.interval;
+  var searchExpression  = data.searchExpression;
+  var callBack          = data.callBack;
+  var countExec         = data.countExec;
+
   setTimeout( function(){
 
     // 実行の実体
@@ -15,7 +23,8 @@ var regularInterval = function( times, interval,  searchExpression, callBack ){
     countExec++;
     if( countExec <  times ){
       // times回実行されるまで再帰実行
-      regularInterval( times, interval, searchExpression, callBack );
+      data.countExec = countExec;
+      regularInterval( data );
     }else{
       // times回実行されたら終了
       console.log( 'complete.');
