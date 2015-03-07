@@ -1,14 +1,24 @@
-var regInt = require('./lib/regInt');
+var Q = require( 'q' );
+
+var regInt          = require('./lib/regInt');
+var fetchPageCounts = require('./lib/fetchPageCounts');
 
 var data = {};
     data.times    = 5;
     data.interval = 300;
-    data.Obj      = {};
-    data.callBack = function( countExec, Obj ){
-      console.log( 'executed', countExec, Obj );
+    data.obj      = {};
+    data.callBack = function( countExec, obj ){
+      console.log( 'executed', countExec, obj );
     };
 
-regInt( data );
+// regInt( data );
+
+var Author = '森川ジョージ';
+Q.when( Author )
+.then( fetchPageCounts )
+.done( function( pageCounts ){
+  console.log( Author, 'write', pageCounts, 'pages books.' );
+});
 
 
 // # 制限
