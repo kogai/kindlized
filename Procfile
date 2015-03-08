@@ -1,1 +1,1 @@
-db: node db.js -p $PORT
+db: node shelf -p $PORT

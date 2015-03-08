@@ -1,13 +1,18 @@
 var ModelBookList = require('./modelBookList.js');
+var Q = require('q');
 
 module.exports = function( authorData ){
+	var d = Q.defer();
+
 	var author 		= authorData.author;
 	var bookList 	= authorData.bookList;
 
 	for (var i = 0; i < bookList.length; i++) {
 		var book = bookList[i];
 		saveBook( book );
+		if( i === bookList.length - 1 ) d.resolve( authorData );
 	}
+	return d.promise;
 };
 
 var saveBook = function( book ){
@@ -24,6 +29,7 @@ var saveBook = function( book ){
 		    publicationDate : book.publicationDate,
 		    price           : book.price,
 		    url             : book.url,
+		    images          : book.images,
 		    is_kindlized    : false
 			});
 

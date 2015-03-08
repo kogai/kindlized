@@ -11,6 +11,9 @@ module.exports = function( authorData ){
     var modBook = {};
     try{
       var itemAttr = rawBook.ItemAttributes[0];
+      if( rawBook.ImageSets ){
+        var imageSets = JSON.stringify( rawBook.ImageSets );
+      }
 
       modBook.status          = 'DEFAULT';
       modBook.ASIN            = rawBook.ASIN;
@@ -24,7 +27,7 @@ module.exports = function( authorData ){
       modBook.publicationDate = itemAttr.PublicationDate;
       modBook.price           = itemAttr.ListPrice;
       modBook.url             = rawBook.DetailPageURL;
-      modBook.images          = rawBook.ImageSets;
+      modBook.images          = imageSets;
 
     }catch( err ){
       modBook.status  = 'ERROR';

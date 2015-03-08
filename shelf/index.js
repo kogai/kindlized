@@ -16,15 +16,16 @@ var data = {};
     data.callBack = function( data ){
       var authorData = {
         author: Author[ data.countExec ]
-      }
+      };
+      console.log( Author[ data.countExec ], 'process has start.' );
       Q.when( authorData )
       .then( fetchPageCounts )
       .then( fetchBookList )
       .then( modifyBookList )
       .then( saveBookList )
       .done( function( authorData ){
-
-        console.log( authorData.author, 'write', authorData.bookList.length, 'books.' );
+        console.log( 'authorData', authorData.bookList.length );
+        // console.log( authorData.author, 'write', authorData.bookList.length, 'books.' );
         // Author.length の回数分実行されるまで再帰実行
         data.countExec++;
         data.regularInterval( data );

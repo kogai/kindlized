@@ -20,6 +20,7 @@ var booksSchema = new mongoose.Schema({
     publicationDate : Array,
     price           : Array,
     url             : Array,
+    images          : String,
     is_kindlized    : Boolean
 });
 
