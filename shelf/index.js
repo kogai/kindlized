@@ -4,12 +4,13 @@ var fs  = require('fs');
 var regInt          = require('./lib/regInt');
 var fetchPageCounts = require('./lib/fetchPageCounts');
 var fetchBookList   = require('./lib/fetchBookList');
+var modifyBookList  = require('./lib/modifyBookList');
 
 var Author = [ '森川ジョージ', '岩明均' ];
 
 var data = {};
     data.times    = Author.length;
-    data.interval = 1000 * 60;
+    data.interval = 300;
     data.obj      = {};
     data.callBack = function( data ){
       var authorData = {
@@ -20,20 +21,35 @@ var data = {};
       .then( fetchBookList )
       .done( function( authorData ){
         console.log( authorData.author , 'write', authorData.pageCount, 'pages books.' );
-        // console.log( authorData.bookList.length );
-
-        temp_saveBookList( authorData );
+        // temp_saveBookList( authorData );
         // Author.length の回数分実行されるまで再帰実行
         data.countExec++;
         data.regularInterval( data );
       });
     };
 
-regInt( data );
+// regInt( data );
+
+var temp_readBookList = function( path ){
+  fs.readFile( path, function( err, fileData ){
+    var authorData  = JSON.parse(fileData);
+    var modBookList = modifyBookList( authorData );
+
+  	var file = fs.createWriteStream("./bookList/iwaaki_mod.json" );
+        modBookList = JSON.stringify( modBookList );
+
+  	fs.writeFile( file.path, modBookList, function(err){
+  		if(err) throw err;
+  		console.log('bookList saved.');
+  	});
+
+  });
+};
+temp_readBookList( './bookList/iwaaki.json' );
 
 var temp_saveBookList = function( data ){
 	var file = fs.createWriteStream("./bookList/" + data.author + ".json" );
-  data = JSON.stringify( data );
+      data = JSON.stringify( data );
 
 	fs.writeFile( file.path, data, function(err){
 		if(err) throw err;

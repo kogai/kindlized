@@ -1,32 +1,3 @@
-// function getBooks(ItemSearchObj){
-// 	var opHelper = new OperationHelper(OperatonConfig);
-//
-// 	opHelper.execute( 'ItemSearch' , ItemSearchObj , function(error, results){
-// 		if(results.ItemSearchErrorResponse){
-// 			console.log('getBooks is error');
-// 			console.log(results.ItemSearchErrorResponse.Error[0].Message[0]);
-// 		}else{
-// 			if(results.ItemSearchResponse.Items){
-// 				var pages = Number(results.ItemSearchResponse.Items[0].TotalPages[0]);
-// 				var items = results.ItemSearchResponse.Items[0].Item;
-// 				console.log(pages);
-// 				if(pages === 0) return ;
-// 				for(var i = 0; i < pages; ++i){
-// 					(function(local){
-// 						setTimeout(function(){
-// 							getBooksInner( ItemSearchObj , local + 1 );
-// 						}, delay * local);
-// 					})(i);
-// 				}
-// 			}else{
-// 				var errorlog = results.ItemSearchResponse.Items[0].Request[0].Errors[0].Error[0];
-// 				console.log(errorlog);
-// 			}
-//
-// 		}
-// 	});
-// }
-
 var opHelper 						 = require( 'apac' ).OperationHelper;
 var makeOpConfig 				 = require( './makeOpConfig' );
 var makeSearchExpression = require( './makeSearchExpression' );
@@ -45,7 +16,7 @@ module.exports = function( authorData ){
   // ページ数分実行
   var regIntData = {
     times      : pageCount,
-    interval   : 1000 * 60,
+    interval   : 300,
     obj        : {},
     d          : d,
     authorData : authorData,
@@ -55,10 +26,9 @@ module.exports = function( authorData ){
     		if( err ) throw err;
     		try{
           var resBookListPerPage = res.ItemSearchResponse.Items[0].Item;
-          data.authorData.bookList.concat( resBookListPerPage );
+          data.authorData.bookList = data.authorData.bookList.concat( resBookListPerPage );
     		}catch( err ){
-    			console.log( 'fetchBookListのエラー', err );
-    			throw err;
+    			console.log( 'fetchBookListのエラー', err, res );
     		}
         finally{
           data.countExec++;
