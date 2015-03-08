@@ -18,5 +18,5 @@ module.exports = function(){
 		awsId 		: AWSAccessKeyId,
 		awsSecret :	AWSSecretAccessKey,
 		assocId 	: AWSassociatesId
-	}
+	};
 };

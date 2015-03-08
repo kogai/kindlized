@@ -45,7 +45,7 @@ module.exports = function( authorData ){
   // ページ数分実行
   var regIntData = {
     times      : pageCount,
-    interval   : 300,
+    interval   : 1000 * 60,
     obj        : {},
     d          : d,
     authorData : authorData,
@@ -55,9 +55,7 @@ module.exports = function( authorData ){
     		if( err ) throw err;
     		try{
           var resBookListPerPage = res.ItemSearchResponse.Items[0].Item;
-              // resBookListPerPage = JSON.parse( resBookListPerPage );
-              Array.isArray( resBookListPerPage );
-          data.authorData.bookList.push( resBookListPerPage );
+          data.authorData.bookList.concat( resBookListPerPage );
     		}catch( err ){
     			console.log( 'fetchBookListのエラー', err );
     			throw err;

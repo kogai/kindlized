@@ -1,4 +1,5 @@
-var Q = require( 'q' );
+var Q   = require( 'q' );
+var fs  = require('fs');
 
 var regInt          = require('./lib/regInt');
 var fetchPageCounts = require('./lib/fetchPageCounts');
@@ -8,7 +9,7 @@ var Author = [ '森川ジョージ', '岩明均' ];
 
 var data = {};
     data.times    = Author.length;
-    data.interval = 300;
+    data.interval = 1000 * 60;
     data.obj      = {};
     data.callBack = function( data ){
       var authorData = {
@@ -19,8 +20,9 @@ var data = {};
       .then( fetchBookList )
       .done( function( authorData ){
         console.log( authorData.author , 'write', authorData.pageCount, 'pages books.' );
-        console.log( authorData.bookList.length );
+        // console.log( authorData.bookList.length );
 
+        temp_saveBookList( authorData );
         // Author.length の回数分実行されるまで再帰実行
         data.countExec++;
         data.regularInterval( data );
@@ -29,6 +31,17 @@ var data = {};
 
 regInt( data );
 
+var temp_saveBookList = function( data ){
+	var file = fs.createWriteStream("./bookList/" + data.author + ".json" );
+  data = JSON.stringify( data );
+
+	fs.writeFile( file.path, data, function(err){
+		if(err) throw err;
+		console.log('bookList saved.');
+	});
+};
+
+// temp_saveBookList( { author: '森川ジョージ', pageCount: 15 } );
 
 // # 制限
 // 1P毎に10冊

@@ -16,10 +16,11 @@ module.exports = function( authorData ){
 		try{
 			pageCount = res.ItemSearchResponse.Items[0].TotalPages[0];
 			authorData.pageCount = Number( pageCount );
-			d.resolve( authorData );
 		}catch( err ){
 			console.log( 'fetchPageCountsのエラー', err );
 			throw err;
+		}finally{
+			d.resolve( authorData );
 		}
 	};
 	opCountPages.execute( 'ItemSearch', searchExpression, callBack );
