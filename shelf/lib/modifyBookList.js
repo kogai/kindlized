@@ -1,4 +1,8 @@
+var Q = require('q');
+
 module.exports = function( authorData ){
+  var d = Q.defer();
+
   var rawBookList = authorData.bookList;
   var modBookList = [];
 
@@ -20,6 +24,7 @@ module.exports = function( authorData ){
       modBook.publicationDate = itemAttr.PublicationDate;
       modBook.price           = itemAttr.ListPrice;
       modBook.url             = rawBook.DetailPageURL;
+      modBook.images          = rawBook.ImageSets;
 
     }catch( err ){
       modBook.status  = 'ERROR';
@@ -30,5 +35,7 @@ module.exports = function( authorData ){
     }
   }
   authorData.bookList = modBookList;
-  return authorData;
+  d.resolve( authorData );
+
+  return d.promise;
 };

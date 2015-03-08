@@ -10,7 +10,7 @@ passport.use(new LocalStrategy({
 	},
 	function( username , password , done) {
 		MongoDB.User.findOne({ mail: username }, function(err, user) {
-			if (err) { 
+			if (err) {
 				console.log(err);
 				return done(err);
 			 }

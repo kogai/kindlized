@@ -5,6 +5,7 @@ var regInt          = require('./lib/regInt');
 var fetchPageCounts = require('./lib/fetchPageCounts');
 var fetchBookList   = require('./lib/fetchBookList');
 var modifyBookList  = require('./lib/modifyBookList');
+var saveBookList    = require('./lib/saveBookList');
 
 var Author = [ '森川ジョージ', '岩明均' ];
 
@@ -19,43 +20,39 @@ var data = {};
       Q.when( authorData )
       .then( fetchPageCounts )
       .then( fetchBookList )
+      .then( modifyBookList )
+      .then( saveBookList )
       .done( function( authorData ){
-        console.log( authorData.author , 'write', authorData.pageCount, 'pages books.' );
-        // temp_saveBookList( authorData );
+
+        console.log( authorData.author, 'write', authorData.bookList.length, 'books.' );
         // Author.length の回数分実行されるまで再帰実行
         data.countExec++;
         data.regularInterval( data );
       });
     };
 
-// regInt( data );
+regInt( data );
 
 var temp_readBookList = function( path ){
   fs.readFile( path, function( err, fileData ){
-    var authorData  = JSON.parse(fileData);
-    var modBookList = modifyBookList( authorData );
-
-  	var file = fs.createWriteStream("./bookList/iwaaki_mod.json" );
-        modBookList = JSON.stringify( modBookList );
-
-  	fs.writeFile( file.path, modBookList, function(err){
-  		if(err) throw err;
-  		console.log('bookList saved.');
-  	});
-
+    var authorData  = JSON.parse( fileData );
+      data = JSON.stringify( data );
+    modifyBookList( authorData );
   });
 };
-temp_readBookList( './bookList/iwaaki.json' );
 
-var temp_saveBookList = function( data ){
-	var file = fs.createWriteStream("./bookList/" + data.author + ".json" );
-      data = JSON.stringify( data );
+// temp_readBookList( './bookList/iwaaki.json' );
+// temp_readBookList( './bookList/iwaaki_mod.json' );
 
-	fs.writeFile( file.path, data, function(err){
-		if(err) throw err;
-		console.log('bookList saved.');
-	});
-};
+// var temp_saveBookList = function( data ){
+// 	var file = fs.createWriteStream("./bookList/" + data.author + ".json" );
+//       data = JSON.stringify( data );
+//
+// 	fs.writeFile( file.path, data, function(err){
+// 		if(err) throw err;
+// 		console.log('bookList saved.');
+// 	});
+// };
 
 // temp_saveBookList( { author: '森川ジョージ', pageCount: 15 } );
 
