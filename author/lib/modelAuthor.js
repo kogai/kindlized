@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 if (process.env.mongodb) {
   mongodb = process.env.mongodb;
 } else {
-  var credential = require('../credential');
+  var credential = require('../../credential');
   mongodb = credential.mongodb;
 }
 var db = mongoose.createConnection(mongodb);
