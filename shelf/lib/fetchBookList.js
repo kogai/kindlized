@@ -3,6 +3,7 @@ var makeOpConfig 				 = require( './makeOpConfig' );
 var makeSearchExpression = require( './makeSearchExpression' );
 var regInt               = require( './regInt' );
 var Q 									 = require( 'q' );
+var constant        		 = require('./lib/constant');
 
 module.exports = function( authorData ){
 	var Author 				= authorData.author;
@@ -16,7 +17,7 @@ module.exports = function( authorData ){
   // ページ数分実行
   var regIntData = {
     times      : pageCount,
-    interval   : 300,
+    interval   : constant.interval,
     obj        : {},
     d          : d,
     authorData : authorData,
