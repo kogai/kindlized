@@ -1,8 +1,40 @@
+var opHelper 						   = require( 'apac' ).OperationHelper;
+var makeOpConfig 				   = require( '../../common/makeOpConfig' );
+var makeInspectExpression  = require( './makeInspectExpression' );
+
 module.exports = function( book ){
-  console.log( book.title );
+	var opConfig 					= new makeOpConfig();
+	var opInspectBook 		= new opHelper( opConfig );
+	var inspectExpression = new makeInspectExpression( book.ASIN[0] );
+
+  opInspectBook.execute( 'ItemSearch', inspectExpression,  function( err, res ){
+		if( err ) console.log( 'inspectBookのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error );
+		try{
+      var fetchedBook = res.ItemSearchResponse.Items[0].Request[0];
+			console.log( fetchedBook );
+      // data.authorData.bookList = data.authorData.bookList.concat( resBookListPerPage );
+      // data.countExec++;
+		}catch( error ){
+			console.log( 'inspectBookのリクエストエラー', error, res.ItemSearchErrorResponse.Error );
+			// retryInterval = constant.retryInterval;
+		}
+    finally{
+			// setTimeout(function(){
+      // 	data.regularInterval( data );
+			// }, retryInterval );
+    }
+	});
+
 };
 
 /*
+
+{ '$': { xmlns: 'http://webservices.amazon.com/AWSECommerceService/2011-08-01' },
+  OperationRequest:
+   [ { RequestId: [Object],
+       Arguments: [Object],
+       RequestProcessingTime: [Object] } ],
+  Items: [ { Request: [Object] } ] }
 
 { _id: 54fd30a45fd4c0f26ba4a008,
   images: '[{"ImageSet":[{"$":{"Category":"primary"},"SwatchImage":[{"URL":["http://ecx.images-amazon.com/images/I/51A5W%2BtBtML._SL30_.jpg"],"Height":[{"_":"30","$":{"Units":"pixels"}}],"Width":[{"_":"30","$":{"Units":"pixels"}}]}],"SmallImage":[{"URL":["http://ecx.images-amazon.com/images/I/51A5W%2BtBtML._SL75_.jpg"],"Height":[{"_":"75","$":{"Units":"pixels"}}],"Width":[{"_":"75","$":{"Units":"pixels"}}]}],"ThumbnailImage":[{"URL":["http://ecx.images-amazon.com/images/I/51A5W%2BtBtML._SL75_.jpg"],"Height":[{"_":"75","$":{"Units":"pixels"}}],"Width":[{"_":"75","$":{"Units":"pixels"}}]}],"TinyImage":[{"URL":["http://ecx.images-amazon.com/images/I/51A5W%2BtBtML._SL110_.jpg"],"Height":[{"_":"110","$":{"Units":"pixels"}}],"Width":[{"_":"110","$":{"Units":"pixels"}}]}],"MediumImage":[{"URL":["http://ecx.images-amazon.com/images/I/51A5W%2BtBtML._SL160_.jpg"],"Height":[{"_":"160","$":{"Units":"pixels"}}],"Width":[{"_":"160","$":{"Units":"pixels"}}]}],"LargeImage":[{"URL":["http://ecx.images-amazon.com/images/I/51A5W%2BtBtML.jpg"],"Height":[{"_":"500","$":{"Units":"pixels"}}],"Width":[{"_":"500","$":{"Units":"pixels"}}]}]}]}]',

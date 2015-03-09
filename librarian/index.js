@@ -5,7 +5,7 @@
 var Q               = require('q');
 var regInt          = require('./lib/regInt');
 var fetchBookList   = require('./lib/fetchBookList');
-var inspectBookList = require('./lib/inspectBookList');
+var inspectBook     = require('./lib/inspectBook');
 var constant        = require('./lib/constant');
 
 var bookList        = [];
@@ -16,12 +16,12 @@ Q.when( bookList )
   var d = Q.defer();
   var data = {
     times    : bookList.length,
-    interval : 0,
-    // interval : constant.interval,
+    // interval : 0,
+    interval : constant.interval,
     bookList: bookList,
     d: d,
     callBack : function( data ){
-      inspectBookList( data.bookList[ data.countExec ] );
+      inspectBook( data.bookList[ data.countExec ] );
       data.countExec++;
       data.regularInterval( data );
     }
