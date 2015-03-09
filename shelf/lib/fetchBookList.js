@@ -23,6 +23,7 @@ module.exports = function( authorData ){
     authorData : authorData,
     callBack   : function( data ){
     	var searchExpression 	= new makeSearchExpression( Author, data.countExec + 1 );
+			var retryInterval = 0;
       opCountPages.execute( 'ItemSearch', searchExpression,  function( err, res ){
     		if( err ) console.log( 'fetchBookListのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error );
     		try{
@@ -31,9 +32,12 @@ module.exports = function( authorData ){
           data.countExec++;
     		}catch( error ){
     			console.log( 'fetchBookListのリクエストエラー', error, res.ItemSearchErrorResponse.Error );
+					retryInterval = constant.retryInterval;
     		}
         finally{
-          data.regularInterval( data );
+					setTimeout(function(){
+          	data.regularInterval( data );
+					}, retryInterval );
         }
     	});
     }
