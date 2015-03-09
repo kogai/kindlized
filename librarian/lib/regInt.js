@@ -6,9 +6,9 @@ var regularInterval = function( data ){
   // dataオブジェクトから変数を取り出し
   var times     = data.times;
   var interval  = data.interval;
-  var obj       = data.obj;
   var callBack  = data.callBack;
   var countExec = data.countExec;
+  var bookList  = data.bookList;
 
   setTimeout( function(){
     if( countExec <  times ){
@@ -22,7 +22,8 @@ var regularInterval = function( data ){
       }
     }else{
       // times回実行されたら終了
-      console.log( 'complete.');
+      console.log( 'regularInterval is complete.');
+      data.d.resolve( bookList );
     }
   }, interval );
 };

@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "app": "node --debug bin/www",
     "shelf": "node-dev --all-deps shelf",
+    "librarian": "node-dev --all-deps librarian",
     "build": "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js"
   },
   "repository": {
