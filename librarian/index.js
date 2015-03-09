@@ -2,12 +2,13 @@
 // - 書籍DBのkindle化チェック
 // - 書籍DBへの新刊追加
 
-var Q             = require('q');
-var regInt        = require('./lib/regInt');
-var fetchBookList = require('./lib/fetchBookList');
-var constant      = require('./lib/constant');
+var Q               = require('q');
+var regInt          = require('./lib/regInt');
+var fetchBookList   = require('./lib/fetchBookList');
+var inspectBookList = require('./lib/inspectBookList');
+var constant        = require('./lib/constant');
 
-var bookList      = [];
+var bookList        = [];
 
 Q.when( bookList )
 .then( fetchBookList )
@@ -20,7 +21,7 @@ Q.when( bookList )
     bookList: bookList,
     d: d,
     callBack : function( data ){
-      console.log( 'regInt is excuted', data.bookList[ data.countExec ] );
+      inspectBookList( data.bookList[ data.countExec ] );
       data.countExec++;
       data.regularInterval( data );
     }
