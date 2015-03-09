@@ -3,7 +3,7 @@ var makeOpConfig 				 = require( './makeOpConfig' );
 var makeSearchExpression = require( './makeSearchExpression' );
 var regInt               = require( './regInt' );
 var Q 									 = require( 'q' );
-var constant        		 = require('./lib/constant');
+var constant        		 = require('./constant');
 
 module.exports = function( authorData ){
 	var Author 				= authorData.author;
