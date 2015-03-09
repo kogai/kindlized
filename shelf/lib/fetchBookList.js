@@ -27,11 +27,11 @@ module.exports = function( authorData ){
     		try{
           var resBookListPerPage = res.ItemSearchResponse.Items[0].Item;
           data.authorData.bookList = data.authorData.bookList.concat( resBookListPerPage );
+          data.countExec++;
     		}catch( err ){
     			console.log( 'fetchBookListのエラー', err, res );
     		}
         finally{
-          data.countExec++;
           data.regularInterval( data );
         }
     	});
