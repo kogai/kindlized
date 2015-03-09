@@ -1,4 +1,4 @@
-var credential = require('../../credential');
+var credential;
 
 if(process.env.AWSAccessKeyId){
 	//heroku用変数
@@ -7,6 +7,7 @@ if(process.env.AWSAccessKeyId){
 	AWSassociatesId 		= process.env.AWSassociatesId;
 }else{
 	//サービスサーバー用変数
+	credential 					= require('../../credential')
 	AWSAccessKeyId  		= credential.amazon.AWSAccessKeyId;
 	AWSSecretAccessKey  = credential.amazon.AWSSecretAccessKey;
 	AWSassociatesId  		= credential.amazon.AWSassociatesId;
