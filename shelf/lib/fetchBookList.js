@@ -23,17 +23,21 @@ module.exports = function( authorData ){
     authorData : authorData,
     callBack   : function( data ){
     	var searchExpression 	= new makeSearchExpression( Author, data.countExec + 1 );
+			var retryInterval = 0;
       opCountPages.execute( 'ItemSearch', searchExpression,  function( err, res ){
-    		if( err ) console.log( 'fetchBookListのレスポンスエラー ', err, res );
+    		if( err ) console.log( 'fetchBookListのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error );
     		try{
           var resBookListPerPage = res.ItemSearchResponse.Items[0].Item;
           data.authorData.bookList = data.authorData.bookList.concat( resBookListPerPage );
           data.countExec++;
     		}catch( error ){
-    			console.log( 'fetchBookListのリクエストエラー', error, res );
+    			console.log( 'fetchBookListのリクエストエラー', error, res.ItemSearchErrorResponse.Error );
+					retryInterval = constant.retryInterval;
     		}
         finally{
-          data.regularInterval( data );
+					setTimeout(function(){
+          	data.regularInterval( data );
+					}, retryInterval );
         }
     	});
     }
