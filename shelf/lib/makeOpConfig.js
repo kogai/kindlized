@@ -7,7 +7,7 @@ if( process.env.AWSAccessKeyId ){
 	AWSassociatesId 		= process.env.AWSassociatesId;
 }else{
 	//サービスサーバー用変数
-	credential 					= require('../../credential')
+	credential 					= require('../../credential');
 	AWSAccessKeyId  		= credential.amazon.AWSAccessKeyId;
 	AWSSecretAccessKey  = credential.amazon.AWSSecretAccessKey;
 	AWSassociatesId  		= credential.amazon.AWSassociatesId;
