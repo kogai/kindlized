@@ -17,7 +17,7 @@ module.exports = function( authorData ){
 			pageCount = res.ItemSearchResponse.Items[0].TotalPages[0];
 			authorData.pageCount = Number( pageCount );
 		}catch( error ){
-			console.log( 'fetchPageCountsのリクエストエラー', error, res );
+			console.log( 'fetchPageCountsのリクエストエラー', error, res.ItemSearchErrorResponse.Error );
 			// throw err;
 		}finally{
 			d.resolve( authorData );
