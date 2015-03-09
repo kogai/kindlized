@@ -3,6 +3,7 @@ var makeOpConfig 				 = require( './makeOpConfig' );
 var makeSearchExpression = require( './makeSearchExpression' );
 var regInt               = require( './regInt' );
 var Q 									 = require( 'q' );
+var constant        		 = require('./constant');
 
 module.exports = function( authorData ){
 	var Author 				= authorData.author;
@@ -16,20 +17,20 @@ module.exports = function( authorData ){
   // ページ数分実行
   var regIntData = {
     times      : pageCount,
-    interval   : 300,
+    interval   : constant.interval,
     obj        : {},
     d          : d,
     authorData : authorData,
     callBack   : function( data ){
     	var searchExpression 	= new makeSearchExpression( Author, data.countExec + 1 );
       opCountPages.execute( 'ItemSearch', searchExpression,  function( err, res ){
-    		if( err ) throw err;
+    		if( err ) console.log( 'fetchBookListのレスポンスエラー ', err, res );
     		try{
           var resBookListPerPage = res.ItemSearchResponse.Items[0].Item;
           data.authorData.bookList = data.authorData.bookList.concat( resBookListPerPage );
           data.countExec++;
-    		}catch( err ){
-    			console.log( 'fetchBookListのエラー', err, res );
+    		}catch( error ){
+    			console.log( 'fetchBookListのリクエストエラー', error, res );
     		}
         finally{
           data.regularInterval( data );

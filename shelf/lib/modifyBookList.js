@@ -7,12 +7,14 @@ module.exports = function( authorData ){
   var modBookList = [];
 
   for (var i = 0; i < rawBookList.length; i++) {
-    var rawBook = rawBookList[i];
-    var modBook = {};
+    var rawBook   = rawBookList[i];
+    var modBook   = {};
+    var itemAttr  = {};
     try{
-      var itemAttr = rawBook.ItemAttributes[0];
+      itemAttr  = rawBook.ItemAttributes[0];
+      var imageSets = '';
       if( rawBook.ImageSets ){
-        var imageSets = JSON.stringify( rawBook.ImageSets );
+        imageSets = JSON.stringify( rawBook.ImageSets );
       }
 
       modBook.status          = 'DEFAULT';

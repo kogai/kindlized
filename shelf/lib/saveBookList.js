@@ -34,7 +34,7 @@ var saveBook = function( book ){
 			});
 
 			newBook.save( function(err){
-				if(err) console.log(err)
+				if(err) console.log(err);
 				console.log( book.title, 'regist is success' );
 			});
 		}
