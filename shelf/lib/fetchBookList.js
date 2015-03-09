@@ -24,13 +24,13 @@ module.exports = function( authorData ){
     callBack   : function( data ){
     	var searchExpression 	= new makeSearchExpression( Author, data.countExec + 1 );
       opCountPages.execute( 'ItemSearch', searchExpression,  function( err, res ){
-    		if( err ) throw err;
+    		if( err ) console.log( 'fetchBookListのレスポンスエラー ', err, res );
     		try{
           var resBookListPerPage = res.ItemSearchResponse.Items[0].Item;
           data.authorData.bookList = data.authorData.bookList.concat( resBookListPerPage );
           data.countExec++;
-    		}catch( err ){
-    			console.log( 'fetchBookListのエラー', err, res );
+    		}catch( error ){
+    			console.log( 'fetchBookListのリクエストエラー', error, res );
     		}
         finally{
           data.regularInterval( data );

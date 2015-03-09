@@ -12,12 +12,12 @@ module.exports = function( authorData ){
 
 	var pageCount = 0;
 	var callBack  = function( err, res ){
-		if( err ) throw err;
+		if( err ) console.log( 'fetchPageCountsのレスポンスエラー ', err, res );
 		try{
 			pageCount = res.ItemSearchResponse.Items[0].TotalPages[0];
 			authorData.pageCount = Number( pageCount );
-		}catch( err ){
-			console.log( 'fetchPageCountsのエラー', err, res );
+		}catch( error ){
+			console.log( 'fetchPageCountsのリクエストエラー', error, res );
 			// throw err;
 		}finally{
 			d.resolve( authorData );
@@ -25,4 +25,4 @@ module.exports = function( authorData ){
 	};
 	opCountPages.execute( 'ItemSearch', searchExpression, callBack );
 	return d.promise;
-}
+};
