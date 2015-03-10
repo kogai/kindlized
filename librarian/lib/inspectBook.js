@@ -7,15 +7,15 @@ module.exports = function( book ){
 	var opInspectBook 		= new opHelper( opConfig );
 	var inspectExpression = new makeInspectExpression( book.ASIN[0] );
 
-  opInspectBook.execute( 'ItemSearch', inspectExpression,  function( err, res ){
+  opInspectBook.execute( 'ItemLookup', inspectExpression,  function( err, res ){
 		if( err ) console.log( 'inspectBookのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error );
 		try{
-      var fetchedBook = res.ItemSearchResponse.Items[0].Request[0];
+      var fetchedBook = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0];
 			console.log( fetchedBook );
       // data.authorData.bookList = data.authorData.bookList.concat( resBookListPerPage );
       // data.countExec++;
 		}catch( error ){
-			console.log( 'inspectBookのリクエストエラー', error, res.ItemSearchErrorResponse.Error );
+			console.log( 'inspectBookのリクエストエラー', error, res.ItemLookupResponse );
 			// retryInterval = constant.retryInterval;
 		}
     finally{

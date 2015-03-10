@@ -14,23 +14,23 @@ var bookList        = [];
 Q.when( bookList )
 .then( fetchBookList )
 .then( siftBookList )
-// .then( function( bookList ){
-//   var d = Q.defer();
-//   var data = {
-//     times    : bookList.length,
-//     // interval : 0,
-//     interval : constant.interval,
-//     bookList: bookList,
-//     d: d,
-//     callBack : function( data ){
-//       inspectBook( data.bookList[ data.countExec ] );
-//       data.countExec++;
-//       data.regularInterval( data );
-//     }
-//   };
-//   regInt( data );
-//   return d.promise;
-// })
+.then( function( bookList ){
+  var d = Q.defer();
+  var data = {
+    times    : bookList.length,
+    // interval : 0,
+    interval : constant.interval,
+    bookList: bookList,
+    d: d,
+    callBack : function( data ){
+      inspectBook( data.bookList[ data.countExec ] );
+      data.countExec++;
+      data.regularInterval( data );
+    }
+  };
+  regInt( data );
+  return d.promise;
+})
 .done( function( bookList ){
   console.log( bookList.length, 'books in shelf.' );
 });

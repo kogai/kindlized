@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongodb;
 
 module.exports = function( modelName, modelSchema ){
   if (process.env.mongodb) {
