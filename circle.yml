@@ -11,6 +11,9 @@ machine:
   node:
     version: 0.12.0
 
+  enviroment:
+    test: true
+
 test:
   post:
     - npm run test
