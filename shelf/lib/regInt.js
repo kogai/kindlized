@@ -22,7 +22,10 @@ var regularInterval = function( data ){
       }
     }else{
       // times回実行されたら終了
-      if( data.authorData ) data.d.resolve( data.authorData );
+      if( data.authorData ){
+        data.d.resolve( data.authorData )
+        data.deferd.resolve();
+      };
       console.log( 'complete.');
     }
   }, interval );

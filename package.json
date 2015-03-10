@@ -8,6 +8,7 @@
     "app": "node --debug bin/www",
     "shelf": "node-dev --all-deps shelf",
     "librarian": "node-dev --all-deps librarian",
+    "db": "node-dev --all-deps db",
     "build": "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js"
   },
   "repository": {
