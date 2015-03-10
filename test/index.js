@@ -1,3 +1,5 @@
+var librarian = require('./librarian');
+
 require('should');
 
 describe('circleCiのテスト', function () {
@@ -6,3 +8,5 @@ describe('circleCiのテスト', function () {
     done();
   });
 });
+
+librarian();
