@@ -46,11 +46,13 @@ var inspectBookList = function(){
   .then( siftBookList )
   .then( inspectBook )
   .done( function( bookList ){
-    console.log( bookList, 'inspectBookList is completed.');
+    console.log( bookList.length, 'inspectBookList is completed.');
     d.resolve();
   });
 
   return d.promise;
 };
+
 inspectBookList();
+
 module.exports = fetchParentASIN;
