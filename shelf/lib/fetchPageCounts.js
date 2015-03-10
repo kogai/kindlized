@@ -25,7 +25,7 @@ module.exports = function( authorData ){
 					retryCount++;
 			console.log( 'fetchPageCountsの' + retryCount + '回目のリクエストエラー', error, res.ItemSearchErrorResponse.Error );
 			setTimeout(function(){
-				searchExpression 	= new makeSearchExpression( Author )
+				searchExpression 	= new makeSearchExpression( Author );
 				opCountPages.execute( 'ItemSearch', searchExpression, callBack );
 			}, retryInterval * retryCount );
 		}

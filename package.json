@@ -7,6 +7,7 @@
     "test": "./node_modules/.bin/mocha",
     "app": "node --debug bin/www",
     "shelf": "node-dev --all-deps shelf",
+    "librarian": "node-dev --all-deps librarian",
     "build": "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js"
   },
   "repository": {
@@ -31,6 +32,7 @@
     "formidable": "^1.0.15",
     "jade": "~1.6.0",
     "mocha": "^2.0.1",
+    "moment-timezone": "^0.3.0",
     "mongoose": "^3.8.18",
     "mongoose-unique-validator": "^0.4.1",
     "morgan": "~1.3.0",
