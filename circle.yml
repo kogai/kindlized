@@ -11,7 +11,7 @@ machine:
   node:
     version: 0.12.0
 
-  enviroment:
+  environment:
     test: true
 
 test:
