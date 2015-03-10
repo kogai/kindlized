@@ -3,6 +3,4 @@ module.exports = function ( ASIN ){
   this.ItemId            = ASIN
 	this.RelationshipType  = 'AuthorityTitle';
 	this.ResponseGroup     = 'RelatedItems, Small';
-	// this.Author 				= Author;
-	// this.ResponseGroup 	= 'Small , ItemAttributes , Images';
 };
