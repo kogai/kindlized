@@ -12,6 +12,7 @@ var constant        = require('../common/constant');
 var bookList        = [];
 
 var fetchParentASIN = function(){
+  var d = Q.defer();
   Q.when( bookList )
   .then( fetchBookList )
   .then( function( bookList ){
@@ -30,7 +31,9 @@ var fetchParentASIN = function(){
   })
   .done( function( bookList ){
     console.log( bookList.length, 'books in shelf.' );
+    d.resolve();
   });
+  return d.promise;
 }
 
-fetchParentASIN();
+module.exports = fetchParentASIN;
