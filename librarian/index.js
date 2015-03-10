@@ -52,5 +52,5 @@ var inspectBookList = function(){
 
   return d.promise;
 };
-inspectBookList();
+// inspectBookList();
 module.exports = fetchParentASIN;
