@@ -1,22 +1,12 @@
-var mongoose = require('mongoose');
-if (process.env.mongodb) {
-  mongodb = process.env.mongodb;
-} else {
-  var credential = require('../../credential');
-  mongodb = credential.mongodb;
-}
-var db = mongoose.createConnection(mongodb);
+var makeModel     = require('../../common/makeModel');
 
-var authorSchema = new mongoose.Schema({
+var AuthorSchema  = {
   name: {
     type: String,
-    index: {
-      unique: true
-    }
+    index: { unique: true }
   },
   wroteBooks: Number,
   checkDate: Array
-});
+};
 
-Authors = db.model('Authors', authorSchema);
-module.exports = Authors;
+module.exports = new makeModel( 'Author', AuthorSchema );

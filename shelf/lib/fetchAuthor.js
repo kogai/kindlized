@@ -12,4 +12,4 @@ module.exports = function( authorList ) {
     d.resolve(authorList);
   });
   return d.promise;
-}
+};
