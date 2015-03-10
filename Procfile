@@ -1,1 +1,1 @@
-db: node db -p $PORT
+shelf: node db -p $PORT
