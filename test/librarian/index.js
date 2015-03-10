@@ -1,4 +1,4 @@
-var fetchBookList = require( '../../librarian/lib/fetchBookList' );
+var fetchBookList = require( '../../librarian/lib/fetchParentASIN/fetchBookList' );
 var Q =	require('q');
 
 var should = require('should');
