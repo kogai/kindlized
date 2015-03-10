@@ -1,4 +1,5 @@
 var fetchBookList = require( '../../librarian/lib/fetchParentASIN/fetchBookList' );
+var siftBookList 	= require( '../../librarian/lib/inspectBookList/siftBookList' );
 var Q =	require('q');
 
 var should = require('should');
@@ -40,4 +41,18 @@ module.exports = function(){
       }
     });
 	});
+
+	// describe( 'librarian/inspectBookListのテスト', function(){
+	// 	var temp_bookList = [
+	// 		{
+	// 			"_id": {
+	// 				"getTimestamp": function(){
+	// 					return ;
+	// 				}
+	// 			}
+	// 		}
+	// 	]
+	// 	bookList[i]._id.getTimestamp
+	// 	it( 'siftBookListは定数')
+	// });
 }
