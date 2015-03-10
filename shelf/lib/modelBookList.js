@@ -11,6 +11,7 @@ var bookrSchema  = {
   price           : Array,
   url             : Array,
   images          : String,
+  last_modified   : Date,
   is_kindlized    : Boolean
 };
 
