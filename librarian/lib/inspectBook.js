@@ -1,6 +1,7 @@
 var opHelper 						   = require( 'apac' ).OperationHelper;
 var makeOpConfig 				   = require( '../../common/makeOpConfig' );
 var makeInspectExpression  = require( './makeInspectExpression' );
+var modelBookList 				 = require( '../../shelf/modelBookList' );
 
 module.exports = function( book ){
 	var opConfig 					= new makeOpConfig();
@@ -10,12 +11,17 @@ module.exports = function( book ){
   opInspectBook.execute( 'ItemLookup', inspectExpression,  function( err, res ){
 		if( err ) console.log( 'inspectBookのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error );
 		try{
-      var fetchedBook = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0];
+      var fetchedBook = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0].Item;
+			// relatedItemをLookupしてParentASINを取得
+			// 各BookのDBにParentASINを保存
 			console.log( fetchedBook );
+			ModelBookList.findOne( { ASIN: book.ASIN }, function( err, book ){
+				console.log( 'inspectBook-ModelBookList.findOneのレスポンス', book );
+			});
       // data.authorData.bookList = data.authorData.bookList.concat( resBookListPerPage );
       // data.countExec++;
 		}catch( error ){
-			console.log( 'inspectBookのリクエストエラー', error, res.ItemLookupResponse );
+			console.log( 'inspectBookのリクエストエラー', error, res );
 			// retryInterval = constant.retryInterval;
 		}
     finally{
