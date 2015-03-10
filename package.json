@@ -4,7 +4,6 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "app": "node --debug bin/www",
     "shelf": "node-dev --all-deps shelf",
     "librarian": "node-dev --all-deps librarian",
