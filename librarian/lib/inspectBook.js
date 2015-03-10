@@ -26,7 +26,6 @@ module.exports = function( data ){
 			console.log( 'inspectBookのリクエストエラー', error, res );
 			retryInterval = constant.retryInterval;
 		}finally{
-			console.log( 'finally callback is excution.' );
 			setTimeout( function(){
 				regularInterval( data );
 			}, retryInterval );
