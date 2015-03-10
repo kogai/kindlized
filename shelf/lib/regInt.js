@@ -24,7 +24,7 @@ var regularInterval = function( data ){
       // times回実行されたら終了
       if( data.authorData ){
         data.d.resolve( data.authorData )
-        data.deferd.resolve();
+        data.defered.resolve();
       };
       console.log( 'complete.');
     }
