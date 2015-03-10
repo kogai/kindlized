@@ -43,7 +43,7 @@ var inspectBookList = function(){
 
   Q.when( bookList )
   .then( fetchBookList )
-  .then( siftBookList )
+  // .then( siftBookList )
   .then( inspectBook )
   .done( function( bookList ){
     console.log( bookList.length, 'inspectBookList is completed.');
