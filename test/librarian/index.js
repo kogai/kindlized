@@ -4,7 +4,6 @@ var Q =	require('q');
 var should = require('should');
 
 module.exports = function(){
-	console.log( process.env );
 	describe( 'librarian/fetchBookListのテスト', function(){
     var bookList;
     this.timeout( 0 );
