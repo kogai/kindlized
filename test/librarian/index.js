@@ -26,5 +26,18 @@ module.exports = function(){
         bookList[i].should.have.property( 'title' );
       }
     });
+
+    it( 'bookList配列にはASINプロパティがある', function(){
+      for (var i = 0; i < bookList.length; i++) {
+        bookList[i].should.have.property( 'ASIN' );
+      }
+    });
+
+    it( 'ASINプロパティは空の文字列ではない', function(){
+      for (var i = 0; i < bookList.length; i++) {
+				var ASIN = bookList[i].ASIN;
+				( ASIN.length ).should.be.above( 0 );
+      }
+    });
 	});
 }
