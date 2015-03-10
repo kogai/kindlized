@@ -2,6 +2,7 @@ var makeModel     = require('../../common/makeModel');
 var bookrSchema  = {
   status          : String,
   ASIN            : Array,
+  AuthorityASIN   : Array,
   EAN             : Array,
   author          : Array,
   title           : Array,
