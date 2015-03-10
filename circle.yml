@@ -15,6 +15,12 @@ test:
   post:
     - npm run test
 
+deployment:
+  staging:
+    branch: master
+    heroku:
+      appname: kindlized-db
+      
   # Override /etc/hosts
   # hosts:
   #   circlehost: 127.0.0.1
