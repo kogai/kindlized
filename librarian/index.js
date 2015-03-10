@@ -3,11 +3,13 @@
 // - 書籍DBへの新刊追加
 
 var Q               = require('q');
-var regInt          = require('./lib/regInt');
-var fetchBookList   = require('./lib/fetchBookList');
-var siftBookList    = require('./lib/siftBookList');
-var inspectBook     = require('./lib/inspectBook');
+var regInt          = require('./lib/fetchParentASIN/regInt');
+var fetchBookList   = require('./lib/fetchParentASIN/fetchBookList');
+var inspectASIN     = require('./lib/fetchParentASIN/inspectASIN');
 var constant        = require('../common/constant');
+
+var inspectBook     = require( './lib/inspectBookList/inspectBook' );
+var siftBookList    = require('./lib/inspectBookList/siftBookList');
 
 var bookList        = [];
 
@@ -23,7 +25,7 @@ var fetchParentASIN = function(){
       bookList: bookList,
       d: d,
       callBack : function( data ){
-        inspectBook( data );
+        inspectASIN( data );
       }
     };
     regInt( data );
@@ -36,4 +38,19 @@ var fetchParentASIN = function(){
   return d.promise;
 }
 
+var inspectBookList = function(){
+  var d = Q.defer();
+
+  Q.when( bookList )
+  .then( fetchBookList )
+  .then( siftBookList )
+  .then( inspectBook )
+  .done( function( bookList ){
+    console.log( bookList, 'inspectBookList is completed.');
+    d.resolve();
+  });
+
+  return d.promise;
+};
+inspectBookList();
 module.exports = fetchParentASIN;
