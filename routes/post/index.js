@@ -1,3 +1,4 @@
+var Q 				= require('q');
 var express	 		= require('express');
 var router	  		= express.Router();
 var modelBookList 	= require( '../../shelf/lib/modelBookList' );
@@ -9,45 +10,66 @@ var makeExistenceExpression	= require( './lib/makeExistenceExpression' );
 var opConfig 					= new makeOpConfig();
 var opExistenceBook 			= new opHelper( opConfig );
 
-router.post( '/', function( req, res ) {
-	var newBook = req.body.newBook;
-    var existenceAuthorExpression   = new makeExistenceExpression( newBook );
+var fetchBookListDB = function( data ){
+	var d = Q.defer();
 
-	modelBookList.findOne( { title: newBook }, function( err, book ){
-		if( !book ){
-			// amazonに著者が存在するか調べる
-			// 存在したらmodelAuthorに保存
-            opExistenceBook.execute( 'ItemLookup', existenceAuthorExpression,  function( err, item ){
-				try{
-                	console.log( 'item success', item.ItemLookupResponse.Items[0].Request[0] );
-				}catch( e ){
-                	console.log( 'item err', item.ItemLookupResponse );
-				}
+	var req 		= data.req;
+	var newBook		= req.body.newBook;
+	var titleQuery 	= new RegExp( newBook );
 
-                if( item.ItemLookupResponse ){
-        			// var newBook = new modelAuthor({
-        			// });
-                    //
-        			// newBooks.save( function(err){
-        			// 	if(err) console.log(err);
-        			// 	console.log( book.title, 'regist is success' );
-            			res.send({
-            				'isAddedAuthor': true
-            			});
-        			// });
-
-                }else{
-        			res.send({
-        				'isExistenceAuthor': true
-        			});
-                }
-            });
-		}else{
-			// 登録済みの著者
-			res.send({
-				'isRegisterdAuthor': true
-			});
+	modelBookList.find( { title: titleQuery }, function( err, bookListDB ){
+		var countBooks = bookListDB.length;
+		var isRegisterdBook = false;
+		if( countBooks > 0 ){
+			isRegisterdBook = true;
 		}
+		data.isRegisterdBook 	= isRegisterdBook;
+		data.newBook 			= newBook;
+		data.bookListDB			= bookListDB;
+		d.resolve( data );
+	});
+	return d.promise;
+};
+
+var fetchBookListAmazon = function( data ){
+	var d = Q.defer();
+	var newBook = data.newBook;
+	var existenceAuthorExpression = new makeExistenceExpression( newBook );
+    opExistenceBook.execute( 'ItemLookup', existenceAuthorExpression,  function( err, bookListAmazon ){
+		try{
+			console.log( 'bookListAmazon', bookListAmazon.ItemLookupResponse.Items[0].Request[0].Errors );
+		}catch( err ){
+
+		}finally{
+
+		}
+		data.bookListAmazon = bookListAmazon;
+		d.resolve( data );
+    });
+	return d.promise;
+};
+
+var sendResponse = function( data ){
+	var d = Q.defer();
+	var res = data.res;
+	res.send({
+		bookListDB		: data.bookListDB,
+		bookListAmazon	: data.bookListAmazon
+	});
+	d.resolve( data );
+	return d.promise;
+};
+
+router.post( '/', function( req, res ) {
+	Q.when({
+		res : res,
+		req : req
+	})
+	.then( fetchBookListDB )
+	.then( fetchBookListAmazon )
+	.then( sendResponse )
+	.done( function(){
+		console.log('post routes completed.');
 	});
 });
 
