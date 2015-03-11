@@ -1,0 +1,39 @@
+doctype html
+html
+    head
+        meta( charset="UTF-8" )
+        link( rel="stylesheet",
+        href="/css/index.css" )
+        title MAP-APP
+        
+    body( ng-app='App' )
+        
+        div( ng-controller='MainController' )
+            
+            ul.l-center.m-list-sort(  )
+                li.l-idb
+                  input( type='number', ng-model="centerLat", placeholder='緯度：{{ map.center.latitude }}' )
+                li.l-idb
+                  input( type='number', ng-model="centerLong", placeholder='経度：{{ map.center.longitude }}' )
+                li.l-idb 
+                  input( type='button' , value='地図の中心を変える', ng-click='valChange( centerLat, centerLong )' )
+            
+            div( class='angular-google-map-wrapper', ng-style="map.deviceHeight" )
+                ui-gmap-google-map(
+                  center='map.center',
+                  zoom='map.zoom',
+                  options='map.scrollFlg',
+                  events='map.events'
+                )
+                    ui-gmap-markers(
+                      models='events',
+                      coords="'self'"
+                    )
+
+        script( src='//maps.googleapis.com/maps/api/js?sensor=false' )
+        script( src='/javascripts/angular.min.js' )
+        script( src='/javascripts/lodash.underscore.min.js' )
+        script( src='/javascripts/angular-google-maps.min.js' )
+        script( src='/javascripts/bundle.min.js' )
+    
+    

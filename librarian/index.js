@@ -43,7 +43,7 @@ var inspectBookList = function(){
 
   Q.when( bookList )
   .then( fetchBookList )
-  // .then( siftBookList )
+  .then( siftBookList )
   .then( inspectBook )
   .done( function( bookList ){
     console.log( bookList.length, 'inspectBookList is completed.');
@@ -53,6 +53,7 @@ var inspectBookList = function(){
   return d.promise;
 };
 
-// inspectBookList();
-
-module.exports = fetchParentASIN;
+module.exports = {
+    fetchParentASIN: fetchParentASIN,
+    inspectBookList: inspectBookList
+};

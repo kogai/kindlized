@@ -1,23 +1,22 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var bodyParser = require('body-parser');
-var passport = require('passport');
-// var multer = require('multer');
+var express         = require('express');
+var path            = require('path');
+var favicon         = require('serve-favicon');
+var logger          = require('morgan');
+var cookieParser    = require('cookie-parser');
+var session         = require('express-session');
+var bodyParser      = require('body-parser');
+var passport        = require('passport');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var login = require('./routes/login');
-var regist = require('./routes/regist');
-var verify = require('./routes/verify');
-var auth = require('./routes/auth');
-var process = require('./models/process');
-var credential = require('./credential');
+var routes          = require('./routes/index');
+var post            = require('./routes/post/index');
+// var users       = require('./routes/users');
+// var login       = require('./routes/login');
+// var regist      = require('./routes/regist');
+// var verify      = require('./routes/verify');
+// var auth        = require('./routes/auth');
+// var process     = require('./models/process');
 
-// var books = require('./models/exec.books');
+var credential  = require('./credential');
 
 var app = express();
 
@@ -33,22 +32,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-    secret : credential.session,
+    secret : 'mysessionpassword',
     cookie : { maxAge : 30 * 24 * 60 * 60 * 1000 }
 }));
-app.use(passport.initialize());
-app.use(passport.session());
-// app.use(multer(
-//     { dest: './uploads/'})
-// );
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-app.use('/', routes);
-app.use('/users', users);
-app.use('/login', login);
-app.use('/regist', regist);
-app.use('/verify', verify);
-app.use('/process', process);
-app.use('/auth', auth);
+app.use( '/', routes );
+app.use( '/post', post );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

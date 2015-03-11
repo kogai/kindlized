@@ -30,7 +30,7 @@ var saveBook = function( book ){
 		    price           : book.price,
 		    url             : book.url,
 		    images          : book.images,
-		    is_kindlized    : false
+		    isKindlized	    : false
 			});
 
 			newBook.save( function(err){
