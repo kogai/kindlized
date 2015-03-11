@@ -15,7 +15,7 @@ var fetchAuthorList = function( authorsAndBooks ){
 
 var fetchBookList = function( authorsAndBooks ){
 	var d = Q.defer();
-	var bookList 	= modelBookList.find( {}, function( err, books ){
+	var bookList 	= modelBookList.find( { isKindlized: true }, function( err, books ){
 		authorsAndBooks.books = books;
 		d.resolve( authorsAndBooks );
 	});
