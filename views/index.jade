@@ -14,9 +14,10 @@ block content
 		form( ng-submit="postBook()" )
 			input( type="text" required placeholder="書籍を検索" ng-model="newBook" )
 			button( type="submit").btn.btn-default search
-		div( ng-if="isRegisterdAuthor" ) 登録済みの書籍
-		div( ng-if="isExistenceAuthor" ) 存在しない書籍
-		div( ng-if="isAddedAuthor" ) 登録成功
+		
+		div( ng-if="isRegisterdBook" ) 登録済みの書籍
+		div( ng-if="isExistenceBook" ) 存在しない書籍
+		div( ng-if="isAddedBook" ) 登録成功
 			
 	h2 登録済みの書籍
 	ul
