@@ -7,8 +7,8 @@ module.exports = function( bookList ){
   callBack = function( bookList ){
     var siftedBookList = [];
     for (var i = 0; i < bookList.length; i++) {
-        
-      var lastModifyTime  = bookList[i]._id.getTimestamp();
+
+      var lastModifyTime  = bookList[i].lastModified || bookList[i]._id.getTimestamp();
       var todayDate       = moment();
       var diffDay         = todayDate.diff( lastModifyTime, 'days' );
 
