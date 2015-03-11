@@ -18,10 +18,10 @@ module.exports = function(){
 			times		: authorList.length,
 			interval : constant.interval,
 			obj			: {},
-			defered	: defered,
 			callBack : function( data ){
 				var authorData = {
-					author: authorList[ data.countExec ]
+					author: authorList[ data.countExec ],
+					defered	: defered
 				};
 				console.log( authorList[ data.countExec ], 'process has start.' );
 				Q.when( authorData )
