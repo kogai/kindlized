@@ -57,7 +57,11 @@ module.exports = function( bookList ){
 				try{
 					var relatedItems = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0].Item;
 					for (var i = 0; i < relatedItems.length; i++) {
-						console.log( relatedItems[i].ItemAttributes );
+						var relatedBook = relatedItems[i].ItemAttributes[0];
+						if( relatedBook.ProductGroup[0] === 'eBooks' ){
+							console.log( book.title, 'is kindlized.' );
+							modelBookList.findOneAndUpdate( { ASIN: book.ASIN }, { isKindlized: true }, function( err, book ){});
+						}
 					}
 					countExec++;
 					data.countExec = countExec;
@@ -76,3 +80,22 @@ module.exports = function( bookList ){
 	regularInterval( data );
 	return d.promise;
 };
+
+/*
+
+["新装版 寄生獣(8) (KCデラックス アフタヌーン)"] 'is kindlized.'
+
+[ { Author: [ '岩明 均' ],
+    Manufacturer: [ '講談社' ],
+    ProductGroup: [ 'Book' ],
+    Title: [ '寄生獣(7) (アフタヌーンKC)' ] } ]
+[ { Author: [ '岩明 均' ],
+    Manufacturer: [ '講談社' ],
+    ProductGroup: [ 'Book' ],
+    Title: [ '新装版 寄生獣(2) (KCデラックス アフタヌーン)' ] } ]
+[ { Author: [ '岩明均' ],
+    Manufacturer: [ '講談社' ],
+    ProductGroup: [ 'eBooks' ],
+    Title: [ 'ヒストリエ（１）' ] } ]
+
+*/
