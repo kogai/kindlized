@@ -24,7 +24,7 @@ var regularInterval = function( data ){
       if( data.authorData ){
         data.d.resolve( data.authorData );
         data.authorData.defered.resolve();
-      };
+      }
       console.log( 'complete.');
     }
   }, interval );
