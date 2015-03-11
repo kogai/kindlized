@@ -5,7 +5,7 @@ html
 			|#{ title }
 		link(rel='stylesheet', href='/stylesheets/lib/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')
-	body
+	body( ng-app='App')
 		.container
 			block content
 	script(src='/javascripts/lib/angular/angular.min.js')

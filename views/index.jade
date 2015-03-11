@@ -9,7 +9,12 @@ block content
 		-for( var i = 0 ; i < authors.length ; i++ )
 			-var author = authors[ i ]
 			li #{ author.name }
-
+	
+	div( ng-controller="postNewAuthor" )
+		form( ng-submit="postAuthor()" )
+			input( type="text" required placeholder="add new author" ng-model="newAuthor" )
+			button( type="submit") add
+	
 	h2 登録済みの書籍
 	ul
 		-for( var i = 0 ; i < books.length ; i++ )
