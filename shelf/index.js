@@ -1,13 +1,13 @@
 var Q	 = require( 'q' );
 var fs	= require('fs');
 
-var regInt			= require('./lib/regInt');
+var regInt					= require('./lib/regInt');
 var fetchAuthor     = require('./lib/fetchAuthor');
 var fetchPageCounts = require('./lib/fetchPageCounts');
-var fetchBookList	= require('./lib/fetchBookList');
+var fetchBookList	  = require('./lib/fetchBookList');
 var modifyBookList	= require('./lib/modifyBookList');
-var saveBookList	= require('./lib/saveBookList');
-var constant		= require('./lib/constant');
+var saveBookList		= require('./lib/saveBookList');
+var constant				= require('./lib/constant');
 
 module.exports = function(){
 	var defered = Q.defer();
@@ -16,12 +16,12 @@ module.exports = function(){
 	.done(function( authorList ){
 		var data = {
 			times		: authorList.length,
-			interval 	: constant.interval,
+			interval : constant.interval,
 			obj			: {},
-			defered		: defered,
-			callBack 	: function( data ){
+			callBack : function( data ){
 				var authorData = {
-					author: authorList[ data.countExec ]
+					author: authorList[ data.countExec ],
+					defered	: defered
 				};
 				console.log( authorList[ data.countExec ], 'process has start.' );
 				Q.when( authorData )

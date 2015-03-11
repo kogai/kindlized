@@ -1,5 +1,4 @@
 var regularInterval = function( data ){
-
   // 実行回数を初期化
   if( !data.countExec ) data.countExec = 0;
 
@@ -23,8 +22,8 @@ var regularInterval = function( data ){
     }else{
       // times回実行されたら終了
       if( data.authorData ){
-        data.d.resolve( data.authorData )
-        data.deferd.resolve();
+        data.d.resolve( data.authorData );
+        data.authorData.defered.resolve();
       };
       console.log( 'complete.');
     }
