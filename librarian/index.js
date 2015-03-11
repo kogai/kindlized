@@ -53,7 +53,7 @@ var inspectBookList = function(){
   return d.promise;
 };
 
-// fetchParentASIN();
-inspectBookList();
-
-module.exports = fetchParentASIN;
+module.exports = {
+    fetchParentASIN: fetchParentASIN,
+    inspectBookList: inspectBookList
+};
