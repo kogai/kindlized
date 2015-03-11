@@ -9,4 +9,4 @@ logs
 temp
 
 public/javascripts/lib
-!public/javascripts/lib/angular/angular.min.js
+!public/javascripts/lib/angular
