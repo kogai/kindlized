@@ -23,7 +23,7 @@ var regularInterval = function( data ){
 		}else{
 			// times回実行されたら終了
 			console.log( 'inspectBook-regularInterval is complete.');
-			data.d.resolve( bookList );
+			data.d.resolve( data.bookList );
 		}
 	}, interval );
 };
