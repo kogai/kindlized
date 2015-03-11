@@ -12,7 +12,7 @@ var bookrSchema	= {
 	url				: Array,
 	images			: String,
 	lastModified	: Date,
-	is_kindlized	: Boolean
+	isKindlized		: Boolean
 };
 
 module.exports = new makeModel( 'BookList', bookrSchema );
