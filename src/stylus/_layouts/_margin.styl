@@ -1,0 +1,34 @@
+.l-clr
+	clearfix()
+
+.l-left
+	float left
+
+.l-right
+	float right
+
+.l-center
+	text-align center
+	
+.l-idb
+	display inline-block
+
+for j in (5..50)
+	if( j % 5 == 0 )
+		.l-ml{j}
+			margin-left 10px * j
+
+for j in (5..50)
+	if( j % 5 == 0 )
+		.l-mr{j}
+			margin-right 10px * j
+
+for j in (5..50)
+	if( j % 5 == 0 )
+		.l-mb{j}
+			margin-bottom 10px * j
+
+for j in (5..50)
+	if( j % 5 == 0 )
+		.l-mt{j}
+			margin-top 10px * j

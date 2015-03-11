@@ -1,26 +1,28 @@
 extends layout
 
 block content
-	h1= title
-	p Welcome , #{users}
-	form( action='/process/logout' , method='POST' )
-		.btn-group
-			button(type='submit' , class='btn btn-default btn-sm') ログアウト
-	form( action='/process/author', method='POST' )
-		input(type='text' , name='authorRegist')
-		button(type='submit' , class='btn btn-default btn-sm') 新しく著者を登録
-	#authors_all 
-		ul
-			-for(var x = 0; x < authors.length; x++)
-				li
-					|#{authors[x].author}
-	#books_all
-		ul.list-group.media-list.row
-			li(v-repeat='books_all').list-group-item.media.col-xs-6.col-md-3
-				a(href="{{DetailPageURL}}", target='_blank').media-left
-					img(src="{{img.MediumImage}}", alt="{{titile}}")
-				.media-body
-					.media-heading
-						|{{title}}
-					|{{author}}
-					|{{publisher}}
+	h1
+		|#{ title }
+	
+	h2 登録済みの著者
+	ul
+		-for( var i = 0 ; i < authors.length ; i++ )
+			-var author = authors[ i ]
+			li #{ author.name }
+	
+	div( ng-controller="postNewBook" )
+		form( ng-submit="postBook()" )
+			input( type="text" required placeholder="書籍を検索" ng-model="newBook" )
+			button( type="submit").btn.btn-default search
+		div( ng-if="isRegisterdAuthor" ) 登録済みの書籍
+		div( ng-if="isExistenceAuthor" ) 存在しない書籍
+		div( ng-if="isAddedAuthor" ) 登録成功
+			
+	h2 登録済みの書籍
+	ul
+		-for( var i = 0 ; i < books.length ; i++ )
+			-var book = books[ i ]
+			li
+				a(href="#{ book.url }", target="_blank")
+					|#{ book.title }
+		

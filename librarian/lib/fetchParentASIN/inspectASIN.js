@@ -1,3 +1,4 @@
+var moment    				= require('moment-timezone');
 var opHelper				= require( 'apac' ).OperationHelper;
 var makeOpConfig 			= require( '../../../common/makeOpConfig' );
 var makeInspectExpression	= require( './makeInspectExpression' );
@@ -17,15 +18,23 @@ module.exports = function( data ){
 
   opInspectBook.execute( 'ItemLookup', inspectExpression,  function( err, res ){
 		if( err ) console.log( 'inspectASINのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error );
+		var modifiedModelBookList 	= {
+			lastModified	: moment()
+		};
 		try{
       		var AuthorityASIN = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0].Item[0].ASIN;
-			modelBookList.findOneAndUpdate( { ASIN: book.ASIN }, { AuthorityASIN: AuthorityASIN }, function( err, book ){
+
+			modifiedModelBookList.AuthorityASIN = AuthorityASIN;
+
+			modelBookList.findOneAndUpdate( { ASIN: book.ASIN }, modifiedModelBookList, function( err, book ){
 				data.countExec++;
 			});
 		}catch( error ){
 			try{
 				console.log( 'inspectASINのリクエストエラー この本はRelatedItemsを持っていない', error );
-				data.countExec++;
+				modelBookList.findOneAndUpdate( { ASIN: book.ASIN }, modifiedModelBookList, function( err, book ){
+					data.countExec++;
+				});
 			}catch( error ){
 				console.log( 'inspectASINのリクエストエラー API呼び出し間隔のエラー処理', error, res.ItemLookupErrorResponse.Error );
 			}
