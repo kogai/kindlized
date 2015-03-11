@@ -16,7 +16,8 @@
     "jquery-validate": "~1.13.1",
     "jquery": "~2.1.1",
     "vue-validator": "~0.10.0",
-    "socket.io-client": "~1.2.1"
+    "socket.io-client": "~1.2.1",
+    "angular": "~1.3.14"
   },
   "authors": [
     "小飼慎一"
