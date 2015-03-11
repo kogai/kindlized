@@ -1,20 +1,28 @@
 module.exports = ( $scope, $filter, $http ) ->
 
-    $scope.postAuthor = ->
-        console.log $scope.newAuthor, 'postAuthor clicked'
+    $scope.postBook = ->
+        console.log $scope.newBook, 'postAuthor clicked'
+        $scope.isRegisterdAuthor = false
+        $scope.isExistenceAuthor = false
+        $scope.isAddedAuthor     = false
 
         httpOpt =
-            method: 'post'
-            url: '/'
-            data: { newAuthor: $scope.newAuthor }
+            method  : 'post'
+            url     : '/post'
+            data    : { newBook: $scope.newBook }
 
         $http( httpOpt )
-        .success ->
-            console.log 'post is sucess.'
+        .success ( data, status ) ->
+            $scope.isRegisterdAuthor = data.isRegisterdAuthor
+            $scope.isExistenceAuthor = data.isExistenceAuthor
+            $scope.isAddedAuthor     = data.isAddedAuthor
+            return
         .then ->
             console.log 'author saved.'
-            $scope.newAuthor = ''
+            $scope.newBook = ''
             return
+
+        return
 
     console.log 'loaded.'
     return

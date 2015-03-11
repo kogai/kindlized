@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "app": "node --debug bin/www",
+    "app": "node-dev --debug bin/www",
     "shelf": "node-dev --all-deps shelf",
     "librarian": "node-dev --all-deps librarian",
     "db": "node-dev --all-deps db",

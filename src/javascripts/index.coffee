@@ -2,6 +2,6 @@ app = require('./lib/app')
 
 angular.module('App',[])
     .controller(
-        'postNewAuthor',
+        'postNewBook',
         [ '$scope', '$filter', '$http', app ]
     )
