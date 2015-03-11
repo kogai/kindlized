@@ -2,9 +2,10 @@ module.exports = ( $scope, $filter, $http ) ->
 
     $scope.postBook = ->
         console.log $scope.newBook, 'postAuthor clicked'
-        $scope.isRegisterdAuthor = false
-        $scope.isExistenceAuthor = false
-        $scope.isAddedAuthor     = false
+        $scope.isNotExistenceBook   = false
+        $scope.isBookAdded          = false
+        $scope.showSuggestedBooks   = false
+        $scope.isWaiting            = true
 
         httpOpt =
             method  : 'post'
@@ -13,9 +14,10 @@ module.exports = ( $scope, $filter, $http ) ->
 
         $http( httpOpt )
         .success ( data, status ) ->
-            $scope.isRegisterdAuthor = data.isRegisterdAuthor
-            $scope.isExistenceAuthor = data.isExistenceAuthor
-            $scope.isAddedAuthor     = data.isAddedAuthor
+            $scope.isNotExistenceBook   = data.isNotExistenceBook
+            $scope.showSuggestedBooks   = data.showSuggestedBooks
+            $scope.suggestedBooks       = data.bookListDB
+            $scope.isWaiting            = false
             return
         .then ->
             console.log 'author saved.'

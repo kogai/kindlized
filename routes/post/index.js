@@ -53,8 +53,9 @@ var sendResponse = function( data ){
 	var d = Q.defer();
 	var res = data.res;
 	res.send({
-		bookListDB		: data.bookListDB,
-		bookListAmazon	: data.bookListAmazon
+		bookListDB			: data.bookListDB,
+		bookListAmazon		: data.bookListAmazon,
+		showSuggestedBooks 	: true
 	});
 	d.resolve( data );
 	return d.promise;
