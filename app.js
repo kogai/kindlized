@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-    secret : credential.session,
+    secret : 'mysessionpassword',
     cookie : { maxAge : 30 * 24 * 60 * 60 * 1000 }
 }));
 // app.use(passport.initialize());
@@ -40,12 +40,6 @@ app.use(session({
 
 app.use( '/', routes );
 app.use( '/post', post );
-// app.use('/users', users);
-// app.use('/login', login);
-// app.use('/regist', regist);
-// app.use('/verify', verify);
-// app.use('/process', process);
-// app.use('/auth', auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
