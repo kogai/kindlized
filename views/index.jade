@@ -9,6 +9,12 @@ block content
 		-for( var i = 0 ; i < authors.length ; i++ )
 			-var author = authors[ i ]
 			li #{ author.name }
+
+	h2 登録済みの書籍
+	ul
+		-for( var i = 0 ; i < books.length ; i++ )
+			-var book = books[ i ]
+			li #{ book.title }
 		
 	
 	//- p Welcome , #{users}
