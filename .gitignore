@@ -7,3 +7,6 @@ credential.js
 logs
 *.log
 temp
+
+public/javascripts/lib
+!public/javascripts/lib/angular/angular.min.js
