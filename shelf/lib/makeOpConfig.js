@@ -1,6 +1,6 @@
 var credential;
 
-if( process.env.AWSAccessKeyId ){
+if( process.env.AWSAccessKeyId || process.env.CI ){
 	//heroku用変数
 	AWSAccessKeyId 			= process.env.AWSAccessKeyId;
 	AWSSecretAccessKey 	= process.env.AWSSecretAccessKey;
