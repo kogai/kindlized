@@ -19,21 +19,24 @@ module.exports = function( data ){
 	var existenceAuthorExpression = new makeExistenceExpression( newBook );
 
 	var recursionOpExistenceBook = function(){
-		opExistenceBook.execute( 'ItemLookup', existenceAuthorExpression,  function( err, bookListInAmazon ){
+		opExistenceBook.execute( 'ItemSearch', existenceAuthorExpression,  function( err, res ){
+			if( err ) throw err;
+			var bookListInAmazon;
 			try{
-				console.log( 'bookListInAmazon', bookListInAmazon.ItemLookupResponse.Items[0].Request[0].Errors );
+				bookListInAmazon = res.ItemSearchResponse.Items[0].Item;
 			}catch( err ){
 				setTimeout( function(){
+					console.log('retry');
 					recursionOpExistenceBook();
 				}, constant.interval );
 			}finally{
-				// if isNewAuthor
-				// 新規に著者を登録
-
-				// if( 取得に成功 || 書籍が存在しない ){
+				if( bookListInAmazon === undefined ){
+					data.bookListInAmazon = [];
+					d.resolve( data );
+				}else{
 					data.bookListInAmazon = bookListInAmazon;
 					d.resolve( data );
-				// }
+				}
 			}
 	    });
 	};

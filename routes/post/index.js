@@ -10,6 +10,7 @@ var opHelper				= require( 'apac' ).OperationHelper;
 var makeOpConfig 			= require( '../../common/makeOpConfig' );
 var makeExistenceExpression	= require( './lib/makeExistenceExpression' );
 var fetchBookListAmazon		= require( './lib/queryBookList/fetchBookListAmazon' );
+var fetchAuthorListAmazon	= require( './lib/queryBookList/fetchAuthorListAmazon' );
 
 var opConfig 		= new makeOpConfig();
 var opExistenceBook = new opHelper( opConfig );
@@ -80,12 +81,6 @@ var fetchAuthorListDB = function( data ){
 	return d.promise;
 };
 
-var fetchAuthorListAmazon = function( data ){
-	var d = Q.defer();
-		d.resolve( data );
-	return d.promise;
-};
-
 router.post( '/', function( req, res ) {
 	Q.when({
 		res : res,
@@ -97,9 +92,11 @@ router.post( '/', function( req, res ) {
 	.then( fetchAuthorListDB )
 	.then( fetchAuthorListAmazon )
 	.done( function( data ){
-		console.log( 'is NewAuthor?', data.isNewAuthor );
-		console.log( 'authorsRelatedWithBook is', data.authorsRelatedWithBook );
-		console.log( 'authorsRelatedWithBookInDB is', data.authorsRelatedWithBookInDB );
+		// console.log( data.bookListInAmazon[0].ItemAttributes[0].Author );
+		// console.log( data.bookListInAmazon[1].ItemAttributes[0].Author );
+		// console.log( 'is NewAuthor?', data.isNewAuthor );
+		// console.log( 'authorsRelatedWithBook is', data.authorsRelatedWithBook );
+		// console.log( 'authorsRelatedWithBookInDB is', data.authorsRelatedWithBookInDB );
 		console.log('Server-side search books process is completed.');
 	});
 });

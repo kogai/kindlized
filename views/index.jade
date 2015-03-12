@@ -25,7 +25,7 @@ block content
 				button( type="button" ng-click="registBook( bookInDB )").btn.btn-default add
 
 			li( ng-repeat="bookInAmazon in bookListInAmazon" )
-				|{{ bookInAmazon.title[0] }}
+				|{{ bookInAmazon.ItemAttributes[0].Title[0] }}
 				button( type="button" ng-click="registBook( bookInAmazon ) ").btn.btn-default add
 				
 		div( ng-if="isNotExistenceBook" ) 存在しない書籍
