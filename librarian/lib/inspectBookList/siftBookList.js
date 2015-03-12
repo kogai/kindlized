@@ -12,13 +12,17 @@ module.exports = function( bookList ){
       var todayDate       = moment();
       var diffDay         = todayDate.diff( lastModifyTime, 'days' );
 
+    //   console.log( 'lastModifyTime', lastModifyTime );
+    //   console.log( 'diffDay', diffDay );
+
       var hasAuthorityASIN = (function( AuthorityASIN ){
           var authorityASINState = false;
           if( AuthorityASIN.length > 0 ) authorityASINState = true;
           return authorityASINState;
       })( bookList[i].AuthorityASIN );
 
-      if( diffDay > constant.periodicalDay && hasAuthorityASIN ){
+      if( hasAuthorityASIN ){
+    //   if( diffDay > constant.periodicalDay && hasAuthorityASIN ){
         siftedBookList.push( bookList[i] );
       }
     }
