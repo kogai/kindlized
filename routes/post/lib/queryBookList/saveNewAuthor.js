@@ -16,10 +16,14 @@ var opExistenceBook = new opHelper( opConfig );
 module.exports = function( data ){
 	var d = Q.defer();
     var authorListInAmazon = data.authorListInAmazon;
-
+	var authorsStore = [];
 	for (var i = 0; i < authorListInAmazon.length; i++) {
-		var author = authorListInAmazon[i];
-		saveAuthor( author );
+		var authors = authorListInAmazon[i];
+		authorsStore = authorsStore.concat( authors );
+	}
+	for (var i = 0; i < authorsStore.length; i++) {
+		var authors = authorsStore[i];
+		saveAuthor( authors );
 		if( i === authorListInAmazon.length - 1 ) d.resolve( data );
 	}
 	return d.promise;
