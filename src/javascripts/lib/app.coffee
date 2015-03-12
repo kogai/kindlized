@@ -1,6 +1,6 @@
 module.exports = ( $scope, $filter, $http ) ->
 
-    $scope.postBook = ->
+    $scope.searchBook = ->
         console.log $scope.newBook, 'postAuthor clicked'
         $scope.isNotExistenceBook   = false
         $scope.isBookAdded          = false
@@ -16,7 +16,8 @@ module.exports = ( $scope, $filter, $http ) ->
         .success ( data, status ) ->
             $scope.isNotExistenceBook   = data.isNotExistenceBook
             $scope.showSuggestedBooks   = data.showSuggestedBooks
-            $scope.suggestedBooks       = data.bookListDB
+            $scope.bookListInDB         = data.bookListInDB
+            $scope.bookListInAmazon     = data.bookListInAmazon
             $scope.isWaiting            = false
             return
         .then ->
@@ -24,6 +25,10 @@ module.exports = ( $scope, $filter, $http ) ->
             $scope.newBook = ''
             return
 
+        return
+
+    $scope.registBook = ( book ) ->
+        console.log book
         return
 
     console.log 'loaded.'
