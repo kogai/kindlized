@@ -34,7 +34,6 @@ module.exports = function(){
 		});
 
 		it( 'authorList配列は1つ以上の要素を持つ', function(){
-			console.log( authorList );
 			( authorList.length ).should.be.above(0);
 		});
 
