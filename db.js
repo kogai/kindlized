@@ -2,7 +2,7 @@ var librarian   = require( './librarian' );
 var shelf       = require( './shelf' );
 var Q           = require( 'q' );
 var cronjob     = require( 'cron' ).CronJob;
-var crontime    = "0 0 0 * * *"
+var cronTime    = "0 0 0 * * *"
 var moment      = require( 'moment-timezone' );
 
 var libraryHandler = function( currentTime ){
