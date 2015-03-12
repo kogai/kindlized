@@ -30,6 +30,8 @@ var renderRouter = function( authorsAndBooks ){
 			title : 'home',
 			authors: authorsAndBooks.authors,
 			books: authorsAndBooks.books
+		},function( err, html ){
+			res.send( html );
 		});
 		d.resolve();
 	});

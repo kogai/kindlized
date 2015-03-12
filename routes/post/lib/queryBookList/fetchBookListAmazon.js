@@ -25,12 +25,17 @@ module.exports = function( data ){
 			try{
 				bookListInAmazon = res.ItemSearchResponse.Items[0].Item;
 			}catch( err ){
-				console.log( err );
+				console.log( err, res.ItemSearchErrorResponse.Error );
 				intervalTimeIncrements++;
-				setTimeout( function(){
-					console.log('retry');
-					recursionOpExistenceBook();
-				}, constant.interval * intervalTimeIncrements );
+				if( intervalTimeIncrements > 10 ){
+					data.bookListInAmazon = [];
+					d.resolve( data );
+				}else{
+					setTimeout( function(){
+						console.log('retry', intervalTimeIncrements);
+						recursionOpExistenceBook();
+					}, constant.interval * intervalTimeIncrements );
+				}
 			}finally{
 				if( bookListInAmazon === undefined ){
 					data.bookListInAmazon = [];

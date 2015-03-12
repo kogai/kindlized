@@ -1,4 +1,18 @@
 module.exports = ( $scope, $filter, $http ) ->
+    # $scope.searchBook = ->
+    # book
+    httpOpt =
+        method  : 'get'
+        url     : '/book'
+        data    : { newBook: $scope.newBook }
+
+    $http( httpOpt )
+    .success ( bookListInDB, status ) ->
+        console.log 'book fetch', bookListInDB
+        $scope.bookListInDB = bookListInDB
+    .then ->
+        console.log 'book fetched.'
+        return
 
     $scope.searchBook = ->
         console.log $scope.newBook, 'postAuthor clicked'
@@ -15,8 +29,7 @@ module.exports = ( $scope, $filter, $http ) ->
         $http( httpOpt )
         .success ( data, status ) ->
             $scope.isNotExistenceBook   = data.isNotExistenceBook
-            $scope.showSuggestedBooks   = data.showSuggestedBooks
-            $scope.bookListInDB         = data.bookListInDB
+            $scope.showSuggestedBooks   = true
             $scope.bookListInAmazon     = data.bookListInAmazon
             $scope.isWaiting            = false
             return
