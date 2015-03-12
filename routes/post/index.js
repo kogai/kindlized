@@ -11,6 +11,7 @@ var makeOpConfig 			= require( '../../common/makeOpConfig' );
 var makeExistenceExpression	= require( './lib/makeExistenceExpression' );
 var fetchBookListAmazon		= require( './lib/queryBookList/fetchBookListAmazon' );
 var fetchAuthorListAmazon	= require( './lib/queryBookList/fetchAuthorListAmazon' );
+var saveNewAuthor			= require( './lib/queryBookList/saveNewAuthor' );
 
 var opConfig 		= new makeOpConfig();
 var opExistenceBook = new opHelper( opConfig );
@@ -91,6 +92,7 @@ router.post( '/', function( req, res ) {
 	.then( sendResponse )
 	.then( fetchAuthorListDB )
 	.then( fetchAuthorListAmazon )
+	.then( saveNewAuthor )
 	.done( function( data ){
 		// console.log( data.bookListInAmazon[0].ItemAttributes[0].Author );
 		// console.log( data.bookListInAmazon[1].ItemAttributes[0].Author );

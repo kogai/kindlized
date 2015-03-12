@@ -17,7 +17,7 @@ module.exports = function( data ){
 	var d = Q.defer();
 	var newBook = data.newBook;
 	var existenceAuthorExpression = new makeExistenceExpression( newBook );
-
+	var intervalTimeIncrements = 0;
 	var recursionOpExistenceBook = function(){
 		opExistenceBook.execute( 'ItemSearch', existenceAuthorExpression,  function( err, res ){
 			if( err ) throw err;
@@ -25,10 +25,12 @@ module.exports = function( data ){
 			try{
 				bookListInAmazon = res.ItemSearchResponse.Items[0].Item;
 			}catch( err ){
+				console.log( err );
+				intervalTimeIncrements++;
 				setTimeout( function(){
 					console.log('retry');
 					recursionOpExistenceBook();
-				}, constant.interval );
+				}, constant.interval * intervalTimeIncrements );
 			}finally{
 				if( bookListInAmazon === undefined ){
 					data.bookListInAmazon = [];
