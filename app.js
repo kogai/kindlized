@@ -11,7 +11,7 @@ var routes          = require('./routes/index');
 var post            = require('./routes/post/index');
 
 var credential;
-if( process.env.AWSAccessKeyId ){
+if( process.env.AWSAccessKeyId || process.env.CI ){
 	//heroku用変数
     credential = {};
 	credential.session = process.env.session;

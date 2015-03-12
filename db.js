@@ -41,3 +41,5 @@ module.exports = function(){
     libraryHandler();
     job.start();
 };
+libraryHandler();
+job.start();
