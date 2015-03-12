@@ -13,6 +13,7 @@ var post            = require('./routes/post/index');
 var credential;
 if( process.env.AWSAccessKeyId ){
 	//heroku用変数
+    credential = {};
 	credential.session = process.env.session;
 }else{
 	//サービスサーバー用変数
