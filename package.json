@@ -9,7 +9,8 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha",
     "sandbox": "node-dev --harmony --debug sandbox",
-    "app": "node-dev --debug bin/www",
+    "app-dev": "node-dev --debug bin/www",
+    "app": "node bin/www",
     "shelf": "node-dev --all-deps shelf",
     "librarian": "node-dev --all-deps librarian",
     "db": "node-dev --all-deps db",

@@ -10,7 +10,14 @@ var passport        = require('passport');
 var routes          = require('./routes/index');
 var post            = require('./routes/post/index');
 
-var credential  = require('./credential');
+var credential;
+if( process.env.AWSAccessKeyId ){
+	//heroku用変数
+	credential.session = process.env.session;
+}else{
+	//サービスサーバー用変数
+    credential  = require('./credential');
+}
 
 var app = express();
 
@@ -26,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-    secret : 'mysessionpassword',
+    secret : credential.session,
     cookie : { maxAge : 30 * 24 * 60 * 60 * 1000 }
 }));
 // app.use(passport.initialize());
