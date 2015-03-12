@@ -1,7 +1,7 @@
 var opHelper 				= require( 'apac' ).OperationHelper;
 var makeOpConfig 			= require( './makeOpConfig' );
 var makeSearchExpression	= require( './makeSearchExpression' );
-var regInt			   	= require( './regInt' );
+var regInt			   		= require( './regInt' );
 var Q 						= require( 'q' );
 var constant				= require('./constant');
 
