@@ -24,7 +24,7 @@ var fetchBookList = function( authorsAndBooks ){
 
 var renderRouter = function( authorsAndBooks ){
 	var d = Q.defer();
-
+	console.log( authorsAndBooks.books.length );
 	router.get('/', function(req, res) {
 		res.render('index', {
 			title : 'home',
