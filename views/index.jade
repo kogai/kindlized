@@ -4,38 +4,25 @@ block content
 	h1
 		|#{ title }
 	
-	h2 登録済みの著者
-	ul
-		-for( var i = 0 ; i < authors.length ; i++ )
-			-var author = authors[ i ]
-			li #{ author.name }
-	
 	div( ng-controller="postNewBook" )
-		form( ng-submit="searchBook()" ).form-group
-			input( type="text" required placeholder="書籍を検索" ng-model="newBook" ).form-control
-			button( type="submit").btn.btn-default search
-		div( ng-if="isWaiting" ).bg-info 検索中...
+		form( ng-submit="searchBook()" ).input-group
+			input( type="text" required placeholder="書籍のタイトルを入力して下さい" ng-model="newBook" ).form-control
+			.input-group-btn
+				button( type="submit").btn.btn-default 書籍を検索
+		div( ng-if="isWaiting" ).glyphicon.glyphicon-refresh
 
 		div( ng-if="showSuggestedBooks" ).bg-success 検索結果
 		
-		ul( ng-if="showSuggestedBooks" )
-
-			li( ng-repeat="bookInDB in bookListInDB" )
+		.list-group
+			a( href="{{ bookInDB.url[0] }}", target="_blank", ng-repeat="bookInDB in bookListInDB" ).list-group-item
 				|{{ bookInDB.title[0] }}
-				button( type="button" ng-click="registBook( bookInDB )").btn.btn-default add
 
-			li( ng-repeat="bookInAmazon in bookListInAmazon" )
-				|{{ bookInAmazon.ItemAttributes[0].Title[0] }}
-				button( type="button" ng-click="registBook( bookInAmazon ) ").btn.btn-default add
+			div( ng-if="showSuggestedBooks" )
+				a( ng-repeat="bookInAmazon in bookListInAmazon" )
+					|{{ bookInAmazon.ItemAttributes[0].Title[0] }}
+					button( type="button" ng-click="registBook( bookInAmazon ) ").btn.btn-default add
 				
 		div( ng-if="isNotExistenceBook" ) 存在しない書籍
 		div( ng-if="isBookAdded" ) 登録成功
-			
-	h2 登録済みの書籍
-	ul
-		-for( var i = 0 ; i < books.length ; i++ )
-			-var book = books[ i ]
-			li
-				a(href="#{ book.url }", target="_blank")
-					|#{ book.title }
 		
+		div( ng-bind="newBook")

@@ -8,7 +8,7 @@ module.exports = function( authorList ) {
     for (var i = 0; i < result.length; i++) {
       authorList.push(result[i].name);
     }
-    console.log(authorList);
+    console.log(authorList.length, '人の著者が登録されている');
     d.resolve(authorList);
   });
   return d.promise;
