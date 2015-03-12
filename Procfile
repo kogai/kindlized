@@ -1,1 +1,1 @@
-app: node app -p $PORT
+db: node db -p $PORT
