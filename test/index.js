@@ -1,4 +1,5 @@
-var librarian = require('./librarian');
+var librarian           = require('./librarian');
+var fetchBookListAmazon = require('./routes/post/lib/fetchBookListAmazon');
 
 require('should');
 
@@ -10,3 +11,4 @@ describe('circleCiのテスト', function () {
 });
 
 librarian();
+fetchBookListAmazon();
