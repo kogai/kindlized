@@ -9,6 +9,7 @@ var constant 		= require( '../../common/constant' );
 var opHelper				= require( 'apac' ).OperationHelper;
 var makeOpConfig 			= require( '../../common/makeOpConfig' );
 var makeExistenceExpression	= require( './lib/makeExistenceExpression' );
+var fetchBookListAmazon		= require( './lib/queryBookList/fetchBookListAmazon' );
 
 var opConfig 		= new makeOpConfig();
 var opExistenceBook = new opHelper( opConfig );
@@ -34,34 +35,6 @@ var fetchBookListDB = function( data ){
 		data.bookListInDB	= bookListInDB;
 		d.resolve( data );
 	});
-	return d.promise;
-};
-
-var fetchBookListAmazon = function( data ){
-	var d = Q.defer();
-	var newBook = data.newBook;
-	var existenceAuthorExpression = new makeExistenceExpression( newBook );
-
-	var recursionOpExistenceBook = function(){
-		opExistenceBook.execute( 'ItemLookup', existenceAuthorExpression,  function( err, bookListInAmazon ){
-			try{
-				console.log( 'bookListInAmazon', bookListInAmazon.ItemLookupResponse.Items[0].Request[0].Errors );
-			}catch( err ){
-				setTimeout( function(){
-					recursionOpExistenceBook();
-				}, constant.interval );
-			}finally{
-				// if isNewAuthor
-				// 新規に著者を登録
-
-				// if( 取得に成功 || 書籍が存在しない ){
-					data.bookListInAmazon = bookListInAmazon;
-					d.resolve( data );
-				// }
-			}
-	    });
-	};
-	recursionOpExistenceBook();
 	return d.promise;
 };
 
@@ -107,6 +80,12 @@ var fetchAuthorListDB = function( data ){
 	return d.promise;
 };
 
+var fetchAuthorListAmazon = function( data ){
+	var d = Q.defer();
+		d.resolve( data );
+	return d.promise;
+};
+
 router.post( '/', function( req, res ) {
 	Q.when({
 		res : res,
@@ -116,7 +95,11 @@ router.post( '/', function( req, res ) {
 	.then( fetchBookListAmazon )
 	.then( sendResponse )
 	.then( fetchAuthorListDB )
-	.done( function(){
+	.then( fetchAuthorListAmazon )
+	.done( function( data ){
+		console.log( 'is NewAuthor?', data.isNewAuthor );
+		console.log( 'authorsRelatedWithBook is', data.authorsRelatedWithBook );
+		console.log( 'authorsRelatedWithBookInDB is', data.authorsRelatedWithBookInDB );
 		console.log('Server-side search books process is completed.');
 	});
 });
