@@ -1,10 +1,14 @@
 {
   "name": "kindlized",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "notification kindlized books.",
   "main": "app.js",
+  "engines": {
+    "node": "0.12.x"
+  },
   "scripts": {
     "test": "./node_modules/.bin/mocha",
+    "sandbox": "node-dev --harmony --debug sandbox",
     "app": "node-dev --debug bin/www",
     "shelf": "node-dev --all-deps shelf",
     "librarian": "node-dev --all-deps librarian",

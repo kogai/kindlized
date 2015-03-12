@@ -11,15 +11,22 @@ block content
 			li #{ author.name }
 	
 	div( ng-controller="postNewBook" )
-		form( ng-submit="postBook()" )
-			input( type="text" required placeholder="書籍を検索" ng-model="newBook" )
+		form( ng-submit="searchBook()" ).form-group
+			input( type="text" required placeholder="書籍を検索" ng-model="newBook" ).form-control
 			button( type="submit").btn.btn-default search
-		div( ng-if="isWaiting" ) 検索中...
+		div( ng-if="isWaiting" ).bg-info 検索中...
+
+		div( ng-if="showSuggestedBooks" ).bg-success 検索結果
 		
 		ul( ng-if="showSuggestedBooks" )
-			li( ng-repeat="suggestedBook in suggestedBooks" )
-				|{{ suggestedBook.title[0] }}
-				
+
+			li( ng-repeat="bookInDB in bookListInDB" )
+				|{{ bookInDB.title[0] }}
+				button( type="button" ng-click="registBook( bookInDB )").btn.btn-default add
+
+			li( ng-repeat="bookInAmazon in bookListInAmazon" )
+				|{{ bookInAmazon.title[0] }}
+				button( type="button" ng-click="registBook( bookInAmazon ) ").btn.btn-default add
 				
 		div( ng-if="isNotExistenceBook" ) 存在しない書籍
 		div( ng-if="isBookAdded" ) 登録成功

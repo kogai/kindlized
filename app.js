@@ -9,12 +9,6 @@ var passport        = require('passport');
 
 var routes          = require('./routes/index');
 var post            = require('./routes/post/index');
-// var users       = require('./routes/users');
-// var login       = require('./routes/login');
-// var regist      = require('./routes/regist');
-// var verify      = require('./routes/verify');
-// var auth        = require('./routes/auth');
-// var process     = require('./models/process');
 
 var credential  = require('./credential');
 
