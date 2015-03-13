@@ -55,8 +55,6 @@ module.exports = function( bookList ){
 			opInspectBook.execute( 'ItemLookup', inspectExpression,	function( err, res ){
 				if( err ) console.log( 'inspectBookのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error );
 				try{
-					// var relatedItems = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0];
-					// var relatedItems = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0];
 					var relatedItems = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem;
 
 					for (var i = 0; i < relatedItems.length; i++) {
@@ -69,9 +67,7 @@ module.exports = function( bookList ){
 					data.countExec = countExec;
 				}catch( error ){
 					console.log( 'inspectBookのリクエストエラー', error, res.ItemLookupResponse );
-					// console.log( 'inspectBookのリクエストエラー', error, res );
 					retryInterval = 1000;
-					// retryInterval = constant.retryInterval;
 				}finally{
 					setTimeout( function(){
 						regularInterval( data );
