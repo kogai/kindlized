@@ -10,5 +10,7 @@ describe('circleCiのテスト', function () {
   });
 });
 
-librarian();
+librarian.fetchParentASIN.fetchBookList();
+librarian.inspectBookList.siftBookList();
+
 routesPost();

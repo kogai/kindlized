@@ -1,12 +1,12 @@
-var fetchBookList       = require( 'librarian/lib/fetchParentASIN/fetchBookList' );
-var testdata         	= require( 'test/librarian/lib/inspectBookList/testdata' );
+var fetchBookList   = require( 'librarian/lib/fetchParentASIN/fetchBookList' );
+var siftBookList    = require( 'librarian/lib/inspectBookList/siftBookList' );
 
 var Q = require('q');
 
 var should = require('should');
 
 module.exports = function(){
-	describe( 'librarian/lib/inspectBookList/inspectBook.jsのテスト', function(){
+	describe( 'librarian/lib/inspectBookList/siftBookList.jsのテスト', function(){
 		it( 'テストが動作している', function( done ){
 			(5).should.be.exactly(5);
 			done();
@@ -16,24 +16,25 @@ module.exports = function(){
 		this.timeout( 0 );
 
 		before( function( done ){
-            fetchBookList( testdata )
-			.done( function( data ){
-				bookList = data;
+            fetchBookList( [] )
+            .then( siftBookList )
+			.done( function( siftedBookList ){
+                bookList = siftedBookList;
 				done();
 			});
 		});
 
-		it( 'fetchBookListはbookList配列を返す', function(){
+		it( '配列を返す', function(){
 			bookList.should.be.instanceof( Array );
 		});
 
-		it( 'bookList配列にはtitleプロパティがある', function(){
+		it( 'titleプロパティがある', function(){
 			for (var i = 0; i < bookList.length; i++) {
 				bookList[i].should.have.property( 'title' );
 			}
 		});
 
-		it( 'bookList配列にはASINプロパティがある', function(){
+		it( 'ASINプロパティがある', function(){
 			for (var i = 0; i < bookList.length; i++) {
 				bookList[i].should.have.property( 'ASIN' );
 			}
@@ -46,16 +47,16 @@ module.exports = function(){
 			}
 		});
 
-		it( 'bookList配列にはAuthorityASINプロパティがある', function(){
+		it( 'AuthorityASINプロパティがある', function(){
 			for (var i = 0; i < bookList.length; i++) {
 				bookList[i].should.have.property( 'AuthorityASIN' );
 			}
 		});
 
-		it( 'AuthorityASINプロパティは配列である', function(){
+		it( 'AuthorityASINプロパティは空の文字列ではない', function(){
 			for (var i = 0; i < bookList.length; i++) {
 				var AuthorityASIN = bookList[i].AuthorityASIN;
-				AuthorityASIN.should.be.instanceof( Array );
+				( AuthorityASIN.length ).should.be.above( 0 );
 			}
 		});
 	});
