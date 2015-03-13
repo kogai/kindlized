@@ -21,8 +21,10 @@ module.exports = function( data ){
 			isKindlized	    : false
 		});
 
-		newBook.save( function(err){
+		newBook.save( function( err ){
 			if(err) console.log(err);
+			data.book = null;
+			data.book = newBook;
 			d.resolve( data );
 			console.log( book.title, 'regist is success' );
 		});
