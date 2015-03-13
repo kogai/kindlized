@@ -18,12 +18,11 @@ var should = require('should');
 		this.timeout( 0 );
 
 		before( function( done ){
-			console.log( testdata );
             // inspectBook( testdata )
-			// .done( function( data ){
-			// 	console.log( data );
+            fetchBookList( testdata )
+			.done( function( data ){
 				done();
-			// });
+			});
 		});
 
 		// it( 'fetchBookListはbookList配列を返す', function(){
