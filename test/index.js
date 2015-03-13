@@ -14,4 +14,4 @@ librarian.fetchParentASIN.fetchBookList();
 librarian.inspectBookList.siftBookList();
 
 routes.post();
-routes.saveBook.compareBook();
+routes.saveBook.isNewBook();
