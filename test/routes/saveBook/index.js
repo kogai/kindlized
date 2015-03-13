@@ -1,5 +1,5 @@
-var compareBook = require( './lib/compareBook' );
+var isNewBook = require( './lib/isNewBook' );
 
 module.exports = {
-   compareBook: compareBook
+   isNewBook: isNewBook
 }
