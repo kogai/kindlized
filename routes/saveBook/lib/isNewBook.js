@@ -14,7 +14,7 @@ module.exports = function( entryBook ){
          result = true;
       }
       var data = {
-         entryBook: entryBook,
+         book     : entryBook,
          isNewBook: result
       };
       d.resolve( data );

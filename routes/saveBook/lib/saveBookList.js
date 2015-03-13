@@ -1,8 +1,10 @@
 var modelBookList = require('shelf/modelBookList.js');
 var Q = require('q');
 
-module.exports = function( isNewBook ){
+module.exports = function( data ){
 	var d = Q.defer();
+	var isNewBook 	= data.isNewBook;
+	var book 		= data.book;
 
 	if( isNewBook ){
 		var newBook = new modelBookList({
@@ -21,8 +23,11 @@ module.exports = function( isNewBook ){
 
 		newBook.save( function(err){
 			if(err) console.log(err);
+			d.resolve( data );
 			console.log( book.title, 'regist is success' );
 		});
+	}else{
+		d.resolve( data );
 	}
 
 	return d.promise;
