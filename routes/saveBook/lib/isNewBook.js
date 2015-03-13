@@ -8,7 +8,7 @@ module.exports = function( data ){
    var searchExpression = {
       ASIN: newBook.ASIN
    };
-   
+
    modelBookList.findOne( searchExpression, function( err, bookInDB ){
       var result;
       if( bookInDB ){
@@ -16,10 +16,8 @@ module.exports = function( data ){
       }else{
          result = true;
       }
-      var data = {
-         book     : newBook,
-         isNewBook: result
-      };
+      data.book      = newBook;
+      data.isNewBook = result;
       d.resolve( data );
    });
 

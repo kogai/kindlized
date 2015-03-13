@@ -7,6 +7,9 @@ module.exports = function( data ){
 	var req 		= data.req;
 	var book 	= data.book;
 	var bookId 	= book._id;
+	req.session.passport = {
+		_id: '54a10f0f0aa5f89d434cb2c9'
+	};
 	var _id 		= req.session.passport._id;
 
 	modelUser.findOneAndUpdate( { _id: _id }, { $push: { bookList: bookId } }, function( err, user ){
