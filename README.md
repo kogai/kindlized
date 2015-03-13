@@ -2,6 +2,8 @@
 Amazonに出品されている物理書籍のKindle化(kindlized)を調べるサービスです。
 登録した書籍がKindle化すると、アカウント宛に通知が届きます。
 
+[![Circle CI](https://circleci.com/gh/kogai/kindlized.svg?style=svg)](https://circleci.com/gh/kogai/kindlized)
+
 ## 概要
 ### サービス側(app.js)
 1. アカウントを作成する
