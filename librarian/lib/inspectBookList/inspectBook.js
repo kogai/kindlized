@@ -5,31 +5,33 @@ var makeOpConfig 			= require( '../../../common/makeOpConfig' );
 var makeInspectExpression	= require( './makeInspectExpression' );
 var modelBookList 			= require( '../../../shelf/lib/modelBookList' );
 
-var regularInterval = function( data ){
-
-	// 実行回数を初期化
-	if( !data.countExec ) data.countExec = 0;
-
-	// dataオブジェクトから変数を取り出し
-	var times		= data.times;
-	var interval	= data.interval;
-	var callBack	= data.callBack;
-	var countExec 	= data.countExec;
-
-	setTimeout( function(){
-		if( countExec <	times ){
-			// 実行の実体
-			callBack( data );
-		}else{
-			// times回実行されたら終了
-			console.log( 'inspectBook-regularInterval is complete.');
-			data.d.resolve( data.bookList );
-		}
-	}, interval );
-};
 
 module.exports = function( bookList ){
 	var d = Q.defer();
+	var inspectBookList 	= [];
+	var retryCount 		= 0;
+	var regularInterval 	= function( data ){
+
+		// 実行回数を初期化
+		if( !data.countExec ) data.countExec = 0;
+
+		// dataオブジェクトから変数を取り出し
+		var times		= data.times;
+		var interval	= data.interval;
+		var callBack	= data.callBack;
+		var countExec 	= data.countExec;
+
+		setTimeout( function(){
+			if( countExec <	times ){
+				// 実行の実体
+				callBack( data );
+			}else{
+				// times回実行されたら終了
+				console.log( 'inspectBook-regularInterval is complete.');
+				data.d.resolve( inspectBookList );
+			}
+		}, interval );
+	};
 
 	var data = {
 		times		: bookList.length,
@@ -54,8 +56,30 @@ module.exports = function( bookList ){
 
 			opInspectBook.execute( 'ItemLookup', inspectExpression,	function( err, res ){
 				if( err ) console.log( 'inspectBookのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error );
-				try{
-					var relatedItems = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem;
+
+				if( res.ItemLookupErrorResponse ){
+					// リトライ
+					retryCount++;
+					retryInterval = interval * retryCount;
+					console.log( 'librarian/lib/inspectBookList/inspectBook.js', book.title, retryCount, '回目リトライ' );
+				}else{
+					// 再帰
+					countExec++;
+					data.countExec = countExec;
+					retryInterval 	= 0;
+					retryCount 		= 0;
+
+					/*
+						稀にAuthorityASINを持ちながらRelatedItemsを持たない書籍がある
+						恐らく日本未発売の書籍
+						See Example -> http://www.amazon.com/dp/0764545507/ref=r_soa_w_d
+					*/
+
+					var hasRelatedItems 	= res.ItemLookupResponse.Items[0].Item[0].RelatedItems;
+					if( hasRelatedItems ) inspectBookList.push( res );
+
+					//@todo 別の関数に切り分け
+					var relatedItems 		= res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem;
 
 					for (var i = 0; i < relatedItems.length; i++) {
 						var relatedBook = relatedItems[i].Item[0].ItemAttributes[0];
@@ -63,16 +87,10 @@ module.exports = function( bookList ){
 							modelBookList.findOneAndUpdate( { ASIN: book.ASIN }, { isKindlized: true }, function( err, book ){});
 						}
 					}
-					countExec++;
-					data.countExec = countExec;
-				}catch( error ){
-					console.log( 'inspectBookのリクエストエラー', error, res.ItemLookupResponse );
-					retryInterval = 1000;
-				}finally{
-					setTimeout( function(){
-						regularInterval( data );
-					}, retryInterval );
 				}
+				setTimeout( function(){
+					regularInterval( data );
+				}, retryInterval );
 			});
 		}
 	};
