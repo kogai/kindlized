@@ -9,7 +9,7 @@ var passport        = require('passport');
 
 var routes          = require('./routes/index');
 var post            = require('./routes/post/index');
-var fetchBookList   = require('./routes/fetchBookList');
+var bookList        = require('./routes/bookList');
 
 var credential;
 if( process.env.AWSAccessKeyId || process.env.CI ){
@@ -43,7 +43,7 @@ app.use(session({
 
 app.use( '/', routes );
 app.use( '/post', post );
-app.use( '/book', fetchBookList );
+app.use( '/book', bookList );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
