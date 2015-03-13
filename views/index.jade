@@ -13,17 +13,17 @@ block content
 
 		div( ng-if="showSuggestedBooks" ).bg-success 検索結果
 		
-		.list-group
-			a( href="{{ bookInDB.url[0] }}", target="_blank", ng-repeat="bookInDB in bookListInDB" ).list-group-item
-				|{{ bookInDB.title[0] }}
+		ul
+			li( ng-repeat="bookInDB in bookListInDB | filter:newBook" )
+				a( href="{{ bookInDB.url[0] }}", target="_blank" ).list-group-item
+					|{{ bookInDB.title[0] }}
 				button( type="button" ng-click="registBook( bookInDB )" ).btn.btn-default add
 
-			div( ng-if="showSuggestedBooks" ).list-group
-				a( ng-repeat="bookInAmazon in bookListInAmazon" ).list-group-item
-					|{{ bookInAmazon.ItemAttributes[0].Title[0] }}
-					button( type="button" ng-click="registBook( bookInAmazon )" ).btn.btn-default add
+		div( ng-if="showSuggestedBooks" ).list-group
+			a( ng-repeat="bookInAmazon in bookListInAmazon" ).list-group-item
+				|{{ bookInAmazon.ItemAttributes[0].Title[0] }}
+				button( type="button" ng-click="registBook( bookInAmazon )" ).btn.btn-default add
 				
 		div( ng-if="isNotExistenceBook" ) 存在しない書籍
 		div( ng-if="isBookAdded" ) 登録成功
 		
-		div( ng-bind="newBook")
