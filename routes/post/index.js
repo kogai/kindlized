@@ -94,11 +94,6 @@ router.post( '/', function( req, res ) {
 	.then( fetchAuthorListAmazon )
 	.then( saveNewAuthor )
 	.done( function( data ){
-		// console.log( data.bookListInAmazon[0].ItemAttributes[0].Author );
-		// console.log( data.bookListInAmazon[1].ItemAttributes[0].Author );
-		// console.log( 'is NewAuthor?', data.isNewAuthor );
-		// console.log( 'authorsRelatedWithBook is', data.authorsRelatedWithBook );
-		// console.log( 'authorsRelatedWithBookInDB is', data.authorsRelatedWithBookInDB );
 		console.log('Server-side search books process is completed.');
 	});
 });

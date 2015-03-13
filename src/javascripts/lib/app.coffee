@@ -1,6 +1,4 @@
 module.exports = ( $scope, $filter, $http ) ->
-    # $scope.searchBook = ->
-    # book
     httpOpt =
         method  : 'get'
         url     : '/book'
@@ -40,8 +38,25 @@ module.exports = ( $scope, $filter, $http ) ->
 
         return
 
-    $scope.registBook = ( book ) ->
-        console.log book
+    $scope.registBook = ( newBook ) ->
+        console.log newBook
+        httpOpt =
+            method  : 'post'
+            url     : '/save'
+            data    : { newBook: newBook }
+
+        $http( httpOpt )
+        .success ( data, status ) ->
+            console.log 'registBook satatus is', status
+            # $scope.isNotExistenceBook   = data.isNotExistenceBook
+            # $scope.showSuggestedBooks   = true
+            # $scope.bookListInAmazon     = data.bookListInAmazon
+            # $scope.isWaiting            = false
+            return
+        .then ->
+            console.log 'author saved.'
+            $scope.newBook = ''
+            return
         return
 
     console.log 'loaded.'
