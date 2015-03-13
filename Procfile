@@ -1,1 +1,1 @@
-db: node db -p $PORT
+db: env NODE_PATH=./ node db -p $PORT
