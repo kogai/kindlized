@@ -38,8 +38,8 @@ job = new cronjob({
 
 
 module.exports = function(){
-    libraryHandler();
-    job.start();
+   //  libraryHandler();
+   //  job.start();
 };
 libraryHandler();
-job.start();
+// job.start();
