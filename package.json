@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "test-post": "./node_modules/.bin/mocha test/routes/post",
+    "test-wip": "env NODE_PATH=./ ./node_modules/.bin/mocha test/librarian/lib/inspectBookList/inspectBook",
     "sandbox": "env NODE_PATH=./ node-dev --harmony --debug sandbox",
     "app": "env NODE_PATH=./ node-dev --debug bin/www",
     "shelf": "node-dev --all-deps shelf",
