@@ -11,9 +11,9 @@
     "test-wip" : "env NODE_PATH=./ ./node_modules/.bin/mocha test/librarian/lib/inspectBookList/inspectBook",
     "sandbox"  : "env NODE_PATH=./ node-dev --harmony --debug sandbox",
     "app"      : "env NODE_PATH=./ node-dev --debug bin/www",
-    "shelf"    : "node-dev --all-deps shelf",
-    "librarian": "node-dev --all-deps librarian",
-    "db"       : "node-dev --all-deps db",
+    "shelf"    : "env NODE_PATH=./ node-dev --all-deps shelf",
+    "librarian": "env NODE_PATH=./ node-dev --all-deps librarian",
+    "db"       : "env NODE_PATH=./ node-dev --all-deps db",
     "build"    : "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js"
   },
   "repository": {
