@@ -9,8 +9,8 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha",
     "test-post": "./node_modules/.bin/mocha test/routes/post",
-    "sandbox": "node-dev --harmony --debug sandbox",
-    "app": "node-dev --debug bin/www",
+    "sandbox": "env NODE_PATH=./ node-dev --harmony --debug sandbox",
+    "app": "env NODE_PATH=./ node-dev --debug bin/www",
     "shelf": "node-dev --all-deps shelf",
     "librarian": "node-dev --all-deps librarian",
     "db": "node-dev --all-deps db",
