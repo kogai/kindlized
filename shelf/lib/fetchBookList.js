@@ -26,22 +26,30 @@ module.exports = function( authorData ){
 			var searchExpression 	= new makeSearchExpression( Author, data.countExec + 1 );
 
 	  		opCountPages.execute( 'ItemSearch', searchExpression,  function( err, res ){
-				if( err ) console.log( 'fetchBookListのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error );
-				try{
+				if( err ) console.log( 'shelf/fetchBookListのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error );
+
+				if( res.ItemSearchResponse ){
+					// API呼び出しに成功
 					retryCount = 0;
 					var resBookListPerPage = res.ItemSearchResponse.Items[0].Item;
 					data.authorData.bookList = data.authorData.bookList.concat( resBookListPerPage );
 					data.countExec++;
-				}catch( error ){
-					console.log( 'shelf/fetchBookListのリクエストエラー', error, res.ItemSearchErrorResponse.Error );
-					retryCount++;
-					retryInterval = constant.interval ;
+				}else{
+					// API呼び出しに失敗
+					var errorMessage;
+					try{
+						errorMessage = res.ItemSearchErrorResponse.Error[0].Message[0] + '\n';
+					}catch( err ){
+						errorMessage = '予想していなかったエラーを検出\n' + err;
+					}finally{
+						console.log( 'shelf/fetchBookListのリクエストエラー => \n', errorMessage );
+						retryCount++;
+						retryInterval = constant.interval ;
+					}
 				}
-				finally{
-					setTimeout(function(){
-						data.regularInterval( data );
-					}, constant.interval * retryCount );
-				}
+				setTimeout(function(){
+					data.regularInterval( data );
+				}, constant.interval * retryCount );
 			});
 		}
   };
