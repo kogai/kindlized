@@ -27,7 +27,7 @@ module.exports = function( authorData ){
 			setTimeout(function(){
 				searchExpression 	= new makeSearchExpression( Author );
 				opCountPages.execute( 'ItemSearch', searchExpression, callBack );
-			}, retryInterval * retryCount );
+			}, constant.interval * retryCount );
 		}
 	};
 	opCountPages.execute( 'ItemSearch', searchExpression, callBack );

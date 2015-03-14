@@ -7,10 +7,14 @@ module.exports = function( authorData ){
 	var author 		= authorData.author;
 	var bookList 	= authorData.bookList;
 
+	if( bookList.length === 0 ) d.resolve( authorData );
+
 	for (var i = 0; i < bookList.length; i++) {
 		var book = bookList[i];
 		saveBook( book );
-		if( i === bookList.length - 1 ) d.resolve( authorData );
+		if( i === bookList.length - 1 ) {
+			d.resolve( authorData )
+		};
 	}
 	return d.promise;
 };

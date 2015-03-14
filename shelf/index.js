@@ -22,13 +22,13 @@ module.exports = function(){
 			obj			: {},
 			callBack : function( data ){
 				var authorData = {
-					author: authorList[ data.countExec ],
+					author: 	authorList[ data.countExec ],
 					defered	: defered,
 					authorList: authorList,
 					authorRecursionCount: authorRecursionCount,
 				};
 				console.log( '\n------------------------\n' );
-				console.log( authorList[ data.countExec ] + 'の処理を開始' );
+				console.log( authorData.author + 'の処理を開始' );
 				Q.when( authorData )
 				.then( fetchPageCounts )
 				.then( fetchBookList )
@@ -37,6 +37,7 @@ module.exports = function(){
 				.done( function( authorData ){
 		         console.log( authorData.author + '/' + authorData.bookList.length + '冊' + '著者毎の処理を完了' );
 					console.log( '\n------------------------\n' );
+
 					data.countExec++;
 					data.regularInterval( data );
 
