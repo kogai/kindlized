@@ -8,13 +8,13 @@ var moment      = require( 'moment-timezone' );
 var libraryHandler = function( currentTime ){
     Q.when()
     .then( shelf )
-    .then( function( bookList ){
-        var d = Q.defer();
-        d.resolve([]);
-        return d.promise;
-    })
-    .then( librarian.fetchParentASIN )
-    .then( librarian.inspectBookList )
+   //  .then( function( bookList ){
+   //      var d = Q.defer();
+   //      d.resolve([]);
+   //      return d.promise;
+   //  })
+   //  .then( librarian.fetchParentASIN )
+   //  .then( librarian.inspectBookList )
     .done( function(){
       logTime( currentTime );
     });
