@@ -2,7 +2,7 @@ var Q = require('q');
 var fetchUserModel = require( 'postman/lib/fetchUserModel' );
 var postMailToUser = require( 'postman/lib/postMailToUser' );
 
-module.exports = function(){
+// module.exports = function(){
    // *1日に一度実行する
 
    fetchUserModel()
@@ -23,4 +23,4 @@ module.exports = function(){
       console.log( 'postmanの処理が完了' );
    });
 
-};
+// };
