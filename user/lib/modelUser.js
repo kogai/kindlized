@@ -10,7 +10,7 @@ var userSchema  = {
 	pwd            : String,
 	uuid           : String,
 	isVerified     : Boolean,
-    bookList       : Array
+   bookList       : Array
 };
 
 module.exports = new makeModel( 'User', userSchema );
@@ -26,7 +26,7 @@ module.exports = new makeModel( 'User', userSchema );
     bookList       : [
         // extends bookSchema
         {
-            title: "地球の長い午後",
+            _id: "***********",
             isNotified: false
         }
     ]
