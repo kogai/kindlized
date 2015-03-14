@@ -1,5 +1,6 @@
-var librarian   = require( './librarian' );
-var shelf       = require( './shelf' );
+var librarian   = require( 'librarian' );
+var shelf       = require( 'shelf' );
+var postman     = require( 'postman' );
 var Q           = require( 'q' );
 var cronjob     = require( 'cron' ).CronJob;
 var cronTime    = "0 0 0 * * *"
@@ -31,6 +32,7 @@ job = new cronjob({
 	cronTime : cronTime,
 	onTick: function () {
       libraryHandler( moment() );
+      postman();
 	},
 	start: false
 });
