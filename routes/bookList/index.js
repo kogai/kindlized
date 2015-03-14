@@ -2,7 +2,8 @@ var Q 				= require( 'q' );
 var express 		= require('express');
 var router 			= express.Router();
 var modelAuthor 	= require( '../../author/lib/modelAuthor' );
-var modelBookList 	= require( '../../shelf/lib/modelBookList' );
+var modelBookList = require( '../../shelf/lib/modelBookList' );
+var constant 		= require('common/constant')
 
 var fetchBookList = function(){
 	var d = Q.defer();
@@ -14,7 +15,6 @@ var fetchBookList = function(){
 
 var renderRouter = function( books ){
 	var d = Q.defer();
-	console.log( books.length );
 	router.get('/', function(req, res) {
         res.send( books );
 		d.resolve( books );

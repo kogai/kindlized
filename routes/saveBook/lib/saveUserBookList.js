@@ -1,5 +1,6 @@
 var Q = require('q');
 var modelUser = require('user/lib/modelUser');
+var constant = require('common/constant')
 
 module.exports = function( data ){
 	var d = Q.defer();
@@ -8,7 +9,7 @@ module.exports = function( data ){
 	var book 	= data.book;
 	var bookId 	= book._id;
 	req.session.passport = {
-		_id: '54a10f0f0aa5f89d434cb2c9'
+		_id: constant._id
 	};
 	var _id 		= req.session.passport._id;
 

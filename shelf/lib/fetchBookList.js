@@ -11,6 +11,7 @@ module.exports = function( authorData ){
 	var opConfig 		= new makeOpConfig();
 	var opCountPages 	= new opHelper( opConfig );
 	var d 				= Q.defer();
+	var retryCount 	= 0;
 
 	authorData.bookList = [];
 
@@ -23,22 +24,24 @@ module.exports = function( authorData ){
 		authorData 	: authorData,
 		callBack   	: function( data ){
 			var searchExpression 	= new makeSearchExpression( Author, data.countExec + 1 );
-				var retryInterval = 0;
-		  opCountPages.execute( 'ItemSearch', searchExpression,  function( err, res ){
+
+	  		opCountPages.execute( 'ItemSearch', searchExpression,  function( err, res ){
 				if( err ) console.log( 'fetchBookListのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error );
 				try{
-			  var resBookListPerPage = res.ItemSearchResponse.Items[0].Item;
-			  data.authorData.bookList = data.authorData.bookList.concat( resBookListPerPage );
-			  data.countExec++;
+					retryCount = 0;
+					var resBookListPerPage = res.ItemSearchResponse.Items[0].Item;
+					data.authorData.bookList = data.authorData.bookList.concat( resBookListPerPage );
+					data.countExec++;
 				}catch( error ){
-					console.log( 'fetchBookListのリクエストエラー', error, res.ItemSearchErrorResponse.Error );
-						retryInterval = constant.retryInterval;
+					console.log( 'shelf/fetchBookListのリクエストエラー', error, res.ItemSearchErrorResponse.Error );
+					retryCount++;
+					retryInterval = constant.interval ;
 				}
-			finally{
-				setTimeout(function(){
-					data.regularInterval( data );
-				}, retryInterval );
-			}
+				finally{
+					setTimeout(function(){
+						data.regularInterval( data );
+					}, constant.interval * retryCount );
+				}
 			});
 		}
   };

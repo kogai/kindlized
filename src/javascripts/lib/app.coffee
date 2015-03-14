@@ -2,14 +2,11 @@ module.exports = ( $scope, $filter, $http ) ->
 	httpOpt =
 		method  : 'get'
 		url	 : '/book'
-		data	: { newBook: $scope.newBook }
 
 	$http( httpOpt )
 	.success ( bookListInDB, status ) ->
-		console.log 'book fetch', bookListInDB
 		$scope.bookListInDB = bookListInDB
 	.then ->
-		console.log 'book fetched.'
 		return
 
 	$scope.searchBook = ->
