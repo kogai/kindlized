@@ -9,7 +9,7 @@ var passport        = require('passport');
 
 var routes          = require('./routes/index');
 var post            = require('./routes/post/index');
-var bookList        = require('./routes/bookList');
+var book            = require('./routes/book');
 var saveBook        = require('./routes/saveBook');
 
 var credential;
@@ -43,8 +43,8 @@ app.use(session({
 // app.use(passport.session());
 
 app.use( '/', routes );
-app.use( '/post', post );
-app.use( '/book', bookList );
+app.use( '/search', post );
+app.use( '/book', book );
 app.use( '/save', saveBook );
 
 // catch 404 and forward to error handler
