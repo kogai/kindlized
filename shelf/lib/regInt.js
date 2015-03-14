@@ -1,13 +1,13 @@
 var regularInterval = function( data ){
-  // 実行回数を初期化
-  if( !data.countExec ) data.countExec = 0;
+   // 実行回数を初期化
+   if( !data.countExec ) data.countExec = 0;
 
-  // dataオブジェクトから変数を取り出し
-  var times     = data.times;
-  var interval  = data.interval;
-  var obj       = data.obj;
-  var callBack  = data.callBack;
-  var countExec = data.countExec;
+   // dataオブジェクトから変数を取り出し
+   var times     = data.times;
+   var interval  = data.interval;
+   var obj       = data.obj;
+   var callBack  = data.callBack;
+   var countExec = data.countExec;
 
   setTimeout( function(){
     if( countExec <  times ){
@@ -22,8 +22,7 @@ var regularInterval = function( data ){
     }else{
       // times回実行されたら終了
       if( data.authorData ){
-        data.d.resolve( data.authorData );
-        data.authorData.defered.resolve();
+         data.d.resolve( data.authorData );
       }
       console.log( 'complete.');
     }
