@@ -1,13 +1,14 @@
 var Q	 = require( 'q' );
 var fs	= require('fs');
 
-var regInt					= require('./lib/regInt');
-var fetchAuthor     = require('./lib/fetchAuthor');
-var fetchPageCounts = require('./lib/fetchPageCounts');
-var fetchBookList	  = require('./lib/fetchBookList');
-var modifyBookList	= require('./lib/modifyBookList');
-var saveBookList		= require('./lib/saveBookList');
-var constant				= require('./lib/constant');
+var regInt 				= require('shelf/lib/regInt');
+var fetchAuthor     	= require('shelf/lib/fetchAuthor');
+var inspectAuthor    = require('shelf/lib/inspectAuthor');
+var fetchPageCounts 	= require('shelf/lib/fetchPageCounts');
+var fetchBookList	  	= require('shelf/lib/fetchBookList');
+var modifyBookList	= require('shelf/lib/modifyBookList');
+var saveBookList		= require('shelf/lib/saveBookList');
+var constant			= require('shelf/lib/constant');
 
 var authorRecursionCount = 0;
 
@@ -30,6 +31,7 @@ module.exports = function(){
 				console.log( '\n------------------------\n' );
 				console.log( authorData.author + 'の処理を開始' );
 				Q.when( authorData )
+				.then( inspectAuthor )
 				.then( fetchPageCounts )
 				.then( fetchBookList )
 				.then( modifyBookList )

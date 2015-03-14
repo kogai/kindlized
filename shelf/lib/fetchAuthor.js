@@ -1,5 +1,5 @@
 var Q           = require('q');
-var ModelAuthor = require( '../../author/lib/modelAuthor' );
+var ModelAuthor = require( 'author/lib/modelAuthor' );
 
 module.exports = function( authorList ) {
   // DBから著者リストを非同期に取得する
@@ -8,7 +8,7 @@ module.exports = function( authorList ) {
     for (var i = 0; i < result.length; i++) {
       authorList.push(result[i].name);
     }
-    console.log(authorList.length, '人の著者が登録されている');
+    console.log( authorList.length, '人の著者が登録されている' );
     d.resolve(authorList);
   });
   return d.promise;
