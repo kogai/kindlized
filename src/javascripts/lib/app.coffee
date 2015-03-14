@@ -9,6 +9,16 @@ module.exports = ( $scope, $filter, $http ) ->
 	.then ->
 		return
 
+	httpOpt =
+		method  : 'get'
+		url	 : '/book/user'
+
+	$http( httpOpt )
+	.success ( bookListInUser, status ) ->
+		$scope.bookListInUser = bookListInUser
+	.then ->
+		return
+
 	$scope.searchBook = ->
 		console.log $scope.newBook, 'postAuthor clicked'
 		$scope.isNotExistenceBook   = false
@@ -18,7 +28,7 @@ module.exports = ( $scope, $filter, $http ) ->
 
 		httpOpt =
 			method  : 'post'
-			url	 : '/post'
+			url	 : '/search'
 			data	: { newBook: $scope.newBook }
 
 		$http( httpOpt )
