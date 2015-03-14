@@ -14,6 +14,7 @@
     "shelf"    : "env NODE_PATH=./ node-dev --all-deps shelf",
     "librarian": "env NODE_PATH=./ node-dev --all-deps librarian",
     "db"       : "env NODE_PATH=./ node-dev --all-deps db",
+    "postman"  : "env NODE_PATH=./ node-dev --all-deps postman",
     "build"    : "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js"
   },
   "repository": {
