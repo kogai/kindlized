@@ -6,6 +6,7 @@ var AuthorSchema  = {
     index: { unique: true }
   },
   wroteBooks: Number,
+  lastModified	: Date,
   checkDate: Array
 };
 
