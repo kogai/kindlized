@@ -12,5 +12,5 @@ module.exports = function(){
    var postMailToUser;
       var inspectNotifiedBooks;
       var insertMailTemplate;
-      var sendMail;
+      var sendKindlizedNotification;
 };
