@@ -1,5 +1,5 @@
 var librarian  = require('./librarian');
-var routesPost = require('./routes/post');
+var routes     = require('./routes');
 
 require('should');
 
@@ -13,4 +13,5 @@ describe('circleCiのテスト', function () {
 librarian.fetchParentASIN.fetchBookList();
 librarian.inspectBookList.siftBookList();
 
-routesPost();
+routes.post();
+routes.saveBook.isNewBook();
