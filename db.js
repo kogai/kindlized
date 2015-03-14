@@ -30,8 +30,7 @@ var logTime = function( currentTime ){
 job = new cronjob({
 	cronTime : cronTime,
 	onTick: function () {
-      var currentTime = moment();
-      libraryHandler( currentTime );
+      libraryHandler( moment() );
 	},
 	start: false
 });
@@ -41,5 +40,4 @@ module.exports = function(){
     job.start();
 };
 
-var currentTime = moment();
-libraryHandler( currentTime );
+libraryHandler( moment() );
