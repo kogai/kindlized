@@ -9,6 +9,8 @@ var modifyBookList	= require('./lib/modifyBookList');
 var saveBookList		= require('./lib/saveBookList');
 var constant				= require('./lib/constant');
 
+var authorRecursionCount = 0;
+
 module.exports = function(){
 	var defered = Q.defer();
 	Q.when([])
@@ -21,18 +23,27 @@ module.exports = function(){
 			callBack : function( data ){
 				var authorData = {
 					author: authorList[ data.countExec ],
-					defered	: defered
+					defered	: defered,
+					authorList: authorList,
+					authorRecursionCount: authorRecursionCount,
 				};
-				console.log( authorList[ data.countExec ], 'process has start.' );
+				console.log( '\n------------------------\n' );
+				console.log( authorList[ data.countExec ] + 'の処理を開始' );
 				Q.when( authorData )
 				.then( fetchPageCounts )
 				.then( fetchBookList )
 				.then( modifyBookList )
 				.then( saveBookList )
 				.done( function( authorData ){
-					console.log( 'authorData', authorData.bookList.length );
+		         console.log( authorData.author + '/' + authorData.bookList.length + '冊' + '著者毎の処理を完了' );
+					console.log( '\n------------------------\n' );
 					data.countExec++;
 					data.regularInterval( data );
+
+					if( data.countExec > authorData.authorList.length ){
+		         	defered.resolve();
+					}
+
 				});
 			}
 		};
