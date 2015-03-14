@@ -22,9 +22,9 @@ var regularInterval = function( data ){
     }else{
       // times回実行されたら終了
       if( data.authorData ){
+         console.log( 'regInt complete' );
          data.d.resolve( data.authorData );
       }
-      console.log( 'complete.');
     }
   }, interval );
 };

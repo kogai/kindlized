@@ -17,10 +17,10 @@ module.exports = function( authorData ){
 
   // ページ数分実行
 	var regIntData = {
-		times	  	: pageCount,
+		times	  		: pageCount,
 		interval   	: constant.interval,
 		obj			: {},
-		d		  	: d,
+		d		  		: d,
 		authorData 	: authorData,
 		callBack   	: function( data ){
 			var searchExpression 	= new makeSearchExpression( Author, data.countExec + 1 );
