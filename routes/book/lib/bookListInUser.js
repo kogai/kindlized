@@ -20,7 +20,25 @@ var fetchModelUser = function( req, res ){
 var fetchBookList = function( data ){
    var userBookList = data.user.bookList;
 	var d = Q.defer();
-	modelBookList.find( { _id: { $in: userBookList } }, function( err, books ){
+
+	var userBookListIds = [];
+	for (var i = 0; i < userBookList.length; i++) {
+		userBookListIds.push( userBookList[i].bookId );
+	}
+
+	modelBookList.find( { _id: { $in: userBookListIds } }, function( err, books ){
+
+		for (var i = 0; i < books.length; i++) {
+			var book 	= books[i];
+			var bookId 	= book._id.toString();
+
+			for (var j = 0; j < userBookList.length; j++) {
+				if( bookId === userBookList[j].bookId ){
+					book.isNotified = userBookList[j].isNotified
+				}
+			}
+		}
+
       data.books = books;
 		d.resolve( data );
 	});
@@ -43,6 +61,10 @@ module.exports = function( req, res ){
 	.then( fetchBookList )
 	.then( renderRouter )
 	.done( function( books ){
-		console.log( 'user books router fetched ', books.length );
+		try{
+			console.log( 'このユーザーは' + books.length + '冊の書籍を登録している' );
+		}catch( err ){
+			console.log( 'このユーザーは書籍を登録していない');
+		}
 	});
 };
