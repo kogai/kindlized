@@ -17,7 +17,10 @@ module.exports = function(){
 	    });
 
 		it( 'DBに存在するならfalseを返す', function( done ){
-			isNewBook( dataExist )
+			var data = {
+				newBook: dataExist
+			};
+			isNewBook( data )
 			.done( function( data ){
 				should( data.isNewBook ).be.exactly( false );
 				done();
@@ -25,7 +28,10 @@ module.exports = function(){
 		});
 
 		it( 'DBに存在しないならtrueを返す', function( done ){
-			isNewBook( dataNotExist )
+			var data = {
+				newBook: dataNotExist
+			};
+			isNewBook( data )
 			.done( function( data ){
 				should(data.isNewBook ).be.exactly( true );
 				done();
