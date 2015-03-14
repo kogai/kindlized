@@ -9,16 +9,42 @@ block content
 			input( type="text" required placeholder="書籍のタイトルを入力して下さい" ng-model="newBook" ).form-control
 			.input-group-btn
 				button( type="submit").btn.btn-default 書籍を検索
-		div( ng-if="isWaiting" ).glyphicon.glyphicon-refresh
+				
+		div( ng-if="isWaiting" )
+			|検索中...
 
-		div( ng-if="showSuggestedBooks" ).bg-success 検索結果
+		h2( ng-if="!showSuggestedBooks" )
+			|検索結果
 		
-		div( ng-if="showSuggestedBooks" )
-			ul
-				li( ng-repeat="bookInDB in bookListInDB | filter:newBook" )
-					a( href="{{ bookInDB.url[0] }}", target="_blank" ).list-group-item
-						|{{ bookInDB.title[0] }}
-					button( type="button" ng-click="registBook( bookInDB )" ).btn.btn-default add
+		div( ng-if="!showSuggestedBooks" )
+			.panel.panel-default
+				table.table
+					thead
+						tr
+							th タイトル
+							th 出版状況
+							th リンク
+							th 登録
+					tbody
+						tr( ng-repeat="bookInDB in bookListInDB | filter:newBook" )
+							td
+								|{{ bookInDB.title[0] }}
+
+							td
+								div( ng-if="!bookInDB.isKindlized" ).label.label-danger
+									|Kindle版がありません
+									
+								div( ng-if="bookInDB.isKindlized" ).label.label-success
+									|Kindle化済み
+								
+							td
+								a( href="{{ bookInDB.url[0] }}" target="_blank" ).btn.btn-default
+									|Amazonで購入する
+
+							td
+								button( type="button" ng-click="registBook( bookInDB )" ).btn.btn-default
+									|メール通知登録
+
 
 		div( ng-if="showSuggestedBooks" ).list-group
 			a( ng-repeat="bookInAmazon in bookListInAmazon" ).list-group-item
@@ -28,9 +54,33 @@ block content
 		div( ng-if="isNotExistenceBook" ) 存在しない書籍
 		div( ng-if="isBookAdded" ) 登録成功
 		
-		h2 登録済みの書籍
-		ul
-			li( ng-repeat="bookInUser in bookListInUser" )
-				a( href="{{ bookInUser.url[0] }}" target="_blank" ng-class='{ active: bookInUser.isKindlized }' ).list-group-item
-					|{{ bookInUser.title[0] }}
-//- <li class="todo-item" ng-repeat='todo in todos | filter:currentFilter' ng-class='{ done: todo.done, editing: todo == editing }'>
+		h2 メール通知登録済みの書籍
+		.panel.panel-default
+			table.table
+				thead
+					tr
+						th タイトル
+						th ステータス
+						th 出版状況
+						th リンク
+				tbody
+					tr( ng-repeat="bookInUser in bookListInUser" )
+						td
+							|{{ bookInUser.title[0] }}
+						td
+							div( ng-if="!bookInUser.isNotified" ).label.label-danger
+								|メール未通知
+
+							div( ng-if="bookInUser.isNotified" ).label.label-success
+								|メール通知済み
+						
+						td
+							div( ng-if="!bookInUser.isKindlized" ).label.label-danger
+								|Kindle版がありません
+								
+							div( ng-if="bookInUser.isKindlized" ).label.label-success
+								|Kindle化済み
+							
+						td
+							a( href="{{ bookInUser.url[0] }}" target="_blank" ).btn.btn-default
+								|Amazonで購入する
