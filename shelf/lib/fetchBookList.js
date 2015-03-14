@@ -12,6 +12,7 @@ module.exports = function( authorData ){
 	var opCountPages 	= new opHelper( opConfig );
 	var d 				= Q.defer();
 	var retryCount 	= 0;
+	var retryInterval = 1;
 
 	authorData.bookList = [];
 
@@ -42,14 +43,17 @@ module.exports = function( authorData ){
 					}catch( err ){
 						errorMessage = '予想していなかったエラーを検出\n' + err;
 					}finally{
-						console.log( 'shelf/fetchBookListのリクエストエラー => \n', errorMessage );
+						console.log( 'shelf/fetchBookListの' + retryCount + '回目のリクエストエラー => \n', errorMessage );
 						retryCount++;
-						retryInterval = constant.interval ;
+						if( retryCount > 20 ){
+							// 20回以上失敗したなら1時間休む
+							retryInterval = 1000 * 60 * 60;
+						}
 					}
 				}
 				setTimeout(function(){
 					data.regularInterval( data );
-				}, constant.interval * retryCount );
+				}, constant.interval * retryCount * retryInterval );
 			});
 		}
   };
