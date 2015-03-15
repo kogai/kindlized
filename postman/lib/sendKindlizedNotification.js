@@ -1,8 +1,8 @@
 // メールを送信
 
 var Q = require('q');
-var nodemailer = require('nodemailer');
-var credential = require('credential');
+var nodemailer       = require('nodemailer');
+var makeCredential   = require ( 'common/makeCredential' );
 
 module.exports = function( user ){
    var d = Q.defer();
@@ -10,11 +10,12 @@ module.exports = function( user ){
    var kindlizedList = user.kindlizedList;
 
    if( kindlizedList.length > 0 ){
+      var credentialGmail = makeCredential( gmail );
    	var transporter = nodemailer.createTransport({
    		service: 'Gmail',
    		auth: {
-   			user: credential.gmail.user,
-   			pass: credential.gmail.password
+   			user: credentialGmail.user,
+   			pass: credentialGmail.password
    		}
    	});
 
