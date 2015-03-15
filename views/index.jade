@@ -5,7 +5,7 @@ block content
 		|#{ title }
 	
 	div( ng-controller="postNewBook" )
-		form( ng-submit="searchBook()" ).input-group
+		form( ng-submit="search( newBook )" ).input-group
 			input( type="text" required placeholder="書籍のタイトルを入力して下さい" ng-model="newBook" ).form-control
 			.input-group-btn
 				button( type="submit").btn.btn-default 書籍を検索

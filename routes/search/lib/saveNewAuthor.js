@@ -3,13 +3,13 @@ var _ 				= require('underscore');
 var express	 		= require('express');
 var moment 			= require('moment-timezone');
 var router	  		= express.Router();
-var modelBookList 	= require( '../../../../shelf/lib/modelBookList' );
-var modelAuthor 	= require( '../../../../author/lib/modelAuthor' );
-var constant 		= require( '../../../../common/constant' );
+var modelBookList 	= require( 'shelf/lib/modelBookList' );
+var modelAuthor 	= require( 'author/lib/modelAuthor' );
+var constant 		= require( 'common/constant' );
 
 var opHelper				= require( 'apac' ).OperationHelper;
-var makeOpConfig 			= require( '../../../../common/makeOpConfig' );
-var makeExistenceExpression	= require( '../makeExistenceExpression' );
+var makeOpConfig 			= require( 'common/makeOpConfig' );
+var makeExistenceExpression	= require( 'routes/search/lib/makeExistenceExpression' );
 
 var opConfig 		= new makeOpConfig();
 var opExistenceBook = new opHelper( opConfig );

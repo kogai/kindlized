@@ -2,22 +2,25 @@ var Q 				= require('q');
 var _ 				= require('underscore');
 var express	 		= require('express');
 var router	  		= express.Router();
-var modelBookList 	= require( '../../../../shelf/lib/modelBookList' );
-var modelAuthor 	= require( '../../../../author/lib/modelAuthor' );
-var constant 		= require( '../../../../common/constant' );
 
-var opHelper				= require( 'apac' ).OperationHelper;
-var makeOpConfig 			= require( '../../../../common/makeOpConfig' );
-var makeExistenceExpression	= require( '../makeExistenceExpression' );
+var opHelper						= require( 'apac' ).OperationHelper;
+var makeOpConfig 					= require( 'common/makeOpConfig' );
 
-var opConfig 		= new makeOpConfig();
-var opExistenceBook = new opHelper( opConfig );
+var makeExistenceExpression 	= require( 'routes/search/lib/makeExistenceExpression' );
+var modelBookList = require( 'shelf/lib/modelBookList' );
+var modelAuthor 	= require( 'author/lib/modelAuthor' );
+var constant 		= require( 'common/constant' );
+
+var opConfig 			= new makeOpConfig();
+var opExistenceBook 	= new opHelper( opConfig );
 
 module.exports = function( data ){
 	var d = Q.defer();
+
 	var newBook = data.newBook;
 	var existenceAuthorExpression = new makeExistenceExpression( newBook );
 	var intervalTimeIncrements = 0;
+
 	var recursionOpExistenceBook = function(){
 		opExistenceBook.execute( 'ItemSearch', existenceAuthorExpression,  function( err, res ){
 			if( err ) throw err;

@@ -39,9 +39,11 @@ var fetchBookList = function( data ){
 				}
 			}
 
-			// mongodbのコレクションにプロパティを追加した状態でres.sendしても
-			// 追加したプロパティを保持できないっぽいので
-			// 新しくオブジェクトを作って必要なデータをコピー
+			/*
+			mongodbのコレクションにプロパティを追加した状態でres.sendしても
+			追加したプロパティを保持できないっぽいので
+			新しくオブジェクトを作って必要なデータをコピー
+			*/
 			
 			newBooks[i] = {
 				title : books[i].title,
