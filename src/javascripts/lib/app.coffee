@@ -1,12 +1,13 @@
 module.exports = ( $scope, $filter, $http ) ->
-	httpOpt =
-		method  	: 'get'
-		url	 	: '/book'
-	$http( httpOpt )
-	.success ( bookListInDB, status ) ->
-		$scope.bookListInDB = bookListInDB
-	.then ->
-		return
+	# httpOpt =
+	# 	method  	: 'get'
+	# 	url	 	: '/book'
+	# $http( httpOpt )
+	# .success ( bookListInDB, status ) ->
+	# 	$scope.bookListInDB = bookListInDB
+	# .then ->
+	# 	return
+	$scope.isRegiterd = false;
 
 	httpOpt =
 		method  : 'get'
@@ -19,33 +20,39 @@ module.exports = ( $scope, $filter, $http ) ->
 		console.log '/book/user 完了'
 		return
 
-	$scope.searchBook = ->
-		console.log $scope.newBook, 'postAuthor clicked'
-		$scope.isNotExistenceBook   	= false
-		$scope.isBookAdded		  		= false
-		$scope.showSuggestedBooks   	= false
-		$scope.isWaiting					= true
+	$scope.search = ( newBook )->
+		console.log newBook, 'postAuthor clicked'
+		$scope.isWaiting = true
 
-		httpOpt =
+		httpOptToDB =
 			method  : 'post'
-			url	 : '/search'
+			url	 : '/search/db'
 			data	: { newBook: $scope.newBook }
 
-		$http( httpOpt )
+		httpOptToAmazon =
+			method  : 'post'
+			url	 : '/search/amazon'
+			data	: { newBook: $scope.newBook }
+
+		$http( httpOptToDB )
 		.success ( data, status ) ->
-			$scope.isNotExistenceBook   	= data.isNotExistenceBook
-			$scope.showSuggestedBooks   	= true
-			$scope.bookListInAmazon	 		= data.bookListInAmazon
-			$scope.isWaiting					= false
+			$scope.bookListInDB 	= data.bookListInDB
 			return
 		.then ->
-			console.log 'author saved.'
-			# $scope.newBook = ''
+			console.log '/search/db 完了'
 			return
-
+		$http( httpOptToAmazon )
+		.success ( data, status ) ->
+			$scope.bookListInAmazon = data.bookListInAmazon
+			return
+		.then ->
+			console.log '/search/amazon 完了'
+			$scope.isWaiting 	= false
+			$scope.newBook 	= ''
+			return
 		return
 
-	$scope.registBook = ( newBook ) ->
+	$scope.registBook = ( newBook, $index ) ->
 		console.log newBook
 		httpOpt =
 			method  : 'post'
@@ -55,10 +62,12 @@ module.exports = ( $scope, $filter, $http ) ->
 		$http( httpOpt )
 		.success ( data, status ) ->
 			console.log 'registBook satatus is', status
+			$scope.bookListInDB[ $index ].isRegisterd = true
+			$scope.isRegiterd = true;
+			$scope.bookListInUser.push( $scope.bookListInDB[ $index ] )
 			return
 		.then ->
-			console.log 'author saved.'
-			$scope.newBook = ''
+			console.log '/save 完了'
 			return
 		return
 	return
