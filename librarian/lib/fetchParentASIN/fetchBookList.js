@@ -6,10 +6,10 @@ module.exports = function( bookList ) {
   // DBから著者リストを非同期に取得する
   var d = Q.defer();
   ModelBookList.find( {}, function( err, result ) {
-     reduceListByDate( result)
-     .then( function( result){
+   //   reduceListByDate( result)
+   //   .then( function( result){
         d.resolve( result );
-     });
+   //   });
   });
   return d.promise;
 }
