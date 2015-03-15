@@ -3,7 +3,6 @@ var fs	= require('fs');
 
 var regInt 						= require('shelf/lib/regInt');
 var fetchAuthor     			= require('shelf/lib/fetchAuthor');
-var sortAuthorByModified 	= require('shelf/lib/sortAuthorByModified');
 var inspectAuthor    		= require('shelf/lib/inspectAuthor');
 var fetchPageCounts 			= require('shelf/lib/fetchPageCounts');
 var fetchBookList	  			= require('shelf/lib/fetchBookList');
@@ -17,7 +16,6 @@ module.exports = function(){
 	var defered = Q.defer();
 	Q.when([])
 	.then( fetchAuthor )
-	.then( sortAuthorByModified )
 	.done(function( authorList ){
 		var data = {
 			times		: authorList.length,
