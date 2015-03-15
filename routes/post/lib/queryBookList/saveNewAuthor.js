@@ -1,6 +1,7 @@
 var Q 				= require('q');
 var _ 				= require('underscore');
 var express	 		= require('express');
+var moment 			= require('moment-timezone');
 var router	  		= express.Router();
 var modelBookList 	= require( '../../../../shelf/lib/modelBookList' );
 var modelAuthor 	= require( '../../../../author/lib/modelAuthor' );
@@ -32,8 +33,14 @@ module.exports = function( data ){
 var saveAuthor = function( author ){
 	modelAuthor.findOne( { name: author }, function( err, authorInDB ){
 		if( !authorInDB ){
+
+			var currentDay = new Date();
+			currentDay.setDate( currentDay.getDate() - 30 );
+			var initialModifiedTime = moment( currentDay );
+
 			var newAuthor = new modelAuthor({
-                name: author
+					name: author,
+					lastModified: initialModifiedTime
 			});
 			newAuthor.save( function(err){
 				if(err) console.log(err);
