@@ -1,4 +1,4 @@
-var fetchAuthorListAmazon = require('../../../../routes/post/lib/queryBookList/fetchAuthorListAmazon');
+var fetchAuthorListAmazon = require('routes/search/lib/fetchAuthorListAmazon');
 var Q = require('q');
 require('should');
 
