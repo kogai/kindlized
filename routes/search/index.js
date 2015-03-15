@@ -51,20 +51,31 @@ var fetchAuthorListDB = function( data ){
 	return d.promise;
 };
 
-router.post( '/', function( req, res ) {
+router.post( '/db', function( req, res ) {
 	Q.when({
 		res : res,
 		req : req
 	})
 	.then( fetchBookListDB )
 	.then( sendResponseInDB )
-	// .then( fetchBookListAmazon )
-	// .then( sendResponseInAmazon )
+	.done( function( data ){
+		console.log('DB内の検索処理完了.');
+	});
+});
+
+router.post( '/amazon', function( req, res ) {
+	Q.when({
+		res : res,
+		req : req
+	})
+	.then( fetchBookListAmazon )
+	.then( sendResponseInAmazon )
 	// .then( fetchAuthorListDB )
 	// .then( fetchAuthorListAmazon )
 	// .then( saveNewAuthor )
 	.done( function( data ){
-		console.log('Server-side search books process is completed.');
+		console.log( 'data.bookListInAmazon', data.bookListInAmazon );
+		console.log('AmazonAPIの検索処理完了.');
 	});
 });
 

@@ -4,7 +4,7 @@ module.exports = function( data ){
 	var d = Q.defer();
 	var res = data.res;
 	res.send({
-		bookListInDB: data.bookListInDB,
+		bookListInAmazon: data.bookListInAmazon,
 	});
 	d.resolve( data );
 	return d.promise;

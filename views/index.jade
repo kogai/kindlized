@@ -30,7 +30,7 @@ block content
 							th 出版状況
 							th リンク/登録
 					tbody
-						tr( ng-repeat="bookInDB in bookListInDB | filter:newBook" )
+						tr( ng-repeat="bookInDB in bookListInDB" )
 							td
 								|{{ bookInDB.title[0] }}
 
@@ -44,9 +44,30 @@ block content
 							td
 								a( href="{{ bookInDB.url[0] }}" target="_blank" ng-if="bookInDB.isKindlized" ).btn.btn-default
 									|Amazonで購入する
-								button( type="button" ng-click="registBook( bookInDB )" ng-if="!bookInDB.isKindlized" ).btn.btn-default
+								button( type="button" ng-click="registBook( bookInDB, $index )" ng-if="!bookInDB.isKindlized && !bookInDB.isRegisterd" ).btn.btn-default
 									|メール通知登録
-		
+								.label.label-info( ng-if="bookInDB.isRegisterd" )
+									|メール通知登録済みです
+
+						tr( ng-repeat="bookInAmazon in bookListInAmazon" )
+							td
+								|{{ bookInAmazon.ItemAttributes[0].Title[0] }}
+
+							td
+								div( ng-if="!bookInDB.isKindlized" ).label.label-danger
+									|Kindle版がありません
+									
+								div( ng-if="bookInDB.isKindlized" ).label.label-success
+									|Kindle化済み
+								
+							td
+								a( href="{{ bookInDB.url[0] }}" target="_blank" ng-if="bookInDB.isKindlized" ).btn.btn-default
+									|Amazonで購入する
+								button( type="button" ng-click="registBook( bookInDB, $index )" ng-if="!bookInDB.isKindlized && !bookInDB.isRegisterd" ).btn.btn-default
+									|メール通知登録
+								.label.label-info( ng-if="bookInDB.isRegisterd" )
+									|メール通知登録済み
+
 		div( ng-if="isNotExistenceBook" ) 存在しない書籍
 		div( ng-if="isBookAdded" ) 登録成功
 		
