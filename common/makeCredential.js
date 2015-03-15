@@ -1,5 +1,5 @@
 module.exports = function( credentialName ){
-   var var credential;
+   var credential;
    if (process.env.HEROKU || process.env.CI ) {
       credential = process.env;
    } else {
