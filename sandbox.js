@@ -1,3 +1,11 @@
+var moment = require('moment-timezone');
+
+var currentDay = new Date();
+currentDay.setDate( currentDay.getDate() - 30 );
+var date = moment( currentDay );
+
+console.log( '\n', date._d, '\n' );
+
 // var Q	 = require( 'q' );
 // var fs	= require('fs');
 //

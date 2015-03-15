@@ -1,14 +1,15 @@
 var Q	 = require( 'q' );
 var fs	= require('fs');
 
-var regInt 				= require('shelf/lib/regInt');
-var fetchAuthor     	= require('shelf/lib/fetchAuthor');
-var inspectAuthor    = require('shelf/lib/inspectAuthor');
-var fetchPageCounts 	= require('shelf/lib/fetchPageCounts');
-var fetchBookList	  	= require('shelf/lib/fetchBookList');
-var modifyBookList	= require('shelf/lib/modifyBookList');
-var saveBookList		= require('shelf/lib/saveBookList');
-var constant			= require('shelf/lib/constant');
+var regInt 						= require('shelf/lib/regInt');
+var fetchAuthor     			= require('shelf/lib/fetchAuthor');
+var sortAuthorByModified 	= require('shelf/lib/sortAuthorByModified');
+var inspectAuthor    		= require('shelf/lib/inspectAuthor');
+var fetchPageCounts 			= require('shelf/lib/fetchPageCounts');
+var fetchBookList	  			= require('shelf/lib/fetchBookList');
+var modifyBookList			= require('shelf/lib/modifyBookList');
+var saveBookList				= require('shelf/lib/saveBookList');
+var constant					= require('shelf/lib/constant');
 
 var authorRecursionCount = 0;
 
@@ -16,6 +17,7 @@ module.exports = function(){
 	var defered = Q.defer();
 	Q.when([])
 	.then( fetchAuthor )
+	.then( sortAuthorByModified )
 	.done(function( authorList ){
 		var data = {
 			times		: authorList.length,

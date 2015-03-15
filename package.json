@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test"     : "env NODE_PATH=./ ./node_modules/.bin/mocha",
-    "test-wip" : "env NODE_PATH=./ ./node_modules/.bin/mocha test/routes/saveBook/lib/isNewBook",
+    "test-wip" : "env NODE_PATH=./ ./node_modules/.bin/mocha test/shelf/lib/sortAuthorByModified",
     "sandbox"  : "env NODE_PATH=./ node-dev --harmony --debug sandbox",
     "app"      : "env NODE_PATH=./ node-dev --debug bin/www",
     "shelf"    : "env NODE_PATH=./ node-dev --all-deps shelf",
