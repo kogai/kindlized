@@ -43,10 +43,11 @@ module.exports = function( authorData ){
 					}catch( err ){
 						errorMessage = '予想していなかったエラーを検出\n' + err;
 					}finally{
-						console.log( 'shelf/fetchBookListの' + retryCount + '回目のリクエストエラー => \n', errorMessage );
+						console.log( Author + ' shelf/fetchBookListの' + retryCount + '回目のリクエストエラー => \n', errorMessage );
 						retryCount++;
 						if( retryCount > 20 ){
 							// 20回以上失敗したなら1時間休む
+							console.log( Author + ' shelf/fetchBookListは20回失敗したので1時間休む');
 							retryInterval = 1000 * 60 * 60;
 						}
 					}

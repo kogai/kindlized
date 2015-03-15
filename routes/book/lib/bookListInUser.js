@@ -27,6 +27,7 @@ var fetchBookList = function( data ){
 	}
 
 	modelBookList.find( { _id: { $in: userBookListIds } }, function( err, books ){
+		var newBooks 	= [];
 
 		for (var i = 0; i < books.length; i++) {
 			var book 	= books[i];
@@ -34,12 +35,23 @@ var fetchBookList = function( data ){
 
 			for (var j = 0; j < userBookList.length; j++) {
 				if( bookId === userBookList[j].bookId ){
-					book.isNotified = userBookList[j].isNotified
+					books[i].isNotified = userBookList[j].isNotified
 				}
 			}
-		}
 
-      data.books = books;
+			// mongodbのコレクションにプロパティを追加した状態でres.sendしても
+			// 追加したプロパティを保持できないっぽいので
+			// 新しくオブジェクトを作って必要なデータをコピー
+			
+			newBooks[i] = {
+				title : books[i].title,
+				url 	: books[i].url,
+				isNotified 	: books[i].isNotified,
+				isKindlized : books[i].isKindlized
+			};
+		}
+      data.books 		= books;
+      data.newBooks 	= newBooks;
 		d.resolve( data );
 	});
 	return d.promise;
@@ -47,10 +59,11 @@ var fetchBookList = function( data ){
 
 var renderRouter = function( data ){
 	var books  = data.books;
+	var newBooks  = data.newBooks;
 	var res    = data.res;
 	var d      = Q.defer();
 
-	res.send( books );
+	res.send( newBooks );
 	d.resolve( books );
 
 	return d.promise;
