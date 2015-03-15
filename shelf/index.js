@@ -17,6 +17,9 @@ module.exports = function(){
 	Q.when([])
 	.then( fetchAuthor )
 	.done(function( authorList ){
+		if( authorList.length === 0 ){
+			defered.resolve();
+		}
 		var data = {
 			times		: authorList.length,
 			interval : constant.interval,
