@@ -16,6 +16,11 @@ block content
 		h2( ng-if="!showSuggestedBooks" )
 			|検索結果
 		
+		div( ng-if="showSuggestedBooks" ).list-group
+			a( ng-repeat="bookInAmazon in bookListInAmazon" ).list-group-item
+				|{{ bookInAmazon.ItemAttributes[0].Title[0] }}
+				button( type="button" ng-click="registBook( bookInAmazon )" ).btn.btn-default add
+
 		div( ng-if="!showSuggestedBooks" )
 			.panel.panel-default
 				table.table
@@ -23,8 +28,7 @@ block content
 						tr
 							th タイトル
 							th 出版状況
-							th リンク
-							th 登録
+							th リンク/登録
 					tbody
 						tr( ng-repeat="bookInDB in bookListInDB | filter:newBook" )
 							td
@@ -38,18 +42,10 @@ block content
 									|Kindle化済み
 								
 							td
-								a( href="{{ bookInDB.url[0] }}" target="_blank" ).btn.btn-default
+								a( href="{{ bookInDB.url[0] }}" target="_blank" ng-if="bookInDB.isKindlized" ).btn.btn-default
 									|Amazonで購入する
-
-							td
-								button( type="button" ng-click="registBook( bookInDB )" ).btn.btn-default
+								button( type="button" ng-click="registBook( bookInDB )" ng-if="!bookInDB.isKindlized" ).btn.btn-default
 									|メール通知登録
-
-
-		div( ng-if="showSuggestedBooks" ).list-group
-			a( ng-repeat="bookInAmazon in bookListInAmazon" ).list-group-item
-				|{{ bookInAmazon.ItemAttributes[0].Title[0] }}
-				button( type="button" ng-click="registBook( bookInAmazon )" ).btn.btn-default add
 		
 		div( ng-if="isNotExistenceBook" ) 存在しない書籍
 		div( ng-if="isBookAdded" ) 登録成功

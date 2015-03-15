@@ -1,8 +1,7 @@
 module.exports = ( $scope, $filter, $http ) ->
 	httpOpt =
-		method  : 'get'
-		url	 : '/book'
-
+		method  	: 'get'
+		url	 	: '/book'
 	$http( httpOpt )
 	.success ( bookListInDB, status ) ->
 		$scope.bookListInDB = bookListInDB
@@ -12,19 +11,20 @@ module.exports = ( $scope, $filter, $http ) ->
 	httpOpt =
 		method  : 'get'
 		url	 : '/book/user'
-
 	$http( httpOpt )
-	.success ( bookListInUser, status ) ->
+	.success ( bookListInUser, status, header, config ) ->
 		$scope.bookListInUser = bookListInUser
-	.then ->
+		return
+	.then ()->
+		console.log '/book/user 完了'
 		return
 
 	$scope.searchBook = ->
 		console.log $scope.newBook, 'postAuthor clicked'
-		$scope.isNotExistenceBook   = false
-		$scope.isBookAdded		  = false
-		$scope.showSuggestedBooks   = false
-		$scope.isWaiting			= true
+		$scope.isNotExistenceBook   	= false
+		$scope.isBookAdded		  		= false
+		$scope.showSuggestedBooks   	= false
+		$scope.isWaiting					= true
 
 		httpOpt =
 			method  : 'post'
@@ -33,14 +33,14 @@ module.exports = ( $scope, $filter, $http ) ->
 
 		$http( httpOpt )
 		.success ( data, status ) ->
-			$scope.isNotExistenceBook   = data.isNotExistenceBook
-			$scope.showSuggestedBooks   = true
-			$scope.bookListInAmazon	 = data.bookListInAmazon
-			$scope.isWaiting			= false
+			$scope.isNotExistenceBook   	= data.isNotExistenceBook
+			$scope.showSuggestedBooks   	= true
+			$scope.bookListInAmazon	 		= data.bookListInAmazon
+			$scope.isWaiting					= false
 			return
 		.then ->
 			console.log 'author saved.'
-			$scope.newBook = ''
+			# $scope.newBook = ''
 			return
 
 		return
