@@ -42,8 +42,10 @@ module.exports = function( data ){
 						errorLog += util.inspect( res.ItemLookupResponse, false, null);
 						errorLog += '\n---------\n\n';
 				*/
-				var errorLog = book.title;
-						errorLog += 'はAuthorityASIN/RelatedItemsを持っていない\n';
+				var errorLog = book.ASIN[0];
+						errorLog = ' / ';
+						errorLog = book.title;
+						errorLog += 'はAuthorityASIN / RelatedItemsを持っていない\n';
 				console.log( errorLog );
 
 				modelBookList.findOneAndUpdate( { ASIN: book.ASIN }, modifiedModelBookList, function( err, book ){
