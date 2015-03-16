@@ -31,7 +31,7 @@ module.exports = function( data ){
 			});
 		}catch( error ){
 			try{
-				console.log( 'inspectASINのリクエストエラー この本はRelatedItemsを持っていない', error );
+				console.log( book.title + 'この本はRelatedItemsを持っていない', error );
 				modelBookList.findOneAndUpdate( { ASIN: book.ASIN }, modifiedModelBookList, function( err, book ){
 					data.countExec++;
 				});
