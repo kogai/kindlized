@@ -1,4 +1,4 @@
-var makeModel	 = require('../../common/makeModel');
+var makeModel 			= require( 'common/makeModel' );
 
 var userSchema  = {
 	mail : {
@@ -7,10 +7,10 @@ var userSchema  = {
 			unique : true
 		}
 	},
-	pwd            : String,
-	uuid           : String,
-	isVerified     : Boolean,
-   bookList       : Array
+	password: String,
+	verifyId: String,
+	isVerified: Boolean,
+	bookList: Array
 };
 
 module.exports = new makeModel( 'User', userSchema );

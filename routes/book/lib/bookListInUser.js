@@ -1,8 +1,8 @@
 var Q 				= require( 'q' );
 var express 		= require('express');
 var router 			= express.Router();
-var modelUser     = require( 'user/lib/modelUser' );
-var modelBookList = require( 'shelf/lib/modelBookList' );
+var modelUser     	= require( 'user/lib/modelUser' );
+var modelBookList 	= require( 'shelf/lib/modelBookList' );
 var constant 		= require( 'common/constant' )
 
 var fetchModelUser = function( req, res ){
