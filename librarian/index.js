@@ -2,6 +2,15 @@
 // - 書籍DBのkindle化チェック
 // - 書籍DBへの新刊追加
 
+/*
+
+parentsASIN-RelatedItemsのチェックが失敗してるっぽい
+- [ ] シドニアの騎士(10)
+- [ ] 青空エール 3 (マーガレットコミックス)
+- [ ] 姉の結婚 2 (フラワーコミックスアルファ)
+
+*/
+
 var Q               = require('q');
 var regInt          = require('./lib/fetchParentASIN/regInt');
 var fetchBookList   = require('./lib/fetchParentASIN/fetchBookList');
