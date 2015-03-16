@@ -34,13 +34,16 @@ module.exports = function( data ){
 				});
 			}catch( error ){
 				// AuthorityASINを持っていない書籍の処理
+				/*
 				var errorLog = '\n\n---------\n';
 						errorLog += book.title;
 						errorLog += 'はAuthorityASIN/RelatedItemsを持っていない\n';
 						errorLog += error;
 						errorLog += util.inspect( res.ItemLookupResponse, false, null);
 						errorLog += '\n---------\n\n';
-
+				*/
+				var errorLog = book.title;
+						errorLog += 'はAuthorityASIN/RelatedItemsを持っていない\n';
 				console.log( errorLog );
 
 				modelBookList.findOneAndUpdate( { ASIN: book.ASIN }, modifiedModelBookList, function( err, book ){
