@@ -80,6 +80,7 @@ block content
 						th ステータス
 						th 出版状況
 						th リンク
+						th 
 				tbody
 					tr( ng-repeat="bookInUser in bookListInUser" )
 						td
@@ -101,3 +102,5 @@ block content
 						td
 							a( href="{{ bookInUser.url[0] }}" target="_blank" ).btn.btn-default
 								|Amazonで購入する
+						td
+							button( ng-click="unRegistBook( $index )" ).btn.btn-warning.btn-xs 登録を解除
