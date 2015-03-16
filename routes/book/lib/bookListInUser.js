@@ -44,9 +44,10 @@ var fetchBookList = function( data ){
 			追加したプロパティを保持できないっぽいので
 			新しくオブジェクトを作って必要なデータをコピー
 			*/
-			
+
 			newBooks[i] = {
 				title : books[i].title,
+				_id 	: books[i]._id,
 				url 	: books[i].url,
 				isNotified 	: books[i].isNotified,
 				isKindlized : books[i].isKindlized
@@ -66,7 +67,7 @@ var renderRouter = function( data ){
 	var d      = Q.defer();
 
 	res.send( newBooks );
-	d.resolve( books );
+	d.resolve( newBooks );
 
 	return d.promise;
 }
@@ -75,9 +76,9 @@ module.exports = function( req, res ){
 	fetchModelUser( req, res )
 	.then( fetchBookList )
 	.then( renderRouter )
-	.done( function( books ){
+	.done( function( newBooks ){
 		try{
-			console.log( 'このユーザーは' + books.length + '冊の書籍を登録している' );
+			console.log( 'このユーザーは' + newBooks.length + '冊の書籍を登録している' );
 		}catch( err ){
 			console.log( 'このユーザーは書籍を登録していない');
 		}

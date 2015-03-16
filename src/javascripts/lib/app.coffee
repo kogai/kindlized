@@ -1,12 +1,5 @@
 module.exports = ( $scope, $filter, $http ) ->
-	# httpOpt =
-	# 	method  	: 'get'
-	# 	url	 	: '/book'
-	# $http( httpOpt )
-	# .success ( bookListInDB, status ) ->
-	# 	$scope.bookListInDB = bookListInDB
-	# .then ->
-	# 	return
+
 	$scope.isRegiterd = false;
 
 	httpOpt =
@@ -68,6 +61,25 @@ module.exports = ( $scope, $filter, $http ) ->
 			return
 		.then ->
 			console.log '/save 完了'
+			return
+		return
+
+	$scope.unRegistBook = ( $index ) ->
+		_id = $scope.bookListInUser[ $index ]._id
+		$scope.bookListInUser.splice( $index, 1 )
+
+		# 更新したモデルをDBに保存
+
+		httpOpt =
+			method: 'post'
+			url	 : '/reduce'
+			data: deleteBookId: _id
+
+		$http( httpOpt )
+		.success () ->
+			return
+		.then ()->
+			console.log '/reduce 完了'
 			return
 		return
 	return
