@@ -1,7 +1,7 @@
 var Q           = require( 'q' );
 var uuid        = require( 'node-uuid' );
 var nodemailer  = require('nodemailer');
-var modelUser   = require( 'user/lib/modelUser' );
+var modelUser   = require( 'user' );
 var makeCredential = require ( 'common/makeCredential' );
 var credentialGmail = makeCredential( 'gmail' );
 

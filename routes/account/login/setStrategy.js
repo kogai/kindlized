@@ -1,7 +1,7 @@
 var Q = require('q');
 var passport        = require('passport');
 var LocalStrategy   = require('passport-local').Strategy;
-var modelUser       = require('user/lib/modelUser');
+var modelUser       = require('user');
 
 var LocalStrategyField = {
 	usernameField: 'mail',

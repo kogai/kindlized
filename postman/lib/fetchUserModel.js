@@ -1,7 +1,7 @@
 // 全てのuserモデルを取得
 
 var Q          = require('q');
-var modelUser  = require( 'user/lib/modelUser' );
+var modelUser  = require( 'user/' );
 
 module.exports = function(){
    var d = Q.defer();
