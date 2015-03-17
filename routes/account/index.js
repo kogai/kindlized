@@ -3,6 +3,15 @@ var express = require('express');
 var router 	= express.Router();
 var verify 	= require( 'routes/account/verify' );
 var regist 	= require( 'routes/account/regist' );
+var login 	= require( 'routes/account/login' );
+
+router.post('/login', function( req, res ) {
+	console.log( 'login posted' );
+	login({
+		res: res,
+		req: req
+	});
+});
 
 router.get('/verify', function( req, res ) {
 	console.log( 'verify is ', req.query.id );
