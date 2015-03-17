@@ -5,11 +5,10 @@ var reduceListByDate = require('common/reduceListByDate');
 module.exports = function( bookList ) {
   // DBから著者リストを非同期に取得する
   var d = Q.defer();
+  console.log('DBから著者リストを非同期に取得する');
   ModelBookList.find( {}, function( err, result ) {
-   //   reduceListByDate( result)
-   //   .then( function( result){
-        d.resolve( result );
-   //   });
+      console.log(result.length + '冊の書籍データが存在する');
+      d.resolve( result );
   });
   return d.promise;
 }

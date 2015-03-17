@@ -1,34 +1,23 @@
-var Q         = require('q');
-var moment    = require('moment-timezone');
-var constant  = require( '../../../common/constant' );
+var Q		 = require('q');
 
 module.exports = function( bookList ){
-  var d = Q.defer();
-  callBack = function( bookList ){
-    var siftedBookList = [];
-    for (var i = 0; i < bookList.length; i++) {
+	console.log( 'ASINを持つ書籍は', bookList.length );
+    var d = Q.defer();
 
-      var lastModifyTime  = bookList[i].lastModified || bookList[i]._id.getTimestamp();
-      var todayDate       = moment();
-      var diffDay         = todayDate.diff( lastModifyTime, 'days' );
+	var siftedBookList = [];
+	for (var i = 0; i < bookList.length; i++) {
 
-    //   console.log( 'lastModifyTime', lastModifyTime );
-    //   console.log( 'diffDay', diffDay );
+        var hasAuthorityASIN = ( function( AuthorityASIN ){
+            var authorityASINState = false;
+            if( AuthorityASIN.length > 0 ) authorityASINState = true;
+            return authorityASINState;
+        })( bookList[i].AuthorityASIN );
 
-      var hasAuthorityASIN = (function( AuthorityASIN ){
-          var authorityASINState = false;
-          if( AuthorityASIN.length > 0 ) authorityASINState = true;
-          return authorityASINState;
-      })( bookList[i].AuthorityASIN );
-
-      if( hasAuthorityASIN ){
-    //   if( diffDay > constant.periodicalDay && hasAuthorityASIN ){
-        siftedBookList.push( bookList[i] );
-      }
-    }
-    console.log( 'siftedBookList has', siftedBookList.length, 'books.' );
+        if( hasAuthorityASIN ){
+	        siftedBookList.push( bookList[i] );
+        }
+	}
+	console.log( 'AuthorityASINを持つ書籍は', siftedBookList.length );
     d.resolve( siftedBookList );
-  };
-  callBack( bookList );
-  return d.promise;
+    return d.promise;
 };

@@ -16,6 +16,7 @@ var regInt          = require('./lib/fetchParentASIN/regInt');
 var fetchBookList   = require('./lib/fetchParentASIN/fetchBookList');
 var inspectASIN     = require('./lib/fetchParentASIN/inspectASIN');
 var constant        = require('../common/constant');
+var reduceListByDate = require('common/reduceListByDate');
 
 var inspectBook     = require( './lib/inspectBookList/inspectBook' );
 var siftBookList    = require('./lib/inspectBookList/siftBookList');
@@ -49,7 +50,7 @@ var fetchParentASIN = function(){
 
 var inspectBookList = function(){
   var d = Q.defer();
-
+  console.log( '処理を開始' );
   Q.when( bookList )
   .then( fetchBookList )
   .then( siftBookList )
@@ -66,3 +67,4 @@ module.exports = {
     fetchParentASIN: fetchParentASIN,
     inspectBookList: inspectBookList
 };
+inspectBookList();
