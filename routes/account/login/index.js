@@ -1,20 +1,10 @@
 var Q = require('q');
+var localPassport 		= require('routes/account/login/lib/localPassport');
+var passPortSerialize 	= require('routes/account/login/lib/passPortSerialize');
 
-// passport認証
-// comparePassword
-// 認証処理実行
-// レスポンス
+localPassport.serializeUser = passPortSerialize.serialize;
+localPassport.deserializeUser = passPortSerialize.deSerialize;
 
-var renderRouter = function( data ){
-	var res    = data.res;
-	var d      = Q.defer();
-
-	res.send();
-	d.resolve( data );
-
-	return d.promise;
-}
-
-module.exports = function( data ){
-
-}
+module.exports = {
+	localPassport: localPassport
+};
