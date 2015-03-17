@@ -1,8 +1,9 @@
 extends layout
 
 block content
-	h1= title
-	p Login to #{title}
+	h1
+		|#{ title }
+
 	form( action='/process/login' , method='POST' , id='login-wrap' )
 		.input-group.input-group-sm
 			input.form-control(type='text', placeholder='Username' , name='mail')
