@@ -13,7 +13,7 @@ var userSchema  = {
 	bookList: Array
 };
 
-module.exports = new makeModel( 'User', userSchema );
+module.exports = new makeModel( 'User', userSchema, true );
 
 /*
 

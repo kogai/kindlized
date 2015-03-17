@@ -27,6 +27,8 @@ module.exports = ( $scope, $http, account ) ->
 		return
 
 	$scope.login = ( mail, password ) ->
+		console.log mail
+		console.log password
 		$scope.isSending = true
 		httpOpt =
 			method   : 'post'

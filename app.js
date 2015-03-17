@@ -32,18 +32,18 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
+app.use( logger('dev'));
+app.use( express.static(path.join(__dirname, 'public')));
+app.use( bodyParser.json());
+app.use( bodyParser.urlencoded({ extended: false }));
+app.use( cookieParser());
+app.use( session({
     secret : credential.session,
     cookie : { maxAge : 30 * 24 * 60 * 60 * 1000 }
 }));
-// app.use(passport.initialize());
-// app.use(passport.session());
 
+app.use( passport.initialize() );
+app.use( passport.session() );
 
 app.use( '/', routes );
 app.use( '/reduce', reduce );
@@ -51,6 +51,7 @@ app.use( '/search', search );
 app.use( '/book', book );
 app.use( '/save', saveBook );
 app.use( '/account', account );
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
