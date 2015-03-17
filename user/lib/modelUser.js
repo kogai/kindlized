@@ -1,4 +1,4 @@
-var makeModel 			= require( 'common/makeModel' );
+var makeModel = require('common/makeModel');
 
 var userSchema  = {
 	mail : {

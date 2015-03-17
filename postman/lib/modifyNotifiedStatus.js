@@ -1,7 +1,7 @@
 // userモデルのbookListのisNotifiedをtrueに変更
 
 var Q = require('q');
-var modelUser  = require( 'user/lib/modelUser' );
+var modelUser  = require( 'user/' );
 
 module.exports = function( user ){
    var d = Q.defer();

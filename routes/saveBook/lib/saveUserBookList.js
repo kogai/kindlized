@@ -1,5 +1,5 @@
 var Q = require('q');
-var modelUser = require('user/lib/modelUser');
+var modelUser = require('user');
 var constant = require('common/constant')
 
 module.exports = function( data ){
