@@ -67,4 +67,3 @@ module.exports = {
     fetchParentASIN: fetchParentASIN,
     inspectBookList: inspectBookList
 };
-inspectBookList();
