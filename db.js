@@ -14,8 +14,8 @@ var libraryHandler = function( currentTime ){
         d.resolve([]);
         return d.promise;
     })
-    .then( librarian.fetchParentASIN )
     .then( librarian.inspectBookList )
+    .then( librarian.fetchParentASIN )
     .done( function(){
       logTime( currentTime );
     });
