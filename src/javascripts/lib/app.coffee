@@ -1,7 +1,5 @@
 module.exports = ( $scope, $filter, $http ) ->
 
-	$scope.isRegiterd = false;
-
 	httpOpt =
 		method  : 'get'
 		url	 : '/book/user'
@@ -32,6 +30,8 @@ module.exports = ( $scope, $filter, $http ) ->
 			$scope.bookListInDB 	= data.bookListInDB
 			return
 		.then ->
+			$scope.isWaiting = false
+			$scope.showSuggestedBooks = true
 			console.log '/search/db 完了'
 			return
 		$http( httpOptToAmazon )
@@ -46,7 +46,8 @@ module.exports = ( $scope, $filter, $http ) ->
 		return
 
 	$scope.registBook = ( newBook, $index ) ->
-		console.log newBook
+		$scope.bookListInDB[ $index ].isRegisterd = true
+		$scope.bookListInUser.push( $scope.bookListInDB[ $index ] )
 		httpOpt =
 			method  : 'post'
 			url	 : '/save'
@@ -55,9 +56,6 @@ module.exports = ( $scope, $filter, $http ) ->
 		$http( httpOpt )
 		.success ( data, status ) ->
 			console.log 'registBook satatus is', status
-			$scope.bookListInDB[ $index ].isRegisterd = true
-			$scope.isRegiterd = true;
-			$scope.bookListInUser.push( $scope.bookListInDB[ $index ] )
 			return
 		.then ->
 			console.log '/save 完了'
