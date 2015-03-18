@@ -3,7 +3,7 @@ var shelf       = require( 'shelf' );
 var postman     = require( 'postman' );
 var Q           = require( 'q' );
 var cronjob     = require( 'cron' ).CronJob;
-var cronTime    = "0 0 0 * * *"
+var cronTime    = "0 0 0 * * *";
 var moment      = require( 'moment-timezone' );
 
 var libraryHandler = function( currentTime ){
@@ -19,7 +19,7 @@ var libraryHandler = function( currentTime ){
     .done( function(){
       logTime( currentTime );
     });
-}
+};
 
 // タイムゾーンに合わせてログを取る
 var logTime = function( currentTime ){

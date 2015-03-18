@@ -46,7 +46,7 @@ var fetchParentASIN = function(){
     d.resolve();
   });
   return d.promise;
-}
+};
 
 var inspectBookList = function(){
   var d = Q.defer();

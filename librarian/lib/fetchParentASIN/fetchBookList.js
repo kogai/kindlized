@@ -11,4 +11,4 @@ module.exports = function( bookList ) {
       d.resolve( result );
   });
   return d.promise;
-}
+};
