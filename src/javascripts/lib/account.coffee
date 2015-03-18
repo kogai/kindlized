@@ -60,6 +60,7 @@ module.exports = ( $scope, $http, $window, account ) ->
 		$http( httpOpt )
 		.success ( statusMessage ) ->
 			$scope.statusMessage = statusMessage
+			$window.location.href = '/account'
 			return
 		.then ->
 			console.log '/account/logout 完了'
