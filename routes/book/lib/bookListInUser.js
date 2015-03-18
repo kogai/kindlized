@@ -7,7 +7,8 @@ var constant 		= require( 'common/constant' )
 
 var fetchModelUser = function( req, res ){
 	var d = Q.defer();
-	modelUser.findOne( { _id: constant._id }, function( err, user ){
+	var userId = req.session.passport.user;
+	modelUser.findOne( { _id: userId }, function( err, user ){
 		d.resolve({
 			user: user,
 			req: req,

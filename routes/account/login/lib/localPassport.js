@@ -34,7 +34,6 @@ var LocalStrategyCallBack = function( mail, password, done ){
 		var done = data.done;
 
 		user.comparePassword( password , user.password, function( err , isMatch ) {
-			console.log( 'err', err );
 	        if (err) return done(err);
 	        if ( isMatch ){
 	        	return done( null, user );
