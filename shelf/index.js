@@ -14,7 +14,7 @@ var authorRecursionCount = 0;
 
 module.exports = function(){
 	var defered = Q.defer();
-	Q.when([])
+	Q.when()
 	.then( fetchAuthor )
 	.done(function( authorList ){
 		if( authorList.length === 0 ){

@@ -1,25 +1,21 @@
 var Q 		= require( 'q' );
 var express = require('express');
 var router 	= express.Router();
-var passport = require('passport');
 var verify 	= require( 'routes/account/verify' );
 var regist 	= require( 'routes/account/regist' );
 var login 	= require( 'routes/account/login' );
-
-// login.localPassport;
+var localPassport = login.localPassport;
 
 router.post(
 	'/login',
-	passport.authenticate(
+	localPassport.authenticate(
 		'local',
 		{
         	failureRedirect: '/account/fail'
 		}
 	),
 	function( req, res){
-		console.log( req.body.mail );
-		res.redirect( '/' );
-		// res.send( 'authenticated.' );
+		res.send( 'ログイン完了しました。' );
 	}
 );
 
