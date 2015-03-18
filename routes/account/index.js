@@ -15,11 +15,14 @@ router.post(
 		}
 	),
 	function( req, res){
-		console.log( 'ログイン完了しました。' );
-		console.log( req.session.passport );
 		res.send( 'ログイン完了しました。' );
 	}
 );
+
+router.post( '/logout', function( req, res ){
+    delete req.session.passport.user;
+    res.send( 'ログアウト完了しました。' );
+});
 
 router.get('/verify', function( req, res ) {
 	console.log( 'verify is ', req.query.id );
