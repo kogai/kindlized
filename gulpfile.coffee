@@ -4,7 +4,8 @@ reload	  = browserSync.reload
 data		= require 'gulp-data'
 debug	   = require 'gulp-debug'
 newer	   = require 'gulp-newer'
-# sass		= require 'gulp-sass'
+stylus		= require 'gulp-stylus'
+nib = require 'nib'
 sourcemaps  = require 'gulp-sourcemaps'
 minify	  = require 'gulp-minify-css'
 
@@ -31,6 +32,16 @@ jpegtran	= require 'imagemin-jpegtran'
 
 # watch
 watch	   = require 'gulp-watch'
+
+gulp.task 'stylus', ->
+	gulp.src './src/stylus/index.styl'
+	.pipe( sourcemaps.init() )
+	.pipe( stylus({
+		use: nib()
+		compress: true
+	}))
+	.pipe( sourcemaps.write('.') )
+	.pipe( gulp.dest('./public/stylesheets') )
 
 # gulp.task 'sass', ->
 #	 gulp.src('src/sass/*.sass')
@@ -79,13 +90,13 @@ gulp.task 'browserify', ->
 
 
 gulp.task 'watches', ->
-	# gulp.watch [
-	# 	 './**/*.js'
-	# 	 './**/**/*.js'
-	# 	 './**/**/**/*.js'
-	# ],[
-	# 	 'lint'
-	# ]
+	gulp.watch [
+		 './src/stylus/*.styl'
+		 './src/stylus/**/*.styl'
+		 './src/stylus/**/**/*.styl'
+	],[
+		 'stylus'
+	]
 	gulp.watch [
 		'./src/javascripts/*.coffee'
 		'./src/javascripts/**/*.coffee'
@@ -98,5 +109,6 @@ gulp.task 'watches', ->
 gulp.task 'default', [
 	'lint'
 	'browserify'
+	'stylus'
 	'watches'
 ]

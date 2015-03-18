@@ -1,9 +1,15 @@
 extends partials/layout
 
 block content
-	h1
-		|#{ title }
-	
+	.row
+		.col-md-10
+			h1
+				|#{ title }
+		.col-md-2
+			div( ng-controller="account" )
+				div( ng-if='!isRegist' )
+					button( type='submit' ng-click='logout()' ).btn.btn-default ログアウト
+
 	div( ng-controller="postNewBook" )
 		form( ng-submit="search( newBook )" ).input-group
 			input( type="text" required placeholder="書籍のタイトルを入力して下さい" ng-model="newBook" ).form-control

@@ -16,9 +16,6 @@ block content
 			div( ng-if='!isRegist' )
 				button( type='submit' ng-click='login( mail, password )' ).btn.btn-default ログイン
 
-			div( ng-if='!isRegist' )
-				button( type='submit' ng-click='logout()' ).btn.btn-default ログアウト
-
 			div( ng-if='isRegist' ng-click='toggleBtn()' )
 				|アカウント登録済みの方はこちら
 

@@ -6,6 +6,7 @@ html
 		link(rel='stylesheet', href='/javascripts/lib/bootstrap/dist/css/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')
 	body( ng-app='App')
-		block content
+		.container-fluid
+			block content
 	script(src='/javascripts/lib/angular/angular.js')
 	script(src='/javascripts/bundle.min.js')
