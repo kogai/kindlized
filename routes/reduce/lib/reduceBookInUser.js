@@ -6,8 +6,10 @@ var constant 		= require( 'common/constant' )
 
 var fetchModelUser = function( req, res ){
 	var d = Q.defer();
-	modelUser.findOne( { _id: constant._id }, function( err, user ){
+	var userId = req.session.passport.user;
+	modelUser.findOne( { _id: userId }, function( err, user ){
 		d.resolve({
+			userId: userId,
 			user: user,
 			req: req,
 			res: res
@@ -38,7 +40,8 @@ var reduceBookListinUser = function( data ){
 var saveReducedBookInUser = function ( data ){
 	var d = Q.defer();
     var reduceBookList = data.reduceBookList;
-    modelUser.findOneAndUpdate( { _id: constant._id }, { bookList: reduceBookList}, function( err, modifiedUser ){
+	var userId = data.userId;
+    modelUser.findOneAndUpdate( { _id: userId }, { bookList: reduceBookList }, function( err, modifiedUser ){
         data.modifiedUser = modifiedUser;
         d.resolve( data );
     });

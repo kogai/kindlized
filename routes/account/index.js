@@ -15,6 +15,8 @@ router.post(
 		}
 	),
 	function( req, res){
+		console.log( 'ログイン完了しました。' );
+		console.log( req.session.passport );
 		res.send( 'ログイン完了しました。' );
 	}
 );
