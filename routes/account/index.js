@@ -6,16 +6,22 @@ var regist 	= require( 'routes/account/regist' );
 var login 	= require( 'routes/account/login' );
 var localPassport = login.localPassport;
 
+router.get( '/login/success', function( req, res ){
+	console.log( '/login/success' );
+	res.redirect( 303, '/' );
+});
+
 router.post(
 	'/login',
 	localPassport.authenticate(
 		'local',
 		{
-        	failureRedirect: '/account/fail'
+			successRedirect: '/',
+    	failureRedirect: '/account/fail'
 		}
 	),
-	function( req, res){
-		res.send( 'ログイン完了しました。' );
+	function( req, res ){
+		res.redirect( 307, '/aaa' );
 	}
 );
 
@@ -25,7 +31,6 @@ router.post( '/logout', function( req, res ){
 });
 
 router.get('/verify', function( req, res ) {
-	console.log( 'verify is ', req.query.id );
 	verify({
 		res: res,
 		req: req

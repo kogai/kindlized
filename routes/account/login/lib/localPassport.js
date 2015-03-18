@@ -6,7 +6,7 @@ var modelUser       = require('user');
 var LocalStrategyField = {
 	usernameField: 'mail',
 	passwordField: 'password'
-}
+};
 
 var LocalStrategyCallBack = function( mail, password, done ){
 	var fetchUser = function( mail, password, done ){
@@ -26,7 +26,7 @@ var LocalStrategyCallBack = function( mail, password, done ){
 			});
 		});
 		return d.promise;
-	}
+	};
 
 	var comparePassword = function( data ){
 		var password = data.password;

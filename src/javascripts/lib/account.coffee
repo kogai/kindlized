@@ -1,4 +1,4 @@
-module.exports = ( $scope, $http, account ) ->
+module.exports = ( $scope, $http, $window, account ) ->
 
 	$scope.isSending = false
 	$scope.statusMessage = '送信中...'
@@ -38,11 +38,17 @@ module.exports = ( $scope, $http, account ) ->
 
 		$http( httpOpt )
 		.success ( statusMessage ) ->
-			$scope.statusMessage = statusMessage
+			$window.location.href = '/'
+
+			# $http({
+			# 	url: '/account/login/success'
+			# })
 			return
-		.then ->
+		.then ( statusMessage )->
+			$scope.statusMessage = 'ログイン完了'
 			console.log '/account/login 完了'
 			return
+			# return
 		return
 
 	$scope.logout = () ->

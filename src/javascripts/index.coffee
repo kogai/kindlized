@@ -8,5 +8,5 @@ angular.module('App',[])
     )
     .controller(
         'account',
-        [ '$scope', '$http', account ]
+        [ '$scope', '$http', '$window', account ]
     )
