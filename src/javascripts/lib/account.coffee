@@ -27,8 +27,6 @@ module.exports = ( $scope, $http, account ) ->
 		return
 
 	$scope.login = ( mail, password ) ->
-		console.log mail
-		console.log password
 		$scope.isSending = true
 		httpOpt =
 			method   : 'post'
@@ -40,10 +38,10 @@ module.exports = ( $scope, $http, account ) ->
 
 		$http( httpOpt )
 		.success ( statusMessage ) ->
-			# $scope.statusMessage = statusMessage
+			$scope.statusMessage = statusMessage
 			return
 		.then ->
-			console.log '/account/regist 完了'
+			console.log '/account/login 完了'
 			return
 		return
 

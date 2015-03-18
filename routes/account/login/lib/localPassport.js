@@ -10,7 +10,6 @@ var LocalStrategyField = {
 
 var LocalStrategyCallBack = function( mail, password, done ){
 	var fetchUser = function( mail, password, done ){
-		console.log( 'mail', mail );
 		var d = Q.defer();
 		modelUser.findOne({ mail: mail }, function( err, user) {
 			if (err) {
@@ -35,14 +34,12 @@ var LocalStrategyCallBack = function( mail, password, done ){
 		var done = data.done;
 
 		user.comparePassword( password , user.password, function( err , isMatch ) {
-			console.log( 'isMatch', isMatch );
-			console.log( 'user', user );
-			console.log( 'done', done );
+			console.log( 'err', err );
 	        if (err) return done(err);
 	        if ( isMatch ){
 	        	return done( null, user );
 	        }else{
-	        	return done( null, false, { message: 'パスワードが間違っています。' });
+	        	return done( null, false, { message: 'パスワードが間違っています。' } );
 	        }
 	    });
 	};
