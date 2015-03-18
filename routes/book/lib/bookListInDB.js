@@ -1,8 +1,8 @@
-var Q 				= require( 'q' );
-var express 		= require('express');
-var router 			= express.Router();
+var Q 						= require( 'q' );
+var express 			= require('express');
+var router 				= express.Router();
 var modelBookList = require( 'shelf/lib/modelBookList' );
-var constant 		= require( 'common/constant' )
+var constant 			= require( 'common/constant' );
 
 var fetchBookList = function( req, res ){
 	var d = Q.defer();
@@ -18,14 +18,14 @@ var fetchBookList = function( req, res ){
 
 var renderRouter = function( data ){
 	var books = data.books;
-	var res = data.res;
-	var d = Q.defer();
+	var res 	= data.res;
+	var d 		= Q.defer();
 
 	res.send( books );
 	d.resolve( books );
 
 	return d.promise;
-}
+};
 
 module.exports = function( req, res ){
 	fetchBookList( req, res )

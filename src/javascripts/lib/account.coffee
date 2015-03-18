@@ -45,4 +45,19 @@ module.exports = ( $scope, $http, account ) ->
 			return
 		return
 
+	$scope.logout = () ->
+		$scope.isSending = true
+		httpOpt =
+			method : 'post'
+			url		 : '/account/logout'
+
+		$http( httpOpt )
+		.success ( statusMessage ) ->
+			$scope.statusMessage = statusMessage
+			return
+		.then ->
+			console.log '/account/logout 完了'
+			return
+		return
+
 	return
