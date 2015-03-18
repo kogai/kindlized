@@ -16,7 +16,7 @@
     "db": "env NODE_PATH=./ node-dev --all-deps db",
     "postman": "env NODE_PATH=./ node-dev --all-deps postman",
     "build": "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js",
-    "app-p": "env NODE_PATH=./ bin/www"
+    "start": "env NODE_PATH=./ PORT=80 pm2 start bin/www"
   },
   "repository": {
     "type": "git",
