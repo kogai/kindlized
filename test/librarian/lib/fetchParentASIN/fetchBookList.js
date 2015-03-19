@@ -1,61 +1,58 @@
-var fetchBookList       = require( 'librarian/lib/fetchParentASIN/fetchBookList' );
-var testdata         	= require( 'test/librarian/lib/inspectBookList/testdata' );
-
 var Q = require('q');
-
 var should = require('should');
+var fetchBookList = require('librarian/lib/fetchParentASIN/fetchBookList');
 
-module.exports = function(){
-	describe( 'librarian/lib/inspectBookList/inspectBook.jsのテスト', function(){
-		it( 'テストが動作している', function( done ){
+module.exports = function() {
+	describe('librarian/lib/inspectBookList/inspectBook.jsのテスト', function() {
+		it('テストが動作している', function(done) {
 			(5).should.be.exactly(5);
 			done();
-	    });
+		});
 
 		var bookList;
-		this.timeout( 0 );
+		this.timeout(0);
 
-		before( function( done ){
-            fetchBookList( testdata )
-			.done( function( data ){
-				bookList = data;
-				done();
-			});
+		before(function(done) {
+			fetchBookList()
+				.done(function(data) {
+					bookList = data;
+					done();
+				});
 		});
 
-		it( 'fetchBookListはbookList配列を返す', function(){
-			bookList.should.be.instanceof( Array );
+		it('fetchBookListはbookList配列を返す', function() {
+			bookList.should.be.instanceof(Array);
 		});
 
-		it( 'bookList配列にはtitleプロパティがある', function(){
+		it('bookList配列にはtitleプロパティがある', function() {
 			for (var i = 0; i < bookList.length; i++) {
-				bookList[i].should.have.property( 'title' );
+				bookList[i].should.have.property('title');
 			}
 		});
 
-		it( 'bookList配列にはASINプロパティがある', function(){
+		it('bookList配列にはASINプロパティがある', function() {
 			for (var i = 0; i < bookList.length; i++) {
-				bookList[i].should.have.property( 'ASIN' );
+				bookList[i].should.have.property('ASIN');
 			}
 		});
 
-		it( 'ASINプロパティは空の文字列ではない', function(){
+		it('ASINプロパティは空の文字列ではない', function() {
 			for (var i = 0; i < bookList.length; i++) {
 				var ASIN = bookList[i].ASIN;
-				( ASIN.length ).should.be.above( 0 );
+				(ASIN.length).should.be.above(0);
 			}
 		});
 
-		it( 'bookList配列にはAuthorityASINプロパティがある', function(){
+		it('bookList配列にはAuthorityASINプロパティがある', function() {
 			for (var i = 0; i < bookList.length; i++) {
-				bookList[i].should.have.property( 'AuthorityASIN' );
+				bookList[i].should.have.property('AuthorityASIN');
 			}
 		});
 
-		it( 'AuthorityASINプロパティは配列である', function(){
+		it('AuthorityASINプロパティは配列である', function() {
 			for (var i = 0; i < bookList.length; i++) {
 				var AuthorityASIN = bookList[i].AuthorityASIN;
-				AuthorityASIN.should.be.instanceof( Array );
+				AuthorityASIN.should.be.instanceof(Array);
 			}
 		});
 	});
