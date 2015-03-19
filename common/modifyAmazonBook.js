@@ -31,6 +31,6 @@ module.exports = function( rawBook ){
   }catch( err ){
     modBook.status  = 'ERROR';
   }finally{
-    return rawBook;
+    return modBook;
   }
 };

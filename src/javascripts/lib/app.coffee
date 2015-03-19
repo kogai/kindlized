@@ -37,10 +37,10 @@ module.exports = ( $scope, $filter, $http ) ->
 			$scope.showSuggestedBooks = true
 			console.log '/search/db 完了'
 			return
-			
+
 		$http( httpOptToAmazon )
 		.success ( data, status ) ->
-			$scope.bookListInAmazon = data.bookListInAmazon
+			$scope.bookListInDB.push( data.bookListInAmazon )
 			return
 		.then ->
 			console.log '/search/amazon 完了'

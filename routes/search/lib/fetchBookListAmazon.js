@@ -1,7 +1,4 @@
 var Q = require('q');
-var _ = require('underscore');
-var express = require('express');
-var router = express.Router();
 
 var opHelper = require('apac').OperationHelper;
 var makeOpConfig = require('common/makeOpConfig');

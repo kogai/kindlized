@@ -20,9 +20,9 @@ module.exports = function( book ) {
         isKindlized: false
       });
 
-      newBook.save(function(err) {
+      newBook.save(function( err ) {
         if (err) console.log(err);
-        console.log( book.title, 'regist is success' );
+        console.log( '書籍:' + newBook.title + 'が登録されました'　);
       });
     }
   });

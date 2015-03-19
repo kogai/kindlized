@@ -50,7 +50,7 @@ router.post( '/amazon', function( req, res ) {
 	.then( fetchAuthorListAmazon )
 	.then( saveNewAuthor )
 	.done( function( data ){
-		console.log( 'data.bookListInAmazon', data.bookListInAmazon );
+		// console.log( 'data.bookListInAmazon', data.bookListInAmazon );
 		console.log('AmazonAPIの検索処理完了.');
 	});
 });
