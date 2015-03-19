@@ -15,23 +15,22 @@
 
 .l-flex
 	myflex()
+	&.ss-flex-center
+		align-items: center
 
-for j in (5..50)
-	if( j % 5 == 0 )
-		.l-ml{j}
-			margin-left 10px * j
 
-for j in (5..50)
-	if( j % 5 == 0 )
-		.l-mr{j}
-			margin-right 10px * j
+for j in (1..10)
+	.l-ml-{ ( j * 5) }
+		margin-left 5px * j
 
-for j in (5..50)
-	if( j % 5 == 0 )
-		.l-mb{j}
-			margin-bottom 10px * j
+for j in (1..10)
+	.l-mr-{j * 5}
+		margin-right 5px * j
 
-for j in (5..50)
-	if( j % 5 == 0 )
-		.l-mt{j}
-			margin-top 10px * j
+for j in (1..10)
+	.l-mb-{j * 5}
+		margin-bottom 5px * j
+
+for j in (1..10)
+	.l-mt-{j * 5}
+		margin-top 5px * j

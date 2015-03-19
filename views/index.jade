@@ -1,14 +1,14 @@
 extends partials/layout
 
 block content
-	div( ng-controller="postNewBook" ).row
-		.col-md-10
-			h1
+	div( ng-controller="postNewBook" )
+		.l-clr.l-mt-10.l-mb-10
+			.l-left.l-flex.ss-flex-center
 				|ようこそ、{{ userName }}
-		.col-md-2
-			div( ng-controller="account" )
-				div( ng-if='!isRegist' )
-					button( type='submit' ng-click='logout()' ).btn.btn-default ログアウト
+			.l-right
+				div( ng-controller="account" )
+					div( ng-if='!isRegist' )
+						button( type='submit' ng-click='logout()' ).btn.btn-default ログアウト
 
 		form( ng-submit="search( newBook )" ).input-group
 			input( type="text" required placeholder="書籍のタイトルを入力して下さい" ng-model="newBook" ).form-control
