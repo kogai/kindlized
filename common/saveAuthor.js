@@ -15,7 +15,8 @@ module.exports = function( author ) {
         name: author,
         lastModified: initialModifiedTime
       });
-      newAuthor.save(function(err) {
+      newAuthor.save(function( err ) {
+        console.log( '著者:' + author + 'が登録されました'　);
         if (err) console.log(err);
         d.resolve();
       });

@@ -8,7 +8,7 @@ module.exports = function(data) {
   var authorListInAmazon = [];
 
   for (var i = 0; i < bookListInAmazon.length; i++) {
-    var author = bookListInAmazon[i].ItemAttributes[0].Author;
+    var author = bookListInAmazon[i].author;
     authorListInAmazon.push(author);
   }
   authorListInAmazon = _.uniq(authorListInAmazon);
