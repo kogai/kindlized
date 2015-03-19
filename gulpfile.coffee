@@ -35,16 +35,6 @@ gulp.task 'stylus', ->
 	.pipe( sourcemaps.write('.') )
 	.pipe( gulp.dest('./public/stylesheets') )
 
-gulp.task 'lint', ->
-	gulp.src([
-		'./**/*.js'
-		'./**/**/*.js'
-		'./**/**/**/*.js'
-	])
-	.pipe jshint()
-	.pipe jshint.reporter stylish
-	return
-
 gulp.task 'browserify', ->
 	browserify
 		entries: ['./src/javascripts/index.coffee']
@@ -58,13 +48,13 @@ gulp.task 'browserify', ->
 	.pipe gulp.dest './public/javascripts/'
 
 
-gulp.task 'watches', ->
+gulp.task 'watch', ->
 	gulp.watch [
-		 './src/stylus/*.styl'
-		 './src/stylus/**/*.styl'
-		 './src/stylus/**/**/*.styl'
+	 './src/stylus/*.styl'
+	 './src/stylus/**/*.styl'
+	 './src/stylus/**/**/*.styl'
 	],[
-		 'stylus'
+	 'stylus'
 	]
 	gulp.watch [
 		'./src/javascripts/*.coffee'
@@ -76,8 +66,7 @@ gulp.task 'watches', ->
 	return
 
 gulp.task 'default', [
-	'lint'
 	'browserify'
 	'stylus'
-	'watches'
+	'watch'
 ]
