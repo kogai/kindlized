@@ -3,6 +3,7 @@ module.exports = ( $scope, $filter, $http ) ->
 	httpOpt =
 		method : 'get'
 		url	 : '/book/user'
+		
 	$http( httpOpt )
 	.success ( data ) ->
 		bookListInUser = data.newBooks
@@ -40,7 +41,8 @@ module.exports = ( $scope, $filter, $http ) ->
 
 		$http( httpOptToAmazon )
 		.success ( data, status ) ->
-			$scope.bookListInDB = $scope.bookListInDB.concat( data.bookListInAmazon )
+			if( data.bookListInAmazon.length > 0 )
+				$scope.bookListInDB = $scope.bookListInDB.concat( data.bookListInAmazon )
 			return
 		.then ->
 			console.log '/search/amazon 完了'
