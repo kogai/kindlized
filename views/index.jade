@@ -1,10 +1,15 @@
-extends layout
+extends partials/layout
 
 block content
-	h1
-		|#{ title }
-	
-	div( ng-controller="postNewBook" )
+	div( ng-controller="postNewBook" ).row
+		.col-md-10
+			h1
+				|ようこそ、{{ userName }}
+		.col-md-2
+			div( ng-controller="account" )
+				div( ng-if='!isRegist' )
+					button( type='submit' ng-click='logout()' ).btn.btn-default ログアウト
+
 		form( ng-submit="search( newBook )" ).input-group
 			input( type="text" required placeholder="書籍のタイトルを入力して下さい" ng-model="newBook" ).form-control
 			.input-group-btn
@@ -13,15 +18,10 @@ block content
 		div( ng-if="isWaiting" )
 			|検索中...
 
-		h2( ng-if="!showSuggestedBooks" )
+		h2( ng-if="showSuggestedBooks" )
 			|検索結果
 		
-		div( ng-if="showSuggestedBooks" ).list-group
-			a( ng-repeat="bookInAmazon in bookListInAmazon" ).list-group-item
-				|{{ bookInAmazon.ItemAttributes[0].Title[0] }}
-				button( type="button" ng-click="registBook( bookInAmazon )" ).btn.btn-default add
-
-		div( ng-if="!showSuggestedBooks" )
+		div( ng-if="showSuggestedBooks" )
 			.panel.panel-default
 				table.table
 					thead
@@ -49,28 +49,6 @@ block content
 								.label.label-info( ng-if="bookInDB.isRegisterd" )
 									|メール通知登録済みです
 
-						tr( ng-repeat="bookInAmazon in bookListInAmazon" )
-							td
-								|{{ bookInAmazon.ItemAttributes[0].Title[0] }}
-
-							td
-								div( ng-if="!bookInDB.isKindlized" ).label.label-danger
-									|Kindle版がありません
-									
-								div( ng-if="bookInDB.isKindlized" ).label.label-success
-									|Kindle化済み
-								
-							td
-								a( href="{{ bookInDB.url[0] }}" target="_blank" ng-if="bookInDB.isKindlized" ).btn.btn-default
-									|Amazonで購入する
-								button( type="button" ng-click="registBook( bookInDB, $index )" ng-if="!bookInDB.isKindlized && !bookInDB.isRegisterd" ).btn.btn-default
-									|メール通知登録
-								.label.label-info( ng-if="bookInDB.isRegisterd" )
-									|メール通知登録済み
-
-		div( ng-if="isNotExistenceBook" ) 存在しない書籍
-		div( ng-if="isBookAdded" ) 登録成功
-		
 		h2 メール通知登録済みの書籍
 		.panel.panel-default
 			table.table
@@ -80,6 +58,7 @@ block content
 						th ステータス
 						th 出版状況
 						th リンク
+						th 
 				tbody
 					tr( ng-repeat="bookInUser in bookListInUser" )
 						td
@@ -101,3 +80,5 @@ block content
 						td
 							a( href="{{ bookInUser.url[0] }}" target="_blank" ).btn.btn-default
 								|Amazonで購入する
+						td
+							button( ng-click="unRegistBook( $index )" ).btn.btn-warning.btn-xs 登録を解除

@@ -65,9 +65,9 @@ module.exports = function( bookList ){
 				}else{
 					// 再帰
 					countExec++;
-					data.countExec = countExec;
+					data.countExec 	= countExec;
 					retryInterval 	= 0;
-					retryCount 		= 0;
+					retryCount 			= 0;
 
 					/*
 						稀にAuthorityASINを持ちながらRelatedItemsを持たない書籍がある
@@ -78,15 +78,18 @@ module.exports = function( bookList ){
 					var hasRelatedItems 	= res.ItemLookupResponse.Items[0].Item[0].RelatedItems;
 					if( hasRelatedItems ) inspectBookList.push( res );
 
-					//@todo 別の関数に切り分け
-					var relatedItems 		= res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem;
+					try{
+						//@todo 別の関数に切り分け
+						var relatedItems 		= res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem;
 
-					for (var i = 0; i < relatedItems.length; i++) {
-						var relatedBook = relatedItems[i].Item[0].ItemAttributes[0];
-						if( relatedBook.ProductGroup[0] === 'eBooks' ){
-							modelBookList.findOneAndUpdate( { ASIN: book.ASIN }, { isKindlized: true }, function( err, book ){});
-						}
-					}
+						relatedItems.map( function( item ){
+							var relatedBook = item.Item[0].ItemAttributes[0];
+							if( relatedBook.ProductGroup[0] === 'eBooks' ){
+								modelBookList.findOneAndUpdate( { ASIN: book.ASIN }, { isKindlized: true }, function( err, book ){});
+							}
+						});
+					}catch( error ){}
+
 				}
 				setTimeout( function(){
 					regularInterval( data );

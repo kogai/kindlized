@@ -1,4 +1,4 @@
-var Q					= require('q');
+var Q				= require('q');
 var moment			= require('moment-timezone');
 var constant		= require( 'common/constant' );
 

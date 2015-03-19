@@ -18,4 +18,4 @@ module.exports = function( user ){
 
    d.resolve( user );
    return d.promise;
-}
+};

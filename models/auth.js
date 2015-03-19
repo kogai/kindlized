@@ -29,6 +29,7 @@ passport.use(new LocalStrategy({
 	}
 ));
 
+/*
 passport.use(new TwitterStrategy(
 	{
 		consumerKey: credential.twitter.consumerKey,
@@ -66,6 +67,7 @@ passport.use(new TwitterStrategy(
 		});
 	}
 ));
+*/
 
 passport.serializeUser(function(user, done) {
   done( null, user.id );

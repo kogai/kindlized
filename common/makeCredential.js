@@ -6,5 +6,5 @@ module.exports = function( credentialName ){
       credential = require('credential');
    }
    credentialName = credential[ credentialName ];
-   return newModel;
+   return credentialName;
 };

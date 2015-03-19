@@ -1,0 +1,12 @@
+doctype html
+html
+	head
+		title
+			|#{ title }
+		link(rel='stylesheet', href='/javascripts/lib/bootstrap/dist/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/stylesheets/index.css')
+	body( ng-app='App')
+		.container-fluid
+			block content
+	script(src='/javascripts/lib/angular/angular.js')
+	script(src='/javascripts/bundle.min.js')
