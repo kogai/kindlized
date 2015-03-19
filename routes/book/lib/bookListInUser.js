@@ -3,7 +3,7 @@ var express 		= require('express');
 var router 			= express.Router();
 var modelUser     	= require( 'user' );
 var modelBookList 	= require( 'shelf/lib/modelBookList' );
-var constant 		= require( 'common/constant' )
+var constant 		= require( 'common/constant' );
 
 var fetchModelUser = function( req, res ){
 	var d = Q.defer();
@@ -36,7 +36,7 @@ var fetchBookList = function( data ){
 
 			for (var j = 0; j < userBookList.length; j++) {
 				if( bookId === userBookList[j].bookId ){
-					books[i].isNotified = userBookList[j].isNotified
+					books[i].isNotified = userBookList[j].isNotified;
 				}
 			}
 
@@ -65,13 +65,17 @@ var renderRouter = function( data ){
 	var books  = data.books;
 	var newBooks  = data.newBooks;
 	var res    = data.res;
+	var user    = data.user;
 	var d      = Q.defer();
 
-	res.send( newBooks );
+	res.send({
+		newBooks: newBooks,
+		user: user
+	});
 	d.resolve( newBooks );
 
 	return d.promise;
-}
+};
 
 module.exports = function( req, res ){
 	fetchModelUser( req, res )

@@ -4,8 +4,11 @@ module.exports = ( $scope, $filter, $http ) ->
 		method  : 'get'
 		url	 : '/book/user'
 	$http( httpOpt )
-	.success ( bookListInUser, status, header, config ) ->
+	.success ( data ) ->
+		bookListInUser = data.newBooks
+		user = data.user
 		$scope.bookListInUser = bookListInUser
+		$scope.userName = user.mail
 		return
 	.then ()->
 		console.log '/book/user 完了'
