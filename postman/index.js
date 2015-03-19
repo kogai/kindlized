@@ -12,7 +12,7 @@ module.exports = function(){
       var users   = data.users;
 
       Q.all( users.map( postMailToUser ) )
-      .done( function(){
+      .done( function( resultarry ){
          console.log('done');
          d.resolve( data );
       });
