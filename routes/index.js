@@ -1,49 +1,16 @@
-var Q 				= require( 'q' );
 var express 		= require('express');
 var router 			= express.Router();
-var modelAuthor 	= require( '../author/lib/modelAuthor' );
 var modelBookList 	= require( '../shelf/lib/modelBookList' );
 
-var fetchAuthorList = function( authorsAndBooks ){
-	var d = Q.defer();
-	var authorList 	= modelAuthor.find( {}, function( err, authors ){
-		authorsAndBooks.authors = authors;
-		d.resolve( authorsAndBooks );
-	});
-	return d.promise;
-};
-
-var fetchBookList = function( authorsAndBooks ){
-	var d = Q.defer();
-	var bookList 	= modelBookList.find( { isKindlized: true }, function( err, books ){
-		authorsAndBooks.books = books;
-		d.resolve( authorsAndBooks );
-	});
-	return d.promise;
-};
-
-var renderRouter = function( authorsAndBooks ){
-	var d = Q.defer();
-	console.log( authorsAndBooks.books.length );
-	router.get('/', function(req, res) {
-		res.render('index', {
-			title : 'home',
-			authors: authorsAndBooks.authors,
-			books: authorsAndBooks.books
-		},function( err, html ){
-			res.send( html );
+router.get('/', function(req, res) {
+	var isLogined = req.session.passport.user;
+	if( isLogined ){
+		res.render( 'index', {
+			title : 'ホーム',
 		});
-		d.resolve();
-	});
-	return d.promise;
-}
-
-Q.when( {} )
-.then( fetchAuthorList )
-.then( fetchBookList )
-.then( renderRouter )
-.done( function(){
-	console.log( 'router complete.' );
+	}else{
+		res.redirect( 303, '/account');
+	}
 });
 
 module.exports = router;

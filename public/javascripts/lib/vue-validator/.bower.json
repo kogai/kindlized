@@ -1,0 +1,38 @@
+{
+  "name": "vue-validator",
+  "main": "dist/vue-validator.js",
+  "description": "A collection of commonly-used validators for Vue.js",
+  "version": "0.10.0",
+  "homepage": "https://github.com/kazupon/vue-validator",
+  "authors": [
+    "kazuya kawaguchi <kawakazu80@gmail.com>"
+  ],
+  "keywords": [
+    "vue"
+  ],
+  "license": "MIT",
+  "ignore": [
+    ".*",
+    "**/.*",
+    "node_modules",
+    "components",
+    "bower_components",
+    "example",
+    "test",
+    "tests",
+    "Makefile",
+    "LICENSE",
+    "*.js",
+    "*.json",
+    "*.md"
+  ],
+  "_release": "0.10.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.10.0",
+    "commit": "b4770a21ddcaf3c74c8d057e274f5f16e49c00ce"
+  },
+  "_source": "git://github.com/vuejs/vue-validator.git",
+  "_target": "~0.10.0",
+  "_originalSource": "vue-validator"
+}

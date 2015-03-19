@@ -1,69 +1,39 @@
-gulp		= require 'gulp'
+gulp				= require 'gulp'
 browserSync = require 'browser-sync'
-reload	  = browserSync.reload
-data		= require 'gulp-data'
-debug	   = require 'gulp-debug'
-newer	   = require 'gulp-newer'
-# sass		= require 'gulp-sass'
+reload	  	= browserSync.reload
+data				= require 'gulp-data'
+debug	   		= require 'gulp-debug'
+newer	   		= require 'gulp-newer'
+stylus			= require 'gulp-stylus'
+nib 				= require 'nib'
 sourcemaps  = require 'gulp-sourcemaps'
-minify	  = require 'gulp-minify-css'
+minify	  	= require 'gulp-minify-css'
 
 # lint
 jshint	  = require 'gulp-jshint'
-stylish	 = require 'jshint-stylish'
+stylish	 	= require 'jshint-stylish'
 
 # browserify
 browserify  = require 'browserify'
 debowerify  = require 'debowerify'
 licensify   = require 'licensify'
-source	  = require 'vinyl-source-stream'
+source	  	= require 'vinyl-source-stream'
 streamify   = require 'gulp-streamify'
-uglify	  = require 'gulp-uglify'
+uglify	  	= require 'gulp-uglify'
 coffeelint  = require 'gulp-coffeelint'
-
-# jade
-jade		= require 'gulp-jade'
-
-# images
-pngmin	  = require 'gulp-pngmin'
-imagemin	= require 'gulp-imagemin'
-jpegtran	= require 'imagemin-jpegtran'
 
 # watch
 watch	   = require 'gulp-watch'
 
-# gulp.task 'sass', ->
-#	 gulp.src('src/sass/*.sass')
-#	 .pipe( sourcemaps.init() )
-#	 .pipe( sass() )
-#	 .pipe( minify() )
-#	 .pipe( sourcemaps.write('./') )
-#	 .pipe( gulp.dest('./build/employment/graduate2016/css') )
-#
-# gulp.task 'pngmin', ->
-#	 gulp.src [ 'src/images/*.png', 'src/images/**/*.png' ]
-#	 .pipe newer( './build/employment/graduate2016/images' )
-#	 .pipe pngmin()
-#	 .pipe gulp.dest( './build/employment/graduate2016/images' )
-#
-# gulp.task 'jpgmin', ->
-#	 gulp.src([ 'src/images/*.jpg', 'src/images/**/*.jpg', 'src/images/*.jpeg', 'src/images/**/*.jpeg' ])
-#	 .pipe imagemin(
-#		 prpgressive: true
-#		 svgoPlugins: [ { removeViewBox: false } ]
-#		 use: [ jpegtran() ]
-#	 )
-#	 .pipe gulp.dest( './build/employment/graduate2016/images' )
-
-
-gulp.task 'lint', ->
-	gulp.src([
-		'./shelf/*.js'
-		'./shelf/**/*.js'
-	])
-	.pipe jshint()
-	.pipe jshint.reporter stylish
-	return
+gulp.task 'stylus', ->
+	gulp.src './src/stylus/index.styl'
+	.pipe( sourcemaps.init() )
+	.pipe( stylus({
+		use: nib()
+		compress: true
+	}))
+	.pipe( sourcemaps.write('.') )
+	.pipe( gulp.dest('./public/stylesheets') )
 
 gulp.task 'browserify', ->
 	browserify
@@ -78,14 +48,14 @@ gulp.task 'browserify', ->
 	.pipe gulp.dest './public/javascripts/'
 
 
-gulp.task 'watches', ->
-	# gulp.watch [
-	# 	 './**/*.js'
-	# 	 './**/**/*.js'
-	# 	 './**/**/**/*.js'
-	# ],[
-	# 	 'lint'
-	# ]
+gulp.task 'watch', ->
+	gulp.watch [
+	 './src/stylus/*.styl'
+	 './src/stylus/**/*.styl'
+	 './src/stylus/**/**/*.styl'
+	],[
+	 'stylus'
+	]
 	gulp.watch [
 		'./src/javascripts/*.coffee'
 		'./src/javascripts/**/*.coffee'
@@ -96,7 +66,7 @@ gulp.task 'watches', ->
 	return
 
 gulp.task 'default', [
-	'lint'
 	'browserify'
-	'watches'
+	'stylus'
+	'watch'
 ]

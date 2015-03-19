@@ -1,0 +1,27 @@
+extends partials/layout
+
+block content
+	h1
+		|#{ title }
+		
+	div( ng-controller="account" )
+		form
+			.input-group.input-group-sm
+				input.form-control( required type='email', placeholder='メールアドレス', ng-model='mail' )
+				input.form-control( required type='password', placeholder='パスワード', ng-model='password' )
+
+			div( ng-if='isRegist' )
+				button( type='submit' ng-click='regist( mail, password )' ).btn.btn-default 新規登録
+
+			div( ng-if='!isRegist' )
+				button( type='submit' ng-click='login( mail, password )' ).btn.btn-default ログイン
+
+			div( ng-if='isRegist' ng-click='toggleBtn()' )
+				|アカウント登録済みの方はこちら
+
+			div( ng-if='!isRegist' ng-click='toggleBtn()' )
+				|新規にアカウントを登録する方はこちら
+				
+		p( ng-if='isSending' )
+			|{{ statusMessage }}
+			

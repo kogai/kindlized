@@ -20,7 +20,7 @@ module.exports = function( user ){
          '<td>' +
             '<a href="' + book.url + '">' + book.title + '</a>' +
          '</td>' +
-      '</tr>'
+      '</tr>';
    }
 
    var sendHtml = '' +
@@ -33,4 +33,4 @@ module.exports = function( user ){
    d.resolve( user );
 
    return d.promise;
-}
+};

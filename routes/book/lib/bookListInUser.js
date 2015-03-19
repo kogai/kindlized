@@ -1,13 +1,14 @@
 var Q 				= require( 'q' );
 var express 		= require('express');
 var router 			= express.Router();
-var modelUser     = require( 'user/lib/modelUser' );
-var modelBookList = require( 'shelf/lib/modelBookList' );
-var constant 		= require( 'common/constant' )
+var modelUser     	= require( 'user' );
+var modelBookList 	= require( 'shelf/lib/modelBookList' );
+var constant 		= require( 'common/constant' );
 
 var fetchModelUser = function( req, res ){
 	var d = Q.defer();
-	modelUser.findOne( { _id: constant._id }, function( err, user ){
+	var userId = req.session.passport.user;
+	modelUser.findOne( { _id: userId }, function( err, user ){
 		d.resolve({
 			user: user,
 			req: req,
@@ -35,7 +36,7 @@ var fetchBookList = function( data ){
 
 			for (var j = 0; j < userBookList.length; j++) {
 				if( bookId === userBookList[j].bookId ){
-					books[i].isNotified = userBookList[j].isNotified
+					books[i].isNotified = userBookList[j].isNotified;
 				}
 			}
 
@@ -44,9 +45,10 @@ var fetchBookList = function( data ){
 			追加したプロパティを保持できないっぽいので
 			新しくオブジェクトを作って必要なデータをコピー
 			*/
-			
+
 			newBooks[i] = {
 				title : books[i].title,
+				_id 	: books[i]._id,
 				url 	: books[i].url,
 				isNotified 	: books[i].isNotified,
 				isKindlized : books[i].isKindlized
@@ -63,21 +65,25 @@ var renderRouter = function( data ){
 	var books  = data.books;
 	var newBooks  = data.newBooks;
 	var res    = data.res;
+	var user    = data.user;
 	var d      = Q.defer();
 
-	res.send( newBooks );
-	d.resolve( books );
+	res.send({
+		newBooks: newBooks,
+		user: user
+	});
+	d.resolve( newBooks );
 
 	return d.promise;
-}
+};
 
 module.exports = function( req, res ){
 	fetchModelUser( req, res )
 	.then( fetchBookList )
 	.then( renderRouter )
-	.done( function( books ){
+	.done( function( newBooks ){
 		try{
-			console.log( 'このユーザーは' + books.length + '冊の書籍を登録している' );
+			console.log( 'このユーザーは' + newBooks.length + '冊の書籍を登録している' );
 		}catch( err ){
 			console.log( 'このユーザーは書籍を登録していない');
 		}

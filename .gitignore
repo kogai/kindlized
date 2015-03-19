@@ -8,7 +8,6 @@ logs
 *.log
 temp
 
-public/javascripts/lib
-!public/javascripts/lib/angular
-
 TODO.md
+sandbox.js
+sb.js

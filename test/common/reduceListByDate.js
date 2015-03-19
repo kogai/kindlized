@@ -5,7 +5,7 @@ var constant			= require( 'common/constant' );
 var Q = require('q');
 require('should');
 
-// module.exports = function(){
+module.exports = function(){
 	describe('common/reduceListByDateのテスト', function () {
 		it( 'テストが動作している', function( done ){
 			(5).should.be.exactly(5);
@@ -40,4 +40,4 @@ require('should');
 			}
 		});
 	});
-// }
+}

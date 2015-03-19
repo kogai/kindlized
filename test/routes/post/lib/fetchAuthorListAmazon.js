@@ -1,4 +1,4 @@
-var fetchAuthorListAmazon = require('../../../../routes/post/lib/queryBookList/fetchAuthorListAmazon');
+var fetchAuthorListAmazon = require('routes/search/lib/fetchAuthorListAmazon');
 var Q = require('q');
 require('should');
 
@@ -8,10 +8,10 @@ module.exports = function(){
 		var authorList;
 		var data = {
 			bookListInAmazon: [
-				{ "ItemAttributes": [ { "Author": "染谷将太" } ] },
-				{ "ItemAttributes": [ { "Author": "恩田" } ] },
-				{ "ItemAttributes": [ { "Author": "angular" } ] },
-				{ "ItemAttributes": [ { "Author": "岩明 均" } ] }
+				{ "author": "染谷将太" },
+				{ "author": "恩田" },
+				{ "author": "angular" },
+				{ "author": "岩明 均" }
 			]
 		};
 
@@ -43,4 +43,4 @@ module.exports = function(){
 			}
 		});
 	});
-}
+};

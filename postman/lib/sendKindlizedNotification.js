@@ -11,13 +11,13 @@ module.exports = function( user ){
 
    if( kindlizedList.length > 0 ){
       var credentialGmail = makeCredential( gmail );
-   	var transporter = nodemailer.createTransport({
-   		service: 'Gmail',
-   		auth: {
-   			user: credentialGmail.user,
-   			pass: credentialGmail.password
-   		}
-   	});
+      var transporter     = nodemailer.createTransport({
+    		service: 'Gmail',
+    		auth: {
+    			user: credentialGmail.user,
+    			pass: credentialGmail.password
+    		}
+      });
 
    	var mailOptions = {
    		from: 'Kindlized ✔ <kogai0121@gmail.com>',
@@ -40,4 +40,4 @@ module.exports = function( user ){
    }
 
    return d.promise;
-}
+};
