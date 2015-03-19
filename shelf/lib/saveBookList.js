@@ -13,8 +13,8 @@ module.exports = function( authorData ){
 		var book = bookList[i];
 		saveBook( book );
 		if( i === bookList.length - 1 ) {
-			d.resolve( authorData )
-		};
+			d.resolve( authorData );
+		}
 	}
 	return d.promise;
 };
