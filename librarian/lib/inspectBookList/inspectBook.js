@@ -4,7 +4,8 @@ var opHelper = require('apac').OperationHelper;
 var makeOpConfig = require('../../../common/makeOpConfig');
 var makeInspectExpression = require('./makeInspectExpression');
 var modelBookList = require('../../../shelf/lib/modelBookList');
-
+var moment = require('moment-timezone');
+var util = require('util');
 
 module.exports = function(bookList) {
   var d = Q.defer();
@@ -61,39 +62,52 @@ module.exports = function(bookList) {
           // リトライ
           retryCount++;
           retryInterval = interval * retryCount;
-          console.log('librarian/lib/inspectBookList/inspectBook.js', book.title, retryCount, '回目リトライ');
+          // console.log( book.title, retryCount, '回目リトライ');
         } else {
           // 再帰
           countExec++;
           data.countExec = countExec;
           retryInterval = 0;
           retryCount = 0;
-
           /*
 						稀にAuthorityASINを持ちながらRelatedItemsを持たない書籍がある
 						恐らく日本未発売の書籍
 						See Example -> http://www.amazon.com/dp/0764545507/ref=r_soa_w_d
 					*/
-
-          var hasRelatedItems = res.ItemLookupResponse.Items[0].Item[0].RelatedItems;
-          if (hasRelatedItems) inspectBookList.push(res);
-
+          var query = {
+            ASIN: book.ASIN
+          };
           try {
+            var hasRelatedItems = res.ItemLookupResponse.Items[0].Item[0].RelatedItems;
+            if (hasRelatedItems) inspectBookList.push(res);
+
             //@todo 別の関数に切り分け
             var relatedItems = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem;
+            var hasNotKindle = true;
 
             relatedItems.forEach(function(item) {
               var relatedBook = item.Item[0].ItemAttributes[0];
               if (relatedBook.ProductGroup[0] === 'eBooks') {
-                modelBookList.findOneAndUpdate({
-                  ASIN: book.ASIN
-                }, {
-                  isKindlized: true
+                hasNotKindle = false;
+                console.log( book.AuthorityASIN + ':' + book.title + 'は電子化されている');
+                modelBookList.findOneAndUpdate(query, {
+                  isKindlized: true,
+                  lastModified: moment()
                 }, function(err, book) {});
               }
             });
-          } catch (error) {}
-
+            if( hasNotKindle ){
+              console.log( book.title + 'は電子化されていない');
+              modelBookList.findOneAndUpdate(query, {
+                lastModified: moment()
+              }, function(err, book) {});
+            }
+          } catch (error) {
+            console.log( book.title + 'は関連書籍を持たない', util.inspect( error, false, null));
+            modelBookList.findOneAndUpdate(query, {
+              lastModified: moment()
+            }, function(err, book) {});
+          }
         }
         setTimeout(function() {
           regularInterval(data);
