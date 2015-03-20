@@ -4,7 +4,6 @@ machine:
   timezone:
     Asia/Tokyo # Set the timezone
 
-  # Version of ruby to use
   pre:
     - curl https://raw.githubusercontent.com/creationix/nvm/v0.23.3/install.sh | bash
 
@@ -17,10 +16,15 @@ test:
 
 deployment:
   staging:
+    branch: develop
+    commands:
+      - ./github.sh
+
+  production:
     branch: master
     heroku:
       appname: kindlized-db
-      
+
   # Override /etc/hosts
   # hosts:
   #   circlehost: 127.0.0.1
