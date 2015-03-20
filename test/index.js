@@ -11,7 +11,6 @@ describe('circleCiのテスト', function () {
 });
 
 librarian.fetchParentASIN.fetchBookList();
-librarian.inspectBookList.siftBookList();
 
 routes.post();
 routes.saveBook.isNewBook();

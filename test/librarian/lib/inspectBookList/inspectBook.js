@@ -1,5 +1,4 @@
 var fetchBookList       = require( 'librarian/lib/fetchParentASIN/fetchBookList' );
-var siftBookList        = require( 'librarian/lib/inspectBookList/siftBookList' );
 var inspectBook         = require( 'librarian/lib/inspectBookList/inspectBook' );
 var testdata         	= require( 'test/librarian/lib/inspectBookList/testdata' );
 
