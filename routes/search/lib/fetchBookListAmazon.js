@@ -26,14 +26,14 @@ module.exports = function(data) {
       try {
         bookListInAmazon = res.ItemSearchResponse.Items[0].Item;
       } catch (error) {
-        console.log(error, res.ItemSearchErrorResponse.Error);
+        console.log( error, res.ItemSearchErrorResponse.Error );
         intervalTimeIncrements++;
         if (intervalTimeIncrements > 10) {
           data.bookListInAmazon = [];
           d.resolve(data);
         } else {
           setTimeout(function() {
-            console.log('retry', intervalTimeIncrements);
+            console.log('retry fetchBookListAmazon', intervalTimeIncrements);
             recursionOpExistenceBook();
           }, constant.interval * intervalTimeIncrements);
         }

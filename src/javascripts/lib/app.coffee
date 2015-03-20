@@ -3,7 +3,7 @@ module.exports = ( $scope, $filter, $http ) ->
 	httpOpt =
 		method : 'get'
 		url	 : '/book/user'
-		
+
 	$http( httpOpt )
 	.success ( data ) ->
 		bookListInUser = data.newBooks
@@ -18,6 +18,7 @@ module.exports = ( $scope, $filter, $http ) ->
 	$scope.search = ( newBook ) ->
 		console.log newBook, 'postAuthor clicked'
 		$scope.isWaiting = true
+		$scope.bookListInDB = null
 
 		httpOptToDB =
 			method : 'post'
