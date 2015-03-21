@@ -32,6 +32,8 @@ block content
 					tbody
 						tr( ng-repeat="bookInDB in bookListInDB | filter:!isRegisterd" )
 							td
+								a( href="{{ bookInDB.url[0] }}" target="_blank" style='display:block;' )
+									img(ng-src="{{bookInDB.images}}")
 								|{{ bookInDB.title[0] }}
 
 							td
@@ -62,7 +64,8 @@ block content
 				tbody
 					tr( ng-repeat="bookInUser in bookListInUser" )
 						td
-							img(ng-src="{{bookInUser.images}}")
+							a( href="{{ bookInUser.url[0] }}" target="_blank" style='display:block;')
+								img(ng-src="{{bookInUser.images}}")
 							|{{ bookInUser.title[0] }}
 						td
 							div( ng-if="!bookInUser.isNotified" ).label.label-danger

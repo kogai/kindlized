@@ -59,6 +59,7 @@ var fetchBookList = function(data) {
         title: books[i].title,
         _id: books[i]._id,
         url: books[i].url,
+        images: books[i].images,
         isNotified: books[i].isNotified,
         isKindlized: books[i].isKindlized
       };
