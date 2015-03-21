@@ -5,12 +5,9 @@ module.exports = function() {
   var d = Q.defer();
 
   var query = ModelBookList.find({
-    isKindlized: true
-  })
-  .sort({
-    title: -1
-  })
-  .limit(10);
+    isKindlized: true,
+    isKindlizedUrl: { $ne: true  }
+  });
 
   query.exec(function(err, books){
     d.resolve(books);

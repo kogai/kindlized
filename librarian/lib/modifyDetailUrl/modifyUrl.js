@@ -3,7 +3,6 @@ var ModelBookList = require('shelf/lib/modelBookList');
 
 module.exports = function( books ) {
   var d = Q.defer();
-  console.log( 'modifyUrl', books.length );
 
   Q.all(books.map(function(book){
     ModelBookList.findOneAndUpdate({
@@ -14,11 +13,11 @@ module.exports = function( books ) {
       url: book.url,
       isKindlizedUrl: true
     },function(err, book){
-      console.log(book);
+      return book;
     });
   }))
-  .done(function(){
-    d.resolve(books);
+  .done(function( books ){
+    // d.resolve(books);
   });
 
   d.resolve(books);
