@@ -6,12 +6,14 @@ module.exports = function( data ){
 	var d = Q.defer();
 	var res = data.res;
 
-	var bookListInAmazon = reduceRudundancy( data.bookListInAmazon );
-
-	res.send({
-		bookListInAmazon: bookListInAmazon,
+	reduceRudundancy( data.bookListInAmazon )
+	.done(function(bookListInAmazon){
+		console.log(bookListInAmazon);
+		res.send({
+			bookListInAmazon: bookListInAmazon,
+		});
+		d.resolve( data );
 	});
-	d.resolve( data );
 	return d.promise;
 };
 

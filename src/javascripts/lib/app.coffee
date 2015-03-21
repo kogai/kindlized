@@ -12,11 +12,9 @@ module.exports = ( $scope, $filter, $http ) ->
 		$scope.userName = user.mail
 		return
 	.then () ->
-		console.log '/book/user 完了'
 		return
 
 	$scope.search = ( newBook ) ->
-		console.log newBook, 'postAuthor clicked'
 		$scope.isWaiting = true
 		$scope.bookListInDB = null
 
@@ -32,12 +30,12 @@ module.exports = ( $scope, $filter, $http ) ->
 
 		$http( httpOptToDB )
 		.success ( data, status ) ->
-			$scope.bookListInDB 	 = data.bookListInDB
+			$scope.bookListInDB = data.bookListInDB
+			if(data.bookListInDB.length > 0)
+				$scope.isWaiting = false
 			return
 		.then ->
-			$scope.isWaiting = false
 			$scope.showSuggestedBooks = true
-			console.log '/search/db 完了'
 			return
 
 		$http( httpOptToAmazon )
@@ -46,7 +44,6 @@ module.exports = ( $scope, $filter, $http ) ->
 				$scope.bookListInDB = $scope.bookListInDB.concat( data.bookListInAmazon )
 			return
 		.then ->
-			console.log '/search/amazon 完了'
 			$scope.isWaiting 	 = false
 			$scope.newBook 	 = ''
 			return
@@ -55,7 +52,6 @@ module.exports = ( $scope, $filter, $http ) ->
 	$scope.registBook = ( newBook, $index ) ->
 		$scope.bookListInDB[ $index ].isRegisterd = true
 		$scope.bookListInUser.push( $scope.bookListInDB[ $index ] )
-		console.log newBook
 		httpOpt =
 			method : 'post'
 			url	 : '/save'
@@ -63,10 +59,8 @@ module.exports = ( $scope, $filter, $http ) ->
 
 		$http( httpOpt )
 		.success ( data, status ) ->
-			console.log 'registBook satatus is', status
 			return
 		.then ->
-			console.log '/save 完了'
 			return
 		return
 
@@ -85,7 +79,6 @@ module.exports = ( $scope, $filter, $http ) ->
 		.success () ->
 			return
 		.then () ->
-			console.log '/reduce 完了'
 			return
 		return
 	return
