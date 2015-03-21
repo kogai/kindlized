@@ -62,6 +62,7 @@ block content
 				tbody
 					tr( ng-repeat="bookInUser in bookListInUser" )
 						td
+							img(ng-src="{{bookInUser.images}}")
 							|{{ bookInUser.title[0] }}
 						td
 							div( ng-if="!bookInUser.isNotified" ).label.label-danger
