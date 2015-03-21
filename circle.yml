@@ -19,12 +19,7 @@ deployment:
     commands:
       - ./github.sh
 
-  production_db:
+  production_app:
     branch: master
-    heroku:
-      appname: kindlized-db
-
-  # production_app:
-  #   branch: master
-  #   commands:
-  #     - ./production.sh
+    commands:
+      - ./production.sh
