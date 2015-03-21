@@ -30,7 +30,7 @@ block content
 							th 出版状況
 							th リンク/登録
 					tbody
-						tr( ng-repeat="bookInDB in bookListInDB" )
+						tr( ng-repeat="bookInDB in bookListInDB | filter:!isRegisterd" )
 							td
 								|{{ bookInDB.title[0] }}
 
