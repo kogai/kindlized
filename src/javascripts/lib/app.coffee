@@ -1,6 +1,6 @@
 imageStrModifyer = require('./imageStrModifyer')
-module.exports = ( $scope, $filter, $http ) ->
 
+module.exports = ( $scope, $filter, $http ) ->
 	httpOpt =
 		method : 'get'
 		url	 : '/book/user'
@@ -31,7 +31,7 @@ module.exports = ( $scope, $filter, $http ) ->
 
 		$http( httpOptToDB )
 		.success ( data, status ) ->
-			$scope.bookListInDB = data.bookListInDB
+			$scope.bookListInDB = imageStrModifyer(data.bookListInDB)
 			if(data.bookListInDB.length > 0)
 				$scope.isWaiting = false
 			return
@@ -42,7 +42,7 @@ module.exports = ( $scope, $filter, $http ) ->
 		$http( httpOptToAmazon )
 		.success ( data, status ) ->
 			if( data.bookListInAmazon.length > 0 )
-				$scope.bookListInDB = $scope.bookListInDB.concat( data.bookListInAmazon )
+				$scope.bookListInDB = $scope.bookListInDB.concat( imageStrModifyer(data.bookListInAmazon) )
 			return
 		.then ->
 			$scope.isWaiting 	 = false
