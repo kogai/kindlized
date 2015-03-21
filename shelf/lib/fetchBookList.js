@@ -40,8 +40,8 @@ module.exports = function( authorData ){
 					var errorMessage;
 					try{
 						errorMessage = res.ItemSearchErrorResponse.Error[0].Message[0] + '\n';
-					}catch( err ){
-						errorMessage = '予想していなかったエラーを検出\n' + err;
+					}catch( error ){
+						errorMessage = '予想していなかったエラーを検出\n' + error;
 					}finally{
 						console.log( Author + ' shelf/fetchBookListの' + retryCount + '回目のリクエストエラー => \n', errorMessage );
 						retryCount++;

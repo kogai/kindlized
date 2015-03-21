@@ -1,25 +1,28 @@
 var Q = require('q');
+var util = require('util');
 var itemLookUp = require('common/itmeLookUp');
 
 module.exports = function( books ){
   var d = Q.defer();
   console.log( 'lookUpEbooks', books.length );
-  Q.all( books.map(mappingFunc) )
-  .done(function(books){
-    d.resolve(books);
-  });
+  var execCount = 0;
+  var recursion = function(execCount){
+    mappingFunc(books[execCount])
+    .done(function(){
+      if( execCount < books.length -1 ){
+        execCount++;
+        recursion(execCount);
+      }else{
+        d.resolve(books);
+      }
+    });
+  };
+  recursion(execCount);
   return d.promise;
 };
 
 var mappingFunc = function( book ){
-  var d = Q.defer();
-  /*
-  var modifiableRecipe = {
-    AuthorityASIN: book.AuthorityASIN[0],
-    title: book.title[0],
-    ebookASIN: ebookASIN
-  };
-  */
+  var def = Q.defer();
   var ebookUrl;
   itemLookUp({
     ItemId: book.ebookASIN,
@@ -29,14 +32,14 @@ var mappingFunc = function( book ){
     ebookUrl = res.ItemLookupResponse.Items[0].Item[0].DetailPageURL[0];
     // 成功時の処理
     return ebookUrl;
-  },function(){
+  },function(error){
     // エラー時の処理
     ebookUrl = book.url;
     return ebookUrl;
   })
   .done(function(ebookUrl){
     book.url = ebookUrl;
-    d.resolve(book);
+    def.resolve(book);
   });
-  return d.promise;
+  return def.promise;
 };

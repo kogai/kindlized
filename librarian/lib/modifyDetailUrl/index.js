@@ -10,16 +10,10 @@ module.exports = function() {
   .then(lookUpAuthority)
   .then(lookUpEbooks)
   .then(modifyUrl)
-  // modifyUrl
-  // URLを書き換え
-  // 書き換え済みフラグを立てる
   .done(function( books ){
-      var titles = books.map( function( book ){
-        // return book.title;
-        return book.ebookASIN + ':' + book.title;
-        // return book;
-      });
-      console.log( titles );
+    var titles = books.map( function( book ){
+      return book.AuthorityASIN + ':' + book.title + ':\n' + book.url;
+    });
     console.log('URLを書き換え完了');
     d.resolve();
   });
