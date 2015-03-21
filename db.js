@@ -16,6 +16,7 @@ var libraryHandler = function(currentTime) {
     })
     .then(librarian.inspectBookList)
     .then(librarian.fetchParentASIN)
+    .then(librarian.modifyDetailUrl)
     .done(function() {
       logTime(currentTime);
     });

@@ -7,6 +7,7 @@ var constant = require('../common/constant');
 var reduceListByDate = require('common/reduceListByDate');
 
 var inspectBook = require('./lib/inspectBookList/inspectBook');
+var modifyDetailUrl = require('librarian/lib/modifyDetailUrl');
 
 var fetchParentASIN = function() {
   var d = Q.defer();
@@ -48,5 +49,6 @@ var inspectBookList = function() {
 
 module.exports = {
   fetchParentASIN: fetchParentASIN,
-  inspectBookList: inspectBookList
+  inspectBookList: inspectBookList,
+  modifyDetailUrl: modifyDetailUrl
 };
