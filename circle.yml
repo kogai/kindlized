@@ -22,4 +22,4 @@ deployment:
   production_app:
     branch: master
     commands:
-      - ./production.sh
+      # - ./production.sh
