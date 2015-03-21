@@ -19,7 +19,7 @@ deployment:
     commands:
       - ./github.sh
 
-  production_app:
-    branch: master
-    commands:
+  # production_app:
+  #   branch: master
+  #   commands:
       # - ./production.sh
