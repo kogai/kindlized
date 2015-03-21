@@ -7,26 +7,24 @@ var num = 0;
 var opConfig = new makeOpConfig();
 var opInspectBook = new opHelper(opConfig);
 
-var execApi = function( expression, callback ) {
+var execApi = function( expression, callback, errorCallback ) {
   var d = Q.defer();
-  console.log('execApi');
   num++;
   opInspectBook.execute('ItemLookup', expression, function(err, res) {
     if (err) console.log('ItemLookupのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
     if (res.ItemLookupErrorResponse) {
-      // リトライ
-      console.log('ItemLookupのレスポンスエラー ' + res.ItemSearchErrorResponse);
+      console.log( 'res.ItemLookupErrorResponse', util.inspect( res.ItemLookupErrorResponse.Error, false, null ));
       setTimeout(function(){
 				execApi( expression );
 			}, 500 * num);
     } else {
-      console.log( '成功:', util.inspect( res.ItemLookupResponse, false, null) );
+      var result;
       try {
-        callback(res);
+        result = callback(res);
       } catch (error) {
-        console.log('hasRelatedItemsにエラー' + error);
+        result = errorCallback(error);
       }finally{
-        d.resolve();
+        d.resolve(result);
       }
     }
   });

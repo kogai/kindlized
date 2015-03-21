@@ -3,10 +3,18 @@ var ModelBookList = require('shelf/lib/modelBookList');
 
 module.exports = function() {
   var d = Q.defer();
-  ModelBookList.find({
+
+  var query = ModelBookList.find({
     isKindlized: true
-  }, function(err, result) {
-    d.resolve(result);
+  })
+  .sort({
+    title: -1
+  })
+  .limit(10);
+
+  query.exec(function(err, books){
+    d.resolve(books);
   });
+
   return d.promise;
 };
