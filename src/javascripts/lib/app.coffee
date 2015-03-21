@@ -1,3 +1,4 @@
+imageStrModifyer = require('./imageStrModifyer')
 module.exports = ( $scope, $filter, $http ) ->
 
 	httpOpt =
@@ -6,7 +7,7 @@ module.exports = ( $scope, $filter, $http ) ->
 
 	$http( httpOpt )
 	.success ( data ) ->
-		bookListInUser = data.newBooks
+		bookListInUser = imageStrModifyer(data.newBooks)
 		user = data.user
 		$scope.bookListInUser = bookListInUser
 		$scope.userName = user.mail
