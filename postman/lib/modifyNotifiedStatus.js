@@ -6,10 +6,6 @@ var modelUser  = require( 'user/' );
 module.exports = function( user ){
    var d = Q.defer();
 
-   // console.log( user.postList.length );
-   // console.log( user.bookList.length );
-   // console.log( user.kindlizedList.length );
-
    var kindlizedList    = user.kindlizedList;
    var bookList         = user.bookList;
    var _id              = user._id;

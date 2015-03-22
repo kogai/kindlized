@@ -8,7 +8,6 @@ module.exports = function( data ) {
   Q.all( bookListInAmazon.map( modifyAmazonBook ) )
   .done( function( modBookListForDB ){
     data.bookListInAmazon = modBookListForDB;
-    // console.log( modBookListForDB );
     d.resolve( data );
   });
 
