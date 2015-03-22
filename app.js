@@ -13,6 +13,7 @@ var book            = require('./routes/book');
 var reduce          = require('./routes/reduce');
 var saveBook        = require('./routes/saveBook');
 var account         = require('./routes/account');
+// var detail          = require('./routes/detail');
 
 var credential;
 if( process.env.AWSAccessKeyId || process.env.CI ){
@@ -51,6 +52,7 @@ app.use( '/search', search );
 app.use( '/book', book );
 app.use( '/save', saveBook );
 app.use( '/account', account );
+// app.use( '/detail', detail );
 
 
 // catch 404 and forward to error handler
