@@ -1,6 +1,8 @@
+var Q = require('q');
 var ModelBookList = require('shelf/lib/modelBookList.js');
 
 module.exports = function( book ) {
+  var d = Q.defer();
   ModelBookList.findOne({
     ASIN: book.ASIN
   }, function( err, dbBook ) {
@@ -23,7 +25,11 @@ module.exports = function( book ) {
       newBook.save(function( err ) {
         if (err) console.log(err);
         console.log( '書籍:' + newBook.title + 'が登録されました'　);
+        d.resolve(newBook);
       });
+    }else{
+      d.resolve();
     }
   });
+  return d.promise;
 };
