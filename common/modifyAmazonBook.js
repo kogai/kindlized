@@ -3,7 +3,6 @@ module.exports = function( rawBook ){
   var itemAttr;
   try{
     itemAttr  = rawBook.ItemAttributes[0];
-
     /*
       mongodbはkey名に$を含むオブジェクトを扱えないので
       文字列化して保存する
@@ -18,7 +17,6 @@ module.exports = function( rawBook ){
       ISBN            : rawBook.ISBN,
       SKU             : rawBook.SKU,
       EAN             : itemAttr.EAN,
-
       author          : itemAttr.Author,
       title           : itemAttr.Title,
       publisher       : itemAttr.Publisher,

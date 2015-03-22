@@ -36,4 +36,4 @@ module.exports = function( next ) {
 	.done( function( hash ){
 		next();
 	});
-}
+};
