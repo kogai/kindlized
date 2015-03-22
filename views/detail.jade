@@ -1,0 +1,41 @@
+extends partials/layout
+
+block content
+	div( ng-controller="detail" )
+		.panel.panel-default
+			table.table.m-table
+				thead
+					tr
+						th 書影
+						th タイトル
+						th 著者
+						th 出版社
+						th 価格
+						th 出版日
+						th 出版状況
+						th リンク
+				tbody
+					tr
+						td
+							a( href="#{book.url[0]}" target="_blank" style='display:block;' )
+								img(src="#{book.images}")
+						td
+							|#{book.title[0]}
+						td
+							|#{book.author[0]}
+						td
+							|#{book.publisher[0]}
+						td
+							|#{book.price[0].FormattedPrice[0]}
+						td
+							|#{book.publicationDate[0]}
+						td
+							div( ng-if="#{!book.isKindlized}" ).label.label-danger
+								|Kindle版がありません
+								
+							div( ng-if="#{book.isKindlized}" ).label.label-success
+								|Kindle化済み
+
+						td
+							a( href="#{book.url[0]}" target="_blank" ).btn.btn-default
+								|Amazonで購入する
