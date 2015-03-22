@@ -11,6 +11,7 @@ module.exports = function( book ) {
       var newBook = new ModelBookList({
         status: book.satus,
         ASIN: book.ASIN,
+        AuthorityASIN: book.AuthorityASIN,
         EAN: book.EAN,
         author: book.author,
         title: book.title,
@@ -19,7 +20,7 @@ module.exports = function( book ) {
         price: book.price,
         url: book.url,
         images: book.images,
-        isKindlized: false
+        isKindlized: book.isKindlized
       });
 
       newBook.save(function( err ) {

@@ -10,6 +10,7 @@ module.exports = function(data) {
 
   Q.all(
       bookListInAmazon.map(function(book) {
+        console.log('保存する書籍は',book);
         var def = Q.defer();
         saveBook(book)
           .done(function(book) {
