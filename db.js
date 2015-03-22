@@ -3,7 +3,8 @@ var shelf = require('shelf');
 var postman = require('postman');
 var Q = require('q');
 var cronjob = require('cron').CronJob;
-var cronTime = "0 0 12 * * *";
+var cronLibrarian = "0 0 */2 * * *";
+var cronPostman = "0 0 12 * * *";
 var moment = require('moment-timezone');
 
 var libraryHandler = function(currentTime) {
@@ -29,13 +30,21 @@ var logTime = function(currentTime) {
 };
 
 //定期実行
-job = new cronjob({
-  cronTime: cronTime,
+jobLibrarian = new cronjob({
+  cronTime: cronLibrarian,
   onTick: function() {
     libraryHandler(moment());
-    postman();
   },
   start: false
 });
+jobLibrarian.start();
 
-job.start();
+jobPostman = new cronjob({
+  cronTime: cronPostman,
+  onTick: function() {
+    postman();
+    logTime(moment());
+  },
+  start: false
+});
+jobPostman.start();
