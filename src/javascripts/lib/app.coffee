@@ -31,22 +31,25 @@ module.exports = ( $scope, $filter, $http ) ->
 
 		$http( httpOptToDB )
 		.success ( data, status ) ->
-			$scope.bookListInDB = imageStrModifyer(data.bookListInDB)
 			if(data.bookListInDB.length > 0)
 				$scope.isWaiting = false
+				$scope.showSuggestedBooks = true
+			$scope.bookListInDB = imageStrModifyer(data.bookListInDB)
 			return
 		.then ->
-			$scope.showSuggestedBooks = true
-			return
 
-		$http( httpOptToAmazon )
-		.success ( data, status ) ->
-			if( data.bookListInAmazon.length > 0 )
-				$scope.bookListInDB = $scope.bookListInDB.concat( imageStrModifyer(data.bookListInAmazon) )
-			return
-		.then ->
-			$scope.isWaiting 	 = false
-			$scope.newBook 	 = ''
+			$http( httpOptToAmazon )
+			.success ( data, status ) ->
+				if( data.bookListInAmazon.length > 0 )
+					console.log data.bookListInAmazon
+					$scope.bookListInDB = $scope.bookListInDB.concat( imageStrModifyer(data.bookListInAmazon) )
+					$scope.showSuggestedBooks = true
+					console.log $scope.bookListInDB
+				return
+			.then ->
+				$scope.isWaiting = false
+				$scope.newBook = ''
+				return
 			return
 		return
 

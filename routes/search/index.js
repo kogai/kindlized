@@ -17,6 +17,8 @@ var sendResponseInDB				= require( 'routes/search/lib/sendResponseInDB' );
 var fetchBookListAmazon				= require( 'routes/search/lib/fetchBookListAmazon' );
 var handleBookListFromAmazon 	= require( 'routes/search/lib/handleBookListFromAmazon' );
 var sendResponseInAmazon			= require( 'routes/search/lib/sendResponseInAmazon' );
+var searchAuthorityASIN				= require( 'routes/search/lib/searchAuthorityASIN' );
+var lookUpAuthorityASIN				= require( 'routes/search/lib/lookUpAuthorityASIN' );
 var saveBookListToDB 					= require( 'routes/search/lib/saveBookListToDB' );
 var fetchBookListFromAmazon 	= require( 'routes/search/lib/fetchBookListFromAmazon' );
 var fetchAuthorListAmazon			= require( 'routes/search/lib/fetchAuthorListAmazon' );
@@ -44,13 +46,14 @@ router.post( '/amazon', function( req, res ) {
 	})
 	.then( fetchBookListAmazon )
 	.then( handleBookListFromAmazon )
-	.then( saveBookListToDB )
+	.then( searchAuthorityASIN )
+	.then( lookUpAuthorityASIN )
 	.then( sendResponseInAmazon )
+	.then( saveBookListToDB )
 	.then( fetchBookListFromAmazon )
 	.then( fetchAuthorListAmazon )
 	.then( saveNewAuthor )
 	.done( function( data ){
-		// console.log( 'data.bookListInAmazon', data.bookListInAmazon );
 		console.log('AmazonAPIの検索処理完了.');
 	});
 });
