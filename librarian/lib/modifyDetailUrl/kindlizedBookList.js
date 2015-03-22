@@ -7,7 +7,8 @@ module.exports = function() {
   var query = ModelBookList.find({
     isKindlized: true,
     isKindlizedUrl: { $ne: true  }
-  });
+  })
+  .limit(10);
 
   query.exec(function(err, books){
     d.resolve(books);

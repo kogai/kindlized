@@ -5,7 +5,7 @@ module.exports = function( modelName, modelSchema, isReturnSchema ){
   if (process.env.mongodb || process.env.CI ) {
     mongodb = process.env.mongodb;
   } else {
-    var credential = require('../credential');
+    var credential = require('credential');
     mongodb = credential.mongodb;
   }
   var db          = mongoose.createConnection( mongodb );

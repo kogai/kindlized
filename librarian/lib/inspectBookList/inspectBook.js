@@ -1,9 +1,9 @@
 var Q = require('q');
-var constant = require('../../../common/constant');
+var constant = require('common/constant');
 var opHelper = require('apac').OperationHelper;
-var makeOpConfig = require('../../../common/makeOpConfig');
+var makeOpConfig = require('common/makeOpConfig');
 var makeInspectExpression = require('./makeInspectExpression');
-var modelBookList = require('../../../shelf/lib/modelBookList');
+var modelBookList = require('shelf/lib/modelBookList');
 var moment = require('moment-timezone');
 var util = require('util');
 
