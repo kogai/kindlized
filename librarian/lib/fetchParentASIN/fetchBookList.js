@@ -1,15 +1,20 @@
 var Q = require('q');
-var ModelBookList = require('shelf/lib/modelBookList');
-var reduceListByDate = require('common/reduceListByDate');
+var modelBookList = require('shelf/lib/modelBookList');
 
 module.exports = function() {
   var d = Q.defer();
-  ModelBookList.find({
-    AuthorityASIN: {
-      $not: /.+/
-    }
-  }, function(err, haveNotAuthorityAsin) {
-    d.resolve(haveNotAuthorityAsin);
-  });
+
+  var query = modelBookList.find({
+      AuthorityASIN: {
+        $not: /.+/
+      }
+    })
+    .limit(100);
+
+    query.exec(function(error, haveNotAuthorityAsin){
+      console.log('AuthorityASINを持たない'+haveNotAuthorityAsin.length+'冊の書籍');
+      d.resolve(haveNotAuthorityAsin);
+    });
+
   return d.promise;
 };

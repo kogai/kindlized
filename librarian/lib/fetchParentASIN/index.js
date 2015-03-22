@@ -1,7 +1,8 @@
 var Q = require('q');
-var regInt = require('lib/fetchParentASIN/regInt');
-var fetchBookList = require('lib/fetchParentASIN/fetchBookList');
-var inspectASIN = require('lib/fetchParentASIN/inspectASIN');
+var constant = require('common/constant');
+var regInt = require('librarian/lib/fetchParentASIN/regInt');
+var fetchBookList = require('librarian/lib/fetchParentASIN/fetchBookList');
+var inspectASIN = require('librarian/lib/fetchParentASIN/inspectASIN');
 
 module.exports = function() {
   var d = Q.defer();

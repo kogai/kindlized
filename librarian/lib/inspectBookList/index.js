@@ -1,6 +1,6 @@
 var Q = require('q');
-var fetchBookListNotKindlized = require('lib/inspectBookList/fetchBookListNotKindlized');
-var inspectBook = require('lib/inspectBookList/inspectBook');
+var fetchBookListNotKindlized = require('librarian/lib/inspectBookList/fetchBookListNotKindlized');
+var inspectBook = require('librarian/lib/inspectBookList/inspectBook');
 var modifyDetailUrl = require('librarian/lib/modifyDetailUrl');
 
 module.exports = function() {

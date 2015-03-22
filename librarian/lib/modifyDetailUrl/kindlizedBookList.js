@@ -8,7 +8,7 @@ module.exports = function() {
     isKindlized: true,
     isKindlizedUrl: { $ne: true  }
   })
-  .limit(10);
+  .limit(100);
 
   query.exec(function(err, books){
     d.resolve(books);
