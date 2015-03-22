@@ -30,6 +30,7 @@ module.exports = function(data) {
         modelBookList.findOneAndUpdate({
           ASIN: book.ASIN
         }, modifiedModelBookList, function(err, book) {
+          console.log(book.title+'はAuthorityASIN / RelatedItemsを持っている');
           data.countExec++;
         });
       } catch (error) {
@@ -38,7 +39,7 @@ module.exports = function(data) {
         errorLog = book.ASIN[0];
         errorLog = ' / ';
         errorLog = book.title;
-        errorLog += 'はAuthorityASIN / RelatedItemsを持っていない\n';
+        errorLog += 'はAuthorityASIN / RelatedItemsを持っていない';
         console.log(errorLog);
 
         modelBookList.findOneAndUpdate({
