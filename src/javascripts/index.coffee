@@ -10,3 +10,7 @@ angular.module('App',[])
         'account',
         [ '$scope', '$http', '$window', account ]
     )
+    .controller(
+        'detail',
+        [ '$scope', '$http', '$window', account ]
+    )
