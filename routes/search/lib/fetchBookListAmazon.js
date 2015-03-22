@@ -15,7 +15,7 @@ module.exports = function(data) {
   var d = Q.defer();
 
   var req = data.req;
-	var newBook		= req.body.newBook;
+  var newBook = req.body.newBook;
   var existenceAuthorExpression = new makeExistenceExpression(newBook);
   var intervalTimeIncrements = 0;
 
@@ -26,7 +26,7 @@ module.exports = function(data) {
       try {
         bookListInAmazon = res.ItemSearchResponse.Items[0].Item;
       } catch (error) {
-        console.log( error, res.ItemSearchErrorResponse.Error );
+        console.log(error, res.ItemSearchErrorResponse.Error);
         intervalTimeIncrements++;
         if (intervalTimeIncrements > 10) {
           data.bookListInAmazon = [];
