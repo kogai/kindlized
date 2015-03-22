@@ -22,8 +22,19 @@ module.exports = function() {
       return d.promise;
     })
     .done(function(bookList) {
-      console.log(bookList.length, 'books in shelf.');
       d.resolve();
     });
   return d.promise;
 };
+
+/*
+AuthorityASINに有効な値がないbookListを取得する -> fetchBookList
+ASINからItemLookupでAmazon-apiから書籍データを取得する
+book毎に以下のオブジェクトを作って一時保存用配列に格納する
+{
+  _id: _id,
+  ASIN: ASIN,
+  AuthorityASIN: AuthorityASIN,
+}
+ASINでfindOneAndUpdateでAuthorityASINを保存する
+*/
