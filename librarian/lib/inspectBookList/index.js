@@ -6,8 +6,7 @@ var log = require('common/log');
 
 module.exports = function() {
   var d = Q.defer();
-  Q.when()
-    .then(fetchBookListNotKindlized)
+  fetchBookListNotKindlized()
     .then(inspectBook)
     .done(function(bookList) {
       log.info(bookList.length, 'inspectBookListの処理を完了');

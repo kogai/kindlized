@@ -1,15 +1,16 @@
 var Q = require('q');
 var modelBookList = require('shelf/lib/modelBookList');
 var limit = require('common/constant').limit;
+var periodicalDay = require('common/constant').periodicalDay;
+var moment = require('moment-timezone');
 
 module.exports = function() {
   var d = Q.defer();
 
   var query = modelBookList.find({
-      AuthorityASIN: {
-        AuthorityASIN: /.+/,
-        isKindlized: false
-      }
+      AuthorityASIN: /.+/,
+      isKindlized: { $ne: true },
+      lastModified : { $lte : moment().subtract( periodicalDay, 'days') }
     })
     .limit(limit);
 

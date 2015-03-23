@@ -25,7 +25,7 @@ module.exports = function(data) {
     log.info(error);
     bookASIN = 'UNDEFINED';
   }finally{
-    inspectExpression = new makeInspectExpression(book.ASIN[0]);
+    inspectExpression = new makeInspectExpression(bookASIN);
   }
 
   opInspectBook.execute('ItemLookup', inspectExpression, function(error, res) {
@@ -49,13 +49,14 @@ module.exports = function(data) {
       }catch (e) {
         // AuthorityASINを持っていない書籍の処理
         log.info(e,book);
+        data.countExec++;
 
-        modelBookList.findOneAndUpdate({
-          ASIN: book.ASIN
-        }, modifiedModelBookList, function(err, book) {
-          log.info(err, book);
-          data.countExec++;
-        });
+        // modelBookList.findOneAndUpdate({
+        //   ASIN: book.ASIN
+        // }, modifiedModelBookList, function(err, book) {
+        //   log.info(err, book);
+        //   data.countExec++;
+        // });
       }
     } else {
       // リクエスト失敗の時の処理
