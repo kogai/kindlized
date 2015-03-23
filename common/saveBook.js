@@ -32,6 +32,8 @@ module.exports = function( book ) {
           log.info(error);
           defferd.resolve();
         }
+      }else{
+        defferd.resolve();
       }
     });
   }catch(error){

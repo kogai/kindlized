@@ -2,7 +2,7 @@ var Q 						= require('q');
 var _ 						= require('underscore');
 var express	 			= require('express');
 var router	  		= express.Router();
-
+var log = require('common/log');
 var modelBookList = require( 'shelf/lib/modelBookList' );
 var modelAuthor 	= require( 'author/lib/modelAuthor' );
 var constant 			= require( 'common/constant' );
@@ -35,7 +35,7 @@ router.post( '/db', function( req, res ) {
 	.then( fetchBookListDB )
 	.then( sendResponseInDB )
 	.done( function( data ){
-		console.log('DB内の検索処理完了.');
+		log.info('DB内の検索処理完了.');
 	});
 });
 
@@ -54,7 +54,7 @@ router.post( '/amazon', function( req, res ) {
 	.then( fetchAuthorListAmazon )
 	.then( saveNewAuthor )
 	.done( function( data ){
-		console.log('AmazonAPIの検索処理完了.');
+		log.info('AmazonAPIの検索処理完了.');
 	});
 });
 
