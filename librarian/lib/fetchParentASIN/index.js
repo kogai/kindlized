@@ -3,6 +3,7 @@ var constant = require('common/constant');
 var regInt = require('librarian/lib/fetchParentASIN/regInt');
 var fetchBookList = require('librarian/lib/fetchParentASIN/fetchBookList');
 var inspectASIN = require('librarian/lib/fetchParentASIN/inspectASIN');
+var log = require('common/log');
 
 module.exports = function() {
   var d = Q.defer();
@@ -23,6 +24,7 @@ module.exports = function() {
       return d.promise;
     })
     .done(function(bookList) {
+      log.info('fetchParentASINが完了');
       d.resolve();
     });
   return d.promise;
