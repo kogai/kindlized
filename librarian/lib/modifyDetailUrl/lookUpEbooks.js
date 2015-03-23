@@ -1,10 +1,11 @@
 var Q = require('q');
 var util = require('util');
 var itemLookUp = require('common/itmeLookUp');
+var log = require('common/log');
 
 module.exports = function( books ){
   var d = Q.defer();
-  console.log( 'lookUpEbooks', books.length );
+  log.info( 'lookUpEbooks', books.length );
   var execCount = 0;
   var recursion = function(execCount){
     mappingFunc(books[execCount])

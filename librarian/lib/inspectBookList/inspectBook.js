@@ -66,7 +66,7 @@ module.exports = function(bookList) {
           // リトライ
           retryCount++;
           retryInterval = interval * retryCount;
-          // console.log( book.title, retryCount, '回目リトライ');
+          // log.info( book.title, retryCount, '回目リトライ');
         } else {
           // 再帰
           countExec++;
