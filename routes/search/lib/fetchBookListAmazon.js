@@ -1,4 +1,5 @@
 var Q = require('q');
+var log = require('common/log');
 
 var opHelper = require('apac').OperationHelper;
 var makeOpConfig = require('common/makeOpConfig');
@@ -26,14 +27,14 @@ module.exports = function(data) {
       try {
         bookListInAmazon = res.ItemSearchResponse.Items[0].Item;
       } catch (error) {
-        console.log(error, res.ItemSearchErrorResponse.Error);
+        log.info(error, res.ItemSearchErrorResponse.Error);
         intervalTimeIncrements++;
         if (intervalTimeIncrements > 10) {
           data.bookListInAmazon = [];
           d.resolve(data);
         } else {
           setTimeout(function() {
-            console.log('retry fetchBookListAmazon', intervalTimeIncrements);
+            log.info(intervalTimeIncrements);
             recursionOpExistenceBook();
           }, constant.interval * intervalTimeIncrements);
         }

@@ -1,5 +1,6 @@
 var Q = require('q');
 var _ = require('underscore');
+var log = require('common/log');
 
 var modelBookList = require('shelf/lib/modelBookList');
 var saveBook = require('common/saveBook');
@@ -10,7 +11,7 @@ module.exports = function(data) {
 
   Q.all(
       bookListInAmazon.map(function(book) {
-        console.log('保存する書籍は',book);
+        log.info('保存する書籍は',book);
         var def = Q.defer();
         saveBook(book)
           .done(function(book) {
@@ -20,6 +21,7 @@ module.exports = function(data) {
       })
     )
     .done(function(savedBooks) {
+      log.info('書籍の登録が完了', savedBooks);
       savedBooks = _.compact( savedBooks );
       data.savedBooks = savedBooks;
       d.resolve(data);
