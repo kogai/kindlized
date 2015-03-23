@@ -17,10 +17,22 @@ module.exports = function(data) {
 
   var opConfig = new makeOpConfig();
   var opInspectBook = new opHelper(opConfig);
-  var inspectExpression = new makeInspectExpression(book.ASIN[0]);
+  var bookASIN;
+  var inspectExpression;
+  try{
+    bookASIN = book.ASIN[0];
+  }catch(error){
+    log.info(error);
+    bookASIN = 'UNDEFINED';
+  }finally{
+    inspectExpression = new makeInspectExpression(book.ASIN[0]);
+  }
 
-  opInspectBook.execute('ItemLookup', inspectExpression, function(err, res) {
-    if (err) log.info('inspectASINのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
+  opInspectBook.execute('ItemLookup', inspectExpression, function(error, res) {
+    if (error) {
+      log.info('inspectASINのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
+      error = null;
+    }
     var modifiedModelBookList = {};
 
     if (res.ItemLookupResponse) {
@@ -34,18 +46,14 @@ module.exports = function(data) {
           log.info(book.title+'はAuthorityASIN / RelatedItemsを持っている');
           data.countExec++;
         });
-      } catch (error) {
+      }catch (e) {
         // AuthorityASINを持っていない書籍の処理
-        var errorLog = '';
-        errorLog = book.ASIN[0];
-        errorLog = ' / ';
-        errorLog = book.title;
-        errorLog += 'はAuthorityASIN / RelatedItemsを持っていない';
-        log.info(errorLog);
+        log.info(e,book);
 
         modelBookList.findOneAndUpdate({
           ASIN: book.ASIN
         }, modifiedModelBookList, function(err, book) {
+          log.info(err, book);
           data.countExec++;
         });
       }

@@ -14,7 +14,7 @@ module.exports = function() {
     .limit(limit);
 
   query.exec(function(error, haveAuthorityAsin) {
-    console.log('AuthorityASINを持たない' + haveAuthorityAsin.length + '冊の書籍');
+    console.log('Kindle化されていない' + haveAuthorityAsin.length + '冊の書籍');
     d.resolve(haveAuthorityAsin);
   });
 
