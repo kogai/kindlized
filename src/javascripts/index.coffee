@@ -1,5 +1,6 @@
 app = require('./lib/app')
 account = require('./lib/account')
+analytics = require('./lib/analytics')
 
 angular.module('App',[])
     .controller(
@@ -10,3 +11,5 @@ angular.module('App',[])
         'account',
         [ '$scope', '$http', '$window', account ]
     )
+    
+analytics()
