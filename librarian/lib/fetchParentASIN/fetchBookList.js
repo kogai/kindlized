@@ -1,5 +1,6 @@
 var Q = require('q');
 var modelBookList = require('shelf/lib/modelBookList');
+var log = require('common/log');
 var limit = require('common/constant').limit;
 
 module.exports = function() {
@@ -13,7 +14,7 @@ module.exports = function() {
     .limit(limit);
 
     query.exec(function(error, haveNotAuthorityAsin){
-      console.log('AuthorityASINを持たない'+haveNotAuthorityAsin.length+'冊の書籍');
+      log.info('AuthorityASINを持たない'+haveNotAuthorityAsin.length+'冊の書籍');
       d.resolve(haveNotAuthorityAsin);
     });
 

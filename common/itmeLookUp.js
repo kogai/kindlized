@@ -5,6 +5,7 @@ var makeOpConfig = require('common/makeOpConfig');
 var num = 0;
 var opConfig = new makeOpConfig();
 var interval = require('common/constant').interval;
+var log = require('common/log');
 
 var execApi = function( expression, callback, errorCallback, defferd ) {
   var opInspectBook = new opHelper(opConfig);
@@ -14,9 +15,9 @@ var execApi = function( expression, callback, errorCallback, defferd ) {
     'ItemLookup',
     searchExpression,
     function(err, res) {
-      if (err) console.log('ItemLookupのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
+      if (err) log.info('ItemLookupのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
       if (res.ItemLookupErrorResponse) {
-        console.log('res.ItemLookupErrorResponse\n', util.inspect( res, false, null ));
+        log.info('res.ItemLookupErrorResponse\n', res);
         num++;
         setTimeout(function(){
   				execApi( expression, callback, errorCallback, defferd );
@@ -29,7 +30,7 @@ var execApi = function( expression, callback, errorCallback, defferd ) {
           result = errorCallback(error);
         }finally{
           num = 0;
-          console.log('itemLookUp\n', util.inspect( result, false, null ));
+          log.info('itemLookUp\n', result);
           defferd.resolve(result);
         }
       }

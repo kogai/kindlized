@@ -5,6 +5,7 @@ var makeOpConfig = require('common/makeOpConfig');
 var constant = require('common/constant');
 var makeInspectExpression = require('librarian/lib/fetchParentASIN/makeInspectExpression');
 var modelBookList = require('shelf/lib/modelBookList');
+var log = require('common/log');
 
 module.exports = function(data) {
   var retryInterval = 0;
@@ -19,7 +20,7 @@ module.exports = function(data) {
   var inspectExpression = new makeInspectExpression(book.ASIN[0]);
 
   opInspectBook.execute('ItemLookup', inspectExpression, function(err, res) {
-    if (err) console.log('inspectASINのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
+    if (err) log.info('inspectASINのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
     var modifiedModelBookList = {};
 
     if (res.ItemLookupResponse) {
@@ -30,7 +31,7 @@ module.exports = function(data) {
         modelBookList.findOneAndUpdate({
           ASIN: book.ASIN
         }, modifiedModelBookList, function(err, book) {
-          console.log(book.title+'はAuthorityASIN / RelatedItemsを持っている');
+          log.info(book.title+'はAuthorityASIN / RelatedItemsを持っている');
           data.countExec++;
         });
       } catch (error) {
@@ -40,7 +41,7 @@ module.exports = function(data) {
         errorLog = ' / ';
         errorLog = book.title;
         errorLog += 'はAuthorityASIN / RelatedItemsを持っていない';
-        console.log(errorLog);
+        log.info(errorLog);
 
         modelBookList.findOneAndUpdate({
           ASIN: book.ASIN
@@ -50,7 +51,7 @@ module.exports = function(data) {
       }
     } else {
       // リクエスト失敗の時の処理
-      console.log('inspectASINのリクエストエラー API呼び出し間隔のエラー処理', res.ItemLookupErrorResponse.Error);
+      log.info('inspectASINのリクエストエラー API呼び出し間隔のエラー処理', res.ItemLookupErrorResponse.Error);
       retryCount++;
     }
     setTimeout(function() {

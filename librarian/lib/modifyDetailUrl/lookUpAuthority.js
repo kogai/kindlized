@@ -1,11 +1,12 @@
 var Q = require('q');
 var itemLookUp = require('common/itmeLookUp');
 var interval = require('common/constant').interval;
+var log = require('common/log');
 
 module.exports = function( books ){
   var d = Q.defer();
   var queries = [];
-  console.log( '\n\n最初の再帰処理が開始:', books.length + '\n\n' );
+  log.info( '\n\n最初の再帰処理が開始:', books.length + '\n\n' );
 
   var execCount = 0;
   var recursion = function(execCount){
@@ -16,7 +17,7 @@ module.exports = function( books ){
       if( execCount < books.length -1 ){
         recursion(execCount);
       } else {
-        console.log('\n\n最初の再帰処理が完了\n\n');
+        log.info('\n\n最初の再帰処理が完了\n\n');
         d.resolve(queries);
       }
     });
@@ -28,7 +29,7 @@ module.exports = function( books ){
 
 var mappingFunc = function( book ){
   var def = Q.defer();
-  console.log( book.title );
+  log.info( book.title );
 
   var modifiableRecipe = {
     AuthorityASIN: book.AuthorityASIN,
@@ -53,7 +54,7 @@ var mappingFunc = function( book ){
     return modifiableRecipe;
   },function(error){
     // エラー時の処理
-    console.log(error);
+    log.info(error);
     return modifiableRecipe;
   })
   .done(function(modifiableRecipe){
