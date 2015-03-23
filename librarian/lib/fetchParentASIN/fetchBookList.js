@@ -1,16 +1,22 @@
-var Q                = require('q');
-var ModelBookList    = require( 'shelf/lib/modelBookList' );
-var reduceListByDate = require('common/reduceListByDate');
+var Q = require('q');
+var modelBookList = require('shelf/lib/modelBookList');
+var log = require('common/log');
+var limit = require('common/constant').limit;
 
 module.exports = function() {
-  // DBから著者リストを非同期に取得する
   var d = Q.defer();
-  console.log('DBから著者リストを非同期に取得する');
-  ModelBookList.find( {
-    AuthorityASIN: { $not: /.+/  }
-  }, function( err, result ) {
-      console.log(result.length + '冊の書籍データが存在する');
-      d.resolve( result );
-  });
+
+  var query = modelBookList.find({
+      AuthorityASIN: {
+        $not: /.+/
+      }
+    })
+    .limit(limit);
+
+    query.exec(function(error, haveNotAuthorityAsin){
+      log.info('AuthorityASINを持たない'+haveNotAuthorityAsin.length+'冊の書籍');
+      d.resolve(haveNotAuthorityAsin);
+    });
+
   return d.promise;
 };

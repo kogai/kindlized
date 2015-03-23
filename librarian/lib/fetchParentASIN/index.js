@@ -1,7 +1,9 @@
 var Q = require('q');
-var regInt = require('lib/fetchParentASIN/regInt');
-var fetchBookList = require('lib/fetchParentASIN/fetchBookList');
-var inspectASIN = require('lib/fetchParentASIN/inspectASIN');
+var constant = require('common/constant');
+var regInt = require('librarian/lib/fetchParentASIN/regInt');
+var fetchBookList = require('librarian/lib/fetchParentASIN/fetchBookList');
+var inspectASIN = require('librarian/lib/fetchParentASIN/inspectASIN');
+var log = require('common/log');
 
 module.exports = function() {
   var d = Q.defer();
@@ -22,8 +24,20 @@ module.exports = function() {
       return d.promise;
     })
     .done(function(bookList) {
-      console.log(bookList.length, 'books in shelf.');
+      log.info('fetchParentASINが完了');
       d.resolve();
     });
   return d.promise;
 };
+
+/*
+AuthorityASINに有効な値がないbookListを取得する -> fetchBookList
+ASINからItemLookupでAmazon-apiから書籍データを取得する
+book毎に以下のオブジェクトを作って一時保存用配列に格納する
+{
+  _id: _id,
+  ASIN: ASIN,
+  AuthorityASIN: AuthorityASIN,
+}
+ASINでfindOneAndUpdateでAuthorityASINを保存する
+*/
