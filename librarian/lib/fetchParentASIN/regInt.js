@@ -1,3 +1,5 @@
+var log = require('common/log');
+
 var regularInterval = function( data ){
 
   // 実行回数を初期化
@@ -18,7 +20,7 @@ var regularInterval = function( data ){
         callBack( data );
       }
       catch( err ){
-        throw err;
+        log.info(err);
       }
     }else{
       // times回実行されたら終了
