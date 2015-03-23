@@ -43,6 +43,7 @@ module.exports = function(data) {
           data.bookListInAmazon = [];
           d.resolve(data);
         } else {
+          bookListInAmazon = bookListInAmazon.map(exceptionHasNotAuthor);
           data.bookListInAmazon = bookListInAmazon;
           d.resolve(data);
         }
@@ -51,4 +52,13 @@ module.exports = function(data) {
   };
   recursionOpExistenceBook();
   return d.promise;
+};
+
+var exceptionHasNotAuthor = function( book ){
+  // 必須プロパティを持たない書籍のための例外処理
+  if( !book.ASIN ) book.ASIN = 'UNDEFINED';
+  if( !book.DetailPageURL ) book.DetailPageURL = 'UNDEFINED';
+  if( !book.ItemAttributes[0].Author ) book.ItemAttributes[0].Author = 'UNDEFINED';
+  if( !book.ItemAttributes[0].Title ) book.ItemAttributes[0].Title = 'UNDEFINED';
+  return book;
 };

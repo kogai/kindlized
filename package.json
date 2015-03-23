@@ -7,8 +7,8 @@
     "node": "0.12.x"
   },
   "scripts": {
-    "test": "env NODE_PATH=./ ./node_modules/.bin/mocha",
-    "wip": "env NODE_PATH=./ ./node_modules/.bin/mocha test/routes/post",
+    "test": "env NODE_PATH=./ ./node_modules/.bin/mocha spec",
+    "wip": "env NODE_PATH=./ ./node_modules/.bin/mocha spec/routes/search/amazon",
     "sandbox": "env NODE_PATH=./ node-dev --harmony --debug sandbox",
     "sbapi": "env NODE_PATH=./ node-dev --harmony --debug sbapi",
     "app": "env NODE_PATH=./ node-dev --debug bin/www",
