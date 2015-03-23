@@ -1,5 +1,6 @@
 var Q = require('q');
 var modelBookList = require('shelf/lib/modelBookList');
+var limit = require('common/constant').limit;
 
 module.exports = function() {
   var d = Q.defer();
@@ -10,7 +11,7 @@ module.exports = function() {
         isKindlized: false
       }
     })
-    .limit(100);
+    .limit(limit);
 
   query.exec(function(error, haveAuthorityAsin) {
     console.log('AuthorityASINを持たない' + haveAuthorityAsin.length + '冊の書籍');
