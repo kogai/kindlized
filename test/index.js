@@ -12,5 +12,4 @@ describe('circleCiのテスト', function () {
 
 librarian.fetchParentASIN.fetchBookList();
 
-routes.post();
-routes.saveBook.isNewBook();
+routes();
