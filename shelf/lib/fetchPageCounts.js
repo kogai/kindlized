@@ -3,6 +3,7 @@ var makeOpConfig = require('./makeOpConfig');
 var makeSearchExpression = require('./makeSearchExpression');
 var Q = require('q');
 var constant = require('./constant');
+var log = require('common/log');
 
 module.exports = function(authorData) {
   var Author = authorData.author;
@@ -15,7 +16,7 @@ module.exports = function(authorData) {
   var retryCount = 0;
 
   var callBack = function(err, res) {
-    if (err) console.log('fetchPageCountsのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
+    if (err) log.info('fetchPageCountsのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
     try {
       pageCount = res.ItemSearchResponse.Items[0].TotalPages[0];
       authorData.pageCount = Number(pageCount);
@@ -23,7 +24,7 @@ module.exports = function(authorData) {
     } catch (error) {
       var retryInterval = constant.retryInterval;
       retryCount++;
-      console.log('fetchPageCountsの' + retryCount + '回目のリクエストエラー', error, res.ItemSearchErrorResponse.Error);
+      log.info('fetchPageCountsの' + retryCount + '回目のリクエストエラー', error, res.ItemSearchErrorResponse.Error);
       setTimeout(function() {
         searchExpression = new makeSearchExpression(Author);
         opCountPages.execute('ItemSearch', searchExpression, callBack);

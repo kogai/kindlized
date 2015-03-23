@@ -1,5 +1,6 @@
 var ModelBookList = require('./modelBookList.js');
 var Q = require('q');
+var log = require('common/log');
 
 module.exports = function( authorData ){
 	var d = Q.defer();
@@ -38,8 +39,8 @@ var saveBook = function( book ){
 			});
 
 			newBook.save( function(err){
-				if(err) console.log(err);
-				console.log( book.title, 'regist is success' );
+				if(err) log.info(err);
+				log.info( book.title, 'regist is success' );
 			});
 		}
 	});
