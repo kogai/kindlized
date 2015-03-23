@@ -3,7 +3,7 @@ var shelf = require('shelf');
 var postman = require('postman');
 var Q = require('q');
 var cronjob = require('cron').CronJob;
-var cronLibrarian = "0 0 */2 * * *";
+var cronLibrarian = "0 0 * * * *";
 var cronPostman = "0 0 12 * * *";
 var moment = require('moment-timezone');
 
