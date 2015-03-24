@@ -12,6 +12,7 @@ var bookrSchema = {
   url: Array,
   images: String,
   lastModified: Date,
+  lastModifiedLogs: Object,
   isKindlized: Boolean,
   isKindlizedUrl: Boolean
 };
