@@ -40,6 +40,7 @@ module.exports = function(data) {
       try {
         var AuthorityASIN = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0].Item[0].ASIN;
         modifiedModelBookList.AuthorityASIN = AuthorityASIN;
+        modifiedModelBookList.lastModifiedLogs.fetchParentASIN = moment();
         modelBookList.findOneAndUpdate({
           ASIN: book.ASIN
         }, modifiedModelBookList, function(err, book) {
