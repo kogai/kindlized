@@ -1,6 +1,7 @@
 var Q = require('q');
 var itemLookUp = require('common/itmeLookUp');
 var interval = require('common/constant').interval;
+var _ = require('underscore');
 
 module.exports = function( data ){
   var d = Q.defer();
@@ -16,7 +17,7 @@ module.exports = function( data ){
       if( execCount < books.length -1 ){
         recursion(execCount);
       } else {
-        data.bookListInAmazon = modBooks;
+        data.bookListInAmazon = _.compact(modBooks);
         d.resolve(data);
       }
     });

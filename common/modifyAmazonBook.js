@@ -23,7 +23,8 @@ module.exports = function( rawBook ){
       publicationDate : itemAttr.PublicationDate,
       price           : itemAttr.ListPrice,
       url             : rawBook.DetailPageURL,
-      images          : imageSets
+      images          : imageSets,
+      isKindlized     : false
     };
 
   }catch( err ){

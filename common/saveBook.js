@@ -21,24 +21,25 @@ module.exports = function( book ) {
             price: book.price,
             url: book.url,
             images: book.images,
-            isKindlized: false
+            isKindlized: false,
+            AuthorityASIN: book.AuthorityASIN
           });
           newBook.save(function( err ) {
             if (err) console.log(err);
             log.info( '書籍:' + newBook.title + 'が登録されました'　);
-            defferd.resolve(newBook);
+            defferd.resolve( newBook );
           });
-        }catch(error){
+        }catch( error ){
           log.info(error);
-          defferd.resolve();
+          defferd.resolve( undefined );
         }
       }else{
-        defferd.resolve();
+        defferd.resolve( undefined );
       }
     });
   }catch(error){
     log.info(error);
-    defferd.resolve();
+    defferd.resolve( undefined );
   }finally{
     return defferd.promise;
   }

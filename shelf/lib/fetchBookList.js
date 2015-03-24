@@ -28,7 +28,7 @@ module.exports = function(authorData) {
 			var searchExpression = new makeSearchExpression(Author, data.countExec + 1);
 
 			opCountPages.execute('ItemSearch', searchExpression, function(err, res) {
-				if (err) log.info('shelf/fetchBookListのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
+				if (err) log.info( err );
 
 				if (res.ItemSearchResponse) {
 					// API呼び出しに成功
