@@ -1,3 +1,4 @@
+var logPostman = require('common/logEx').postman;
 var inspectNotifiedBooks      = require( 'postman/lib/inspectNotifiedBooks' );
 var inspectKindlizedBooks     = require( 'postman/lib/inspectKindlizedBooks' );
 var insertMailTemplate        = require( 'postman/lib/insertMailTemplate' );
@@ -13,9 +14,9 @@ module.exports = function( user ){
    .then( inspectKindlizedBooks )
    .then( insertMailTemplate )
    .then( sendKindlizedNotification )
-  //  .then( modifyNotifiedStatus )
+   .then( modifyNotifiedStatus )
    .done( function( user ){
-      console.log( user._id + 'の処理が完了');
+      logPostman.info( user._id + 'の処理が完了');
       d.resolve();
    });
 

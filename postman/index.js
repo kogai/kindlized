@@ -2,6 +2,7 @@ var Q = require('q');
 
 var fetchUserModel = require( 'postman/lib/fetchUserModel' );
 var postMailToUser = require( 'postman/lib/postMailToUser' );
+var logPostman = require('common/logEx').postman;
 
 module.exports = function(){
    // *1日に一度実行する
@@ -13,13 +14,13 @@ module.exports = function(){
 
       Q.all( users.map( postMailToUser ) )
       .done( function( resultarry ){
-         console.log('done');
+         logPostman.info('done');
          d.resolve( data );
       });
 
       return d.promise;
    })
    .done( function( data ){
-      console.log( 'postmanの処理が完了' );
+      logPostman.info( 'postmanの処理が完了' );
    });
 };

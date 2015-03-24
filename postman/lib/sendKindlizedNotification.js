@@ -3,6 +3,7 @@
 var Q = require('q');
 var nodemailer = require('nodemailer');
 var makeCredential = require('common/makeCredential');
+var logPostman = require('common/logEx').postman;
 
 module.exports = function(user) {
   var d = Q.defer();
@@ -29,9 +30,9 @@ module.exports = function(user) {
 
     transporter.sendMail(mailOptions, function(error, info) {
       if (error) {
-        console.log(error);
+        logPostman.info(error);
       } else {
-        console.log('Message sent: ' + info.response);
+        logPostman.info('Message sent: ' + info.response);
       }
       d.resolve(user);
     });

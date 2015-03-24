@@ -1,6 +1,8 @@
 // userモデルのbookListからisNotifiedがfalseのものを抽出してpostList配列に格納
 
 var  Q = require('q');
+var _ = require('underscore');
+var logPostman = require('common/logEx').postman;
 
 module.exports = function( user ){
    var d = Q.defer();
@@ -14,6 +16,9 @@ module.exports = function( user ){
          postList.push( book.bookId );
       }
    }
+   postList = _.compact(postList);
+   logPostman.info('\n', bookList);
+   logPostman.info('\n', postList);
    user.postList = postList;
 
    d.resolve( user );
