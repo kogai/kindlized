@@ -12,10 +12,12 @@ module.exports = function() {
   .then(lookUpEbooks)
   .then(modifyUrl)
   .done(function( books ){
-    var titles = books.map( function( book ){
-      return book.AuthorityASIN + ':' + book.title + ':\n' + book.url;
-    });
-    log.info('modifyUrlが完了');
+    if( books.length > 0 ){
+      var titles = books.map( function( book ){
+        return book.AuthorityASIN + ':' + book.title + ':\n' + book.url;
+      });
+      log.info('modifyUrlが完了');
+    }
     d.resolve();
   });
   return d.promise;
