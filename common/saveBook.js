@@ -21,7 +21,7 @@ module.exports = function( book ) {
             price: book.price,
             url: book.url,
             images: book.images,
-            isKindlized: dbBook.isKindlized,
+            isKindlized: book.isKindlized,
             AuthorityASIN: book.AuthorityASIN
           });
           newBook.save(function( err ) {
