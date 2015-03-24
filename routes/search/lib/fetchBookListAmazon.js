@@ -17,17 +17,17 @@ module.exports = function(data) {
 
   var req = data.req;
   var newBook = req.body.newBook;
-  var existenceAuthorExpression = new makeExistenceExpression(newBook);
+  var searchExpression = new makeExistenceExpression( newBook );
   var intervalTimeIncrements = 0;
 
   var recursionOpExistenceBook = function() {
-    opExistenceBook.execute('ItemSearch', existenceAuthorExpression, function(err, res) {
+    opExistenceBook.execute( 'ItemSearch', searchExpression, function(err, res) {
       if (err) throw err;
       var bookListInAmazon;
       try {
         bookListInAmazon = res.ItemSearchResponse.Items[0].Item;
       } catch (error) {
-        log.info(error, res.ItemSearchErrorResponse.Error);
+        log.info( res.ItemSearchErrorResponse.Error);
         intervalTimeIncrements++;
         if (intervalTimeIncrements > 10) {
           data.bookListInAmazon = [];
@@ -56,9 +56,9 @@ module.exports = function(data) {
 
 var exceptionHasNotAuthor = function( book ){
   // 必須プロパティを持たない書籍のための例外処理
-  if( !book.ASIN ) book.ASIN = 'UNDEFINED';
-  if( !book.DetailPageURL ) book.DetailPageURL = 'UNDEFINED';
-  if( !book.ItemAttributes[0].Author ) book.ItemAttributes[0].Author = 'UNDEFINED';
-  if( !book.ItemAttributes[0].Title ) book.ItemAttributes[0].Title = 'UNDEFINED';
+  if( !book.ASIN ) book.ASIN = ['UNDEFINED'];
+  if( !book.DetailPageURL ) book.DetailPageURL = ['UNDEFINED'];
+  if( !book.ItemAttributes[0].Author ) book.ItemAttributes[0].Author = ['UNDEFINED'];
+  if( !book.ItemAttributes[0].Title ) book.ItemAttributes[0].Title = ['UNDEFINED'];
   return book;
 };

@@ -13,11 +13,25 @@ log4js.configure({
   }]
 });
 
+log4js.configure({
+  appenders: [
+{
+  type: 'console'
+},    {
+    type: 'file',
+    filename: 'logs/librarian/' + moment().format('fetchParentASIN-YYYYMMDD') + '.log',
+    category: 'fetchParentASIN'
+  }]
+});
+
 log4js_extend(log4js, {
   path: __dirname,
   format: "at @name (@file:@line:@column)"
 });
 
 module.exports = {
-  postman: log4js.getLogger("postman")
+  postman: log4js.getLogger("postman"),
+  librarian: {
+    fetchParentASIN: log4js.getLogger("fetchParentASIN")
+  }
 };
