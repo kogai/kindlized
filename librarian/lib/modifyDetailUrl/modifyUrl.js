@@ -1,4 +1,5 @@
 var Q = require('q');
+var moment = require('moment-timezone');
 var ModelBookList = require('shelf/lib/modelBookList');
 
 module.exports = function( books ) {
@@ -11,7 +12,10 @@ module.exports = function( books ) {
     },{
       // modify
       url: book.url,
-      isKindlizedUrl: true
+      isKindlizedUrl: true,
+      lastModifiedLogs: {
+        modifyUrl: moment()
+      }
     },function(err, book){
       return book;
     });

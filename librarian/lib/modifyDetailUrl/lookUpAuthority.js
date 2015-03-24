@@ -6,23 +6,27 @@ var log = require('common/log');
 module.exports = function( books ){
   var d = Q.defer();
   var queries = [];
-  log.info( '\n\n最初の再帰処理が開始:', books.length + '\n\n' );
+  if( books.length === 0) {
+    d.resolve(queries);
+  }else{
 
-  var execCount = 0;
-  var recursion = function(execCount){
-    mappingFunc(books[execCount])
-    .done(function( modifiableRecipe ){
-      queries.push(modifiableRecipe);
-      execCount++;
-      if( execCount < books.length -1 ){
-        recursion(execCount);
-      } else {
-        log.info('\n\n最初の再帰処理が完了\n\n');
-        d.resolve(queries);
-      }
-    });
-  };
-  recursion(execCount);
+    log.info( '\n\n最初の再帰処理が開始:', books.length + '\n\n' );
+    var execCount = 0;
+    var recursion = function(execCount){
+      mappingFunc(books[execCount])
+      .done(function( modifiableRecipe ){
+        queries.push(modifiableRecipe);
+        execCount++;
+        if( execCount < books.length -1 ){
+          recursion(execCount);
+        } else {
+          log.info('\n\n最初の再帰処理が完了\n\n');
+          d.resolve(queries);
+        }
+      });
+    };
+    recursion(execCount);
+  }
 
   return d.promise;
 };
