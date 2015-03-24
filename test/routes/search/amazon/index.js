@@ -4,12 +4,6 @@ var searchAuthorityASIN = require('test/routes/search/amazon/lib/searchAuthority
 var lookUpAuthorityASIN = require('test/routes/search/amazon/lib/lookUpAuthorityASIN');
 var saveBookListToDB = require('test/routes/search/amazon/lib/saveBookListToDB');
 
-// fetchBookListAmazon();
-// handleBookListFromAmazon();
-// searchAuthorityASIN();
-// lookUpAuthorityASIN();
-saveBookListToDB();
-
 module.exports = function(){
 	fetchBookListAmazon();
 	handleBookListFromAmazon();
