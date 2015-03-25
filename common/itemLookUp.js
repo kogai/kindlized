@@ -31,7 +31,7 @@ var execApi = function( expression, callback, errorCallback, defferd ) {
           result = errorCallback(error);
         }finally{
           num = 0;
-          logWrap.info('itemLookUp\n', result);
+          logWrap.info('itemLookUp', result);
           defferd.resolve(result);
         }
       }
