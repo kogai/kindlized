@@ -12,7 +12,10 @@ var bookrSchema = {
   url: Array,
   images: String,
   lastModified: Date,
-  lastModifiedLogs: Object,
+  lastModifiedLogs: {
+    fetchParentASIN: Date,
+    modifyUrl: Date
+  },
   isKindlized: Boolean,
   isKindlizedUrl: Boolean
 };

@@ -34,7 +34,3 @@ module.exports = function() {
 
 	return d.promise;
 };
-
-/*
-db.booklists.find( { AuthorityASIN: /.+/, isKindlized: false, $or: [{  lastModified : {$lte : new ISODate("2015-03-17T03:00:31Z")}},{lastModified : {$exists: false}}] } ).count()
-*/
