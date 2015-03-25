@@ -35,7 +35,6 @@ module.exports = function() {
 					.done(function( data ) {
 						resBook = data.book;
 						resData = data;
-						console.log(resBook);
 						done();
 					});
 			});

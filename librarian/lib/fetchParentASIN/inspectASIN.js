@@ -6,6 +6,7 @@ var constant = require('common/constant');
 var makeInspectExpression = require('librarian/lib/fetchParentASIN/makeInspectExpression');
 var modelBookList = require('shelf/lib/modelBookList');
 var log = require('common/log');
+var logWrap = require('common/logWrap')('librarian',false);
 
 module.exports = function(data) {
   var def = Q.defer();
@@ -25,7 +26,7 @@ module.exports = function(data) {
   try{
     bookASIN = book.ASIN[0];
   }catch(error){
-    log.info(error);
+    logWrap.info(error);
     bookASIN = 'UNDEFINED';
   }finally{
     inspectExpression = new makeInspectExpression(bookASIN);
@@ -33,7 +34,7 @@ module.exports = function(data) {
 
   opInspectBook.execute('ItemLookup', inspectExpression, function(error, res) {
     if (error) {
-      log.info('inspectASINのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
+      logWrap.info('inspectASINのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
       error = null;
     }
     var modifiedModelBookList = {};
@@ -41,7 +42,6 @@ module.exports = function(data) {
     if (res.ItemLookupResponse) {
       // リクエスト成功の時の処理
       try {
-
         // AuthorityASINを持っている書籍の処理
         var AuthorityASIN = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0].Item[0].ASIN;
 
@@ -54,7 +54,7 @@ module.exports = function(data) {
 
       }catch (e) {
         // AuthorityASINを持っていない書籍の処理
-        log.info( res );
+        logWrap.info( res );
         modifyModelBook( book.ASIN, ['UNDEFINED'], moment() )
         .done(function(modBook){
           data.countExec++;
@@ -64,7 +64,7 @@ module.exports = function(data) {
       }
     } else {
       // リクエスト失敗の時の処理
-      log.info( res.ItemLookupErrorResponse.Error );
+      logWrap.info( res.ItemLookupErrorResponse.Error );
       retryCount++;
     }
     setTimeout(function() {
