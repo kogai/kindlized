@@ -47,7 +47,6 @@ module.exports = function() {
 
 			it('isKindlizedプロパティがある', function() {
 				bookList.forEach(function( book, index ){
-					console.log( book );
 					book.should.have.property('isKindlized');
 				});
 			});

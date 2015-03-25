@@ -7,6 +7,8 @@ var modelBookList = require('shelf/lib/modelBookList');
 var moment = require('moment-timezone');
 var util = require('util');
 var log = require('common/log');
+var logWrap = require('common/logWrap')('inspectBookList',false);
+var logWrapShow = require('common/logWrap')('inspectBookList',true);
 
 module.exports = function(bookList) {
   var d = Q.defer();
@@ -29,7 +31,7 @@ module.exports = function(bookList) {
         callBack(data);
       } else {
         // times回実行されたら終了
-        log.info('inspectBook-regularInterval is complete.');
+        logWrap.info('inspectBook-regularInterval is complete.');
         data.d.resolve(inspectBookList);
       }
     }, interval);
@@ -58,15 +60,15 @@ module.exports = function(bookList) {
 
       opInspectBook.execute('ItemLookup', inspectExpression, function(err, res) {
         if (err) {
-          log.info(err);
-          log.info(res);
+          logWrap.info(err);
+          logWrap.info(res);
         }
 
         if (res.ItemLookupErrorResponse) {
           // リトライ
           retryCount++;
           retryInterval = interval * retryCount;
-          // log.info( book.title, retryCount, '回目リトライ');
+          logWrapShow.info( book.title, retryCount, '回目リトライ');
         } else {
           // 再帰
           countExec++;
@@ -93,7 +95,7 @@ module.exports = function(bookList) {
               var relatedBook = item.Item[0].ItemAttributes[0];
               if (relatedBook.ProductGroup[0] === 'eBooks') {
                 hasNotKindle = false;
-                log.info( book.AuthorityASIN + ':' + book.title + 'は電子化されている');
+                logWrapShow.info( book.AuthorityASIN + ':' + book.title + 'は電子化されている');
                 modelBookList.findOneAndUpdate(query, {
                   isKindlized: true,
                   lastModified: moment()
@@ -101,13 +103,13 @@ module.exports = function(bookList) {
               }
             });
             if( hasNotKindle ){
-              log.info( book.title + 'は電子化されていない');
+              logWrapShow.info( book.title + 'は電子化されていない');
               modelBookList.findOneAndUpdate(query, {
                 lastModified: moment()
               }, function(err, book) {});
             }
           } catch (error) {
-            log.info( book.title + 'は関連書籍を持たない', error);
+            logWrapShow.info( book.title + 'は関連書籍を持たない', error);
             modelBookList.findOneAndUpdate(query, {
               lastModified: moment()
             }, function(err, book) {});

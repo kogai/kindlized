@@ -6,6 +6,7 @@ var num = 0;
 var opConfig = new makeOpConfig();
 var interval = require('common/constant').interval;
 var log = require('common/log');
+var logWrap = require('common/logWrap')('itemLookUp',false);
 
 var execApi = function( expression, callback, errorCallback, defferd ) {
   var opInspectBook = new opHelper(opConfig);
@@ -15,9 +16,9 @@ var execApi = function( expression, callback, errorCallback, defferd ) {
     'ItemLookup',
     searchExpression,
     function(err, res) {
-      if (err) log.info('ItemLookupのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
+      if (err) logWrap.info('ItemLookupのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
       if (res.ItemLookupErrorResponse) {
-        log.info('res.ItemLookupErrorResponse\n', res);
+        logWrap.info('res.ItemLookupErrorResponse\n', res);
         num++;
         setTimeout(function(){
   				execApi( expression, callback, errorCallback, defferd );
@@ -30,7 +31,7 @@ var execApi = function( expression, callback, errorCallback, defferd ) {
           result = errorCallback(error);
         }finally{
           num = 0;
-          log.info('itemLookUp\n', result);
+          logWrap.info('itemLookUp\n', result);
           defferd.resolve(result);
         }
       }

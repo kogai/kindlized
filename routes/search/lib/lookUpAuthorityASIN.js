@@ -2,6 +2,7 @@ var Q = require('q');
 var itemLookUp = require('common/itmeLookUp');
 var interval = require('common/constant').interval;
 var _ = require('underscore');
+var logWrap = require('common/logWrap')('lookUpAuthorityASIN',false);
 
 module.exports = function( data ){
   var d = Q.defer();
@@ -47,7 +48,7 @@ var mappingFunc = function( book ){
       return book;
     },function(error){
       // エラー時の処理
-      console.log(error);
+      logWrap.info(error);
       return book;
     })
     .done(function(book){
