@@ -3,6 +3,7 @@ var util = require('util');
 var should = require('should');
 var fetchBookList = require('librarian/lib/fetchParentASIN/fetchBookList');
 var inspectASIN = require('librarian/lib/fetchParentASIN/inspectASIN');
+var regInt = require('librarian/lib/fetchParentASIN/regInt');
 
 module.exports = function() {
 	describe('librarian/lib/fetchParentASIN/inspectASINのテスト', function() {
@@ -17,6 +18,7 @@ module.exports = function() {
 			var resData;
 			var countExec = initCountExec;
 			var countExecIncrements = initCountExec + 1;
+      var d = Q.defer();
 
 			before(function(done) {
 				fetchBookList()
@@ -26,7 +28,8 @@ module.exports = function() {
 						var data = {};
 						data.countExec = countExec;
 						data.bookList = books;
-						data.regularInterval = function(){ return ;};
+						data.regularInterval = regInt;
+						data.d = d;
 						d.resolve( data );
 
 						return d.promise;
@@ -41,6 +44,11 @@ module.exports = function() {
 
 			it('dataのカウントがインクリメントしている', function() {
 				resData.countExec.should.exactly( countExecIncrements );
+			});
+
+			it('ASINプロパティがあり、空の文字列ではない', function() {
+				resBook.should.have.property('ASIN');
+				( resBook.ASIN[0].length ).should.be.above( 0 );
 			});
 
 			it('AuthorityASINプロパティがあり、空の文字列ではない', function() {

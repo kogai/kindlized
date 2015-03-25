@@ -68,6 +68,7 @@ module.exports = function(data) {
       retryCount++;
     }
     setTimeout(function() {
+      // console.log('\n\nregularInterval\n\n', regularInterval.toString());
       regularInterval( data );
     }, retryCount * constant.interval);
   });

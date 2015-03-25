@@ -1,6 +1,7 @@
 var Q = require('q');
 var should = require('should');
 var fetchBookList = require('librarian/lib/fetchParentASIN/fetchBookList');
+var limit = require('common/constant').limit;
 
 module.exports = function() {
 	describe('librarian/lib/fetchParentASIN/fetchBookList.jsのテスト', function() {
@@ -22,6 +23,10 @@ module.exports = function() {
 
 		it('fetchBookListはbookList配列を返す', function() {
 			bookList.should.be.instanceof(Array);
+		});
+
+		it('bookList配列はlimi定数冊以下である', function() {
+			bookList.length.should.be.below(limit + 1);
 		});
 
 		it('bookList配列にはtitleプロパティがある', function() {
