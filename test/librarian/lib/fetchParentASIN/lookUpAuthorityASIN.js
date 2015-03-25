@@ -11,13 +11,14 @@ module.exports = function() {
 		});
 
 		var bookList = [];
+		var testElement = 90;
 		this.timeout(0);
 
 		before(function(done) {
 			fetchBookList()
 				.then(function(data){
 					var d = Q.defer();
-					lookUpAuthorityASIN(data[0])
+					lookUpAuthorityASIN(data[ testElement + 0 ])
 					.done(function(book){
 						data.modBookList = [];
 						data.modBookList.push(book);
@@ -27,7 +28,7 @@ module.exports = function() {
 				})
 				.then(function(data){
 					var d = Q.defer();
-					lookUpAuthorityASIN(data[1])
+					lookUpAuthorityASIN(data[ testElement + 2 ])
 					.done(function(book){
 						data.modBookList.push(book);
 						d.resolve(data);
@@ -36,7 +37,7 @@ module.exports = function() {
 				})
 				.then(function(data){
 					var d = Q.defer();
-					lookUpAuthorityASIN(data[2])
+					lookUpAuthorityASIN(data[ testElement + 3 ])
 					.done(function(book){
 						data.modBookList.push(book);
 						d.resolve(data);
@@ -45,7 +46,7 @@ module.exports = function() {
 				})
 				.then(function(data){
 					var d = Q.defer();
-					lookUpAuthorityASIN(data[3])
+					lookUpAuthorityASIN(data[ testElement + 4 ])
 					.done(function(book){
 						data.modBookList.push(book);
 						d.resolve(data);
@@ -54,7 +55,7 @@ module.exports = function() {
 				})
 				.then(function(data){
 					var d = Q.defer();
-					lookUpAuthorityASIN(data[4])
+					lookUpAuthorityASIN(data[ testElement + 5 ])
 					.done(function(book){
 						data.modBookList.push(book);
 						d.resolve(data);
@@ -79,7 +80,7 @@ module.exports = function() {
 		});
 		it('Authorityプロパティは空の文字列ではない', function(){
 			bookList.forEach(function(book){
-				book.AuthorityASIN[0].should.be.above(0);
+				book.AuthorityASIN[0].length.should.be.above(0);
 			});
 		});
 		});
