@@ -3,7 +3,7 @@ var should = require('should');
 var fetchBookList = require('librarian/lib/fetchParentASIN/fetchBookList');
 
 module.exports = function() {
-	describe('librarian/lib/inspectBookList/inspectBook.jsのテスト', function() {
+	describe('librarian/lib/fetchParentASIN/fetchBookList.jsのテスト', function() {
 		it('テストが動作している', function(done) {
 			(5).should.be.exactly(5);
 			done();

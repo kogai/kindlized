@@ -1,4 +1,4 @@
-var util = require('util');
+var Q = require('q');
 var moment = require('moment-timezone');
 var opHelper = require('apac').OperationHelper;
 var makeOpConfig = require('common/makeOpConfig');
@@ -8,6 +8,8 @@ var modelBookList = require('shelf/lib/modelBookList');
 var log = require('common/log');
 
 module.exports = function(data) {
+  var def = Q.defer();
+
   var retryInterval = 0;
   var retryCount = 0;
   var countExec = data.countExec;
@@ -19,6 +21,7 @@ module.exports = function(data) {
   var opInspectBook = new opHelper(opConfig);
   var bookASIN;
   var inspectExpression;
+
   try{
     bookASIN = book.ASIN[0];
   }catch(error){
@@ -38,35 +41,55 @@ module.exports = function(data) {
     if (res.ItemLookupResponse) {
       // リクエスト成功の時の処理
       try {
+
+        // AuthorityASINを持っている書籍の処理
         var AuthorityASIN = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0].Item[0].ASIN;
-        modifiedModelBookList.AuthorityASIN = AuthorityASIN;
-        modifiedModelBookList.lastModifiedLogs.fetchParentASIN = moment();
-        modelBookList.findOneAndUpdate({
-          ASIN: book.ASIN
-        }, modifiedModelBookList, function(err, book) {
-          log.info(book.title+'はAuthorityASIN / RelatedItemsを持っている');
+
+        modifyModelBook( book.ASIN, AuthorityASIN, moment() )
+        .done(function(modBook){
           data.countExec++;
+          data.book = modBook;
+          def.resolve( data );
         });
+
       }catch (e) {
         // AuthorityASINを持っていない書籍の処理
-        log.info(e,book);
-        data.countExec++;
-
-        // modelBookList.findOneAndUpdate({
-        //   ASIN: book.ASIN
-        // }, modifiedModelBookList, function(err, book) {
-        //   log.info(err, book);
-        //   data.countExec++;
-        // });
+        log.info( res );
+        modifyModelBook( book.ASIN, ['UNDEFINED'], moment() )
+        .done(function(modBook){
+          data.countExec++;
+          data.book = modBook;
+          def.resolve( data );
+        });
       }
     } else {
       // リクエスト失敗の時の処理
-      log.info('inspectASINのリクエストエラー API呼び出し間隔のエラー処理', res.ItemLookupErrorResponse.Error);
+      log.info( res.ItemLookupErrorResponse.Error );
       retryCount++;
     }
     setTimeout(function() {
-      regularInterval(data);
+      regularInterval( data );
     }, retryCount * constant.interval);
   });
 
+  return def.promise;
+};
+
+var modifyModelBook = function( ASIN, AuthorityASIN, moment ){
+  var d = Q.defer();
+  var queryModel = {
+    ASIN: ASIN
+  };
+  var modifyModel = {
+    AuthorityASIN: AuthorityASIN,
+    lastModifiedLogs: {
+      fetchParentASIN: moment
+    }
+  };
+  var callbackModel = function( error, book ){
+    console.log( book.title + 'のAuthorityASINを' + book.AuthorityASIN + 'に更新した');
+    d.resolve(book);
+  };
+  modelBookList.findOneAndUpdate( queryModel, modifyModel, callbackModel );
+  return d.promise;
 };
