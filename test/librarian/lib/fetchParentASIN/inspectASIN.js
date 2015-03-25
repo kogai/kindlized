@@ -11,58 +11,62 @@ module.exports = function() {
 			done();
 		});
 
-		var resBook;
-		var resData;
-		var countExec = 2;
-		var countExecIncrements = 3;
 		this.timeout(0);
+		var testFunc = function( initCountExec ){
+			var resBook;
+			var resData;
+			var countExec = initCountExec;
+			var countExecIncrements = initCountExec + 1;
 
-		before(function(done) {
-			fetchBookList()
-				.then(function(books){
-					var d = Q.defer();
+			before(function(done) {
+				fetchBookList()
+					.then(function(books){
+						var d = Q.defer();
 
-					var data = {};
-					data.countExec = countExec;
-					data.bookList = books;
-					data.regularInterval = function(){ return ;};
-					d.resolve( data );
+						var data = {};
+						data.countExec = countExec;
+						data.bookList = books;
+						data.regularInterval = function(){ return ;};
+						d.resolve( data );
 
-					return d.promise;
-				})
-				.then( inspectASIN )
-				.done(function( data ) {
-					resBook = data.book;
-					resData = data;
-					console.log(resBook);
-					done();
-				});
-		});
+						return d.promise;
+					})
+					.then( inspectASIN )
+					.done(function( data ) {
+						resBook = data.book;
+						resData = data;
+						console.log(resBook);
+						done();
+					});
+			});
 
-		it('dataのカウントがインクリメントしている', function() {
-			resData.countExec.should.exactly( countExecIncrements );
-		});
+			it('dataのカウントがインクリメントしている', function() {
+				resData.countExec.should.exactly( countExecIncrements );
+			});
 
-		it('AuthorityASINプロパティがあり、空の文字列ではない', function() {
-			resBook.should.have.property('AuthorityASIN');
-			( resBook.AuthorityASIN[0].length ).should.be.above( 0 );
-		});
+			it('AuthorityASINプロパティがあり、空の文字列ではない', function() {
+				resBook.should.have.property('AuthorityASIN');
+				( resBook.AuthorityASIN[0].length ).should.be.above( 0 );
+			});
 
-		it('lastModifiedLogsプロパティがある', function() {
-			resBook.should.have.property('lastModifiedLogs');
-		});
+			it('lastModifiedLogsプロパティがある', function() {
+				resBook.should.have.property('lastModifiedLogs');
+			});
 
-		it('lastModifiedLogsプロパティはObject型である', function() {
-			resBook.lastModifiedLogs.should.be.instanceof(Object);
-		});
+			it('lastModifiedLogsプロパティはObject型である', function() {
+				resBook.lastModifiedLogs.should.be.instanceof(Object);
+			});
 
-		it('lastModifiedLogsプロパティはfetchParentASIN子プロパティを持つ', function() {
-			resBook.lastModifiedLogs.should.have.property('fetchParentASIN');
-		});
+			it('lastModifiedLogsプロパティはfetchParentASIN子プロパティを持つ', function() {
+				resBook.lastModifiedLogs.should.have.property('fetchParentASIN');
+			});
 
-		it('fetchParentASIN子プロパティはDate型である', function() {
-			resBook.lastModifiedLogs.fetchParentASIN.should.be.instanceof(Date);
-		});
-
+			it('fetchParentASIN子プロパティはDate型である', function() {
+				resBook.lastModifiedLogs.fetchParentASIN.should.be.instanceof(Date);
+			});
+		};
+		for (var i = 0; i < 10; i++) {
+			testFunc(i);
+		}
 	});
 };

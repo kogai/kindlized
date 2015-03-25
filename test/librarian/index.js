@@ -1,17 +1,7 @@
-var fetchBookList = require( 'test/librarian/lib/fetchParentASIN/fetchBookList' );
-var inspectASIN 	= require( 'test/librarian/lib/fetchParentASIN/inspectASIN' );
+var fetchParentASIN = require('test/librarian/lib/fetchParentASIN');
+var inspectBookList = require('test/librarian/lib/inspectBookList');
 
-var inspectBook 	= require( 'test/librarian/lib/inspectBookList/inspectBook' );
-
-// fetchBookList();
-inspectASIN();
-
-module.exports = {
-	fetchParentASIN: {
-		fetchBookList: fetchBookList,
-		inspectASIN: inspectASIN
-	},
-	inspectBookList: {
-		inspectBook	: inspectBook
-	}
+module.exports = function(){
+	fetchParentASIN();
+	// inspectBookList();
 };
