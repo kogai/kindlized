@@ -49,7 +49,6 @@ module.exports = function() {
 				bookList.forEach(function( book, index ){
 					book.should.have.property('_id');
 					( book._id.length ).should.be.above( 0 );
-					console.log( book );
 				});
 			});
 
