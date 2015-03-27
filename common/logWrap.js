@@ -27,8 +27,3 @@ var loggingHandler = function( loggingCategory, isShowConsole ) {
 };
 
 module.exports = loggingHandler;
-
-/*
-var log = loggingHandler('testLog',  true );
-log.info('this is test');
-*/
