@@ -1,4 +1,3 @@
-
 /*
 配列とThenableな関数を渡すと配列の各要素に対して直列に非同期処理を実行する
 */
@@ -13,7 +12,7 @@ module.exports = function( array, callback ){
 		count: 0
 	});
 
-	array.forEach(function ( array ) {
+	array.forEach( function ( array ) {
 		result = result.then( function(data){
 			var deferd = Q.defer();
 			var ele = data.array[data.count];
