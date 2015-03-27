@@ -52,7 +52,7 @@ var callback = function( book ){
 					book.AuthorityASIN = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0].Item[0].ASIN;
 				}catch (e) {
 					// AuthorityASINを持っていない書籍の処理
-					book.AuthorityASIN = ['UNDEFINED'];
+					book.AuthorityASIN = [''];
 				}finally{
 					book.lastModifiedLogs = {
 						fetchParentASIN: moment()
