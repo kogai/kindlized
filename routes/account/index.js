@@ -7,7 +7,6 @@ var login 	= require( 'routes/account/login' );
 var localPassport = login.localPassport;
 
 router.get( '/login/success', function( req, res ){
-	console.log( '/login/success' );
 	res.redirect( 303, '/' );
 });
 
