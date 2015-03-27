@@ -1,5 +1,6 @@
 var Q = require('q');
 var should = require('should');
+var testArray = require('test/routes/search/amazon/lib/testArray');
 var fetchBookListAmazon = require('routes/search/lib/fetchBookListAmazon');
 
 module.exports = function() {
@@ -10,17 +11,6 @@ module.exports = function() {
 		});
 
 		this.timeout(0);
-		var testArray = [
-			'海街diary',
-			'逃げるは恥だが役に立つ',
-			'刃牙',
-			'インタラクティブ・データビジュアライゼーション ―D3.js',
-			'アイスクリン強し (講談社文庫)',
-			'W>Gーtaste 3 (<CDーROM>(Win版))',
-			'地球の長い午後',
-			'-',
-			' '
-		];
 		var testFunc = function( bookName ){
 			var bookList;
 		  var data = {

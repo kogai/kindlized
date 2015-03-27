@@ -1,5 +1,5 @@
 var Q = require('q');
-var itemLookUp = require('common/itmeLookUp');
+var itemLookUp = require('common/itemLookUp');
 var interval = require('common/constant').interval;
 var _ = require('underscore');
 
