@@ -4,7 +4,7 @@ var postman = require('postman');
 var Q = require('q');
 var cronjob = require('cron').CronJob;
 var cronLibrarian = "0 0 * * * *";
-var cronPostman = "0 0 12 * * *";
+var cronPostman = "0 0 21 * * *";
 var moment = require('moment-timezone');
 
 var libraryHandler = function(currentTime) {
