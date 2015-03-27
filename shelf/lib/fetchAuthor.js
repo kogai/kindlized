@@ -2,24 +2,36 @@ var Q = require('q');
 var ModelAuthor = require('author/lib/modelAuthor');
 var reduceListByDate = require('common/reduceListByDate');
 var log = require('common/log');
+var limit = require('common/constant').limit;
+var periodicalDay = require('common/constant').periodicalDay;
 
 module.exports = function() {
   // DBから著者リストを非同期に取得する
   var d = Q.defer();
   var authorList = [];
 
-  ModelAuthor.find({}).sort({
+  var query = ModelAuthor
+  .find({
+		$or: [
+      {
+				lastModified: {
+					$lte: moment().subtract( periodicalDay, 'days' )
+				}
+			}, {
+				lastModified: {
+					$exists: false
+				}
+			}
+    ]
+  })
+  .sort({
     lastModified: 1
-  }).find({}, function(err, result) {
-    log.info(result.length, '人の著者が登録されている');
-    reduceListByDate(result)
-      .then(function(result) {
-        for (var i = 0; i < result.length; i++) {
-          authorList.push(result[i].name);
-        }
-        log.info(authorList.length, '人の著者の処理を実行する');
-        d.resolve(authorList);
-      });
+  })
+  .limit( limit / 2 );
+
+  query.exec(function( error, authors ){
+    log.info( authors.length, '人の著者の処理を実行する');
+    d.resolve( authors );
   });
 
   return d.promise;
