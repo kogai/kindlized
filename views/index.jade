@@ -15,15 +15,17 @@ block content
 			.input-group-btn
 				button( type="submit").btn.btn-default 書籍を検索
 				
-		div( ng-if="isWaiting" )
+		div( ng-if="isWaiting" class="l-mt-10" )
 			|検索中...
 
-		h2( ng-if="showSuggestedBooks" )
+		h2( ng-if="showSuggestedBooks" class="l-mt-10 l-mb-10")
 			|検索結果
 		
 		div( ng-if="showSuggestedBooks" )
 			.panel.panel-default
-				table.table
+				table(
+					class="table m-table"
+				)
 					thead
 						tr
 							th タイトル
@@ -51,9 +53,13 @@ block content
 								.label.label-info( ng-if="bookInDB.isRegisterd" )
 									|メール通知登録済みです
 
-		h2 メール通知登録済みの書籍
+		h2(
+			class="l-mt-40 l-mb-10"
+		) メール通知登録済みの書籍
 		.panel.panel-default
-			table.table
+			table(
+				class="table m-table"
+			)
 				thead
 					tr
 						th タイトル
