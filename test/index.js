@@ -1,5 +1,6 @@
 var librarian = require('test/librarian');
 var routes = require('test/routes');
+var common = require('test/common');
 
 require('should');
 
@@ -12,3 +13,4 @@ describe('circleCiのテスト', function() {
 
 librarian();
 routes();
+common();

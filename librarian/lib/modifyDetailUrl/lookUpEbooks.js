@@ -1,6 +1,6 @@
 var Q = require('q');
 var util = require('util');
-var itemLookUp = require('common/itmeLookUp');
+var itemLookUp = require('common/itemLookUp');
 var log = require('common/log');
 
 module.exports = function( books ){

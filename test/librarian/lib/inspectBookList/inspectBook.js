@@ -17,9 +17,6 @@ module.exports = function() {
 		this.timeout(0);
 
 		before(function(done) {
-			// fetchBookList( [] )
-			// .then( siftBookList )
-			// .then( inspectBook )
 			Q.when(testdata)
 				.done(function(bookListInAmazon) {
 					console.log(bookListInAmazon.length + '=580');
