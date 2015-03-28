@@ -4,6 +4,7 @@ var ModelAuthor = require('author/lib/modelAuthor');
 var reduceListByDate = require('common/reduceListByDate');
 var log = require('common/log');
 var limit = require('common/constant').limit;
+var limitAuthor = require('common/constant').limitAuthor;
 var periodicalDay = require('common/constant').periodicalDay;
 
 module.exports = function() {
@@ -28,7 +29,7 @@ module.exports = function() {
   .sort({
     lastModified: 1
   })
-  .limit( limit / 2 );
+  .limit( limitAuthor );
 
   query.exec(function( error, authors ){
     log.info( authors.length, '人の著者の処理を実行する');
