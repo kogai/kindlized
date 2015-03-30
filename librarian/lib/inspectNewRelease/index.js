@@ -7,34 +7,25 @@ var modelAuthor = require('author/lib/modelAuthor');
 var fetchAuthors = require('librarian/lib/inspectNewRelease/fetchAuthors');
 var inspectPublishedBooks = require('librarian/lib/inspectNewRelease/inspectPublishedBooks');
 var modifyAuthors = require('librarian/lib/inspectNewRelease/modifyAuthors');
+var updateAuthors = require('librarian/lib/inspectNewRelease/updateAuthors');
 
 module.exports = function(){
-    "use strict";
-/*
-  /librarian
-  ##著者に新刊があるか調べる
-  以下を全authorモデルに対してcron処理する / 週
-  1. 刊行数を調べる inspectPublishedBooks
-  2. 前回cron実行時の刊行数を旧刊行数に保存する modifyAuthors
-  3. 新しい刊行数を保存する modifyAuthors
-  3. 新しい刊行数が旧刊行数と違えばisChangedをtrueに、それ以外はfalseに設定する modifyAuthors
-  4. 刊行数の調査日時を記録する modifyAuthors
-*/
+  "use strict";
+  var handleFails = function (error) {
+    var d = Q.defer();
+
+    d.resolve(error);
+
+    return d.promise;
+  };
+
   Q.when()
   .then(fetchAuthors)
   .then(inspectPublishedBooks)
   .then(modifyAuthors)
+  .then(updateAuthors)
   .fail(handleFails)
   .done();
-
-};
-
-var handleFails = function(){
-  var d = Q.defer();
-
-
-
-  return d.promise;
 };
 
 /*
