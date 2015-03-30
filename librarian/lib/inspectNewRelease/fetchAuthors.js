@@ -26,8 +26,7 @@ module.exports = function() {
 				}
 			}]
 		})
-		.skip(20)
-		.limit(10);
+		.limit(limit);
 
 	query.exec(function(error, authors) {
 		if (error) {
