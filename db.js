@@ -2,15 +2,23 @@ var librarian = require('librarian');
 var shelf = require('shelf');
 var postman = require('postman');
 var Q = require('q');
-var cronjob = require('cron').CronJob;
+var Cronjob = require('cron').CronJob;
 var cronLibrarian = "0 0 * * * *";
 var cronPostman = "0 0 21 * * *";
 var moment = require('moment-timezone');
 
+// タイムゾーンに合わせてログを取る
+var logTime = function(currentTime) {
+  "use strict";
+  var current = currentTime.tz('Asia/Tokyo').format('YYYY-MM-DD-hA');
+  console.log('all process is complete at', current);
+};
+
 var libraryHandler = function(currentTime) {
+  "use strict";
   Q.when()
     .then(shelf)
-    .then(function(bookList) {
+    .then(function() {
       var d = Q.defer();
       d.resolve([]);
       return d.promise;
@@ -18,30 +26,27 @@ var libraryHandler = function(currentTime) {
     .then(librarian.inspectBookList)
     .then(librarian.fetchParentASIN)
     .then(librarian.modifyDetailUrl)
+    .then(librarian.inspectNewRelease)
     .done(function() {
       logTime(currentTime);
     });
 };
 
-// タイムゾーンに合わせてログを取る
-var logTime = function(currentTime) {
-  var current = currentTime.tz('Asia/Tokyo').format('YYYY-MM-DD-hA');
-  console.log('all process is complete at', current);
-};
-
 //定期実行
-jobLibrarian = new cronjob({
+var jobLibrarian = new Cronjob({
   cronTime: cronLibrarian,
   onTick: function() {
+    "use strict";
     libraryHandler(moment());
   },
   start: false
 });
 jobLibrarian.start();
 
-jobPostman = new cronjob({
+var jobPostman = new Cronjob({
   cronTime: cronPostman,
   onTick: function() {
+    "use strict";
     postman();
     logTime(moment());
   },
