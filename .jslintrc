@@ -15,7 +15,7 @@
   "maxlen": false,
   "newcap": false,
   "node": true,
-  "nomen": false,
+  "nomen": true,
   "passfail": false,
   "plusplus": false,
   "predef": [
