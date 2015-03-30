@@ -6,6 +6,7 @@ var limit = require('common/constant').limit;
 var periodicalDay = require('common/constant').periodicalDay;
 
 module.exports = function() {
+	"use strict";
 	var d = Q.defer();
 	var query = modelBookList.find({
 			$and: [
@@ -17,6 +18,8 @@ module.exports = function() {
 							}
 						}, {
 							AuthorityASIN: 'UNDEFINED'
+						}, {
+							AuthorityASIN: ['UNDEFINED']
 						}
 					]
 				},
