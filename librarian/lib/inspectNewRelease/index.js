@@ -18,14 +18,17 @@ module.exports = function(){
 
     return d.promise;
   };
-
+  var deferd = Q.defer();
   Q.when()
   .then(fetchAuthors)
   .then(inspectPublishedBooks)
   .then(modifyAuthors)
   .then(updateAuthors)
   .fail(handleFails)
-  .done();
+  .done(function () {
+    deferd.resolve();
+  });
+  return deferd.promise;
 };
 
 /*
