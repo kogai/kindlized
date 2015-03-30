@@ -6,8 +6,10 @@ var modelAuthor = require('author/lib/modelAuthor');
 
 var fetchAuthors = require('librarian/lib/inspectNewRelease/fetchAuthors');
 var inspectPublishedBooks = require('librarian/lib/inspectNewRelease/inspectPublishedBooks');
+var modifyAuthors = require('librarian/lib/inspectNewRelease/modifyAuthors');
 
 module.exports = function(){
+    "use strict";
 /*
   /librarian
   ##著者に新刊があるか調べる
@@ -25,54 +27,6 @@ module.exports = function(){
   .fail(handleFails)
   .done();
 
-};
-
-var modifyAuthors = function(authors){
-  var d = Q.defer();
-
-/*
-  2. 前回cron実行時の刊行数を旧刊行数に保存する modifyAuthors
-  3. 新しい刊行数を保存する modifyAuthors
-  3. 新しい刊行数が旧刊行数と違えばisChangedをtrueに、それ以外はfalseに設定する modifyAuthors
-  4. 刊行数の調査日時を記録する modifyAuthors
-
-var AuthorSchema = {
-	wroteBooks: {
-		lastModified: Date,
-    isChanged: Boolean,
-		recent: {
-			publicationBooks: Array,
-			publicationNumber: Number
-		},
-		current: {
-			publicationBooks: Array,
-			publicationNumber: Number
-		}
-	},
-	lastModified: Date
-};
-
-*/
-  Q.all(
-    authors.map(function(author){
-      var def = Q.defer();
-
-      author.wroteBooks.recent.publicationNumber = author.wroteBooks.current.publicationNumber;
-      author.wroteBooks.recent.publicationBooks = author.wroteBooks.current.publicationBooks;
-
-      author.wroteBooks.current.publicationNumber = author
-      author.wroteBooks.current.publicationBooks = author
-
-      def.resolve(author);
-
-      return def.promise;
-    })
-  )
-  .done(function(authors){
-    d.resolve(authors);
-  });
-
-  return d.promise;
 };
 
 var handleFails = function(){

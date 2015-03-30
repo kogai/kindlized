@@ -14,7 +14,6 @@ module.exports = function (authors) {
     };
 
     var inspectToAmazon = function (author) {
-        console.log(author.name);
         var def = Q.defer();
         var retryCount = 0;
         var inspectExpression = {
