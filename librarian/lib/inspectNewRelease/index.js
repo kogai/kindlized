@@ -1,13 +1,89 @@
-/*
+var Q = require('q');
+var moment = require('moment-timezone');
+var periodicalDay = require('common/constant').periodicalDay;
+var promiseSerialize = require('common/promiseSerialize');
+var modelAuthor = require('author/lib/modelAuthor');
 
-/librarian
-##著者に新刊があるか調べる
-以下を全authorモデルに対してcron処理する / 週
-1. 刊行数を調べる
-2. 前回cron実行時の刊行数を旧刊行数に保存する
-3. 新しい刊行数を保存する
-3. 新しい刊行数が旧刊行数と違えばisChangedをtrueに、それ以外はfalseに設定する
-4. 刊行数の調査日時を記録する
+var fetchAuthors = require('librarian/lib/inspectNewRelease/fetchAuthors');
+var inspectPublishedBooks = require('librarian/lib/inspectNewRelease/inspectPublishedBooks');
+
+module.exports = function(){
+/*
+  /librarian
+  ##著者に新刊があるか調べる
+  以下を全authorモデルに対してcron処理する / 週
+  1. 刊行数を調べる inspectPublishedBooks
+  2. 前回cron実行時の刊行数を旧刊行数に保存する modifyAuthors
+  3. 新しい刊行数を保存する modifyAuthors
+  3. 新しい刊行数が旧刊行数と違えばisChangedをtrueに、それ以外はfalseに設定する modifyAuthors
+  4. 刊行数の調査日時を記録する modifyAuthors
+*/
+  Q.when()
+  .then(fetchAuthors)
+  .then(inspectPublishedBooks)
+  .then(modifyAuthors)
+  .fail(handleFails)
+  .done();
+
+};
+
+var modifyAuthors = function(authors){
+  var d = Q.defer();
+
+/*
+  2. 前回cron実行時の刊行数を旧刊行数に保存する modifyAuthors
+  3. 新しい刊行数を保存する modifyAuthors
+  3. 新しい刊行数が旧刊行数と違えばisChangedをtrueに、それ以外はfalseに設定する modifyAuthors
+  4. 刊行数の調査日時を記録する modifyAuthors
+
+var AuthorSchema = {
+	wroteBooks: {
+		lastModified: Date,
+    isChanged: Boolean,
+		recent: {
+			publicationBooks: Array,
+			publicationNumber: Number
+		},
+		current: {
+			publicationBooks: Array,
+			publicationNumber: Number
+		}
+	},
+	lastModified: Date
+};
+
+*/
+  Q.all(
+    authors.map(function(author){
+      var def = Q.defer();
+
+      author.wroteBooks.recent.publicationNumber = author.wroteBooks.current.publicationNumber;
+      author.wroteBooks.recent.publicationBooks = author.wroteBooks.current.publicationBooks;
+
+      author.wroteBooks.current.publicationNumber = author
+      author.wroteBooks.current.publicationBooks = author
+
+      def.resolve(author);
+
+      return def.promise;
+    })
+  )
+  .done(function(authors){
+    d.resolve(authors);
+  });
+
+  return d.promise;
+};
+
+var handleFails = function(){
+  var d = Q.defer();
+
+
+
+  return d.promise;
+};
+
+/*
 
 /routes/saveBook
 ##userモデルに新しく書籍が追加された時の処理
