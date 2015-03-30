@@ -7,7 +7,8 @@ var _ = require('underscore');
 
 module.exports = function( req, res ){
 	var query = {
-		isKindlized: true
+		isKindlized: true,
+		images: /.+/,
 	};
 
 	var sort = {
@@ -22,14 +23,8 @@ module.exports = function( req, res ){
 		res.send(
 			books.map(function( book ){
 				var images = function(imagesStrings){
-					image = JSON.parse(imagesStrings);
-					try{
-						images = image[0].ImageSet[0].MediumImage[0].URL[0];
-					}catch(e){
-						images = "";
-					}finally{
-						return images;
-					}
+					image = JSON.parse( imagesStrings );
+					return image[0].ImageSet[0].MediumImage[0].URL[0];
 				};
 				return {
 					title: book.title[0],
