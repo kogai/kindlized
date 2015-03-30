@@ -11,7 +11,7 @@ module.exports = function( req, res ){
 	};
 
 	var sort = {
-		lastModified: 1
+		lastModified: -1
 	};
 
 	var search = ModelBookList.find( query )
@@ -23,7 +23,13 @@ module.exports = function( req, res ){
 			books.map(function( book ){
 				var images = function(imagesStrings){
 					image = JSON.parse(imagesStrings);
-					return image[0].ImageSet[0].MediumImage[0].URL[0];
+					try{
+						images = image[0].ImageSet[0].MediumImage[0].URL[0];
+					}catch(e){
+						images = "";
+					}finally{
+						return images;
+					}
 				};
 				return {
 					title: book.title[0],
