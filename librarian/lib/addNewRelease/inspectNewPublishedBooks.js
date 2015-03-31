@@ -2,11 +2,12 @@ var Q = require('q');
 var _ = require('underscore');
 var moment = require('moment-timezone');
 var modelAuthor = require('author/lib/modelAuthor');
+var modleUser = require('user/');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
-module.exports = function (user) {
+var fetchNewId = function(user){
 	'use strict';
-	var d = Q.defer();
+	var def = Q.defer();
 
 	var query = {
 		$and: [
@@ -15,27 +16,56 @@ module.exports = function (user) {
 					$in: user.authorList
 				}
 			},
-			{
-				isChanged: true
-			}
+			// {
+			// 	isChanged: true
+			// }
 		]
 	};
 
 	modelAuthor.find(query, function (err, authors) {
 		if(err){
-			d.reject(err);
+			def.reject(err);
 		}
 		var newPublishedBooks = authors.map(function (author) {
-			var recentBooks = author.recent.publicationBooks;
-			var currentBooks = author.current.publicationBooks;
+			var recentBooks = author.wroteBooks.recent.publicationBooks;
+			var currentBooks = author.wroteBooks.current.publicationBooks;
 			return _.difference(recentBooks, currentBooks);
 		});
-
-		// user.postList = user.postList.concat(newPublishedBooks);
-
-		d.resolve(newPublishedBooks);
+		newPublishedBooks = _.flatten(newPublishedBooks);
+		newPublishedBooks = newPublishedBooks.map( function(bookId) {
+			return {
+        isNotified: false,
+        bookId: bookId
+			};
+		});
+		user.newPublishedBooks = newPublishedBooks;
+		def.resolve(user);
 	});
 
+	return def.promise;
+};
+
+var saveNewId = function (user) {
+	'use strict';
+	var def = Q.defer();
+
+	modleUser.find({ _id: user._id }, function () {
+		def.resolve(user);
+	});
+
+	return def.promise;
+};
+
+module.exports = function (user) {
+	'use strict';
+	var d = Q.defer();
+
+	Q.when(user)
+		.then(fetchNewId)
+		.then(saveNewId)
+		.done(function (user) {
+			d.resolve(user);
+		});
 	return d.promise;
 };
 
