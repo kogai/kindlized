@@ -4,6 +4,7 @@ var modelBookList 	= require( '../shelf/lib/modelBookList' );
 
 router.get('/', function(req, res) {
 	var isLogined = req.session.passport.user;
+
 	if( isLogined ){
 		res.render( 'index', {
 			title : 'ホーム',

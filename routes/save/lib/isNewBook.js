@@ -2,6 +2,7 @@ var modelBookList = require( 'shelf/lib/modelBookList' );
 var Q = require('q');
 
 module.exports = function( data ){
+  "use strict";
    var d       = Q.defer();
    var newBook = data.newBook;
 
@@ -10,13 +11,16 @@ module.exports = function( data ){
    };
 
    modelBookList.findOne( searchExpression, function( err, bookInDB ){
+     if(err){
+       d.reject(err);
+     }
       var result;
       if( bookInDB ){
          result = false;
       }else{
          result = true;
       }
-      data.book      = newBook;
+      data.book = bookInDB;
       data.isNewBook = result;
       d.resolve( data );
    });
