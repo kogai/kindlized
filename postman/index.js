@@ -5,6 +5,7 @@ var postMailToUser = require( 'postman/lib/postMailToUser' );
 var logPostman = require('common/logEx').postman;
 
 module.exports = function(){
+  "use strict";
    // *1日に一度実行する
    fetchUserModel()
    .then( function( data ){
@@ -13,7 +14,7 @@ module.exports = function(){
       var users   = data.users;
 
       Q.all( users.map( postMailToUser ) )
-      .done( function( resultarry ){
+      .done( function(){
          logPostman.info('done');
          d.resolve( data );
       });

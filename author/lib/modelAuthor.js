@@ -9,7 +9,7 @@ var AuthorSchema = {
 	},
 	wroteBooks: {
 		lastModified: Date,
-    	isChanged: Boolean,
+		isChanged: Boolean,
 		recent: {
 			publicationBooks: Array,
 			publicationNumber: Number
