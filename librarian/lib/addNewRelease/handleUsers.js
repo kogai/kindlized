@@ -8,8 +8,8 @@ module.exports = function (users) {
   Q.all(
 		users.map(inspectNewPublishedBooks)
 	)
-  .done( function(){
-     d.resolve();
+  .done( function(users){
+     d.resolve(users);
   });
 
 	return d.promise;
