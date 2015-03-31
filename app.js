@@ -11,7 +11,7 @@ var routes          = require('./routes/index');
 var search          = require('./routes/search');
 var book            = require('./routes/book');
 var reduce          = require('./routes/reduce');
-var saveBook        = require('./routes/saveBook');
+var save            = require('./routes/save');
 var account         = require('./routes/account');
 // var detail          = require('./routes/detail');
 
@@ -50,7 +50,7 @@ app.use( '/', routes );
 app.use( '/reduce', reduce );
 app.use( '/search', search );
 app.use( '/book', book );
-app.use( '/save', saveBook );
+app.use( '/save', save );
 app.use( '/account', account );
 // app.use( '/detail', detail );
 

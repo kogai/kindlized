@@ -1,13 +1,14 @@
-var modelBookList = require('shelf/lib/modelBookList.js');
+var ModelBookList = require('shelf/lib/modelBookList.js');
 var Q = require('q');
 
 module.exports = function( data ){
+	"use strict";
 	var d = Q.defer();
 	var isNewBook 	= data.isNewBook;
 	var book 		= data.book;
 
 	if( isNewBook ){
-		var newBook = new modelBookList({
+		var newBook = new ModelBookList({
 			status          : book.satus,
 			ASIN            : book.ASIN,
 			EAN             : book.EAN,
@@ -22,7 +23,9 @@ module.exports = function( data ){
 		});
 
 		newBook.save( function( err ){
-			if(err) console.log(err);
+			if(err){
+				console.log(err);
+			}
 			data.book = null;
 			data.book = newBook;
 			d.resolve( data );

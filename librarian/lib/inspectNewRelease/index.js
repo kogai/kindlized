@@ -32,10 +32,6 @@ module.exports = function(){
 };
 
 /*
-/routes/saveBook
-##userモデルに新しく書籍が追加された時の処理
-1. 登録された書籍のtitleからauthorモデルを取得
-2. authorモデルの_idをユニークの基準にしてauthorListに追加する
 
 /user
 ##推薦する書籍リストを作る
