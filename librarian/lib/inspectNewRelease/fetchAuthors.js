@@ -13,16 +13,12 @@ module.exports = function() {
 					$exists: false
 				}
 			}, {
-				wroteBooks: {
-					lastModified: {
-						$lte: moment().subtract(periodicalDay, 'days')
-					}
+				"wroteBooks.lastModified": {
+					$lte: new Date("2015/03/31")
 				}
 			}, {
-				wroteBooks: {
-					lastModified: {
-						$exists: false
-					}
+				"wroteBooks.lastModified": {
+					$exists: false
 				}
 			}]
 		})
