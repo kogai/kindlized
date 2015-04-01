@@ -1,34 +1,38 @@
-var opHelper = require('apac').OperationHelper;
-var makeOpConfig = require('./makeOpConfig');
-var makeSearchExpression = require('./makeSearchExpression');
 var Q = require('q');
-var constant = require('./constant');
+var OpHelper = require('apac').OperationHelper;
+var MakeOpConfig = require('./makeOpConfig');
+var MakeSearchExpression = require('./makeSearchExpression');
+var INTERVAL = require('common/constant').INTERVAL;
 var log = require('common/log');
 
 module.exports = function(authorData) {
+  'use strict';
   var Author = authorData.author;
-  var opConfig = new makeOpConfig();
-  var opCountPages = new opHelper(opConfig);
-  var searchExpression = new makeSearchExpression(Author);
+  var opConfig = new MakeOpConfig();
+  var opCountPages = new OpHelper(opConfig);
+  var searchExpression = new MakeSearchExpression(Author);
   var d = Q.defer();
 
   var pageCount = 0;
   var retryCount = 0;
 
   var callBack = function(err, res) {
-    if (err) log.info('fetchPageCountsのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
+    if (err){
+      log.info('fetchPageCountsのレスポンスエラー ', err);
+      log.info(res.ItemSearchErrorResponse);
+    }
     try {
       pageCount = res.ItemSearchResponse.Items[0].TotalPages[0];
       authorData.pageCount = Number(pageCount);
       d.resolve(authorData);
     } catch (error) {
-      var retryInterval = constant.retryInterval;
-      retryCount++;
-      log.info('fetchPageCountsの' + retryCount + '回目のリクエストエラー', error, res.ItemSearchErrorResponse.Error);
+      retryCount += retryCount;
+      log.info('fetchPageCountsの' + retryCount + '回目のリクエストエラー', error);
+      log.info(res.ItemSearchErrorResponse);
       setTimeout(function() {
-        searchExpression = new makeSearchExpression(Author);
+        searchExpression = new MakeSearchExpression(Author);
         opCountPages.execute('ItemSearch', searchExpression, callBack);
-      }, constant.interval * retryCount);
+      }, INTERVAL * retryCount);
     }
   };
   opCountPages.execute('ItemSearch', searchExpression, callBack);
