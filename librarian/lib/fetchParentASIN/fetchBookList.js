@@ -26,20 +26,16 @@ module.exports = function() {
 				{
 					$or: [
 						{
-							lastModifiedLogs: {
-								fetchParentASIN:{
-									$lte: moment().subtract( periodicalDay, 'days')
-								}
+							"lastModifiedLogs.fetchParentASIN": {
+								$lte: moment().subtract( periodicalDay, 'days')
 							}
 						}, {
 							lastModifiedLogs: {
 								$exists: false
 							}
 						}, {
-							lastModifiedLogs: {
-								fetchParentASIN: {
-									$exists: false
-								}
+							"lastModifiedLogs.fetchParentASIN": {
+								$exists: false
 							}
 						}
 					]

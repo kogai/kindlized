@@ -13,21 +13,17 @@ module.exports = function() {
     isKindlizedUrl: { $ne: true  },
 		$or: [
       {
-				lastModifiedLogs: {
-          modifyUrl: {
-			      $lte: moment().subtract(periodicalDay, 'days')
-          }
-				}
+        "lastModifiedLogs.modifyUrl": {
+		      $lte: moment().subtract(periodicalDay, 'days')
+        }
 			}, {
 				lastModifiedLogs: {
 		      $exists: false
 				}
 			}, {
-				lastModifiedLogs: {
-          modifyUrl: {
+        "lastModifiedLogs.modifyUrl": {
 			      $exists: false
-          }
-				}
+        }
 			}
 		]
   })
