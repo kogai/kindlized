@@ -8,3 +8,10 @@ for j in (1..20)
 			th, td
 				box-sizing border-box
 				width 20%
+				.label
+					// display none
+					&:before
+						@extend .glyphicon
+						content ""
+						display block
+					// @extend .glyphicon-inbox
