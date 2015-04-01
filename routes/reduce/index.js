@@ -1,11 +1,12 @@
 var Q 				= require( 'q' );
 var express 		= require('express');
 var router 			= express.Router();
-var bookListInDB 	= require( 'routes/reduce/lib/reduceBookInUser' );
+var reduceBookInUser 	= require( 'routes/reduce/lib/reduceBookInUser' );
 
 router.post( '/', function( req, res ) {
+	'use strict';
 	console.log('===reduce...');
-	bookListInDB( req, res );
+	reduceBookInUser( req, res );
 });
 
 module.exports = router;
