@@ -26,7 +26,6 @@ var libraryHandler = function(currentTime) {
     .then(librarian.inspectBookList)
     .then(librarian.fetchParentASIN)
     .then(librarian.modifyDetailUrl)
-    .then(librarian.inspectNewRelease)
     .done(function() {
       logTime(currentTime);
     });
