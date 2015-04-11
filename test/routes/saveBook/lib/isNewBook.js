@@ -1,4 +1,4 @@
-var isNewBook   	= require( 'routes/saveBook/lib/isNewBook' );
+var isNewBook   	= require( 'routes/save/lib/isNewBook' );
 var testdata      = require( 'test/routes/saveBook/lib/testdata' );
 
 var dataExist 		= testdata[0];
