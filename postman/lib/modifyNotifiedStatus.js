@@ -4,6 +4,7 @@ var Q = require('q');
 var modelUser  = require( 'user/' );
 
 module.exports = function( user ){
+  'use strict';
    var d = Q.defer();
 
    var kindlizedList    = user.kindlizedList;
@@ -17,7 +18,7 @@ module.exports = function( user ){
 
    for (var j = 0; j < bookList.length; j++) {
       for (var k = 0; k < notifiedBookIds.length; k++) {
-         if( bookList[j].bookId === notifiedBookIds[k].toString() ){
+         if( bookList[j].bookId.toString() === notifiedBookIds[k].toString() ){
             bookList[j].isNotified = true;
          }
       }
