@@ -1,8 +1,8 @@
 var express 		= require('express');
 var router 			= express.Router();
-var modelBookList 	= require( '../shelf/lib/modelBookList' );
 
 router.get('/', function(req, res) {
+	'use strict';
 	var isLogined = req.session.passport.user;
 
 	if( isLogined ){
