@@ -5,6 +5,7 @@
 var Q = require('q');
 
 module.exports = function(user) {
+  'use strict';
   var d = Q.defer();
 
   var kindlizedList = user.kindlizedList;
