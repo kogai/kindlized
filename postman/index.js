@@ -5,7 +5,7 @@ var postMailToUser = require( 'postman/lib/postMailToUser' );
 var inspectNewRelease = require('librarian/lib/inspectNewRelease');
 var logPostman = require('common/logEx').postman;
 
-module.exports = function(){
+module.exports = (function(){
   "use strict";
    // *1日に一度実行する
   Q.when()
@@ -27,4 +27,4 @@ module.exports = function(){
    .done( function(){
       logPostman.info( 'postmanの処理が完了' );
    });
-};
+}());
