@@ -16,5 +16,3 @@ angular.module('App',[])
         'intro',
         [ '$scope', '$http', '$window', intro ]
     )
-
-analytics()
