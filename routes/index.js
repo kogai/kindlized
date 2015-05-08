@@ -7,7 +7,7 @@ router.get('/', function(req, res) {
 
 	if( isLogined ){
 		res.render( 'index', {
-			title : 'ホーム',
+			title : 'ホーム'
 		});
 	}else{
 		res.redirect( 303, '/account');

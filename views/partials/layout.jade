@@ -2,10 +2,11 @@ doctype html
 html
 	head
 		title
-			|#{ title }
+			|#{ title }|kindle化した書籍の通知サービス
 		link(rel='stylesheet', href='/javascripts/lib/bootstrap/dist/css/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/index.css')
 		meta(name='viewport', content='width=device-width')
+		meta(name="description" content="登録した書籍がkindle化されたら通知を送るサービスです。")
 	body( ng-app='App')
 		.container-fluid
 			block content

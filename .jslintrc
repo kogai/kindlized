@@ -28,7 +28,7 @@
   "stupid": false,
   "sub": false,
   "todo": false,
-  "unparam": false,
+  "unparam": true,
   "vars": true,
   "white": true
 }
