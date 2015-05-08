@@ -1,6 +1,14 @@
 doctype html
 html
 	head
+		noscript
+			iframe(src='//www.googletagmanager.com/ns.html?id=GTM-T37HW2', height='0', width='0', style='display:none;visibility:hidden')
+		script.
+			(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+			new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+			j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+			'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+			})(window,document,'script','dataLayer','GTM-T37HW2');
 		title
 			|#{ title } | kindle化した書籍の通知サービス - "kindlize-it"
 		link(rel='stylesheet', href='/javascripts/lib/bootstrap/dist/css/bootstrap.min.css')
@@ -12,11 +20,3 @@ html
 			block content
 	script(src='/javascripts/lib/angular/angular.js')
 	script(src='/javascripts/bundle.min.js')
-	noscript
-		iframe(src='//www.googletagmanager.com/ns.html?id=GTM-T37HW2', height='0', width='0', style='display:none;visibility:hidden')
-	script.
-		(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-		'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-		})(window,document,'script','dataLayer','GTM-T37HW2');
