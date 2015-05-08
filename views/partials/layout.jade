@@ -1,6 +1,13 @@
 doctype html
 html
 	head
+		title
+			|#{ title } | kindle化した書籍の通知サービス - "kindlize-it"
+		link(rel='stylesheet', href='/javascripts/lib/bootstrap/dist/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/stylesheets/index.css')
+		meta(name='viewport', content='width=device-width')
+		meta(name="description" content="登録した書籍がkindle化されたら通知を送るサービスです。")
+	body( ng-app='App')
 		noscript
 			iframe(src='//www.googletagmanager.com/ns.html?id=GTM-T37HW2', height='0', width='0', style='display:none;visibility:hidden')
 		script.
@@ -9,13 +16,6 @@ html
 			j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 			'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 			})(window,document,'script','dataLayer','GTM-T37HW2');
-		title
-			|#{ title } | kindle化した書籍の通知サービス - "kindlize-it"
-		link(rel='stylesheet', href='/javascripts/lib/bootstrap/dist/css/bootstrap.min.css')
-		link(rel='stylesheet', href='/stylesheets/index.css')
-		meta(name='viewport', content='width=device-width')
-		meta(name="description" content="登録した書籍がkindle化されたら通知を送るサービスです。")
-	body( ng-app='App')
 		.container-fluid
 			block content
 	script(src='/javascripts/lib/angular/angular.js')
