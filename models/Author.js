@@ -38,7 +38,7 @@ var SequenceSchema = new mongoose.Schema({
   seq: Number
 });
 
-SequenceSchema.index = { name: 1 };
+SequenceSchema.index = { name: 1501 };
 var SequenceModel = db.model('Sequence', SequenceSchema );
 
 AuthorSchema.pre('save', function (next) {

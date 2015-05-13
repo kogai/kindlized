@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 
+"use strict";
+
 var debug = require('debug')('init');
-var app = require('app');
+var app = require('app.js');
+var sitemap = require('express-sitemap')();
 
 app.set('port', process.env.PORT || 3000);
+sitemap.generate(app);
+sitemap.XMLtoFile();
 
 var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
+	debug('Express server listening on port ' + server.address().port);
 });
