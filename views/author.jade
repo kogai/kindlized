@@ -1,0 +1,48 @@
+extends partials/layout
+
+block content
+	div( ng-controller="author" )
+		.l-clr.l-mt-10.l-mb-10
+			.l-left
+				|#{ title } | #{ books.length }冊中 #{ kindlizedBooks.length }冊がKindle化済み
+			.l-right
+				a(href="/").btn.btn-default ホームに戻る
+		
+		table.table.m-table
+			thead
+				tr
+					th タイトル
+					th 出版状況
+					th リンク
+			tbody
+				- for(var i = 0; i < books.length; i++)
+					- var book = books[i]
+					tr
+						td
+							a( href="#{ book.url[0] }" target="_blank" style='display:block;' )
+								img(src="#{ book.images }", alt="#{ book.title }")
+							|#{ book.title }
+						td
+							-if(book.isKindlized)
+								.label.label-success.m-icon-book
+									span.is-pc
+										|Kindle化済み
+									span.is-sp
+										|Kindle済
+							-else
+								.label.label-danger.m-icon-book
+									span.is-pc
+										|Kindle版がありません
+									span.is-sp
+										|未Kindle
+						td
+							a( href="#{ book.url[0] }" target="_blank" ).btn.btn-default.m-icon-buy
+								span.is-pc
+									|Amazonで購入する
+								span.is-sp
+									|購入
+		.l-clr.l-m-20
+			.l-left
+				a(href="/author/#{pager.prev}").btn.btn-default 前のページ
+			.l-right
+				a(href="/author/#{pager.next}").btn.btn-default 次のページ

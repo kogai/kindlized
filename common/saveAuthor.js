@@ -1,4 +1,4 @@
-var modelAuthor = require('author/lib/modelAuthor');
+var modelAuthor = require('models/Author');;
 var moment = require('moment-timezone');
 var Q = require('q');
 
