@@ -1,5 +1,5 @@
 var Q = require('q');
-var modelAuthor = require('author/lib/modelAuthor');
+var modelAuthor = require('models/Author');;
 
 module.exports = function (authors) {
   "use strict";

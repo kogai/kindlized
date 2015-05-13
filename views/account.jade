@@ -31,9 +31,21 @@ block content
 
 			p( ng-if='isSending' class="l-mt-5" )
 				|{{ statusMessage }}
-
-			div( class="l-mt-50" )
+			
+			.l-mt-50
 				|登録した書籍がkindle化されたら通知を送るサービスです。
+			
+			.l-mt-20
+				.l-mt-5.m-fz-20
+					|こんな著者の書籍がKindle化されています
+				ul.l-mt-10
+					-for(var i = 0; i < authorLinks.length; i++)
+						-var author = authorLinks[i]
+						li.l-idb.l-mr-10
+							a(href="/author/#{ author.pageId }")
+								|#{ author.name }	
+
+			.l-mt-20
 				div(
 					class="l-mt-5 m-fz-20"
 					ng-controller="intro"
@@ -43,6 +55,7 @@ block content
 						class="l-mt-10 l-clr"
 					)
 						li(
+							style="height: 230px"
 							class="l-left l-mb-20 l-gutter-6 ss-gutter-1 ss-colum-img"
 							ng-repeat="book in books"
 						)
@@ -59,3 +72,4 @@ block content
 									class="m-fz-12"
 								)
 									|{{book.title}}
+									
