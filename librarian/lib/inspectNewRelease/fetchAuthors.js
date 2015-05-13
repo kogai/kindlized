@@ -2,7 +2,7 @@ var Q = require('q');
 var moment = require('moment-timezone');
 var periodicalDay = require('common/constant').periodicalDay;
 var limit = require('common/constant').limit;
-var modelAuthor = require('author/lib/modelAuthor');
+var modelAuthor = require('models/Author');;
 
 module.exports = function() {
 	"use strict";
