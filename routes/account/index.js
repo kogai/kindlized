@@ -5,6 +5,7 @@ var verify 	= require( 'routes/account/verify' );
 var regist 	= require( 'routes/account/regist' );
 var login 	= require( 'routes/account/login' );
 var localPassport = login.localPassport;
+var Author = require('models/Author');
 
 router.get( '/login/success', function( req, res ){
 	"use strict";
@@ -46,8 +47,26 @@ router.post('/regist', function( req, res ) {
 
 router.get('/', function( req, res ) {
 	"use strict";
-	res.render( 'account', {
-		title: 'アカウント登録 | ログイン'
+	Author.find({}, function(err, authors){
+		if(err){
+			console.log(err);
+			return err;
+		}
+		res.render( 'account', {
+			title: 'アカウント登録 | ログイン',
+			authorLinks: (function(authors){
+				var rand = Math.floor(Math.random() * (authors.length - 1) + 1 );
+				var limitedAuthor = [];
+				var i;
+				if(rand + 12 >= authors.length ){
+					rand -= 12;
+				}
+				for (i = rand; i < rand + 12; i++) {
+					limitedAuthor.push(authors[i]);
+				}
+				return limitedAuthor;
+			}(authors))
+		});
 	});
 });
 

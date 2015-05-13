@@ -1,7 +1,7 @@
 var Q = require('q');
 var _ = require('underscore');
 var moment = require('moment-timezone');
-var modelAuthor = require('author/lib/modelAuthor');
+var modelAuthor = require('models/Author');;
 var modleUser = require('user/');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
