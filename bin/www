@@ -5,7 +5,7 @@
 var debug = require('debug')('init');
 var app = require('app.js');
 var sitemap = require('express-sitemap')({
-	url: "http://kindlize.it"
+	url: "kindlize.it"
 });
 
 app.set('port', process.env.PORT || 3000);
