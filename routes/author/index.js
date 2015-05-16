@@ -34,8 +34,10 @@ module.exports = function(req, res){
 				console.log(err);
 			}
 			books = encodeImgSrc(books);
+			var title = author.name + "先生のKindle化された著書";
 			res.render( 'author', {
-				title : author.name + "先生のKindle化された著書",
+				title : title,
+				description: title + "の一覧ページです",
 				books: books,
 				kindlizedBooks: (function(books){
 					books = books.map(function(book){
