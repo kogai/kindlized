@@ -1,6 +1,6 @@
 var Q             = require( 'q' );
 var moment        = require( 'moment-timezone' );
-var modelAuthor   = require( 'author/lib/modelAuthor' );
+var modelAuthor   = require( 'models/Author' );
 
 module.exports = function( authorData ) {
    // 著者リストの最終編集日をアップデート
