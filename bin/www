@@ -7,8 +7,12 @@ var app = require('app.js');
 var sitemap = require('express-sitemap')();
 
 app.set('port', process.env.PORT || 3000);
-sitemap.generate(app);
-sitemap.XMLtoFile();
+sitemap.generate4(app, [
+	'/',
+	'/account/',
+	'/author/'
+]);
+sitemap.XMLtoFile('./public/sitemap.xml');
 
 var server = app.listen(app.get('port'), function() {
 	debug('Express server listening on port ' + server.address().port);
