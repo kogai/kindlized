@@ -3,6 +3,7 @@
 var Author = require('models/Author');
 var Booklist = require('shelf/lib/modelBookList');
 var _ = require('underscore');
+var Q = require('q');
 
 module.exports = function(req, res){
 	var encodeImgSrc = function(bookList) {
@@ -25,8 +26,55 @@ module.exports = function(req, res){
 	  });
 	};
 
-	var authorId = req.params[0];
-	Author.findOne({ pageId: authorId }, function(err, author){
+	var authorId = Number(req.params[0]);
+	var authors = {};
+
+	var countAuthors = function(){
+		var d = Q.defer();
+		Author.count({}, function(err, count){
+			authors.count = count;
+			d.resolve(authors);
+		});
+		return d.promise;
+	};
+
+	var getAuthor = function(authorId, index){
+		var d = Q.defer();
+		Author.findOne({ pageId: authorId }, function(err, author){
+			authors[index] = author;
+			d.resolve(authors);
+		});
+		return d.promise;
+	};
+
+	var getAuthorParallel = function(){
+		var authorIds = [
+			authorId - 1,
+			authorId,
+			authorId + 1
+		];
+
+		if(authorIds[2] > authors.count){
+			authorIds[2] = 1;
+		}
+		if(authorIds[0] === 0){
+			authorIds[0] = authors.count;
+		}
+
+		var d = Q.defer();
+	  Q.all(authorIds.map(getAuthor))
+	  .done(function(authors){
+			d.resolve(authors);
+		});
+		return d.promise;
+	};
+
+
+	var handleAuthorRoute = function(){
+		var author = authors['1'];
+		var authorPrev = authors['0'];
+		var authorNext = authors['2'];
+
 		Booklist.find({
 			author: author.name
 		}, function (err, books) {
@@ -49,10 +97,20 @@ module.exports = function(req, res){
 					return books;
 				}(books)),
 				pager: {
-					prev: Number(authorId)-1,
-					next: Number(authorId)+1
+					prev: {
+						pageId: authorPrev.pageId,
+						name: authorPrev.name
+					},
+					next: {
+						pageId: authorNext.pageId,
+						name: authorNext.name
+					}
 				}
 			});
 		});
-	});
+	};
+
+	countAuthors()
+	.then(getAuthorParallel)
+	.done(handleAuthorRoute);
 };
