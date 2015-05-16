@@ -25,12 +25,7 @@ var AuthorSchema = new mongoose.Schema({
 	},
 	lastModified: Date,
 	haveId: Boolean,
-  pageId: {
-    type: Number,
-    // index: {
-    //   unique: true
-    // }
-  }
+  pageId: Number
 });
 
 var SequenceSchema = new mongoose.Schema({
@@ -38,7 +33,7 @@ var SequenceSchema = new mongoose.Schema({
   seq: Number
 });
 
-SequenceSchema.index = { name: 1501 };
+SequenceSchema.index = { name: 1 };
 var SequenceModel = db.model('Sequence', SequenceSchema );
 
 AuthorSchema.pre('save', function (next) {
