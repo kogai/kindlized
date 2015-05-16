@@ -43,6 +43,6 @@ block content
 									|購入
 		.l-clr.l-m-20
 			.l-left
-				a(href="/author/#{pager.prev}").btn.btn-default 前のページ
+				a(href="/author/#{ pager.prev.pageId }").btn.btn-default #{ pager.prev.name }先生のページへ
 			.l-right
-				a(href="/author/#{pager.next}").btn.btn-default 次のページ
+				a(href="/author/#{ pager.next.pageId }").btn.btn-default #{ pager.next.name }先生のページへ
