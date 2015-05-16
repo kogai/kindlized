@@ -2,7 +2,7 @@
 
 var Author = require('models/Author');
 
-var LIMIT = 1501;
+var LIMIT = process.argv[2];
 var executedCount = 0;
 var updateRecursive = function(authors){
 	if(executedCount === LIMIT){
