@@ -43,6 +43,8 @@ block content
 									|購入
 		.l-clr.l-m-20
 			.l-left
-				a(href="/author/#{ pager.prev.pageId }").btn.btn-default #{ pager.prev.name }先生のページへ
+				-if(!pager.prev.isNotExist)
+					a(href="/author/#{ pager.prev.pageId }").btn.btn-default #{ pager.prev.name }先生のページへ
 			.l-right
-				a(href="/author/#{ pager.next.pageId }").btn.btn-default #{ pager.next.name }先生のページへ
+				-if(!pager.next.isNotExist)
+					a(href="/author/#{ pager.next.pageId }").btn.btn-default #{ pager.next.name }先生のページへ

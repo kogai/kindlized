@@ -41,6 +41,9 @@ module.exports = function(req, res){
 	var getAuthor = function(authorId, index){
 		var d = Q.defer();
 		Author.findOne({ pageId: authorId }, function(err, author){
+			if(err){
+				return console.log("err", err);
+			}
 			authors[index] = author;
 			d.resolve(authors);
 		});
@@ -74,7 +77,20 @@ module.exports = function(req, res){
 		var author = authors['1'];
 		var authorPrev = authors['0'];
 		var authorNext = authors['2'];
-
+		if(authorPrev === null){
+			authorPrev = {
+				pageId: null,
+				name: null,
+				isNotExist: true
+			};
+		}
+		if(authorNext === null){
+			authorNext = {
+				pageId: null,
+				name: null,
+				isNotExist: true
+			};
+		}
 		Booklist.find({
 			author: author.name
 		}, function (err, books) {
@@ -99,11 +115,13 @@ module.exports = function(req, res){
 				pager: {
 					prev: {
 						pageId: authorPrev.pageId,
-						name: authorPrev.name
+						name: authorPrev.name,
+						isNotExist: authorPrev.isNotExist
 					},
 					next: {
 						pageId: authorNext.pageId,
-						name: authorNext.name
+						name: authorNext.name,
+						isNotExist: authorNext.isNotExist
 					}
 				}
 			});
