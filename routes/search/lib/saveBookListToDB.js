@@ -1,3 +1,5 @@
+"use strict";
+
 var Q = require('q');
 var _ = require('underscore');
 var log = require('common/log');
@@ -11,17 +13,17 @@ module.exports = function(data) {
 
   Q.all(
       bookListInAmazon.map(function(book) {
-        log.info('保存する書籍は',book.title);
+        console.log('保存する書籍は',book.title);
         var def = Q.defer();
         saveBook(book)
-          .done(function(book) {
-            def.resolve( book );
-          });
+        .done(function(book) {
+          def.resolve( book );
+        });
         return def.promise;
       })
     )
     .done(function(savedBooks) {
-      log.info('書籍の登録が完了', savedBooks);
+      console.log('書籍の登録が完了', savedBooks);
       savedBooks = _.compact( savedBooks );
       data.savedBooks = savedBooks;
       d.resolve(data);

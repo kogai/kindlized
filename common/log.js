@@ -5,10 +5,10 @@ var moment = require('moment-timezone');
 log4js.configure({
   appenders: [{
     type: 'console'
-  }, {
-    type: 'file',
-    filename: 'logs/' + moment().format('YYYYMMDD') + '.log',
-    category: 'dev'
+  // }, {
+  //   type: 'file',
+  //   filename: 'logs/' + moment().format('YYYYMMDD') + '.log',
+  //   category: 'dev'
   }]
 });
 
@@ -17,4 +17,4 @@ log4js_extend(log4js, {
   format: "at @name (@file:@line:@column)"
 });
 
-module.exports = log4js.getLogger("dev");
+module.exports = log4js.getLogger();

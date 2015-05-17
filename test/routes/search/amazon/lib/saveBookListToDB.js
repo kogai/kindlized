@@ -8,12 +8,7 @@ var searchAuthorityASIN = require('routes/search/lib/searchAuthorityASIN');
 var saveBookListToDB = require('routes/search/lib/saveBookListToDB');
 var testArray = require('test/routes/search/amazon/lib/testArray');
 
-describe('routes/search/lib/handleBookListFromAmazonのテスト', function() {
-	it('テストが動作している', function(done) {
-		(5).should.be.exactly(5);
-		done();
-	});
-
+describe('routes/search/lib/saveBookListToDBのテスト', function() {
 	this.timeout(0);
 	var testFunc = function( bookName ){
 		var bookList;
@@ -24,16 +19,16 @@ describe('routes/search/lib/handleBookListFromAmazonのテスト', function() {
 				}
 			}
 		};
-
 		before(function(done) {
 			fetchBookListAmazon(data)
-				.then(handleBookListFromAmazon)
-				.then(searchAuthorityASIN)
-				.then(saveBookListToDB)
-				.done(function(data) {
-					bookList = data.savedBooks;
-					done();
-				});
+			.then(handleBookListFromAmazon)
+			.then(searchAuthorityASIN)
+			.then(saveBookListToDB)
+			.done(function(data) {
+				bookList = data.savedBooks;
+				console.log("bookList", bookList);
+				done();
+			});
 		});
 
 		it('_idプロパティがあり、空の文字列ではない', function() {

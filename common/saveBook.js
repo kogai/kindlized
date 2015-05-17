@@ -1,3 +1,5 @@
+"use strict";
+
 var Q = require('q');
 var ModelBookList = require('shelf/lib/modelBookList.js');
 var log = require('common/log');
@@ -25,12 +27,14 @@ module.exports = function( book ) {
             AuthorityASIN: book.AuthorityASIN
           });
           newBook.save(function( err ) {
-            if (err) console.log(err);
+            if (err) {
+              return console.log(err);
+            }
             log.info( '書籍:' + newBook.title + 'が登録されました'　);
             defferd.resolve( newBook );
           });
         }catch( error ){
-          log.info(error);
+          console.log("error", error);
           defferd.resolve( undefined );
         }
       }else{
@@ -38,7 +42,7 @@ module.exports = function( book ) {
       }
     });
   }catch(error){
-    log.info(error);
+    console.log("error", error);
     defferd.resolve( undefined );
   }finally{
     return defferd.promise;
