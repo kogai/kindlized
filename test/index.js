@@ -1,8 +1,4 @@
-var librarian = require('test/librarian');
-var routes = require('test/routes');
-var common = require('test/common');
-
-require('should');
+"use strict";
 
 describe('circleCiのテスト', function() {
 	it('circleCiが動作している', function(done) {
@@ -10,7 +6,3 @@ describe('circleCiのテスト', function() {
 		done();
 	});
 });
-
-librarian();
-routes();
-common();

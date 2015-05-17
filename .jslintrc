@@ -19,6 +19,9 @@
   "passfail": false,
   "plusplus": true,
   "predef": [
+      "before",
+      "it",
+      "describe",
       "angular",
       "$"
   ],
