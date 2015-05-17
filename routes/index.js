@@ -1,6 +1,8 @@
 var express 		= require('express');
 var router 			= express.Router();
 
+var author = require('routes/author');
+
 router.get('/', function(req, res) {
 	'use strict';
 	var isLogined = req.session.passport.user;
@@ -13,5 +15,7 @@ router.get('/', function(req, res) {
 		res.redirect( 303, '/account');
 	}
 });
+
+router.get('/author/*', author);
 
 module.exports = router;
