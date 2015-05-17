@@ -1,12 +1,8 @@
 module.exports = [
    {
-       "ASIN": [
-           "4063770605"
-       ],
+       "ASIN": [ "4063770605" ]
    },
    {
-       "ASIN": [
-           "aaaaaaaaa"
-       ]
+       "ASIN": [ "aaaaaaaaa" ]
    }
-]
+];

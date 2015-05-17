@@ -6,7 +6,10 @@ html
 		link(rel='stylesheet', href='/javascripts/lib/bootstrap/dist/css/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/index.css')
 		meta(name='viewport', content='width=device-width')
-		meta(name="description" content="登録した書籍がkindle化されたら通知を送るサービスです。")
+		-if(description)
+			meta(name="description" content="#{ description }")
+		-else
+			meta(name="description" content="登録した書籍がkindle化されたら通知を送るサービスです。")
 	body( ng-app='App')
 		noscript
 			iframe(src='//www.googletagmanager.com/ns.html?id=GTM-T37HW2', height='0', width='0', style='display:none;visibility:hidden')
