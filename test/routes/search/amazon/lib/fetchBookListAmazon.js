@@ -1,92 +1,92 @@
+"use strict";
+
 var Q = require('q');
 var should = require('should');
 var testArray = require('test/routes/search/amazon/lib/testArray');
 var fetchBookListAmazon = require('routes/search/lib/fetchBookListAmazon');
 
-module.exports = function() {
-	describe('routes/search/lib/fetchBookListAmazonのテスト', function() {
-		it('テストが動作している', function(done) {
-			(5).should.be.exactly(5);
-			done();
+describe('routes/search/lib/fetchBookListAmazonのテスト', function() {
+	it('テストが動作している', function(done) {
+		(5).should.be.exactly(5);
+		done();
+	});
+
+	this.timeout(0);
+	var testFunc = function( bookName ){
+		var bookList;
+	  var data = {
+			req: {
+				body: {
+					newBook: bookName
+				}
+			}
+		};
+
+		before(function(done) {
+			fetchBookListAmazon(data)
+				.done(function(data) {
+					bookList = data.bookListInAmazon;
+					done();
+				});
 		});
 
-		this.timeout(0);
-		var testFunc = function( bookName ){
-			var bookList;
-		  var data = {
-				req: {
-					body: {
-						newBook: bookName
-					}
-				}
-			};
+		it('配列を返す', function() {
+			bookList.should.be.instanceof(Array);
+		});
 
-			before(function(done) {
-				fetchBookListAmazon(data)
-					.done(function(data) {
-						bookList = data.bookListInAmazon;
-						done();
-					});
+		it('ASINプロパティがある', function() {
+			bookList.forEach(function( book, index ){
+				book.should.have.property('ASIN');
 			});
+		});
 
-			it('配列を返す', function() {
-				bookList.should.be.instanceof(Array);
+		it('ASINプロパティは空の文字列ではない', function() {
+			bookList.forEach(function( book, index ){
+				( book.ASIN.length ).should.be.above( 0 );
 			});
+		});
 
-			it('ASINプロパティがある', function() {
-				bookList.forEach(function( book, index ){
-					book.should.have.property('ASIN');
-				});
+		it('DetailPageURLプロパティがある', function() {
+			bookList.forEach(function( book, index ){
+				book.should.have.property('DetailPageURL');
 			});
+		});
 
-			it('ASINプロパティは空の文字列ではない', function() {
-				bookList.forEach(function( book, index ){
-					( book.ASIN.length ).should.be.above( 0 );
-				});
+		it('DetailPageURLプロパティは空の文字列ではない', function() {
+			bookList.forEach(function( book, index ){
+				( book.DetailPageURL.length ).should.be.above( 0 );
 			});
+		});
 
-			it('DetailPageURLプロパティがある', function() {
-				bookList.forEach(function( book, index ){
-					book.should.have.property('DetailPageURL');
-				});
+		it('ItemAttributesプロパティがある', function() {
+			bookList.forEach(function( book, index ){
+				book.should.have.property('ItemAttributes');
 			});
+		});
 
-			it('DetailPageURLプロパティは空の文字列ではない', function() {
-				bookList.forEach(function( book, index ){
-					( book.DetailPageURL.length ).should.be.above( 0 );
-				});
+		it('ItemAttributes/Authorプロパティがある', function() {
+			bookList.forEach(function( book, index ){
+				book.ItemAttributes[0].should.have.property('Author');
 			});
+		});
 
-			it('ItemAttributesプロパティがある', function() {
-				bookList.forEach(function( book, index ){
-					book.should.have.property('ItemAttributes');
-				});
+		it('ItemAttributes/Authorプロパティは空の文字列ではない', function() {
+			bookList.forEach(function( book, index ){
+				( book.ItemAttributes[0].Author.length ).should.be.above( 0 );
 			});
+		});
 
-			it('ItemAttributes/Authorプロパティがある', function() {
-				bookList.forEach(function( book, index ){
-					book.ItemAttributes[0].should.have.property('Author');
-				});
+		it('ItemAttributes/Titleプロパティがある', function() {
+			bookList.forEach(function( book, index ){
+				book.ItemAttributes[0].should.have.property('Title');
 			});
+		});
 
-			it('ItemAttributes/Authorプロパティは空の文字列ではない', function() {
-				bookList.forEach(function( book, index ){
-					( book.ItemAttributes[0].Author.length ).should.be.above( 0 );
-				});
+		it('ItemAttributes/Titleプロパティは空の文字列ではない', function() {
+			bookList.forEach(function( book, index ){
+				( book.ItemAttributes[0].Title.length ).should.be.above( 0 );
 			});
-
-			it('ItemAttributes/Titleプロパティがある', function() {
-				bookList.forEach(function( book, index ){
-					book.ItemAttributes[0].should.have.property('Title');
-				});
-			});
-
-			it('ItemAttributes/Titleプロパティは空の文字列ではない', function() {
-				bookList.forEach(function( book, index ){
-					( book.ItemAttributes[0].Title.length ).should.be.above( 0 );
-				});
-			});
-		};
-		testArray.forEach(testFunc);
-	});
-};
+		});
+	};
+	testArray.forEach(testFunc);
+});
