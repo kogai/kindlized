@@ -20,9 +20,9 @@ deployment:
   staging:
     branch: develop
     commands:
-      - ./github.sh
+      - ./sh/github.sh
 
   production:
     branch: master
     commands:
-      - ./production.sh
+      - ./sh/production.sh
