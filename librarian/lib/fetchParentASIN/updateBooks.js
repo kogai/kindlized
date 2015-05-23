@@ -1,5 +1,5 @@
 var Q = require('q');
-var modelBookList = require('shelf/lib/modelBookList');
+var modelBookList = require('models/BookList');
 var logWrap = require('common/logWrap')( 'librarian', true );
 
 module.exports = function( books ){

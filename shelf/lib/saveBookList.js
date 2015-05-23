@@ -1,4 +1,4 @@
-var ModelBookList = require('./modelBookList.js');
+var ModelBookList = require('models/BookList');
 var Q = require('q');
 var log = require('common/log');
 
