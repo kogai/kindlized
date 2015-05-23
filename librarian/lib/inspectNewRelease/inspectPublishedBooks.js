@@ -1,5 +1,5 @@
 var Q = require('q');
-var modelBookList = require('shelf/lib/modelBookList');
+var modelBookList = require('models/BookList');
 
 module.exports = function (authors) {
     'use strict';

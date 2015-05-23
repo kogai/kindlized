@@ -1,4 +1,4 @@
-var modelBookList = require( 'shelf/lib/modelBookList' );
+var modelBookList = require( 'models/BookList' );
 var Q = require('q');
 
 module.exports = function( data ){

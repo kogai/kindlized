@@ -1,7 +1,7 @@
 "use strict";
 
 var Author = require('models/Author');
-var Booklist = require('shelf/lib/modelBookList');
+var Booklist = require('models/BookList');
 var _ = require('underscore');
 var Q = require('q');
 
