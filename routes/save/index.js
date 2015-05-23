@@ -12,7 +12,7 @@ var isNewAuthor = require('routes/save/lib/isNewAuthor');
 var saveUserAuthorList = require('routes/save/lib/saveUserAuthorList');
 
 router.post('/', function(req, res) {
-
+	console.log("req.body", req.body);
 	var payload = req.body;
 	var newBook = payload.newBook;
 
