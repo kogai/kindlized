@@ -1,3 +1,5 @@
+"use strict";
+
 var Q = require('q');
 var express = require('express');
 var router = express.Router();
@@ -10,9 +12,15 @@ var isNewAuthor = require('routes/save/lib/isNewAuthor');
 var saveUserAuthorList = require('routes/save/lib/saveUserAuthorList');
 
 router.post('/', function(req, res) {
-	"use strict";
-	var newBook = req.body.newBook;
-	Q.when({
+
+	var payload = req.body;
+	var newBook = payload.newBook;
+
+	if(payload.isAuthorPage){
+		console.log("payload.ASIN", payload.ASIN);
+		res.send('ok');
+	}else{
+		Q.when({
 			req: req,
 			res: res,
 			newBook: newBook
@@ -27,6 +35,7 @@ router.post('/', function(req, res) {
 				newBook: newBook
 			});
 		});
+	}
 });
 
 module.exports = router;
