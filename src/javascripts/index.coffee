@@ -2,6 +2,7 @@ app = require('./lib/app')
 account = require('./lib/account')
 analytics = require('./lib/analytics')
 intro = require('./lib/intro')
+author = require('./lib/author')
 
 angular.module('App',[])
     .controller(
@@ -15,4 +16,8 @@ angular.module('App',[])
     .controller(
         'intro',
         [ '$scope', '$http', '$window', intro ]
+    )
+    .controller(
+        'author',
+        [ '$scope', '$http', '$http', author ]
     )

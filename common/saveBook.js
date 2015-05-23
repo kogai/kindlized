@@ -1,5 +1,5 @@
 var Q = require('q');
-var ModelBookList = require('shelf/lib/modelBookList.js');
+var ModelBookList = require('models/BookList.js');
 var log = require('common/log');
 
 module.exports = function( book ) {
