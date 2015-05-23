@@ -1,9 +1,10 @@
+"use strict";
+
 var Q = require('q');
 var _ = require('underscore');
 var modelUser = require('user');
 
 var findUser = function( data ) {
-	"use strict";
 	var def = Q.defer();
 
 	modelUser.findOne({
@@ -22,7 +23,6 @@ var findUser = function( data ) {
 };
 
 module.exports = function (data) {
-	"use strict";
 	var d = Q.defer();
 
 	findUser(data)

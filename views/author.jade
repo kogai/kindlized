@@ -19,9 +19,13 @@ block content
 					- var book = books[i]
 					tr
 						td
-							a( href="#{ book.url[0] }" target="_blank" style='display:block;' )
-								img(src="#{ book.images }", alt="#{ book.title }")
-							|#{ book.title }
+							-if(book.images)
+								a( href="#{ book.url[0] }" target="_blank")
+									img(src="#{ book.images }" alt="#{ book.title }" style='display:block;')
+									|#{ book.title }
+							-else
+								a( href="#{ book.url[0] }" target="_blank" style='display:block;' )
+									|#{ book.title }
 						td
 							-if(book.isKindlized)
 								.label.label-success.m-icon-book
@@ -36,11 +40,26 @@ block content
 									span.is-sp
 										|未Kindle
 						td
-							a( href="#{ book.url[0] }" target="_blank" ).btn.btn-default.m-icon-buy
-								span.is-pc
-									|Amazonで購入する
-								span.is-sp
-									|購入
+							-if(book.isKindlized)
+								a( href="#{ book.url[0] }" target="_blank" ).btn.btn-default.m-icon-buy
+									span.is-pc
+										|Amazonで購入する
+									span.is-sp
+										|購入
+							-else
+								-if(isLogined)
+									button(ng-click="registBook('#{book.ASIN[0]}')").btn.btn-default.m-icon-mail
+										span.is-pc
+											|この本がkindle化されたら通知を受ける
+										span.is-sp
+											|kindle化通知を受ける
+								-else
+									a(href="/account?ASIN=#{ book.ASIN[0] }").btn.btn-default.m-icon-mail
+										span.is-pc
+											|この本がkindle化されたら通知を受ける
+										span.is-sp
+											|kindle化通知を受ける
+
 		.l-clr.l-m-20
 			.l-left
 				-if(!pager.prev.isNotExist)

@@ -1,11 +1,12 @@
 "use strict";
 
 var Author = require('models/Author');
-var Booklist = require('shelf/lib/modelBookList');
+var Booklist = require('models/BookList');
 var _ = require('underscore');
 var Q = require('q');
 
 module.exports = function(req, res){
+	var isLogined = req.session.passport.user;
 	var encodeImgSrc = function(bookList) {
 	  return bookList.map(function(book) {
 	    var err, images;
@@ -103,6 +104,7 @@ module.exports = function(req, res){
 				title : title,
 				description: title + "の一覧ページです",
 				books: books,
+				isLogined: isLogined,
 				kindlizedBooks: (function(books){
 					books = books.map(function(book){
 						if(book.isKindlized){

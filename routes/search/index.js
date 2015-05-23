@@ -3,7 +3,7 @@ var _ 						= require('underscore');
 var express	 			= require('express');
 var router	  		= express.Router();
 var log = require('common/log');
-var modelBookList = require( 'shelf/lib/modelBookList' );
+var modelBookList = require( 'models/BookList' );
 var modelAuthor 	= require( 'models/Author' );
 var constant 			= require( 'common/constant' );
 

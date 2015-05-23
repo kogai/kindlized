@@ -1,4 +1,7 @@
-var makeModel = require('common/makeModel');
+"use strict";
+
+var MakeModel = require('common/makeModel');
+
 var bookrSchema = {
   status: String,
   ASIN: Array,
@@ -20,4 +23,4 @@ var bookrSchema = {
   isKindlizedUrl: Boolean
 };
 
-module.exports = new makeModel('BookList', bookrSchema);
+module.exports = new MakeModel('BookList', bookrSchema);
