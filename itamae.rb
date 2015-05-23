@@ -25,22 +25,16 @@ service "mongod" do
   action :start
 end
 
-# execute 'wait for starting mongod-service' do
-#   command "wait"
-# end
-#
-# execute 'create DB and User' do
-#   user "root"
-#   command "mongo /vagrant/shell.js"
-#   not_if "mongo cheers"
-# end
-
-
 # サーバー関連のインストール
 
 execute 'fetch specific node' do
   user "root"
   command "curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -"
+  not_if "which node"
+end
+
+package 'nodejs' do
+  action :install
   not_if "which node"
 end
 
@@ -63,11 +57,6 @@ end
 
 execute 'wait for starting nginx-service' do
   command "wait"
-end
-
-package 'nodejs' do
-  action :install
-  not_if "which node"
 end
 
 remote_file "/home/vagrant/.bash_profile" do
@@ -93,11 +82,4 @@ end
 #   user "root"
 #   command "/vagrant/forever.sh"
 #   only_if "which forever"
-# end
-#
-# execute 'node-dev install' do
-#   user "root"
-#   command "npm install -g node-dev"
-#   only_if "which node"
-#   not_if "which node-dev"
 # end
