@@ -10,6 +10,8 @@ var fetchAuthor = require('shelf/lib/fetchAuthor');
 var updateAuthorModifiedTime = require('shelf/lib/updateAuthorModifiedTime');
 var fetchPageCount = require('shelf/lib/fetchPageCount');
 var fetchBookList = require('shelf/lib/fetchBookList');
+var modifyBookList = require('shelf/lib/modifyBookList');
+var saveBookList = require('shelf/lib/saveBookList');
 
 var handleAuthorData = function(author){
 	var d = Q.defer();
@@ -19,10 +21,10 @@ var handleAuthorData = function(author){
 	.then(updateAuthorModifiedTime)
 	.then(fetchPageCount)
 	.then(fetchBookList)
-	// .then(modifyBookList)
-	// .then(saveBookList)
+	.then(modifyBookList)
+	.then(saveBookList)
 	.then(function(author){
-		log.info(author.name + ' : ' + author.pageCount + '冊' + 'の処理を完了');
+		log.info(author.name + ' : ' + author.pageCount + 'ページ分' + 'の処理を完了');
 	})
 	.fail(function(result){
 		log.info(result.err);
@@ -42,43 +44,6 @@ fetchAuthor()
 	}
 	promiseSerialize(authors, handleAuthorData)
 	.done(function(){
-		return log.info('shelf処理が完了');
+		return log.info('shelfの巡回処理が完了');
 	});
 });
-
-// var regInt = require('shelf/lib/regInt');
-// var fetchAuthor = require('shelf/lib/fetchAuthor');
-// var modifyBookList = require('shelf/lib/modifyBookList');
-// var saveBookList = require('shelf/lib/saveBookList');
-// var constant = require('shelf/lib/constant');
-// var log = require('common/log');
-//
-// var authorRecursionCount = 0;
-//
-// module.exports = function() {
-// 	var defered = Q.defer();
-// 	Q.when()
-// 		.then(fetchAuthor)
-// 		.done(function(authorList) {
-// 			if (authorList.length === 0) {
-// 				defered.resolve();
-// 			}
-// 			var data = {
-// 				times: authorList.length,
-// 				interval: constant.interval,
-// 				obj: {},
-// 				callBack: function(data) {
-// 					var authorData = {
-// 						author: authorList[data.countExec],
-// 						defered: defered,
-// 						authorList: authorList,
-// 						authorRecursionCount: authorRecursionCount,
-// 					};
-//
-// 					log.info('\n------------------------\n' + authorData.author + 'の処理を開始');
-// 				}
-// 			};
-// 			regInt(data);
-// 		});
-// 	return defered.promise;
-// };
