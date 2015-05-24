@@ -1,4 +1,5 @@
 "use strict";
+require('newrelic');
 
 var Q = require('q');
 var Cronjob = require('cron').CronJob;

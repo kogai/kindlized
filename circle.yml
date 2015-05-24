@@ -22,7 +22,7 @@ deployment:
     commands:
       - ./sh/github.sh
 
-  production:
-    branch: master
-    commands:
-      - ./sh/production.sh
+  # production:
+  #   branch: master
+  #   commands:
+  #     - ./sh/production.sh

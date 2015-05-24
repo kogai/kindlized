@@ -2,6 +2,8 @@
 
 "use strict";
 
+require('newrelic');
+
 var debug = require('debug')('init');
 var app = require('app.js');
 var sitemap = require('express-sitemap')({
