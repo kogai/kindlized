@@ -21,7 +21,7 @@ module.exports = function(user) {
     });
 
     var mailOptions = {
-      from: 'Kindlized ✔ <kogai0121@gmail.com>',
+      from: 'Kindlized ✔ <info@kindlize.it>',
       to: user.mail,
       subject: 'Kindle化通知',
       text: sendHtml,
