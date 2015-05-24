@@ -2,7 +2,7 @@ var Q = require('q');
 var moment = require('moment-timezone');
 var periodicalDay = require('common/constant').periodicalDay;
 var promiseSerialize = require('common/promiseSerialize');
-var modelAuthor = require('models/Author');;
+var modelAuthor = require('models/Author');
 
 var fetchAuthors = require('librarian/lib/inspectNewRelease/fetchAuthors');
 var inspectPublishedBooks = require('librarian/lib/inspectNewRelease/inspectPublishedBooks');

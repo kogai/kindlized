@@ -17,8 +17,4 @@ db.createUser({
 	]
 })
 
-db.sequences.insert({
-	seq: 0
-});
-
 printjson(db.adminCommand('listDatabases').databases);
