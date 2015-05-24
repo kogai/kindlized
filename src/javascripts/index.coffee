@@ -5,13 +5,21 @@ intro = require('./lib/intro')
 author = require('./lib/author')
 
 angular.module('App',[])
+    .config([
+        "$locationProvider",
+        ($locationProvider) ->
+            $locationProvider.html5Mode(
+                enabled: true
+                requireBase: false
+            )
+    ])
     .controller(
         'postNewBook',
         [ '$scope', '$filter', '$http', app ]
     )
     .controller(
         'account',
-        [ '$scope', '$http', '$window', account ]
+        [ '$scope', '$http', '$window', '$location', account ]
     )
     .controller(
         'intro',

@@ -1,8 +1,11 @@
-module.exports = ( $scope, $http, $window, account ) ->
+module.exports = ( $scope, $http, $window, $location ) ->
 
 	$scope.isSending = false
 	$scope.statusMessage = '送信中...'
-	$scope.isRegist = !true
+	if($location.search()['ASIN'])
+		$scope.isRegist = true
+	else
+		$scope.isRegist = false
 
 	$scope.toggleBtn = () ->
 		$scope.isRegist = !$scope.isRegist
