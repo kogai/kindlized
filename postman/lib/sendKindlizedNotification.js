@@ -4,6 +4,7 @@ var Q = require('q');
 var nodemailer = require('nodemailer');
 var makeCredential = require('common/makeCredential');
 var logPostman = require('common/logEx').postman;
+var mailInfo = require('common/constant').mail.info;
 
 module.exports = function(user) {
   var d = Q.defer();
@@ -21,7 +22,7 @@ module.exports = function(user) {
     });
 
     var mailOptions = {
-      from: 'Kindlized ✔ <info@kindlize.it>',
+      from: 'Kindlized ✔ <' + mailInfo + '>',
       to: user.mail,
       subject: 'Kindle化通知',
       text: sendHtml,
