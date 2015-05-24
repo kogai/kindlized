@@ -11,7 +11,7 @@ execute 'make list' do
 end
 
 execute 'reload' do
-  uer 'root'
+  user 'root'
   command "apt-get update"
   not_if "which mongo"
 end
@@ -26,16 +26,21 @@ service "mongod" do
   action :start
 end
 
-# execute 'import' do
-#   command "mongorestore -h 192.168.33.10:27017 -d kindlized -u kindlized -p r5FLahwlAcgAwrzlDVSy ./backup"
-#   not_if "mongo kindlized"
-# end
+execute 'wait for starting mongod-service' do
+  command "wait"
+end
 
-#  mongorestore -h 192.168.33.10:27017 -d kindlized -u kindlized -p
-# 	mongodb: 'mongodb://root:root@127.0.0.1:27017/cheers'
-	# mongodb: 'mongodb://root:root@192.168.33.10:27017'
+execute 'create DB and User' do
+  user "root"
+  command "mongo /vagrant/mongoshell.js"
+  not_if "mongo kindlized"
+end
 
-  # mongo 192.168.33.10:27017/kindlized -u kindlized -p r5FLahwlAcgAwrzlDVSy
+execute 'import' do
+  command "mongorestore -h 127.0.0.1:27017 -d kindlized -u kindlized -p r5FLahwlAcgAwrzlDVSy /vagrant/kindlized"
+  not_if "mongo kindlized"
+end
+
 
 # サーバー関連のインストール
 

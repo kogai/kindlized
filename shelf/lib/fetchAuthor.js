@@ -1,18 +1,22 @@
+"use strict";
+
 var Q = require('q');
 var moment = require('moment-timezone');
-var ModelAuthor = require('models/Author');;
-var reduceListByDate = require('common/reduceListByDate');
+
+var Author = require('models/Author');
+
 var log = require('common/log');
-var limit = require('common/constant').limit;
 var limitAuthor = require('common/constant').limitAuthor;
 var periodicalDay = require('common/constant').periodicalDay;
 
 module.exports = function() {
+  console.log("fetchAuthor");
+  /*
   // DBから著者リストを非同期に取得する
   var d = Q.defer();
   var authorList = [];
 
-  var query = ModelAuthor
+  var query = Author
   .find({
 		$or: [
       {
@@ -37,4 +41,5 @@ module.exports = function() {
   });
 
   return d.promise;
+  */
 };
