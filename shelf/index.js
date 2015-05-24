@@ -6,8 +6,10 @@ var log = require('common/log');
 var promiseSerialize = require('common/promiseSerialize');
 
 var fetchAuthor = require('shelf/lib/fetchAuthor');
+
 var updateAuthorModifiedTime = require('shelf/lib/updateAuthorModifiedTime');
 var fetchPageCount = require('shelf/lib/fetchPageCount');
+var fetchBookList = require('shelf/lib/fetchBookList');
 
 var handleAuthorData = function(author){
 	var d = Q.defer();
@@ -16,7 +18,7 @@ var handleAuthorData = function(author){
 	Q.when(author)
 	.then(updateAuthorModifiedTime)
 	.then(fetchPageCount)
-	// .then(fetchBookList)
+	.then(fetchBookList)
 	// .then(modifyBookList)
 	// .then(saveBookList)
 	.then(function(author){
@@ -40,15 +42,12 @@ fetchAuthor()
 	}
 	promiseSerialize(authors, handleAuthorData)
 	.done(function(){
-		log.info('shelf処理が完了');
+		return log.info('shelf処理が完了');
 	});
 });
 
-// var fs = require('fs');
-//
 // var regInt = require('shelf/lib/regInt');
 // var fetchAuthor = require('shelf/lib/fetchAuthor');
-// var fetchBookList = require('shelf/lib/fetchBookList');
 // var modifyBookList = require('shelf/lib/modifyBookList');
 // var saveBookList = require('shelf/lib/saveBookList');
 // var constant = require('shelf/lib/constant');
