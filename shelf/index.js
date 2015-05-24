@@ -37,13 +37,15 @@ var handleAuthorData = function(author){
 	return d.promise;
 };
 
-fetchAuthor()
-.done(function(authors){
-	if(authors.length === 0){
-		return;
-	}
-	promiseSerialize(authors, handleAuthorData)
-	.done(function(){
-		return log.info('shelfの巡回処理が完了');
+module.exports = function(){
+	fetchAuthor()
+	.done(function(authors){
+		if(authors.length === 0){
+			return;
+		}
+		promiseSerialize(authors, handleAuthorData)
+		.done(function(){
+			return log.info('shelfの巡回処理が完了');
+		});
 	});
-});
+};
