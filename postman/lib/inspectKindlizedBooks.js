@@ -2,7 +2,7 @@
 
 var Q = require('q');
 var _ = require('underscore');
-var modelBookList = require('shelf/lib/modelBookList');
+var modelBookList = require('models/BookList');
 var logPostman = require('common/logEx').postman;
 
 module.exports = function(user) {

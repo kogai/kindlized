@@ -8,5 +8,8 @@ module.exports = {
   SALT_WORK_FACTOR: 10,
   limit: 500,
   limitAuthor:100,
-  limitIntro: 24
+  limitIntro: 24,
+  mail: {
+    info: 'info@kindlize.it'
+  }
 };

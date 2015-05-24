@@ -5,8 +5,8 @@ var opHelper = require('apac').OperationHelper;
 var makeOpConfig = require('common/makeOpConfig');
 
 var makeExistenceExpression = require('routes/search/lib/makeExistenceExpression');
-var modelBookList = require('shelf/lib/modelBookList');
-var modelAuthor = require('author/lib/modelAuthor');
+var modelBookList = require('models/BookList');
+var modelAuthor = require('models/Author');;
 var constant = require('common/constant');
 
 var opConfig = new makeOpConfig();

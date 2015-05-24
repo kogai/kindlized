@@ -1,47 +1,60 @@
-var ModelBookList = require('./modelBookList.js');
+"use strict";
+
 var Q = require('q');
+
+var BookList = require('models/BookList');
 var log = require('common/log');
 
-module.exports = function( authorData ){
-	var d = Q.defer();
+var saveBook = function(book) {
+	var def = Q.defer();
 
-	var author 		= authorData.author;
-	var bookList 	= authorData.bookList;
-
-	if( bookList.length === 0 ) d.resolve( authorData );
-
-	for (var i = 0; i < bookList.length; i++) {
-		var book = bookList[i];
-		saveBook( book );
-		if( i === bookList.length - 1 ) {
-			d.resolve( authorData );
-		}
-	}
-	return d.promise;
-};
-
-var saveBook = function( book ){
-	ModelBookList.findOne( { ASIN: book.ASIN }, function( err, dbBook ){
-		if( !dbBook ){
-
-			var newBook = new ModelBookList({
-		    status          : book.satus,
-		    ASIN            : book.ASIN,
-		    EAN             : book.EAN,
-		    author          : book.author,
-		    title           : book.title,
-		    publisher       : book.publisher,
-		    publicationDate : book.publicationDate,
-		    price           : book.price,
-		    url             : book.url,
-		    images          : book.images,
-		    isKindlized	    : false
+	BookList.findOne({
+		ASIN: book.ASIN
+	}, function(err, dbBook) {
+		if (dbBook) {
+			def.resolve();
+		}else{
+			// 戻り値が無ければ === 新規の書籍ならば登録する
+			var newBook = new BookList({
+				status: book.satus,
+				ASIN: book.ASIN,
+				EAN: book.EAN,
+				author: book.author,
+				title: book.title,
+				publisher: book.publisher,
+				publicationDate: book.publicationDate,
+				price: book.price,
+				url: book.url,
+				images: book.images,
+				isKindlized: false
 			});
 
-			newBook.save( function(err){
-				if(err) log.info(err);
-				log.info( book.title, 'regist is success' );
+			newBook.save(function(err) {
+				if (err) {
+					log.info(err);
+				}
+				log.info(book.title, 'を追加した');
+				def.resolve();
 			});
 		}
 	});
+
+	return def.promise;
+};
+
+module.exports = function(author) {
+	var d = Q.defer();
+
+	var bookList = author.bookList;
+
+	if (bookList.length === 0) {
+		d.resolve(author);
+	}else{
+	  Q.all(bookList.map(saveBook))
+	  .done(function(){
+			d.resolve(author);
+		});
+	}
+
+	return d.promise;
 };

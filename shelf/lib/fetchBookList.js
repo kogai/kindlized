@@ -1,64 +1,56 @@
-var opHelper = require('apac').OperationHelper;
-var makeOpConfig = require('./makeOpConfig');
-var makeSearchExpression = require('./makeSearchExpression');
-var regInt = require('./regInt');
+"use strict";
+
 var Q = require('q');
-var constant = require('./constant');
+var OpHelper = require('apac').OperationHelper;
+
+var MakeOpConfig = require('./makeOpConfig');
+var opConfig = new MakeOpConfig();
+var opCountPages = new OpHelper(opConfig);
+var MakeSearchExpression = require('./makeSearchExpression');
+var INTERVAL = require('common/constant').INTERVAL;
 var log = require('common/log');
 
-module.exports = function(authorData) {
-	var Author = authorData.author;
-	var pageCount = authorData.pageCount;
-	var opConfig = new makeOpConfig();
-	var opCountPages = new opHelper(opConfig);
+var recursiveCallBack = function(author, callBack, pageCount){
+	var searchExpression = new MakeSearchExpression(author.name, pageCount);
+	opCountPages.execute('ItemSearch', searchExpression, callBack);
+};
+
+module.exports = function(author){
 	var d = Q.defer();
+	var maxCount = author.pageCount;
 	var retryCount = 0;
-	var retryInterval = 1;
+	var pageCount = 1;
+	var bookList = [];
+	log.info(maxCount + 'ページ分の処理を開始');
 
-	authorData.bookList = [];
+	var callBack = function(err, res) {
+		if (err || res.ItemSearchErrorResponse) {
+			// APIの呼び出し間隔が短すぎた時の処理
+      retryCount += 1;
+			setTimeout(function() {
+	      recursiveCallBack(author, callBack, pageCount);
+			}, INTERVAL * retryCount);
+		}else{
+			// API呼び出しの成功処理
+			if(pageCount > maxCount){
+				log.info((pageCount - 1) + 'ページ分の処理を完了 : ' + bookList.length + '冊の処理を完了');
+				author.bookList = bookList;
+				d.resolve(author);
+			}else{
+				// 次の再帰呼び出しの前にretryCountを初期化する
+				retryCount = 0;
 
-	// ページ数分実行
-	var regIntData = {
-		times: pageCount,
-		interval: constant.interval,
-		obj: {},
-		d: d,
-		authorData: authorData,
-		callBack: function(data) {
-			var searchExpression = new makeSearchExpression(Author, data.countExec + 1);
+				// resから書籍リストをストアする
+				var bookListPerPage = res.ItemSearchResponse.Items[0].Item;
+				bookList = bookList.concat(bookListPerPage);
 
-			opCountPages.execute('ItemSearch', searchExpression, function(err, res) {
-				if (err) log.info( err );
-
-				if (res.ItemSearchResponse) {
-					// API呼び出しに成功
-					retryCount = 0;
-					var resBookListPerPage = res.ItemSearchResponse.Items[0].Item;
-					data.authorData.bookList = data.authorData.bookList.concat(resBookListPerPage);
-					data.countExec++;
-				} else {
-					// API呼び出しに失敗
-					var errorMessage;
-					try {
-						errorMessage = res.ItemSearchErrorResponse.Error[0].Message[0] + '\n';
-					} catch (error) {
-						errorMessage = '予想していなかったエラーを検出\n' + error;
-					} finally {
-						log.info(Author + ' shelf/fetchBookListの' + retryCount + '回目のリクエストエラー => \n', errorMessage);
-						retryCount++;
-						if (retryCount > 20) {
-							// 20回以上失敗したなら1時間休む
-							log.info(Author + ' shelf/fetchBookListは20回失敗したので1時間休む');
-							retryInterval = 1000 * 60 * 60;
-						}
-					}
-				}
-				setTimeout(function() {
-					data.regularInterval(data);
-				}, constant.interval * retryCount * retryInterval);
-			});
-		}
+				// カウントを進めて再帰
+				pageCount += 1;
+	      recursiveCallBack(author, callBack, pageCount);
+			}
+	  }
 	};
-	regInt(regIntData);
+	recursiveCallBack(author, callBack, pageCount);
+
 	return d.promise;
 };

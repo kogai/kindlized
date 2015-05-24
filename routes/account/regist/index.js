@@ -1,21 +1,22 @@
+"use strict";
+
 var Q = require('q');
 var uuid = require('node-uuid');
 var nodemailer = require('nodemailer');
-var modelUser = require('user');
+var ModelUser = require('user');
 var makeCredential = require('common/makeCredential');
 var credentialGmail = makeCredential('gmail');
+var mailInfo = require('common/constant').mail.info;
 
 var makeNewUserModel = function(data) {
-	"use strict";
   var d = Q.defer();
 
   var verifyId = uuid.v1();
   var req = data.req;
-  var res = data.res;
   var mail = req.body.mail;
   var password = req.body.password;
 
-  var newUser = new modelUser({
+  var newUser = new ModelUser({
     mail: mail,
     password: password,
     verifyId: verifyId,
@@ -73,7 +74,7 @@ var sendVerifyMail = function(data) {
     });
 
     var mailOptions = {
-      from: 'Kindlized ✔ <kogai0121@gmail.com>',
+      from: 'Kindlized ✔ <' + mailInfo + '>',
       to: mail,
       subject: 'kindlizedアカウント認証',
       text: sendHtml,
@@ -118,11 +119,11 @@ var renderFailRouter = function(data) {
 
 module.exports = function(data) {
   makeNewUserModel(data)
-    .then(makeMailTemplate)
-    .then(sendVerifyMail)
-    .then(renderRouter)
-    .fail(renderFailRouter)
-    .done(function(data) {
-      console.log('新規ユーザー登録完了');
-    });
+  .then(makeMailTemplate)
+  .then(sendVerifyMail)
+  .then(renderRouter)
+  .fail(renderFailRouter)
+  .done(function(data) {
+    console.log('新規ユーザー登録完了');
+  });
 };

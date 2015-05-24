@@ -7,17 +7,17 @@
     "node": "0.12.x"
   },
   "scripts": {
-    "test": "env NODE_PATH=./ ./node_modules/.bin/mocha",
-    "wip": "env NODE_PATH=./ ./node_modules/.bin/mocha test/wip",
-    "sandbox": "env NODE_PATH=./ node-dev --harmony --debug sandbox",
-    "sbapi": "env NODE_PATH=./ node-dev --harmony --debug sbapi",
-    "app": "env NODE_PATH=./ node-dev --debug bin/www",
-    "shelf": "env NODE_PATH=./ node-dev --all-deps shelf",
-    "librarian": "env NODE_PATH=./ node-dev --all-deps librarian",
-    "db": "env NODE_PATH=./ node-dev --all-deps db",
-    "postman": "env NODE_PATH=./ node-dev --all-deps postman",
+    "test": "./node_modules/.bin/mocha --recursive",
+    "wip": "./node_modules/.bin/mocha test/wip",
+    "sandbox": "node-dev --harmony --debug sandbox",
+    "sbapi": "node-dev --harmony --debug sbapi",
+    "app": "node-dev --debug bin/www",
+    "shelf": "node-dev --all-deps shelf",
+    "librarian": "node-dev --all-deps librarian",
+    "db": "node-dev --all-deps db",
+    "postman": "node-dev --all-deps postman",
     "build": "browserify -t debowerify -d public/javascripts/index.js -o public/javascripts/min/bundle.js",
-    "start": "env NODE_PATH=./ PORT=80 pm2 start bin/www"
+    "start": "PORT=80 pm2 start bin/www"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
     "escape-regexp": "0.0.1",
     "express": "^4.9.0",
     "express-session": "^1.9.1",
+    "express-sitemap": "^1.5.6",
     "formidable": "^1.0.15",
     "jade": "~1.6.0",
     "levenshtein": "^1.0.5",
@@ -46,7 +47,7 @@
     "log4js-extend": "^0.1.2",
     "mocha": "^2.0.1",
     "moment-timezone": "^0.3.0",
-    "mongoose": "^3.8.18",
+    "mongoose": "^4.0.3",
     "mongoose-unique-validator": "^0.4.1",
     "morgan": "~1.3.0",
     "multer": "^0.1.6",
@@ -58,6 +59,7 @@
     "q": "^1.1.2",
     "serve-favicon": "~2.1.3",
     "socket.io": "^1.1.0",
+    "superagent": "^1.2.0",
     "underscore": "^1.8.2"
   },
   "devDependencies": {

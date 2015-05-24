@@ -1,7 +1,7 @@
 var Q 						= require( 'q' );
 var express 			= require('express');
 var router 				= express.Router();
-var modelBookList = require( 'shelf/lib/modelBookList' );
+var modelBookList = require( 'models/BookList' );
 var constant 			= require( 'common/constant' );
 
 var fetchBookList = function( req, res ){

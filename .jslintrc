@@ -17,8 +17,11 @@
   "node": true,
   "nomen": true,
   "passfail": false,
-  "plusplus": false,
+  "plusplus": true,
   "predef": [
+      "before",
+      "it",
+      "describe",
       "angular",
       "$"
   ],

@@ -1,6 +1,6 @@
 var Q = require('q');
 var moment = require('moment-timezone');
-var modelBookList = require('shelf/lib/modelBookList');
+var modelBookList = require('models/BookList');
 var logWrap = require('common/logWrap')('librarian', true );
 var limit = require('common/constant').limit;
 var periodicalDay = require('common/constant').periodicalDay;
