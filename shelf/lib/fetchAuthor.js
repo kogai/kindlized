@@ -10,14 +10,10 @@ var limitAuthor = require('common/constant').limitAuthor;
 var periodicalDay = require('common/constant').periodicalDay;
 
 module.exports = function() {
-  console.log("fetchAuthor");
-  /*
   // DBから著者リストを非同期に取得する
   var d = Q.defer();
-  var authorList = [];
 
-  var query = Author
-  .find({
+  var query = Author.find({
 		$or: [
       {
 				lastModified: {
@@ -33,7 +29,7 @@ module.exports = function() {
   .sort({
     lastModified: 1
   })
-  .limit( limitAuthor );
+  .limit(limitAuthor);
 
   query.exec(function( error, authors ){
     log.info( authors.length, '人の著者の処理を実行する');
@@ -41,5 +37,4 @@ module.exports = function() {
   });
 
   return d.promise;
-  */
 };

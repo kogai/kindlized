@@ -7,6 +7,7 @@ var promiseSerialize = require('common/promiseSerialize');
 
 var fetchAuthor = require('shelf/lib/fetchAuthor');
 var updateAuthorModifiedTime = require('shelf/lib/updateAuthorModifiedTime');
+var fetchPageCount = require('shelf/lib/fetchPageCount');
 
 var handleAuthorData = function(author){
 	var d = Q.defer();
@@ -14,13 +15,18 @@ var handleAuthorData = function(author){
 	// シーケンシャルに処理する非同期処理
 	Q.when(author)
 	.then(updateAuthorModifiedTime)
-	// .then(fetchPageCounts)
+	.then(fetchPageCount)
 	// .then(fetchBookList)
 	// .then(modifyBookList)
 	// .then(saveBookList)
-	.done(function(author) {
-		log.info(author.name + ' : ' + '著者毎の処理を完了');
-		// log.info(author.name + '/' + authorData.bookList.length + '冊' + '著者毎の処理を完了');
+	.then(function(author){
+		log.info(author.name + ' : ' + author.pageCount + '冊' + 'の処理を完了');
+	})
+	.fail(function(result){
+		log.info(result.err);
+		log.info(result.author.name + ' : ' + 'の処理が失敗');
+	})
+	.done(function() {
 		d.resolve();
 	});
 
@@ -28,21 +34,20 @@ var handleAuthorData = function(author){
 };
 
 fetchAuthor()
-// .done(function(authors){
-// 	if(authors.length === 0){
-// 		return;
-// 	}
-// 	promiseSerialize(authors, handleAuthorData)
-// 	.done(function(){
-// 		log.info('shelf処理が完了');
-// 	});
-// });
+.done(function(authors){
+	if(authors.length === 0){
+		return;
+	}
+	promiseSerialize(authors, handleAuthorData)
+	.done(function(){
+		log.info('shelf処理が完了');
+	});
+});
 
 // var fs = require('fs');
 //
 // var regInt = require('shelf/lib/regInt');
 // var fetchAuthor = require('shelf/lib/fetchAuthor');
-// var fetchPageCounts = require('shelf/lib/fetchPageCounts');
 // var fetchBookList = require('shelf/lib/fetchBookList');
 // var modifyBookList = require('shelf/lib/modifyBookList');
 // var saveBookList = require('shelf/lib/saveBookList');
