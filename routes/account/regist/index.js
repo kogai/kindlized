@@ -73,7 +73,7 @@ var sendVerifyMail = function(data) {
     });
 
     var mailOptions = {
-      from: 'Kindlized ✔ <kogai0121@gmail.com>',
+      from: 'Kindlized ✔ <info@kindlize.it>',
       to: mail,
       subject: 'kindlizedアカウント認証',
       text: sendHtml,
