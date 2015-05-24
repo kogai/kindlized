@@ -11,7 +11,8 @@ execute 'make list' do
 end
 
 execute 'reload' do
-  command "sudo apt-get update"
+  uer 'root'
+  command "apt-get update"
   not_if "which mongo"
 end
 
@@ -24,6 +25,17 @@ service "mongod" do
   user "root"
   action :start
 end
+
+# execute 'import' do
+#   command "mongorestore -h 192.168.33.10:27017 -d kindlized -u kindlized -p r5FLahwlAcgAwrzlDVSy ./backup"
+#   not_if "mongo kindlized"
+# end
+
+#  mongorestore -h 192.168.33.10:27017 -d kindlized -u kindlized -p
+# 	mongodb: 'mongodb://root:root@127.0.0.1:27017/cheers'
+	# mongodb: 'mongodb://root:root@192.168.33.10:27017'
+
+  # mongo 192.168.33.10:27017/kindlized -u kindlized -p r5FLahwlAcgAwrzlDVSy
 
 # サーバー関連のインストール
 
@@ -64,22 +76,3 @@ remote_file "/home/vagrant/.bash_profile" do
   group "root"
   source "conf/.bash_profile"
 end
-
-# execute 'forever install' do
-#   user "root"
-#   command "npm install -g forever"
-#   only_if "which node"
-#   not_if "which forever"
-# end
-
-# execute 'add rights' do
-#   user "root"
-#   command "chmod 777 /vagrant/forever.sh"
-#   only_if "test -e /vagrant/forever.sh"
-# end
-
-# execute 'start server instances' do
-#   user "root"
-#   command "/vagrant/forever.sh"
-#   only_if "which forever"
-# end
