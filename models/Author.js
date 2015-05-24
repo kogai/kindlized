@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var mongodb = require('common/makeCredential')('mongodb');
+
 var db = mongoose.createConnection(mongodb);
 
 var AuthorSchema = new mongoose.Schema({
