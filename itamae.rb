@@ -37,7 +37,7 @@ execute 'create DB and User' do
 end
 
 execute 'import' do
-  command "mongorestore -h 127.0.0.1:27017 -d kindlized -u kindlized -p r5FLahwlAcgAwrzlDVSy /vagrant/kindlized"
+  command "mongorestore -h 127.0.0.1:27017 -d kindlized -u root -p root /vagrant/kindlized"
   not_if "mongo kindlized"
 end
 
