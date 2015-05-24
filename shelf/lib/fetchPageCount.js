@@ -23,7 +23,7 @@ module.exports = function(author) {
   var callBack = function(err, res) {
 		if (err || res.ItemSearchErrorResponse) {
 			// APIの呼び出し間隔が短すぎた時の処理
-      retryCount++;
+      retryCount += 1;
       if(retryCount > 50){
         d.reject({
 					err: res.ItemSearchErrorResponse,
