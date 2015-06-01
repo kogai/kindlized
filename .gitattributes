@@ -1,1 +1,3 @@
 *.psd filter=lfs diff=lfs merge=lfs -crlf
+design/ filter=lfs diff=lfs merge=lfs -crlf
+design/kindlize.psd filter=lfs diff=lfs merge=lfs -crlf

@@ -6,7 +6,7 @@ var opConfig = new makeOpConfig();
 var makeInspectExpression = require('librarian/lib/fetchParentASIN/makeInspectExpression');
 var interval = require('common/constant').interval;
 var promiseSerialize = require('common/promiseSerialize');
-var logWrap = require('common/logWrap')( 'librarian', false );
+var log = require('common/log');
 
 module.exports = function( booksFromDB ){
 	var d = Q.defer();
@@ -67,5 +67,5 @@ var callback = function( book ){
 };
 
 var erroHandler = function( err ){
-	logWrap.info('inspectASINのレスポンスエラー ', res );
+	log.info(res);
 };

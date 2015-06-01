@@ -1,4 +1,6 @@
-var logPostman = require('common/logEx').postman;
+"use strict";
+var log = require('common/log');
+
 var inspectNotifiedBooks = require('postman/lib/inspectNotifiedBooks');
 var inspectKindlizedBooks = require('postman/lib/inspectKindlizedBooks');
 var insertMailTemplate = require('postman/lib/insertMailTemplate');
@@ -8,7 +10,6 @@ var modifyNotifiedStatus = require('postman/lib/modifyNotifiedStatus');
 var Q = require('q');
 
 module.exports = function(user) {
-	'use strict';
 	var d = Q.defer();
 
 	inspectNotifiedBooks(user)
@@ -17,7 +18,7 @@ module.exports = function(user) {
 		.then(sendKindlizedNotification)
 		.then(modifyNotifiedStatus)
 		.done(function(user) {
-			logPostman.info(user._id + 'の処理が完了');
+			log.info(user._id + 'の処理が完了');
 			d.resolve();
 		});
 

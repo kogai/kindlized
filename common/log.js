@@ -7,14 +7,13 @@ log4js.configure({
     type: 'console'
   }, {
     type: 'file',
-    filename: 'logs/' + moment().format('YYYYMMDD') + '.log',
-    category: 'dev'
+    filename: process.env.NODE_PATH + 'logs/' + moment().format('YYYYMMDD') + '.log'
   }]
 });
 
 log4js_extend(log4js, {
   path: __dirname,
-  format: "at @name (@file:@line:@column)"
+  format: "[@file:@line:@column]"
 });
 
 module.exports = log4js.getLogger("dev");

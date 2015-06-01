@@ -8,9 +8,6 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha --recursive",
-    "wip": "./node_modules/.bin/mocha test/wip",
-    "sandbox": "node-dev --harmony --debug sandbox",
-    "sbapi": "node-dev --harmony --debug sbapi",
     "app": "node-dev --debug bin/www",
     "shelf": "node-dev --all-deps shelf",
     "librarian": "node-dev --all-deps librarian",
