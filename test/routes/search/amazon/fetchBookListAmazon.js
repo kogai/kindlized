@@ -2,15 +2,10 @@
 
 var Q = require('q');
 var should = require('should');
-var testArray = require('test/routes/search/amazon/lib/testArray');
+var testArray = require('test/routes/search/amazon/testArray');
 var fetchBookListAmazon = require('routes/search/lib/fetchBookListAmazon');
 
 describe('routes/search/lib/fetchBookListAmazonのテスト', function() {
-	it('テストが動作している', function(done) {
-		(5).should.be.exactly(5);
-		done();
-	});
-
 	this.timeout(0);
 	var testFunc = function( bookName ){
 		var bookList;
