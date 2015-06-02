@@ -2,6 +2,7 @@
 
 var Q = require('q');
 var log = require('common/log');
+var warn = log.warn;
 
 var OpHelper = require('apac').OperationHelper;
 var MakeOpConfig = require('common/makeOpConfig');
@@ -41,20 +42,20 @@ module.exports = function(data) {
 	var recursionOpExistenceBook = function() {
 		opExistenceBook.execute('ItemSearch', searchExpression, function(err, res) {
 			if (err) {
-        return log.info(err);
+        return warn.info(err);
       }
 			var bookListInAmazon;
 			try {
 				bookListInAmazon = res.ItemSearchResponse.Items[0].Item;
 			} catch (error) {
-				log.debug(error);
+				warn.info(error);
 				intervalTimeIncrements++;
 				if (intervalTimeIncrements > 10) {
 					data.bookListInAmazon = [];
 					d.resolve(data);
 				} else {
 					setTimeout(function() {
-						log.debug(intervalTimeIncrements);
+						warn.info(intervalTimeIncrements);
 						recursionOpExistenceBook();
 					}, constant.interval * intervalTimeIncrements);
 				}

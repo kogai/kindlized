@@ -26,7 +26,7 @@ var execApi = function( expression, callback, errorCallback, defferd ) {
         return log.info(err);
       }
       if (res.ItemLookupErrorResponse) {
-        log.info(res);
+        log.info(res.ItemLookupErrorResponse);
         num++;
         setTimeout(function(){
   				execApi( expression, callback, errorCallback, defferd );
