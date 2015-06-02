@@ -4,6 +4,7 @@ var Q = require('q');
 var _ = require('underscore');
 var express = require('express');
 var router = express.Router();
+
 var log = require('common/log');
 var modelBookList = require('models/BookList');
 var modelAuthor = require('models/Author');
@@ -30,6 +31,7 @@ var opConfig = new MakeOpConfig();
 var opExistenceBook = new OpHelper(opConfig);
 
 router.post('/db', function(req, res) {
+	res.send([]);
 	Q.when({
 		res: res,
 		req: req

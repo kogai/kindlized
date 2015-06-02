@@ -1,9 +1,9 @@
 "use strict";
 
 var Q = require('q');
-var itemLookUp = require('common/itemLookUp');
-var interval = require('common/constant').interval;
 var _ = require('underscore');
+
+var itemLookUp = require('common/itemLookUp');
 var log = require('common/log');
 
 var mappingFunc = function( book ){
@@ -32,6 +32,7 @@ var mappingFunc = function( book ){
       def.resolve(book);
     });
   }catch( error ){
+    // AuthorityASINを持たない書籍はスキップ
     def.resolve(book);
   }
 

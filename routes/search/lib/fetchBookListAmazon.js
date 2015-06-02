@@ -34,8 +34,7 @@ var exceptionHasNotAuthor = function(book) {
 module.exports = function(data) {
 	var d = Q.defer();
 
-	var req = data.req;
-	var newBook = req.body.newBook;
+	var newBook = data.req.body.newBook;
 	var searchExpression = new MakeExistenceExpression(newBook);
 	var intervalTimeIncrements = 0;
 
@@ -48,14 +47,14 @@ module.exports = function(data) {
 			try {
 				bookListInAmazon = res.ItemSearchResponse.Items[0].Item;
 			} catch (error) {
-				log.info(res.ItemSearchErrorResponse.Error);
+				log.debug(error);
 				intervalTimeIncrements++;
 				if (intervalTimeIncrements > 10) {
 					data.bookListInAmazon = [];
 					d.resolve(data);
 				} else {
 					setTimeout(function() {
-						log.info(intervalTimeIncrements);
+						log.debug(intervalTimeIncrements);
 						recursionOpExistenceBook();
 					}, constant.interval * intervalTimeIncrements);
 				}

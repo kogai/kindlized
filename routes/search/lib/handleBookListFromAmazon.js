@@ -1,5 +1,9 @@
+"use strict";
+
 var Q = require('q');
+
 var modifyAmazonBook = require( 'common/modifyAmazonBook' );
+var log = require( 'common/log' );
 
 module.exports = function( data ) {
   var d = Q.defer();
