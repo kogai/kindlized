@@ -12,9 +12,7 @@
 		
 		div( ng-if="showSuggestedBooks" )
 			.panel.panel-default
-				table(
-					class="table m-table"
-				)
+				table.table.m-table
 					thead
 						tr
 							th タイトル
@@ -46,7 +44,7 @@
 										|Amazonで購入する
 									span.is-sp
 										|購入
-								button( type="button" ng-click="registBook( bookInDB, $index )" ng-if="!bookInDB.isKindlized && !bookInDB.isRegisterd" ).btn.btn-default.m-icon-ok
+								button(type="button" ng-click="registBook( bookInDB, $index )" ng-if="!bookInDB.isKindlized && !bookInDB.isRegisterd" ).btn.btn-default.m-icon-ok
 									span.is-pc
 										|メール通知登録
 									span.is-sp

@@ -1,40 +1,45 @@
 imageStrModifyer = require('./imageStrModifyer')
 
-module.exports = ( $scope, $filter, $http ) ->
-	$scope.search = ( newBook ) ->
+module.exports = ($scope, $filter, $http) ->
+	$scope.search = (newBook) ->
 		$scope.isWaiting = true
-		$scope.bookListInDB = null
+		$scope.bookListInDB = []
+		isCompleteDB = false
+		isCompleteAmazon = false
 
+		# DBの検索ポスト
 		httpOptToDB =
-			method : 'post'
-			url	 : '/search/db'
-			data	: { newBook: $scope.newBook }
-
-		httpOptToAmazon =
-			method : 'post'
-			url	 : '/search/amazon'
-			data	: { newBook: $scope.newBook }
+			method: 'post'
+			url: '/search/db'
+			data: { newBook: $scope.newBook }
 
 		$http( httpOptToDB )
-		.success ( data, status ) ->
+		.success(data, status) ->
 			if(data.bookListInDB.length > 0)
 				$scope.isWaiting = false
 				$scope.showSuggestedBooks = true
-			$scope.bookListInDB = imageStrModifyer(data.bookListInDB)
+			$scope.bookListInDB = $scope.bookListInDB.concat(imageStrModifyer(data.bookListInDB))
+			isCompleteDB = true
+			completeTasks()
 			return
-		.then ->
 
-			$http( httpOptToAmazon )
-			.success ( data, status ) ->
-				if( data.bookListInAmazon.length > 0 )
-					console.log data.bookListInAmazon
-					$scope.bookListInDB = $scope.bookListInDB.concat( imageStrModifyer(data.bookListInAmazon) )
-					$scope.showSuggestedBooks = true
-					console.log $scope.bookListInDB
-				return
-			.then ->
+
+		# AmazonAPIの検索ポスト
+		httpOptToAmazon =
+			method: 'post'
+			url	: '/search/amazon'
+			data: { newBook: $scope.newBook }
+
+		$http( httpOptToAmazon )
+		.success(data, status) ->
+			if( data.bookListInAmazon.length > 0 )
 				$scope.isWaiting = false
-				$scope.newBook = ''
-				return
+				$scope.showSuggestedBooks = true
+			$scope.bookListInDB = $scope.bookListInDB.concat(imageStrModifyer(data.bookListInAmazon))
+			isCompleteAmazon = true
+			completeTasks()
 			return
-		return
+
+		completeTasks ->
+			if(isCompleteDB && isCompleteAmazon)
+				$scope.newBook = ''
