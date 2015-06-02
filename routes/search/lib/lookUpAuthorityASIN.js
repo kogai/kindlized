@@ -5,6 +5,7 @@ var _ = require('underscore');
 
 var itemLookUp = require('common/itemLookUp');
 var log = require('common/log');
+var warn = log.warn;
 
 var mappingFunc = function( book ){
   var def = Q.defer();
@@ -25,7 +26,7 @@ var mappingFunc = function( book ){
       return book;
     },function(error){
       // エラー時の処理
-      log.info(error);
+      warn.info(error);
       return book;
     })
     .done(function(book){

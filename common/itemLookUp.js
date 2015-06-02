@@ -8,25 +8,28 @@ var num = 0;
 var opConfig = new MakeOpConfig();
 var interval = require('common/constant').interval;
 var log = require('common/log');
+var warn = log.warn;
 
-var createExpression = function ( expression ){
+var CreateExpression = function ( expression ){
   var key;
   for (key in expression) {
-    this[key] = expression[key];
+    if (expression.hasOwnProperty(key)) {
+       this[key] = expression[key];
+    }
   }
   return this;
 };
 
 var execApi = function( expression, callback, errorCallback, defferd ) {
   var opInspectBook = new OpHelper(opConfig);
-  var searchExpression = new createExpression(expression);
+  var searchExpression = new CreateExpression(expression);
 
   opInspectBook.execute('ItemLookup', searchExpression, function(err, res) {
       if (err) {
-        return log.info(err);
+        return warn.info(err);
       }
       if (res.ItemLookupErrorResponse) {
-        log.info(res.ItemLookupErrorResponse);
+        warn.info(res.ItemLookupErrorResponse);
         num++;
         setTimeout(function(){
   				execApi( expression, callback, errorCallback, defferd );
@@ -39,7 +42,7 @@ var execApi = function( expression, callback, errorCallback, defferd ) {
           result = errorCallback(error);
         }finally{
           num = 0;
-          log.info(result);
+          warn.info(result);
           defferd.resolve(result);
         }
       }
