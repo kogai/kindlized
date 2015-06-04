@@ -1,56 +1,56 @@
-	div( ng-controller="search" )
-		form( ng-submit="search( newBook )" ).input-group
-			input( type="text" required placeholder="書籍のタイトルを入力して下さい" ng-model="newBook" ).form-control
-			.input-group-btn
-				button( type="submit").btn.btn-default 書籍を検索
-				
-		div( ng-if="isWaiting" class="l-mt-10" )
-			|検索中...
+div(ng-controller="search").l-mt-40
+	form(ng-submit="search(newBook)").input-group
+		input( type="text" required placeholder="書籍のタイトルを入力して下さい" ng-model="newBook" ).form-control
+		.input-group-btn
+			button( type="submit").btn.btn-default 書籍を検索
+			
+	div( ng-if="isWaiting" class="l-mt-10" )
+		|検索中...
 
-		h2( ng-if="showSuggestedBooks" class="l-mt-10 l-mb-10")
-			|検索結果
-		
-		div( ng-if="showSuggestedBooks" )
-			.panel.panel-default
-				table.table.m-table
-					thead
-						tr
-							th タイトル
-							th 出版状況
-							th リンク/登録
-					tbody
-						tr( ng-repeat="bookInDB in bookListInDB" )
-							td
-								a( href="{{ bookInDB.url[0] }}" target="_blank" style='display:block;' )
-									img(ng-src="{{bookInDB.images}}")
-								|{{ bookInDB.title[0] }}
+	h2( ng-if="showSuggestedBooks" class="l-mt-10 l-mb-10")
+		|検索結果
+	
+	div( ng-if="showSuggestedBooks" )
+		.panel.panel-default
+			table.table.m-table
+				thead
+					tr
+						th タイトル
+						th 出版状況
+						th リンク/登録
+				tbody
+					tr( ng-repeat="bookInDB in bookListInDB" )
+						td
+							a( href="{{ bookInDB.url[0] }}" target="_blank" style='display:block;' )
+								img(ng-src="{{bookInDB.images}}")
+							|{{ bookInDB.title[0] }}
 
-							td
-								div( ng-if="!bookInDB.isKindlized" ).label.label-danger.m-icon-book
-									span.is-pc
-										|Kindle版がありません
-									span.is-sp
-										|未Kindle
-									
-								div( ng-if="bookInDB.isKindlized" ).label.label-success.m-icon-book
-									span.is-pc
-										|Kindle化済み
-									span.is-sp
-										|Kindle済
+						td
+							div( ng-if="!bookInDB.isKindlized" ).label.label-danger.m-icon-book
+								span.is-pc
+									|Kindle版がありません
+								span.is-sp
+									|未Kindle
 								
-							td
-								a( href="{{ bookInDB.url[0] }}" target="_blank" ng-if="bookInDB.isKindlized" ).btn.btn-default.m-icon-buy
-									span.is-pc
-										|Amazonで購入する
-									span.is-sp
-										|購入
-								button(type="button" ng-click="registBook( bookInDB, $index )" ng-if="!bookInDB.isKindlized && !bookInDB.isRegisterd" ).btn.btn-default.m-icon-ok
-									span.is-pc
-										|メール通知登録
-									span.is-sp
-										|通知登録
-								.label.label-info.m-icon-ok( ng-if="bookInDB.isRegisterd" )
-									span.is-pc
-										|メール通知登録済みです
-									span.is-sp
-										|通知登録済
+							div( ng-if="bookInDB.isKindlized" ).label.label-success.m-icon-book
+								span.is-pc
+									|Kindle化済み
+								span.is-sp
+									|Kindle済
+							
+						td
+							a( href="{{ bookInDB.url[0] }}" target="_blank" ng-if="bookInDB.isKindlized" ).btn.btn-default.m-icon-buy
+								span.is-pc
+									|Amazonで購入する
+								span.is-sp
+									|購入
+							button(type="button" ng-click="registBook( bookInDB, $index )" ng-if="!bookInDB.isKindlized && !bookInDB.isRegisterd" ).btn.btn-default.m-icon-ok
+								span.is-pc
+									|メール通知登録
+								span.is-sp
+									|通知登録
+							.label.label-info.m-icon-ok( ng-if="bookInDB.isRegisterd" )
+								span.is-pc
+									|メール通知登録済みです
+								span.is-sp
+									|通知登録済
