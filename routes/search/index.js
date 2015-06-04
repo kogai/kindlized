@@ -31,7 +31,6 @@ var opConfig = new MakeOpConfig();
 var opExistenceBook = new OpHelper(opConfig);
 
 router.post('/db', function(req, res) {
-	res.send([]);
 	Q.when({
 		res: res,
 		req: req
