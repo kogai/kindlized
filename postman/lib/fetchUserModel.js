@@ -1,16 +1,19 @@
+"use strict";
 // 全てのuserモデルを取得
 
 var Q          = require('q');
 var modelUser  = require( 'user/' );
-var logPostman = require('common/logEx').postman;
+var log = require('common/log');
 
 module.exports = function(){
    var d = Q.defer();
    var data = {};
 
    modelUser.find( {}, function( err, users ){
-     logPostman.info(err);
-     logPostman.info(users);
+     if(err){
+       return log.info(err);
+     }
+     log.info(users);
       data.users = users;
       d.resolve( data );
    });

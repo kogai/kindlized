@@ -1,9 +1,11 @@
+"use strict";
+
 // メールを送信
 
 var Q = require('q');
 var nodemailer = require('nodemailer');
 var makeCredential = require('common/makeCredential');
-var logPostman = require('common/logEx').postman;
+var log = require('common/log');
 var mailInfo = require('common/constant').mail.info;
 
 module.exports = function(user) {
@@ -31,9 +33,9 @@ module.exports = function(user) {
 
     transporter.sendMail(mailOptions, function(error, info) {
       if (error) {
-        logPostman.info(error);
+        log.info(error);
       } else {
-        logPostman.info('Message sent: ' + info.response);
+        log.info('Message sent: ' + info.response);
       }
       d.resolve(user);
     });

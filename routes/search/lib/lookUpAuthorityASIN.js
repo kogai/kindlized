@@ -1,8 +1,44 @@
+"use strict";
+
 var Q = require('q');
-var itemLookUp = require('common/itemLookUp');
-var interval = require('common/constant').interval;
 var _ = require('underscore');
-var logWrap = require('common/logWrap')('lookUpAuthorityASIN',false);
+
+var itemLookUp = require('common/itemLookUp');
+var log = require('common/log');
+var warn = log.warn;
+
+var mappingFunc = function( book ){
+  var def = Q.defer();
+  try{
+    itemLookUp({
+      ItemId: book.AuthorityASIN[0],
+      RelationshipType: 'AuthorityTitle',
+      ResponseGroup: 'RelatedItems, Small'
+    }, function( res ){
+      // 成功時の処理
+      var relatedItems = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem;
+      relatedItems.forEach(function(item) {
+        var relatedBook = item.Item[0].ItemAttributes[0];
+        if (relatedBook.ProductGroup[0] === 'eBooks') {
+          book.isKindlized = true;
+        }
+      });
+      return book;
+    },function(error){
+      // エラー時の処理
+      warn.info(error);
+      return book;
+    })
+    .done(function(book){
+      def.resolve(book);
+    });
+  }catch( error ){
+    // AuthorityASINを持たない書籍はスキップ
+    def.resolve(book);
+  }
+
+  return def.promise;
+};
 
 module.exports = function( data ){
   var d = Q.defer();
@@ -26,37 +62,4 @@ module.exports = function( data ){
   recursion(execCount);
 
   return d.promise;
-};
-
-var mappingFunc = function( book ){
-  var def = Q.defer();
-  try{
-    itemLookUp({
-      ItemId: book.AuthorityASIN[0],
-      RelationshipType: 'AuthorityTitle',
-      ResponseGroup: 'RelatedItems, Small'
-    }, function( res ){
-      // 成功時の処理
-      var relatedItems = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem;
-      relatedItems.forEach(function(item) {
-        var relatedBook = item.Item[0].ItemAttributes[0];
-        if (relatedBook.ProductGroup[0] === 'eBooks') {
-          var ebookASIN = item.Item[0].ASIN[0];
-          book.isKindlized = true;
-        }
-      });
-      return book;
-    },function(error){
-      // エラー時の処理
-      logWrap.info(error);
-      return book;
-    })
-    .done(function(book){
-      def.resolve(book);
-    });
-  }catch( error ){
-    def.resolve(book);
-  }
-
-  return def.promise;
 };

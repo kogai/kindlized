@@ -1,24 +1,35 @@
+"use strict";
+
 var Q = require('q');
 var util = require('util');
-var opHelper = require('apac').OperationHelper;
-var makeOpConfig = require('common/makeOpConfig');
+var OpHelper = require('apac').OperationHelper;
+var MakeOpConfig = require('common/makeOpConfig');
 var num = 0;
-var opConfig = new makeOpConfig();
+var opConfig = new MakeOpConfig();
 var interval = require('common/constant').interval;
 var log = require('common/log');
-var logWrap = require('common/logWrap')('itemLookUp',false);
+var warn = log.warn;
+
+var CreateExpression = function ( expression ){
+  var key;
+  for (key in expression) {
+    if (expression.hasOwnProperty(key)) {
+       this[key] = expression[key];
+    }
+  }
+  return this;
+};
 
 var execApi = function( expression, callback, errorCallback, defferd ) {
-  var opInspectBook = new opHelper(opConfig);
-  var searchExpression = new createExpression(expression);
+  var opInspectBook = new OpHelper(opConfig);
+  var searchExpression = new CreateExpression(expression);
 
-  opInspectBook.execute(
-    'ItemLookup',
-    searchExpression,
-    function(err, res) {
-      if (err) logWrap.info('ItemLookupのレスポンスエラー ', err, res.ItemSearchErrorResponse.Error);
+  opInspectBook.execute('ItemLookup', searchExpression, function(err, res) {
+      if (err) {
+        return warn.info(err);
+      }
       if (res.ItemLookupErrorResponse) {
-        logWrap.info('res.ItemLookupErrorResponse\n', res);
+        warn.info(res.ItemLookupErrorResponse);
         num++;
         setTimeout(function(){
   				execApi( expression, callback, errorCallback, defferd );
@@ -31,19 +42,12 @@ var execApi = function( expression, callback, errorCallback, defferd ) {
           result = errorCallback(error);
         }finally{
           num = 0;
-          logWrap.info('itemLookUp', result);
+          warn.info(result);
           defferd.resolve(result);
         }
       }
     }
   );
-};
-
-var createExpression = function ( expression ){
-  for ( var val in expression ) {
-    this[val] = expression[val];
-  }
-  return this;
 };
 
 module.exports = function( expression, callback, errorCallback ){

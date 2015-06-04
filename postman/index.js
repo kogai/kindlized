@@ -3,7 +3,7 @@ var Q = require('q');
 var fetchUserModel = require( 'postman/lib/fetchUserModel' );
 var postMailToUser = require( 'postman/lib/postMailToUser' );
 var inspectNewRelease = require('librarian/lib/inspectNewRelease');
-var logPostman = require('common/logEx').postman;
+var log = require('common/log');
 
 module.exports = function(){
   "use strict";
@@ -18,13 +18,13 @@ module.exports = function(){
 
       Q.all( users.map( postMailToUser ) )
       .done( function(){
-         logPostman.info('done');
+         log.info('done');
          d.resolve( data );
       });
 
       return d.promise;
    })
    .done( function(){
-      logPostman.info( 'postmanの処理が完了' );
+      log.info( 'postmanの処理が完了' );
    });
 };

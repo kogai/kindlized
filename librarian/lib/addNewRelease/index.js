@@ -1,17 +1,18 @@
+"use strict";
+
 var Q = require('q');
 var fetchUsers = require('librarian/lib/addNewRelease/fetchUsers');
 var handleUsers = require('librarian/lib/addNewRelease/handleUsers');
-var logWrap = require('common/logWrap')('addNewRelease',true);
+var log = require('common/log');
 
 module.exports = function () {
-	'use strict';
 	var d = Q.defer();
 
 	Q.when()
 	.then(fetchUsers)
 	.then(handleUsers)
 	.fail(function(err){
-		logWrap.info(err);
+		log.info(err);
 	})
 	.done(function(){
 		d.resolve();

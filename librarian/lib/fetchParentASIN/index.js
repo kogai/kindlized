@@ -1,8 +1,10 @@
+"use strict";
+
 var Q = require('q');
 var fetchBookList = require('librarian/lib/fetchParentASIN/fetchBookList');
 var handlePromiseSerialize = require('librarian/lib/fetchParentASIN/handlePromiseSerialize');
 var updateBooks = require('librarian/lib/fetchParentASIN/updateBooks');
-var logWrap = require('common/logWrap')( 'librarian', true );
+var log = require('common/log');
 
 module.exports = function(){
   var defferd = Q.defer();
@@ -12,14 +14,14 @@ module.exports = function(){
   .then(updateBooks)
   .fail(erroHandling)
   .done(function(){
-    logWrap.info('AuthorityASINの調査処理が完了');
+    log.info('AuthorityASINの調査処理が完了');
     defferd.resolve();
   });
   return defferd.promise;
 };
 
 var erroHandling = function(){
-  console.log('AuthorityASINのエラーハンドリング');
+  log.info('AuthorityASINのエラーハンドリング');
   var d = Q.defer();
   d.resolve();
   return d.promise;

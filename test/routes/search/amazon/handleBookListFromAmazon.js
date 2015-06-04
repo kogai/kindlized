@@ -4,16 +4,9 @@ var Q = require('q');
 var should = require('should');
 var fetchBookListAmazon = require('routes/search/lib/fetchBookListAmazon');
 var handleBookListFromAmazon = require('routes/search/lib/handleBookListFromAmazon');
-var searchAuthorityASIN = require('routes/search/lib/searchAuthorityASIN');
-var saveBookListToDB = require('routes/search/lib/saveBookListToDB');
-var testArray = require('test/routes/search/amazon/lib/testArray');
+var testArray = require('test/routes/search/amazon/testArray');
 
 describe('routes/search/lib/handleBookListFromAmazonのテスト', function() {
-	it('テストが動作している', function(done) {
-		(5).should.be.exactly(5);
-		done();
-	});
-
 	this.timeout(0);
 	var testFunc = function( bookName ){
 		var bookList;
@@ -28,18 +21,26 @@ describe('routes/search/lib/handleBookListFromAmazonのテスト', function() {
 		before(function(done) {
 			fetchBookListAmazon(data)
 				.then(handleBookListFromAmazon)
-				.then(searchAuthorityASIN)
-				.then(saveBookListToDB)
 				.done(function(data) {
-					bookList = data.savedBooks;
+					bookList = data.bookListInAmazon;
 					done();
 				});
 		});
 
-		it('_idプロパティがあり、空の文字列ではない', function() {
+		it('配列を返す', function() {
+			bookList.should.be.instanceof(Array);
+		});
+
+		it('AuthorityASINプロパティをもっていない', function() {
 			bookList.forEach(function( book, index ){
-				book.should.have.property('_id');
-				( book._id.length ).should.be.above( 0 );
+				book.should.not.have.property('AuthorityASIN');
+			});
+		});
+
+		it('ASINプロパティがあり、空の文字列ではない', function() {
+			bookList.forEach(function( book, index ){
+				book.should.have.property('ASIN');
+				( book.ASIN[0].length ).should.be.above( 0 );
 			});
 		});
 
@@ -61,18 +62,6 @@ describe('routes/search/lib/handleBookListFromAmazonのテスト', function() {
 			bookList.forEach(function( book, index ){
 				book.should.have.property('author');
 				( book.author[0].length ).should.be.above( 0 );
-			});
-		});
-
-		it('isKindlizedプロパティがある', function() {
-			bookList.forEach(function( book, index ){
-				book.should.have.property('isKindlized');
-			});
-		});
-
-		it('isKindlizedプロパティはBoolean型である', function() {
-			bookList.forEach(function( book, index ){
-				book.isKindlized.should.be.instanceof(Boolean);
 			});
 		});
 

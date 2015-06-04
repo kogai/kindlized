@@ -25,7 +25,6 @@ module.exports = ( $scope, $http, $window, $location ) ->
 			$scope.statusMessage = statusMessage
 			return
 		.then ->
-			console.log '/account/regist 完了'
 			return
 		return
 
@@ -42,16 +41,11 @@ module.exports = ( $scope, $http, $window, $location ) ->
 		$http( httpOpt )
 		.success ( statusMessage ) ->
 			$window.location.href = '/'
-
-			# $http({
-			# 	url: '/account/login/success'
-			# })
 			return
 		.then ( statusMessage )->
 			$scope.statusMessage = 'ログイン完了'
 			console.log '/account/login 完了'
 			return
-			# return
 		return
 
 	$scope.logout = () ->
