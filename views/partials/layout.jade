@@ -5,6 +5,7 @@ html
 			|#{ title } | kindle化した書籍の通知サービス - "kindlize-it"
 		link(rel='stylesheet', href='/javascripts/lib/bootstrap/dist/css/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/index.css')
+		link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Pacifico")
 		meta(name='viewport', content='width=device-width')
 		-if(description)
 			meta(name="description" content="#{ description }")
@@ -20,6 +21,21 @@ html
 			'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 			})(window,document,'script','dataLayer','GTM-T37HW2');
 		.container-fluid
+			.t-header
+					.l-clr
+						.l-left
+							h1.m-logo
+								a(href="/").ss-logo-href
+									|Kindlized
+						.l-right
+							ul.l-clr
+								li.l-left.l-mt-5.l-mr-10
+									a(href="/account")
+										|ログイン
+								li.l-left
+									a(href="/account").btn.btn-primary
+										|アカウント作成
+					
 			block content
 	script(src='/javascripts/lib/angular/angular.js')
 	script(src='/javascripts/bundle.min.js')
