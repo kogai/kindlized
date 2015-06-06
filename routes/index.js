@@ -5,11 +5,12 @@ var author = require('routes/author');
 
 router.get('/', function(req, res) {
 	'use strict';
-	var isLogined = req.session.passport.user;
+	var isLogin = req.session.passport.user;
 
-	if( isLogined ){
+	if( isLogin ){
 		res.render( 'index', {
-			title : 'ホーム'
+			title : 'ホーム',
+			isLogin: true
 		});
 	}else{
 		res.redirect( 303, '/account');

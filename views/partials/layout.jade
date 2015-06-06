@@ -21,22 +21,9 @@ html
 			'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 			})(window,document,'script','dataLayer','GTM-T37HW2');
 			
-		.container-fluid
-			.t-header
-				.l-clr
-					.l-left
-						h1.m-logo
-							a(href="/").ss-logo-href
-								|Kindlized
-					.l-right
-						ul.l-clr
-							li.l-left.l-mt-5.l-mr-10
-								a(href="/account/login")
-									|ログイン
-							li.l-left
-								a(href="/account/register").btn.btn-primary
-									|アカウント作成
-			div( ng-app='App')
-				block content
+		.container-fluid(ng-app='App')
+			include header
+			block content
+
 	script(src='/javascripts/lib/angular/angular.js')
 	script(src='/javascripts/bundle.min.js')

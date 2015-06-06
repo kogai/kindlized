@@ -4,6 +4,7 @@ analytics = require('./lib/analytics')
 intro = require('./lib/intro')
 author = require('./lib/author')
 search = require('./lib/search')
+reload = require('./lib/reload')
 
 angular.module('App',[])
 	.config([
@@ -33,4 +34,8 @@ angular.module('App',[])
 	.controller(
 		'search',
 		[ '$scope', '$filter', '$http', search ]
+	)
+	.controller(
+		'reload',
+		[ '$scope', '$window', reload ]
 	)
