@@ -1,6 +1,5 @@
 "use strict";
 
-var Q = require('q');
 var validator = require('validator');
 var nodemailer = require('nodemailer');
 var mandrillTransport = require('nodemailer-mandrill-transport');
@@ -28,9 +27,7 @@ function Mailer(opts){
 	this.html = opts.html || "";
 }
 
-Mailer.prototype.send = function(){
-	var d = Q.defer();
-
+Mailer.prototype.send = function(callback){
   var transporter = nodemailer.createTransport(mandrillTransport({
     auth: {
       apiKey: credentialMandrill
@@ -38,7 +35,7 @@ Mailer.prototype.send = function(){
   }));
 
   var mailOptions = {
-    from: this.from,
+    from: "kindelize.it <" + this.from + ">",
     to: this.to,
     subject: this.subject,
     text: this.text,
@@ -47,12 +44,10 @@ Mailer.prototype.send = function(){
 
   transporter.sendMail(mailOptions, function(error, info) {
     if (error) {
-			d.reject(error);
+			callback(error);
     }
-    d.resolve(info);
+    callback(null, info);
   });
-
-	return d.promise;
 };
 
 module.exports = function(opts){

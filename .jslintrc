@@ -13,7 +13,7 @@
   "indent": 4,
   "maxerr": 50,
   "maxlen": false,
-  "newcap": false,
+  "newcap": true,
   "node": true,
   "nomen": true,
   "passfail": false,

@@ -17,8 +17,7 @@ var sendMail = function(done){
 		html: "<p>mytext</p>"
 	});
 
-	Mailer.send()
-	.done(function(info){
+	Mailer.send(function(err, info){
 		Result = info;
 		done();
 	});
