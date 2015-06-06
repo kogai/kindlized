@@ -2,12 +2,11 @@ extends partials/layout
 
 block content
 	div( ng-controller="account" )
-		.l-mt-20
-			h2.m-fz-20 アカウント登録
-		.l-clr.l-mt-10.l-mb-10
-			.l-left.l-flex.ss-flex-center
-				|新規アカウント登録
-		
+		include partials/description
+
+		.l-mt-50.l-mb-10
+			h2.m-fz-20 アカウントの登録
+	
 		form
 			.form-group
 				label
@@ -23,9 +22,8 @@ block content
 			p( ng-if='isSending' class="l-mt-5" )
 				|{{ statusMessage }}
 			
-	include partials/description
 	
 	.l-mt-50
 		h2.m-fz-20
-			|Kindle化されている書籍を検索する
+			|Kindle化されている書籍を検索してみる
 		include partials/search
