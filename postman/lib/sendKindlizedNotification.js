@@ -6,40 +6,33 @@ var Q = require('q');
 var nodemailer = require('nodemailer');
 var mandrillTransport = require('nodemailer-mandrill-transport');
 
-var makeCredential = require('common/makeCredential');
 var log = require('common/log');
+var credentialMandrill = require('common/makeCredential')('mandrill');
 var mailInfo = require('common/constant').mail.info;
+var Mailer = require('common/Mailer');
 
 module.exports = function(user) {
   var d = Q.defer();
-  var sendHtml = user.sendHtml;
   var kindlizedList = user.kindlizedList;
 
   if (kindlizedList.length > 0) {
     // kindle化通知の対象書籍があったら通知する
-    var credentialMandrill = makeCredential('mandrill');
-
-    var transporter = nodemailer.createTransport(mandrillTransport({
-      auth: {
-        apiKey: credentialMandrill
-      }
-    }));
-
-    var mailOptions = {
-      from: 'kindlize.it <' + mailInfo + '>',
+    var notifyMailer = Mailer({
+      from: mailInfo,
       to: user.mail,
-      subject: '登録していた書籍がKindle化されました',
-      text: sendHtml,
-      html: sendHtml
-    };
+      subject: "[kindlize.it] 登録していた書籍がKindle化されました",
+      text: user.sendHtml,
+      html: user.sendHtml
+    });
 
-    transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        user.info = error;
+    notifyMailer.send(function(err, info){
+      if (err) {
+        user.info = err;
       }
       user.info = info;
       d.resolve(user);
     });
+
   }else{
     d.resolve(user);
   }

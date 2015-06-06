@@ -18,7 +18,7 @@ var sendMail = function(done){
 		}
 
 		user.sendHtml = 'test';
-		user.kindlizedList = ['test'];
+		user.kindlizedList = ['書籍の配列が入る'];
 
 		MailToUser.sendKindlizedNotification(user)
 		.done(function(user){
