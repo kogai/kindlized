@@ -4,8 +4,14 @@
 			h1.m-logo
 				a(href="/").ss-logo-href
 					|Kindlized
+			span.m-fz-12.m-logo--description kindle化した書籍の通知サービス
+				
 		.l-right
 			ul.l-clr(ng-controller="reload")
+				li.l-left.l-mt-5.l-mr-10
+					a(href="https://twitter.com/iamchawan" target="_blank")
+						|お問い合わせ
+						
 				-if(isLogin)
 					li.l-left(ng-controller="account")
 						button(type='submit' ng-click='logout()').btn.btn-default ログアウト
