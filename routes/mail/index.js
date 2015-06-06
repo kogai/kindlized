@@ -3,7 +3,6 @@
 var request = require('superagent');
 var log = require('common/log');
 var slackPostAPI = require('common/makeCredential')('slack');
-var tmp = require('./tmp');
 
 module.exports = function(req, res){
 	var mandrillEvents = req.body.mandrill_events;
@@ -13,6 +12,7 @@ module.exports = function(req, res){
 		mandrillBody = JSON.parse(mandrillEvents);
 	}catch(err){
 		log.info(err);
+		return res.send('no');
 	}finally{
 		mandrillHtml = mandrillBody[0].msg.html;
 	}
@@ -22,9 +22,8 @@ module.exports = function(req, res){
 	.send({
 		text: mandrillHtml
 	})
-	.end(function(err, res){
-		log.info(res.text);
+	.end(function(err, ret){
+		res.send(ret.text);
 	});
 
-	res.send('ok');
 };
