@@ -4,6 +4,8 @@
 
 var Q = require('q');
 var nodemailer = require('nodemailer');
+var mandrillTransport = require('nodemailer-mandrill-transport');
+
 var makeCredential = require('common/makeCredential');
 var log = require('common/log');
 var mailInfo = require('common/constant').mail.info;
@@ -14,32 +16,31 @@ module.exports = function(user) {
   var kindlizedList = user.kindlizedList;
 
   if (kindlizedList.length > 0) {
-    var credentialGmail = makeCredential('gmail');
-    var transporter = nodemailer.createTransport({
-      service: 'Gmail',
+    // kindle化通知の対象書籍があったら通知する
+    var credentialMandrill = makeCredential('mandrill');
+
+    var transporter = nodemailer.createTransport(mandrillTransport({
       auth: {
-        user: credentialGmail.user,
-        pass: credentialGmail.password
+        apiKey: credentialMandrill
       }
-    });
+    }));
 
     var mailOptions = {
-      from: 'Kindlized ✔ <' + mailInfo + '>',
+      from: 'kindlize.it <' + mailInfo + '>',
       to: user.mail,
-      subject: 'Kindle化通知',
+      subject: '登録していた書籍がKindle化されました',
       text: sendHtml,
       html: sendHtml
     };
 
     transporter.sendMail(mailOptions, function(error, info) {
       if (error) {
-        log.info(error);
-      } else {
-        log.info('Message sent: ' + info.response);
+        user.info = error;
       }
+      user.info = info;
       d.resolve(user);
     });
-  } else {
+  }else{
     d.resolve(user);
   }
 
