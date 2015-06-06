@@ -25,11 +25,6 @@ describe('routes/post/fetchAuthorListAmazonのテスト', function () {
 		});
 	});
 
-	it( 'テストが動作している', function( done ){
-		(5).should.be.exactly(5);
-		done();
-    });
-
 	it( 'fetchBookListは配列を返す', function(){
 		authorList.should.be.instanceof( Array );
 	});
