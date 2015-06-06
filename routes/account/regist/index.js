@@ -5,8 +5,6 @@ var uuid = require('node-uuid');
 var nodemailer = require('nodemailer');
 
 var User = require('user/');
-var makeCredential = require('common/makeCredential');
-var credentialGmail = makeCredential('gmail');
 var mailInfo = require('common/constant').mail.info;
 var Mailer = require('common/Mailer');
 

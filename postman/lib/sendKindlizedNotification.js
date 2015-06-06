@@ -3,11 +3,7 @@
 // メールを送信
 
 var Q = require('q');
-var nodemailer = require('nodemailer');
-var mandrillTransport = require('nodemailer-mandrill-transport');
 
-var log = require('common/log');
-var credentialMandrill = require('common/makeCredential')('mandrill');
 var mailInfo = require('common/constant').mail.info;
 var Mailer = require('common/Mailer');
 
