@@ -11,7 +11,7 @@ html
 			meta(name="description" content="#{ description }")
 		-else
 			meta(name="description" content="登録した書籍がkindle化されたら通知を送るサービスです。")
-	body( ng-app='App')
+	body
 		noscript
 			iframe(src='//www.googletagmanager.com/ns.html?id=GTM-T37HW2', height='0', width='0', style='display:none;visibility:hidden')
 		script.
@@ -20,22 +20,23 @@ html
 			j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 			'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 			})(window,document,'script','dataLayer','GTM-T37HW2');
+			
 		.container-fluid
 			.t-header
-					.l-clr
-						.l-left
-							h1.m-logo
-								a(href="/").ss-logo-href
-									|Kindlized
-						.l-right
-							ul.l-clr
-								li.l-left.l-mt-5.l-mr-10
-									a(href="/account")
-										|ログイン
-								li.l-left
-									a(href="/account").btn.btn-primary
-										|アカウント作成
-					
-			block content
+				.l-clr
+					.l-left
+						h1.m-logo
+							a(href="/").ss-logo-href
+								|Kindlized
+					.l-right
+						ul.l-clr
+							li.l-left.l-mt-5.l-mr-10
+								a(href="/account/login")
+									|ログイン
+							li.l-left
+								a(href="/account/register").btn.btn-primary
+									|アカウント作成
+			div( ng-app='App')
+				block content
 	script(src='/javascripts/lib/angular/angular.js')
 	script(src='/javascripts/bundle.min.js')
