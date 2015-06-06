@@ -3,10 +3,12 @@
 var Q = require('q');
 var uuid = require('node-uuid');
 var nodemailer = require('nodemailer');
-var ModelUser = require('user');
+
+var User = require('user/');
 var makeCredential = require('common/makeCredential');
 var credentialGmail = makeCredential('gmail');
 var mailInfo = require('common/constant').mail.info;
+var MailToUser = require('postman/lib/MailToUser');
 
 var makeNewUserModel = function(data) {
   var d = Q.defer();
@@ -16,7 +18,7 @@ var makeNewUserModel = function(data) {
   var mail = req.body.mail;
   var password = req.body.password;
 
-  var newUser = new ModelUser({
+  var newUser = new User({
     mail: mail,
     password: password,
     verifyId: verifyId,
