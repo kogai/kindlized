@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha --recursive",
-    "start": "./sh/start.sh"
+    "start": "./sh/start.sh",
+    "deploy": "rsync -r --exclude='.git/' --exclude='node_modules' --exclude='logs/' ./ root@128.199.210.227:/var/www/"
   },
   "repository": {
     "type": "git",
