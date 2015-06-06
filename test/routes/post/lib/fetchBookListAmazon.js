@@ -24,10 +24,6 @@ describe('routes/post/fetchBookListAmazonのテスト', function () {
 		});
 	});
 
-	it( 'テストが動作している', function( done ){
-		(5).should.be.exactly(5);
-		done();
-    });
 
 	it( 'fetchBookListはbookList配列を返す', function(){
 		bookList.should.be.instanceof( Array );

@@ -2,6 +2,7 @@ var express 		= require('express');
 var router 			= express.Router();
 
 var author = require('routes/author');
+var mail = require('routes/mail');
 
 router.get('/', function(req, res) {
 	'use strict';
@@ -18,5 +19,6 @@ router.get('/', function(req, res) {
 });
 
 router.get('/author/*', author);
+router.post('/mail', mail);
 
 module.exports = router;

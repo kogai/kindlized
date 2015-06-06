@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function( credentialName ){
+module.exports = function(credentialName){
    var credential;
    if (process.env.HEROKU || process.env.CI){
       credential = process.env;
