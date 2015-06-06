@@ -1,0 +1,19 @@
+.t-header
+	.l-clr
+		.l-left
+			h1.m-logo
+				a(href="/").ss-logo-href
+					|Kindlized
+		.l-right
+			ul.l-clr(ng-controller="reload")
+				-if(isLogin)
+					li.l-left(ng-controller="account")
+						button(type='submit' ng-click='logout()').btn.btn-default ログアウト
+
+				-else
+					li.l-left.l-mt-5.l-mr-10
+						a(href="/account/login" ng-click="reload()")
+							|ログイン
+					li.l-left
+						a(href="/account/register" ng-click="reload()").btn.btn-primary
+							|アカウント作成

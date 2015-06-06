@@ -3,10 +3,10 @@
 var Q = require('q');
 var uuid = require('node-uuid');
 var nodemailer = require('nodemailer');
-var ModelUser = require('user');
-var makeCredential = require('common/makeCredential');
-var credentialGmail = makeCredential('gmail');
+
+var User = require('user/');
 var mailInfo = require('common/constant').mail.info;
+var Mailer = require('common/Mailer');
 
 var makeNewUserModel = function(data) {
   var d = Q.defer();
@@ -16,7 +16,7 @@ var makeNewUserModel = function(data) {
   var mail = req.body.mail;
   var password = req.body.password;
 
-  var newUser = new ModelUser({
+  var newUser = new User({
     mail: mail,
     password: password,
     verifyId: verifyId,
@@ -61,37 +61,26 @@ var makeMailTemplate = function(data) {
 
 var sendVerifyMail = function(data) {
   var d = Q.defer();
-  if (data.isRegisterd) {
-    var mail = data.mail;
-    var sendHtml = data.sendHtml;
 
-    var transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: credentialGmail.user,
-        pass: credentialGmail.password
-      }
+  if (data.isRegisterd) {
+    var verifyMailer = Mailer({
+      from: mailInfo,
+      to: data.mail,
+      subject: "[kindlize.it]アカウント認証",
+      text: data.sendHtml,
+      html: data.sendHtml
     });
 
-    var mailOptions = {
-      from: 'Kindlized ✔ <' + mailInfo + '>',
-      to: mail,
-      subject: 'kindlizedアカウント認証',
-      text: sendHtml,
-      html: sendHtml
-    };
-
-    transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Message sent: ' + info.response);
+    verifyMailer.send(function(error, info){
+      if(error){
+        d.reject(error);
       }
       d.resolve(data);
     });
-  } else {
+  }else{
     d.resolve(data);
   }
+
   return d.promise;
 };
 

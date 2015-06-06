@@ -11,8 +11,6 @@ var should = require('should');
 var promiseSerialize = require('common/promiseSerialize');
 
 describe('common/promiseSerialize.jsのテスト', function() {
-	it('テストが動作している', function(done) { (5).should.be.exactly(5); done(); });
-
 	var testCount = 0;
 	var itArray;
 	var testArry = [];

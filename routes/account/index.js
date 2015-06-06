@@ -42,22 +42,20 @@ router.post('/regist', function(req, res) {
 	});
 });
 
-router.get('/', function(req, res) {
-	var isLogined = req.session.passport.user;
-	var queryAuthorCount = Author.find().count();
-	queryAuthorCount.exec(function(err, count){
-
-		var randomSkip = Math.random() * (count - 1);
-		var queryAuthors = Author.find({}).skip(randomSkip).limit(12);
-
-		queryAuthors.exec(function(err, authors){
-			res.render("account", {
-				title: 'アカウント登録 | ログイン',
-				authorLinks: authors,
-				isLogined: isLogined
-			});
-		});
+router.get('/login', function(req, res){
+	res.render("login", {
+		title: 'ログイン'
 	});
+});
+
+router.get('/register', function(req, res){
+	res.render("register", {
+		title: 'アカウント登録'
+	});
+});
+
+router.get('/', function(req, res) {
+	res.redirect( 303, '/account/register');
 });
 
 module.exports = router;

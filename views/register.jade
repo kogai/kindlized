@@ -1,0 +1,29 @@
+extends partials/layout
+
+block content
+	div( ng-controller="account" )
+		include partials/description
+
+		.l-mt-50.l-mb-10
+			h2.m-fz-20 アカウントの登録
+	
+		form
+			.form-group
+				label
+					|メールアドレス
+				input.form-control( required type='email', placeholder='メールアドレス', ng-model='mail' )
+			.form-group
+				label
+					|パスワード
+				input.form-control( required type='password', placeholder='パスワード', ng-model='password' )
+		
+			button( type='submit' ng-click='regist( mail, password )' ).btn.btn-default 新規登録
+		
+			p( ng-if='isSending' class="l-mt-5" )
+				|{{ statusMessage }}
+			
+	
+	.l-mt-50
+		h2.m-fz-20
+			|Kindle化されている書籍を検索してみる
+		include partials/search

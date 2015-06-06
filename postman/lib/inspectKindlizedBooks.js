@@ -16,8 +16,10 @@ module.exports = function(user) {
 			$in: postList
 		}
 	}, function(err, books) {
-		log.info('\n', books.length);
-
+		if(err){
+			log.warn.info(err);
+			return d.reject(err);
+		}
 
 		user.kindlizedList = books.map(function(book) {
 			if (book.isKindlized === true) {
@@ -25,8 +27,8 @@ module.exports = function(user) {
 			}
 		});
 
-		log.info('\n', user.kindlizedList);
     user.kindlizedList = _.compact(user.kindlizedList);
+		log.info("通知対象の書籍: " + user.kindlizedList.length + "冊");
 		d.resolve(user);
 	});
 
