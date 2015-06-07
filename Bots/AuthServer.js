@@ -90,8 +90,8 @@ function AuthServer(){
 	return this;
 }
 
-AuthServer.prototype.listen = function(callback){
-	this.app.listen(process.env.PORT || 3000, callback);
+AuthServer.prototype.listen = function(port, callback){
+	this.app.listen(port, callback);
 };
 
 module.exports = function(){

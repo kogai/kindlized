@@ -1,32 +1,63 @@
 "use strict";
 
 var Twitter = require('twitter');
+var AuthBot = require('models/AuthBot');
+var log = require('common/log');
 
-function TwitterBot(credentials){
+function TwitterBot(credentials, callback){
 	if(!credentials.consumer_key){ throw new Error("Must set consumer_key."); }
 	if(!credentials.consumer_secret){ throw new Error("Must set consumer_secret."); }
-	if(!credentials.access_token_key){ throw new Error("Must set access_token_key."); }
-	if(!credentials.access_token_secret){ throw new Error("Must set access_token_secret."); }
+
+	if((!credentials.access_token_key && !credentials.access_token_secret) && !credentials.screen_name){
+		throw new Error("Must set access_token_key and access_token_secret or screen_name.");
+	}
 
 	this.consumer_key = credentials.consumer_key;
 	this.consumer_secret = credentials.consumer_secret;
-	this.access_token_key = credentials.access_token_key;
-	this.access_token_secret = credentials.access_token_secret;
-	this.client = new Twitter({
-		consumer_key: this.consumer_key,
-		consumer_secret: this.consumer_secret,
-		access_token_key: this.access_token_key,
-		access_token_secret: this.access_token_secret
-	});
-	return this;
+
+	// アクセストークンが渡されていればそのまま使う
+	if(credentials.access_token_key && credentials.access_token_secret){
+		this.access_token_key = credentials.access_token_key;
+		this.access_token_secret = credentials.access_token_secret;
+	}
+
+	// ユーザーアカウント名が渡されていればDBをルックアップ
+	if(credentials.screen_name){
+		var _self = this;
+		AuthBot.findOne({ screen_name: credentials.screen_name }, function(err, bot){
+			if(err){
+				return callback(err);
+			}
+			_self.access_token_key = bot.accessToken;
+			_self.access_token_secret = bot.accessTokenSecret;
+
+			_self.client = new Twitter({
+				consumer_key: _self.consumer_key,
+				consumer_secret: _self.consumer_secret,
+				access_token_key: _self.access_token_key,
+				access_token_secret: _self.access_token_secret
+			});
+			callback(null, _self.client);
+			return _self;
+		});
+	}else{
+		this.client = new Twitter({
+			consumer_key: this.consumer_key,
+			consumer_secret: this.consumer_secret,
+			access_token_key: this.access_token_key,
+			access_token_secret: this.access_token_secret
+		});
+		callback(null, this.client);
+		return this;
+	}
 }
 
-TwitterBot.prototype.tweet = function(){
-	this.client.post('statuses/update', { status: '私はBotになった'}, function(err, tweet, res){
+TwitterBot.prototype.tweet = function(tweetStrng){
+	this.client.post('statuses/update', { status: tweetStrng }, function(err, tweet, res){
 		if(err){
-			return console.log(err);
+			return log.info(err);
 		}
-		console.log(tweet);
+		log.info(tweet.created_at + tweet.text);
 	});
 };
 
@@ -39,6 +70,6 @@ TwitterBot.prototype.getTweets = function(screen_name, callback){
 	});
 };
 
-module.exports = function(credentials){
-	return new TwitterBot(credentials);
+module.exports = function(credentials, callback){
+	return new TwitterBot(credentials, callback);
 };
