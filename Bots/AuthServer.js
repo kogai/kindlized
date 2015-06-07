@@ -3,14 +3,58 @@
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var passport = require('passport');
 var express = require('express');
 var app = express();
 var router = express.Router();
+var passport = require('passport');
+var TwitterStrategy = require('passport-twitter').Strategy;
 
 var sessinCredential = require('common/makeCredential')('session');
+var twitterCredential = require('common/makeCredential')('twitter');
+var AuthBot = require('models/AuthBot');
+var log = require('common/log');
 
 function AuthServer(){
+
+	passport.serializeUser(function(user, done) {
+	  done(null, user);
+	});
+
+	passport.deserializeUser(function(obj, done) {
+	  done(null, obj);
+	});
+
+	passport.use(new TwitterStrategy({
+	    consumerKey: twitterCredential.consumerKey,
+	    consumerSecret: twitterCredential.consumerSecret,
+	    callbackURL: "http://localhost:3000/twitter/callback"
+	  },
+	  function(token, tokenSecret, profile, done) {
+			log.info(profile);
+			AuthBot.findOne({ screen_name: profile.username}, function(err, bot){
+				if(err){
+					return log.info(err);
+				}
+				if(bot){
+					return log.info("This bot is already existed.");
+				}
+				var newAuthBot = new AuthBot({
+					screen_name: profile.username,
+					user: profile._json,
+					accessToken: token,
+					accessTokenSecret: tokenSecret
+				});
+				newAuthBot.save(function(err){
+					if(err){
+						return done(err);
+					}
+					log.info('新しいbot:' + profile.username + 'が登録された。');
+					done(null, profile);
+				});
+			});
+	  }
+	));
+
 	this.app = app;
 
 	this.app.use(bodyParser());
@@ -25,8 +69,20 @@ function AuthServer(){
 	this.app.use(passport.initialize());
 	this.app.use(passport.session());
 
+	router.get('/twitter', passport.authenticate('twitter'), function(req, res){
+    // The request will be redirected to Twitter for authentication, so this
+    // function will not be called.
+		log.info("/twitter");
+		res.send('twitter-ok');
+	});
+
+	router.get('/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/fail' }), function(req, res){
+		log.info("/twitter/callback");
+    res.redirect('/');
+	});
+
 	router.post('/twitter', function(req, res){
-		res.send('ok');
+		res.send('post-ok');
 	});
 
 	this.app.use(router);
