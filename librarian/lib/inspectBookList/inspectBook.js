@@ -1,14 +1,14 @@
 "use strict";
 
 var Q = require('q');
+var moment = require('moment-timezone');
+var util = require('util');
 
 var constant = require('common/constant');
 var opHelper = require('apac').OperationHelper;
 var makeOpConfig = require('common/makeOpConfig');
 var makeInspectExpression = require('./makeInspectExpression');
 var modelBookList = require('models/BookList');
-var moment = require('moment-timezone');
-var util = require('util');
 var log = require('common/log');
 
 var io = require('socket.io-client');
@@ -18,10 +18,6 @@ module.exports = function(bookList) {
 	var d = Q.defer();
 	var inspectBookList = [];
 	var retryCount = 0;
-
-	socket.on('connect', function(){
-		log.info("LibrarianサービスとBotsサービスを接続");
-	});
 
 	var regularInterval = function(data) {
 
