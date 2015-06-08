@@ -11,7 +11,7 @@ describe('AuthorityASINのある書籍を500冊取得する', function(){
 	this.timeout(0);
 
 	before(function(done){
-		InspectKindlize.fetch().then(function(books){
+		InspectKindlize._fetch().then(function(books){
 			Books = books;
 			done();
 		});

@@ -15,8 +15,8 @@ module.exports = function( array, callback ){
 		count: 0
 	});
 
-	array.forEach( function ( array ) {
-		result = result.then( function(data){
+	array.forEach(function(array){
+		result = result.then(function(data){
 			var deferd = Q.defer();
 			var ele = data.array[data.count];
 			data.count++;

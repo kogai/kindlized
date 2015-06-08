@@ -1,10 +1,8 @@
 "use strict";
 
-var fetchParentASIN = require('Librarian/lib/fetchParentASIN');
-var inspectBookList = require('Librarian/lib/inspectBookList');
-var modifyDetailUrl = require('Librarian/lib/modifyDetailUrl');
-
 var InspectKindlize = require('Librarian/InspectKindlize');
+var fetchParentASIN = require('Librarian/lib/fetchParentASIN');
+var modifyDetailUrl = require('Librarian/lib/modifyDetailUrl');
 
 var Q = require('q');
 var Cronjob = require('cron').CronJob;
@@ -31,7 +29,7 @@ var libraryHandler = function(currentTime) {
     d.resolve([]);
     return d.promise;
   })
-  .then(inspectBookList)
+  .then(InspectKindlize.cron)
   .then(fetchParentASIN)
   .then(modifyDetailUrl)
   .done(function() {

@@ -64,12 +64,10 @@ var Batch = new batchModifiedLog({
 	limit: LIMIT,
 	conditions: {},
 	update: {
-		modifiedLog: {
-			AddBookAt: current,
-			InspectKindlizeAt: current,
-			AddASINAt: current,
-			UpdateUrlAt: current
-		}
+		"modifiedLog.AddBookAt": current,
+		"modifiedLog.InspectKindlizeAt": current,
+		"modifiedLog.AddASINAt": current,
+		"modifiedLog.UpdateUrlAt": current
 	},
 	Model: BookList
 });

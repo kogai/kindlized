@@ -9,10 +9,9 @@ describe('配列毎に非同期処理を順番に実行する', function(){
 	this.timeout(0);
 
 	var Books = [], mock = [1, 2, 3, 4, 5];
-	InspectKindlize.inspect = function(book){
+	InspectKindlize._inspect = function(book){
 		var d = Q.defer();
 		setTimeout(function(){
-			console.log(book);
 			Books.push(book);
 			d.resolve(Books);
 		}, 1000);
