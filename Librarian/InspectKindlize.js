@@ -110,7 +110,6 @@ InspectKindlize.prototype._inspect = function(book){
 		book.hasEbook = hasEbook;
 		book.update = update;
 
-		log.info(book.hasEbook);
 		_self._update(book);
 		return book;
 	};
@@ -196,4 +195,6 @@ InspectKindlize.prototype.cron = function(){
 	return d.promise;
 };
 
-module.exports = new InspectKindlize();
+module.exports = function(){
+	return new InspectKindlize();
+};

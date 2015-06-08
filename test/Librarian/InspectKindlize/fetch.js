@@ -3,7 +3,7 @@
 require('should');
 var moment = require('moment-timezone');
 
-var InspectKindlize = require('Librarian/InspectKindlize');
+var InspectKindlize = require('Librarian/InspectKindlize')();
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 var Books;
 

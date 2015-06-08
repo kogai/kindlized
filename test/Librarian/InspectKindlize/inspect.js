@@ -2,7 +2,7 @@
 
 require('should');
 
-var InspectKindlize = require('Librarian/InspectKindlize');
+var InspectKindlize = require('Librarian/InspectKindlize')();
 
 describe('Ebookがあるか調べる', function(){
 	this.timeout(0);
@@ -16,10 +16,6 @@ describe('Ebookがあるか調べる', function(){
 			// Kindle版が無い
 			title: ["七夕の国　下"],
 			AuthorityASIN: ["B003UUWF8W"]
-		},
-		exception: {
-			title: ["深夜食堂 14 (ビッグコミックススペシャル)"],
-			AuthorityASIN: ["B00VFG1FSE"]
 		}
 	}, hasEbook, hasNotEbook;
 

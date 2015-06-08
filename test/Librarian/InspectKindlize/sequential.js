@@ -3,12 +3,13 @@
 require('should');
 var Q = require('q');
 
-var InspectKindlize = require('Librarian/InspectKindlize');
+var InspectKindlize = require('Librarian/InspectKindlize')();
 
 describe('配列毎に非同期処理を順番に実行する', function(){
 	this.timeout(0);
 
 	var Books = [], mock = [1, 2, 3, 4, 5];
+
 	InspectKindlize._inspect = function(book){
 		var d = Q.defer();
 		setTimeout(function(){
@@ -19,7 +20,7 @@ describe('配列毎に非同期処理を順番に実行する', function(){
 	};
 
 	before(function(done){
-		InspectKindlize.sequential(mock).done(function(){
+		InspectKindlize._sequential(mock).done(function(){
 			done();
 		});
 	});
