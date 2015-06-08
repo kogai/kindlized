@@ -70,14 +70,10 @@ function AuthServer(){
 	this.app.use(passport.session());
 
 	router.get('/twitter', passport.authenticate('twitter'), function(req, res){
-    // The request will be redirected to Twitter for authentication, so this
-    // function will not be called.
-		log.info("/twitter");
 		res.send('twitter-ok');
 	});
 
 	router.get('/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/fail' }), function(req, res){
-		log.info("/twitter/callback");
     res.redirect('/');
 	});
 

@@ -56,5 +56,5 @@ var jobPostman = new Cronjob({
 jobPostman.start();
 
 if(process.env.NODE_ENV === "development"){
-  libraryHandler();
+  libraryHandler(moment());
 }
