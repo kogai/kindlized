@@ -1,3 +1,5 @@
+"use strict";
+
 var Q = require('q');
 var ModelBookList = require('models/BookList');
 var limit = require('common/constant').limit;
@@ -30,7 +32,6 @@ module.exports = function() {
   .limit(limit);
 
   query.exec(function(err, books){
-    log.info(books);
     d.resolve(books);
   });
 

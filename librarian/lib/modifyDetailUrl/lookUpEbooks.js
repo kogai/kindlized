@@ -1,30 +1,10 @@
+"use strict";
+
 var Q = require('q');
 var util = require('util');
+
 var itemLookUp = require('common/itemLookUp');
 var log = require('common/log');
-
-module.exports = function( books ){
-  var d = Q.defer();
-  if( books.length === 0) {
-    d.resolve([]);
-  }else{
-    log.info( 'lookUpEbooks', books.length );
-    var execCount = 0;
-    var recursion = function(execCount){
-      mappingFunc(books[execCount])
-      .done(function(){
-        if( execCount < books.length -1 ){
-          execCount++;
-          recursion(execCount);
-        }else{
-          d.resolve(books);
-        }
-      });
-    };
-    recursion(execCount);
-  }
-  return d.promise;
-};
 
 var mappingFunc = function( book ){
   var def = Q.defer();
@@ -47,4 +27,27 @@ var mappingFunc = function( book ){
     def.resolve(book);
   });
   return def.promise;
+};
+
+module.exports = function( books ){
+  var d = Q.defer();
+  if( books.length === 0) {
+    d.resolve([]);
+  }else{
+    log.info( 'lookUpEbooks' + books.length );
+    var execCount = 0;
+    var recursion = function(execCount){
+      mappingFunc(books[execCount])
+      .done(function(){
+        if( execCount < books.length -1 ){
+          execCount++;
+          recursion(execCount);
+        }else{
+          d.resolve(books);
+        }
+      });
+    };
+    recursion(execCount);
+  }
+  return d.promise;
 };
