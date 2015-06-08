@@ -20,26 +20,24 @@ function InspectKindlize(){
 InspectKindlize.prototype.fetch = function(){
 	var d = Q.defer();
 
-	var queryExec = {
+	var conditions = {
 		AuthorityASIN: {
 			$exists: true
 		},
-		isKindlized: false
-	};
-
-	queryExec.modifiedLog = {
-		InspectKindlizeAt: {
+		isKindlized: false,
+		"modifiedLog.InspectKindlizeAt": {
 			$lte: moment().subtract(PERIODICAL_DAY, 'days')
 		}
 	};
 
-	var query = BookList.find(queryExec).limit(LIMIT);
+	var query = BookList.find(conditions).limit(LIMIT);
 
 	query.exec(function(err, books) {
 		if(err){
 			log.info(err);
 			return d.reject(err);
 		}
+		log.info(books.length);
 		d.resolve(books);
 	});
 
