@@ -7,7 +7,7 @@ var socket = io.connect('http://127.0.0.1:' + 5000, { reconnect: true });
 
 var BookList = require('models/BookList');
 var LIMIT = require('common/constant').LIMIT.BOOK;
-LIMIT = 10;
+
 var log = require('common/log');
 var promiseSerialize = require('common/promiseSerialize');
 var itemLookUp = require('common/itemLookUp');
@@ -36,13 +36,15 @@ InspectKindlize.prototype._fetch = function(){
 				isKindlized: false
 			}, {
 				"modifiedLog.InspectKindlizeAt": {
-					"$lte": current.subtract(PERIODICAL_DAY, 'days').format('YYYY-MM-DD hh:mm')
+					"$lte": current.subtract(PERIODICAL_DAY, 'days')
 				}
 			}
 		]
 	};
 
-	var query = BookList.find(conditions).limit(LIMIT);
+	var query = BookList.find(conditions).limit(LIMIT).sort({
+		"modifiedLog.InspectKindlizeAt": 1
+	});
 
 	query.exec(function(err, books) {
 		if(err){
