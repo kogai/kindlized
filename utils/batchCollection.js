@@ -4,7 +4,7 @@ var moment = require('moment-timezone');
 var Q = require('q');
 
 var BookList = require('models/BookList');
-var LIMIT = process.argv[2];
+var LIMIT = process.argv[2] || process.env.LIMIT;
 var current = moment("2015-06-01");
 var log = require('common/log');
 
@@ -43,12 +43,12 @@ batchModifiedLog.prototype.recursive = function(maxBook){
 			return log.info("Recursive process end.");
 		}
 
-		_self.update(books);
+		_self.findAndUpdate(books);
 		_self.run(LIMIT, _self.index++);
 	});
 };
 
-batchModifiedLog.prototype.update = function(collections){
+batchModifiedLog.prototype.findAndUpdate = function(collections){
 	var _self = this;
 	Q.all(collections.map(function(collection){
 		_self.Model.findOneAndUpdate({ ASIN: collection.ASIN }, _self.update, function(err, collection){
