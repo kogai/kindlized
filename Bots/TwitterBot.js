@@ -1,5 +1,9 @@
 "use strict";
 
+var app = require('express')();
+var server = require('http').Server(app).listen(5000);
+var io = require('socket.io')(server);
+
 var Twitter = require('twitter');
 var AuthBot = require('models/AuthBot');
 var log = require('common/log');
@@ -70,6 +74,20 @@ TwitterBot.prototype.getTweets = function(screen_name, callback){
 	});
 };
 
+TwitterBot.prototype.listen = function(){
+	var _self = this;
+	io.on('connection', function(socket){
+		log.info('Botsサービスのソケットサーバーを接続');
+
+		socket.on('librarian-kindlized', function(book){
+			_self.tweet("『" + book.title + "』がkindle化されました。 " + book.url);
+		});
+	});
+};
+
 module.exports = function(credentials, callback){
 	return new TwitterBot(credentials, callback);
 };
+
+/*
+*/

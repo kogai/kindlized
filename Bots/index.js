@@ -17,7 +17,5 @@ Bots.TwitterBot = TwitterBot({
 	consumer_secret: twitterCredential.consumerSecret,
 	screen_name: 'info_kindlize'
 }, function(err, client){
-
-	// Bots.TwitterBot.tweet('Botのツイート');
-
+	Bots.TwitterBot.listen();
 });
