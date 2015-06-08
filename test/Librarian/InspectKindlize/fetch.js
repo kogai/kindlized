@@ -15,9 +15,12 @@ describe('AuthorityASINのある書籍を500冊取得する', function(){
 		});
 	});
 
-	it("1冊以上書籍が取得できる", function(){
-		console.log(Books);
+	it("1冊以上の書籍が取得できる", function(){
 		(Books.length).should.be.above(0);
+	});
+
+	it("500冊以下の書籍が取得できる", function(){
+		(Books.length).should.be.below(500);
 	});
 
 });

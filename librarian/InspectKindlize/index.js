@@ -3,7 +3,8 @@
 var Q = require('q');
 var moment = require('moment-timezone');
 
-var limit = require('common/constant').limit;
+var BookList = require('models/BookList');
+var LIMIT = require('common/constant').LIMIT.BOOK;
 var log = require('common/log');
 
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
@@ -19,27 +20,27 @@ function InspectKindlize(){
 InspectKindlize.prototype.fetch = function(){
 	var d = Q.defer();
 
-	var query = modelBookList.find({
-			AuthorityASIN: /.+/,
-			isKindlized: false,
-			$or: [
-        {
-					lastModified: {
-						$lte: moment().subtract(periodicalDay, 'days')
-					}
-				}, {
-					lastModified: {
-						$exists: false
-					}
-				}
+	var queryExec = {
+		AuthorityASIN: {
+			$exists: true
+		},
+		isKindlized: false
+	};
 
-			]
-		})
-		.limit(limit);
+	queryExec.modifiedLog = {
+		InspectKindlizeAt: {
+			$lte: moment().subtract(PERIODICAL_DAY, 'days')
+		}
+	};
 
-	query.exec(function(error, haveAuthorityAsin) {
-		console.log('Kindle化されていない' + haveAuthorityAsin.length + '冊の書籍');
-		d.resolve(haveAuthorityAsin);
+	var query = BookList.find(queryExec).limit(LIMIT);
+
+	query.exec(function(err, books) {
+		if(err){
+			log.info(err);
+			return d.reject(err);
+		}
+		d.resolve(books);
 	});
 
 	return d.promise;
