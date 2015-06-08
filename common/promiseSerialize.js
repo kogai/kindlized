@@ -1,5 +1,8 @@
+"use strict";
+
 /*
-配列とThenableな関数を渡すと配列の各要素に対して直列に非同期処理を実行する
+配列とThenableな関数を渡すと配列の各要素に対して
+直列に非同期処理を実行する
 */
 
 var Q = require('q');
@@ -19,7 +22,7 @@ module.exports = function( array, callback ){
 			data.count++;
 
 			callback(ele)
-			.done(function( res ){
+			.done(function(res){
 				data.resultArray.push(res);
 				deferd.resolve( data );
 			});

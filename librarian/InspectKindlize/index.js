@@ -6,6 +6,7 @@ var moment = require('moment-timezone');
 var BookList = require('models/BookList');
 var LIMIT = require('common/constant').LIMIT.BOOK;
 var log = require('common/log');
+var promiseSerialize = require('common/promiseSerialize');
 
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
@@ -52,10 +53,11 @@ InspectKindlize.prototype.fetch = function(){
 InspectKindlize.prototype.sequential = function(books){
 	var d = Q.defer();
 
-	setTimeout(function(){
-		log.info("sequential", books);
-		d.resolve();
-	}, 500);
+	promiseSerialize(books, this.inspect)
+	.done(function(books){
+		d.resolve(books);
+	});
+
 	return d.promise;
 };
 
@@ -63,11 +65,12 @@ InspectKindlize.prototype.sequential = function(books){
 /*
 	調査対象の書籍についてAmazonAPIを呼び出し
 	@param AuthorityASIN
-	@param callback
 	@return none
 */
-InspectKindlize.prototype.inspect = function(AuthorityASIN, callback){
+InspectKindlize.prototype.inspect = function(AuthorityASIN){
+	var d = Q.defer();
 	log.info("inspect");
+	return d.promise;
 };
 
 /*
