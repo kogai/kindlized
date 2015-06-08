@@ -27,19 +27,19 @@ InspectKindlize.prototype._fetch = function(){
 	var _self = this;
 
 	var conditions = {
-		AuthorityASIN: {
-			$exists: true
-		},
-		isKindlized: false,
-		lastModified: {
-			$lte: moment("2015-06-05")
-		}
-		/*
-		"modifiedLog.InspectKindlizeAt": {
-			// "$lte": moment("2015-06-05")
-			// "$lte": current.subtract(PERIODICAL_DAY, 'days').format('YYYY-MM-DD hh:mm')
-		}
-		*/
+		$and: [
+			{
+				AuthorityASIN: {
+					$exists: true
+				}
+			}, {
+				isKindlized: false
+			}, {
+				"modifiedLog.InspectKindlizeAt": {
+					"$lte": current.subtract(PERIODICAL_DAY, 'days').format('YYYY-MM-DD hh:mm')
+				}
+			}
+		]
 	};
 
 	var query = BookList.find(conditions).limit(LIMIT);
