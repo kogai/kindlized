@@ -180,7 +180,6 @@ InspectKindlize.prototype._update = function(book){
 				return log.info(err);
 			}
 			log.info(msg + ":" + book.modifiedLog.InspectKindlizeAt + ":" + book.title);
-    	socket.emit('librarian-kindlized', book);
 		});
 	};
 	if(book.hasEbook){
@@ -188,6 +187,7 @@ InspectKindlize.prototype._update = function(book){
 		.done(function(url){
 			update.url = url;
 			updater();
+  		socket.emit('librarian-kindlized', book);
 		});
 		return ;
 	}
