@@ -2,7 +2,7 @@
   "apps": [
     {
       "exec_mode": "fork_mode",
-      "script": "/var/www/app.js",
+      "script": "/var/www/bin/www",
       "name": "App",
       "node_args": [ "--harmony" ],
       "env": {
@@ -15,7 +15,7 @@
     },
     {
       "exec_mode": "fork_mode",
-      "script": "/var/www/Librarian",
+      "script": "/var/www/Librarian/",
       "name": "Librarian",
       "node_args": [ "--harmony" ],
       "env": {
@@ -27,7 +27,7 @@
     },
     {
       "exec_mode": "fork_mode",
-      "script": "/var/www/Bots",
+      "script": "/var/www/Bots/",
       "name": "Bots",
       "node_args": [ "--harmony" ],
       "env": {
@@ -36,6 +36,18 @@
       },
       "error_file": "/vagrant/logs/Bots.err.log",
       "out_file": "/vagrant/logs/Bots.out.log"
+    },
+    {
+      "exec_mode": "fork_mode",
+      "script": "/var/www/Postman/",
+      "name": "Postman",
+      "node_args": [ "--harmony" ],
+      "env": {
+        "NODE_ENV": "production",
+        "NODE_PATH": "/var/www/"
+      },
+      "error_file": "/vagrant/logs/Postman.err.log",
+      "out_file": "/vagrant/logs/Postman.out.log"
     }
   ]
 }
