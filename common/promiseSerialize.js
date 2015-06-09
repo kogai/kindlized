@@ -7,7 +7,7 @@
 
 var Q = require('q');
 
-module.exports = function( array, callback ){
+module.exports = function(array, callback){
 
 	var result = Q({
 		array: array,

@@ -7,8 +7,8 @@
 
 var Q = require('q');
 var moment = require('moment-timezone');
+var objectAssign = require('object-assign');
 
-var BookList = require('models/BookList');
 var LIMIT = require('common/constant').LIMIT.BOOK;
 
 var log = require('common/log');
@@ -41,12 +41,19 @@ var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 		ResponseGroup: 'RelatedItems, Small'
 	}
 */
+
 function Librarian(opts){
-	this.books = [];
-	this.limit = LIMIT;
-	this.conditions = opts.conditions;
-	this.sort = opts.sort;
-	this.amazonConditions = opts.amazonConditions;
+	var _opts = opts || {};
+
+	this.limit = _opts.limit || LIMIT;
+	this.conditions = _opts.conditions || { isKindlized: true };
+	this.sort = _opts.sort;
+	this.Model = _opts.Model || require('models/BookList');
+	this.amazonConditions = _opts.amazonConditions || { ResponseGroup: 'Small , ItemAttributes , Images' };
+	if(!this.Model) { throw new Error('モデルは必須項目'); }
+	if(!this.limit) { throw new Error('実行数の上限は必須項目'); }
+	if(!this.conditions) { throw new Error('DBの検索条件は必須項目'); }
+	if(!this.amazonConditions) { throw new Error('APIの検索条件は必須項目'); }
 }
 
 /*
@@ -56,7 +63,7 @@ function Librarian(opts){
 	@ return books
 */
 Librarian.prototype.fetch = function(callback){
-	var query = BookList.find(this.conditions).limit(this.limit);
+	var query = this.Model.find(this.conditions).limit(this.limit);
 	if(this.sort){
 		query = query.sort(this.sort);
 	}
@@ -76,22 +83,22 @@ Librarian.prototype.fetch = function(callback){
 	@ return modifiedBooks inspectメソッドの返り値が格納された配列
 */
 Librarian.prototype.sequential = function(books, callback){
-	var _inspect = this.inspect.bind(this);
+	var _lookup = this.lookup.bind(this);
 
-	promiseSerialize(books, _inspect)
+	promiseSerialize(books, _lookup)
 	.done(function(modifiedBooks){
-		callback(modifiedBooks);
+		callback(null, modifiedBooks.resultArray);
 	});
 };
 
 
 /*
-	調査対象の書籍についてAmazonAPIを呼び出し
+	調査対象の書籍についてAmazonAPIを呼び出す
 	@param book Object |
 	@param callback | lookupメソッドが実行された後に呼ばれるコールバック関数
 	@return modifiedBook Object | AmazonAPIのレスポンスをメンバに格納したbookオブジェクト
 */
-Librarian.prototype.lookup = function(book, callback){
+Librarian.prototype.lookup = function(book){
 	var d = Q.defer();
 
 	var success = function(res){
@@ -106,15 +113,17 @@ Librarian.prototype.lookup = function(book, callback){
 		return book;
 	};
 
-	itemLookUp(this.amazonConditions, success, fail)
+	var conditions = objectAssign({}, this.amazonConditions, book.conditions || { ItemId: book.ASIN[0] });
+
+	itemLookUp(conditions, success, fail)
 	.done(function(modifiedBook){
-		callback(modifiedBook);
+		d.resolve(modifiedBook);
 	});
 
 	return d.promise;
 };
 
-Librarian.prototype.defer = function(method, opts){
+Librarian.prototype.defer = function(method){
 	var d = Q.defer();
 
 	method.bind(this);
@@ -129,18 +138,56 @@ Librarian.prototype.defer = function(method, opts){
 };
 
 /*
+	書籍の更新
+	@param book Objcet 書籍データ
+	@param update Objcet 更新する要素
+	@param callback Function 処理完了後に呼ばれるコールバック関数
+	@return err
+	@return modifiedBook | 更新後の書籍データ
+*/
+Librarian.prototype.update = function(book, update, callback){
+	var conditions = {
+		ASIN: book.ASIN[0]
+	};
+
+	this.Model.findOneAndUpdate(conditions, update, function(err, modifiedBook){
+		if(err){
+			return callback(err);
+		}
+		callback(null, modifiedBook);
+	});
+};
+
+
+/*
 	ハンドラー
 	fetch -> sequential[loocup] の順に実行するメソッド
 	@param callback | 処理完了後に呼ばれるコールバック関数
 	@return books | sequentialメソッドの返り値
 */
 Librarian.prototype.run = function(callback){
-	var _fetch = this.defer(this.fetch);
-	var _sequential = this.defer(this.sequential);
+	var _fetch = this.fetch.bind(this);
+	var _sequential = this.sequential.bind(this);
 
 	Q.when()
-	.then(_fetch)
-	.then(_sequential)
+	.then(function(){
+		var d = Q.defer();
+
+		_fetch(function(err, books){
+			d.resolve(books);
+		});
+
+		return d.promise;
+	})
+	.then(function(books){
+		var d = Q.defer();
+
+		_sequential(books, function(err, modifiedBooks){
+			d.resolve(modifiedBooks);
+		});
+
+		return d.promise;
+	})
 	.done(function(books){
 		callback(books);
 	});
