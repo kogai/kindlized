@@ -2,6 +2,8 @@
 
 var Shelf = require('Librarian/Shelf/')();
 var InspectKindlize = require('Librarian/InspectKindlize')();
+var RepairImg = require('Librarian/RepairImg')();
+
 var fetchParentASIN = require('Librarian/lib/fetchParentASIN');
 var modifyDetailUrl = require('Librarian/lib/modifyDetailUrl');
 
@@ -22,6 +24,7 @@ var logTime = function(currentTime) {
 var libraryHandler = function(currentTime) {
   Q.when()
   .then(Shelf.cron.bind(Shelf))
+  .then(RepairImg.cron.bind(RepairImg))
   .then(InspectKindlize.cron.bind(InspectKindlize))
   .then(fetchParentASIN)
   .then(modifyDetailUrl)
