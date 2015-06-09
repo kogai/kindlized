@@ -16,20 +16,37 @@ var promiseSerialize = require('common/promiseSerialize');
 var itemLookUp = require('common/itemLookUp');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
+/*
+	コンストラクター
+	@param limit Number
+	fetchメソッドの取得数上限
+
+	@param conditions Object
+	fetchメソッドの検索条件
+	{
+		isKindlized: true
+	}
+
+	@param sort Object
+	[option]fetchメソッドのソート条件
+	{
+		"modifiedLog.InspectKindlizeAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') }
+	}
+
+	@param amazonConditions Object
+	inspectメソッドの検索条件
+	{
+		ItemId: book.AuthorityASIN[0],
+		RelationshipType: 'AuthorityTitle',
+		ResponseGroup: 'RelatedItems, Small'
+	}
+*/
 function Librarian(opts){
 	this.books = [];
 	this.limit = LIMIT;
 	this.conditions = opts.conditions;
 	this.sort = opts.sort;
 	this.amazonConditions = opts.amazonConditions;
-
-/*
-	var conditions = {
-    ItemId: book.AuthorityASIN[0],
-    RelationshipType: 'AuthorityTitle',
-    ResponseGroup: 'RelatedItems, Small'
-	};
-*/
 }
 
 /*
