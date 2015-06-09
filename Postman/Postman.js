@@ -2,35 +2,32 @@
 
 var Q = require('q');
 
-var fetchUserModel = require('postman/lib/fetchUserModel');
-var MailToUser = require('postman/lib/MailToUser');
-var inspectNewRelease = require('librarian/lib/inspectNewRelease');
+var MailToUser = require('Postman/lib/MailToUser');
+
 var log = require('common/log');
+var User = require('user/');
 
 function Postman(){
+	this.conditions = {
+		isVerified: true
+	};
 	return this;
 }
 
-Postman.prototype.run = function(){
-	// *1日に一度実行する
-	Q.when()
-	.then(inspectNewRelease)
-	.then(fetchUserModel)
-	.then(function(data) {
+Postman.prototype.fetch = function(callback){
+	User.find(this.conditions, callback);
+};
 
-		var d = Q.defer();
-		var users = data.users;
+Postman.prototype.run = function(){
+	this.fetch(function(err, users){
+		if(err){
+			return log.info(err);
+		}
 
 		Q.all(users.map(MailToUser.send))
-			.done(function() {
-				log.info('done');
-				d.resolve(data);
-			});
-
-		return d.promise;
-	})
-	.done(function() {
-		log.info('メールの配信が完了');
+		.done(function(){
+			log.info('メールの配信が完了');
+		});
 	});
 };
 
