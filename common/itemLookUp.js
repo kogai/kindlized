@@ -10,7 +10,7 @@ var interval = require('common/constant').interval;
 var log = require('common/log');
 var warn = log.warn;
 
-var CreateExpression = function ( expression ){
+var CreateExpression = function (expression){
   var key;
   for (key in expression) {
     if (expression.hasOwnProperty(key)) {

@@ -1,0 +1,41 @@
+{
+  "apps": [
+    {
+      "exec_mode": "fork_mode",
+      "script": "/var/www/app.js",
+      "name": "App",
+      "node_args": [ "--harmony" ],
+      "env": {
+        "PORT": 80,
+        "NODE_ENV": "production",
+        "NODE_PATH": "/var/www/"
+      },
+      "error_file": "/var/www/logs/app-err.log",
+      "out_file": "/var/www/logs/app-out.log"
+    },
+    {
+      "exec_mode": "fork_mode",
+      "script": "/var/www/Librarian",
+      "name": "Librarian",
+      "node_args": [ "--harmony" ],
+      "env": {
+        "NODE_ENV": "production",
+        "NODE_PATH": "/var/www/"
+      },
+      "error_file": "/var/www/logs/Librarian-err.log",
+      "out_file": "/var/www/logs/Librarian-out.log"
+    },
+    {
+      "exec_mode": "fork_mode",
+      "script": "/var/www/Bots",
+      "name": "Bots",
+      "node_args": [ "--harmony" ],
+      "env": {
+        "NODE_ENV": "production",
+        "NODE_PATH": "/var/www/"
+      },
+      "error_file": "/vagrant/logs/Bots.err.log",
+      "out_file": "/vagrant/logs/Bots.out.log"
+    }
+  ]
+}

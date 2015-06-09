@@ -19,6 +19,12 @@ var bookrSchema = {
     fetchParentASIN: Date,
     modifyUrl: Date
   },
+	modifiedLog: {
+		AddBookAt: Date,
+		InspectKindlizeAt: Date,
+		AddASINAt: Date,
+		UpdateUrlAt: Date
+	},
   isKindlized: Boolean,
   isKindlizedUrl: Boolean
 };

@@ -5,13 +5,13 @@ var Q = require('q');
 var log = require('common/log');
 var promiseSerialize = require('common/promiseSerialize');
 
-var fetchAuthor = require('shelf/lib/fetchAuthor');
+var fetchAuthor = require('Librarian/Shelf/lib/fetchAuthor');
 
-var updateAuthorModifiedTime = require('shelf/lib/updateAuthorModifiedTime');
-var fetchPageCount = require('shelf/lib/fetchPageCount');
-var fetchBookList = require('shelf/lib/fetchBookList');
-var modifyBookList = require('shelf/lib/modifyBookList');
-var saveBookList = require('shelf/lib/saveBookList');
+var updateAuthorModifiedTime = require('Librarian/Shelf/lib/updateAuthorModifiedTime');
+var fetchPageCount = require('Librarian/Shelf/lib/fetchPageCount');
+var fetchBookList = require('Librarian/Shelf/lib/fetchBookList');
+var modifyBookList = require('Librarian/Shelf/lib/modifyBookList');
+var saveBookList = require('Librarian/Shelf/lib/saveBookList');
 
 var handleAuthorData = function(author){
 	var d = Q.defer();
@@ -37,15 +37,21 @@ var handleAuthorData = function(author){
 	return d.promise;
 };
 
-module.exports = function(){
+function Shelf(){
+	return this;
+}
+
+Shelf.prototype.run = function(callback){
 	fetchAuthor()
 	.done(function(authors){
-		if(authors.length === 0){
-			return;
-		}
+		if(authors.length === 0){ return callback(); }
 		promiseSerialize(authors, handleAuthorData)
 		.done(function(){
-			return log.info('shelfの巡回処理が完了');
+			return callback();
 		});
 	});
+};
+
+module.exports = function(){
+	return new Shelf();
 };
