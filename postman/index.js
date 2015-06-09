@@ -1,31 +1,19 @@
 "use strict";
 
-var Q = require('q');
+var Cronjob = require('cron').CronJob;
+var moment = require('moment-timezone');
 
-var fetchUserModel = require('postman/lib/fetchUserModel');
-var MailToUser = require('postman/lib/MailToUser');
-var inspectNewRelease = require('librarian/lib/inspectNewRelease');
-var log = require('common/log');
+var Postman = require('Postman/Postman')();
 
-module.exports = function() {
-	// *1日に一度実行する
-	Q.when()
-	.then(inspectNewRelease)
-	.then(fetchUserModel)
-	.then(function(data) {
+var cronTime = "0 0 21 * * *";
 
-		var d = Q.defer();
-		var users = data.users;
+//定期実行
+var cronJob = new Cronjob({
+  cronTime: cronTime,
+  onTick: function() {
+    Postman.run();
+  },
+  start: false
+});
 
-		Q.all(users.map(MailToUser.send))
-			.done(function() {
-				log.info('done');
-				d.resolve(data);
-			});
-
-		return d.promise;
-	})
-	.done(function() {
-		log.info('postmanの処理が完了');
-	});
-};
+cronJob.start();
