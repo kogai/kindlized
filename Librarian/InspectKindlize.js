@@ -11,7 +11,6 @@ var LIMIT = require('common/constant').LIMIT.BOOK;
 var log = require('common/log');
 var promiseSerialize = require('common/promiseSerialize');
 var itemLookUp = require('common/itemLookUp');
-var current = moment();
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
 function InspectKindlize(){
@@ -36,7 +35,7 @@ InspectKindlize.prototype._fetch = function(){
 				isKindlized: false
 			}, {
 				"modifiedLog.InspectKindlizeAt": {
-					"$lte": current.subtract(PERIODICAL_DAY, 'days')
+					"$lte": moment().subtract(PERIODICAL_DAY, 'days')
 				}
 			}
 		]
@@ -51,8 +50,7 @@ InspectKindlize.prototype._fetch = function(){
 			log.info(err);
 			return d.reject(err);
 		}
-
-		log.info(current.format('YYYY-MM-DD hh:mm') + ":" + books.length + "冊の書籍がkindle化されているか調査");
+		log.info(moment().format('YYYY-MM-DD hh:mm') + ":" + books.length + "冊の書籍がkindle化されているか調査");
 		_self.books = books;
 		d.resolve(books);
 	});
@@ -88,7 +86,7 @@ InspectKindlize.prototype._inspect = function(book){
 
 	var _self = this;
 	var update = {
-		"modifiedLog.InspectKindlizeAt": current
+		"modifiedLog.InspectKindlizeAt": moment()
 	};
 	var conditions = {
     ItemId: book.AuthorityASIN[0],
