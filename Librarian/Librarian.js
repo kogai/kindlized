@@ -7,6 +7,7 @@
 
 var Q = require('q');
 var moment = require('moment-timezone');
+var objectAssign = require('object-assign');
 
 var BookList = require('models/BookList');
 var LIMIT = require('common/constant').LIMIT.BOOK;
@@ -110,7 +111,8 @@ Librarian.prototype.lookup = function(book, callback){
 		return book;
 	};
 
-	itemLookUp(this.amazonConditions, success, fail)
+	var conditions = objectAssign({}, this.amazonConditions, book.conditions);
+	itemLookUp(conditions, success, fail)
 	.done(function(modifiedBook){
 		callback(modifiedBook);
 	});
