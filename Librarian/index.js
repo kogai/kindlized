@@ -9,11 +9,9 @@ var Q = require('q');
 var Cronjob = require('cron').CronJob;
 var moment = require('moment-timezone');
 
-var postman = require('postman/');
 var log = require('common/log');
 
-var cronLibrarian = "0 0 * * * *";
-var cronPostman = "0 0 21 * * *";
+var cronTime = "0 0 * * * *";
 
 // タイムゾーンに合わせてログを取る
 var logTime = function(currentTime) {
@@ -33,25 +31,15 @@ var libraryHandler = function(currentTime) {
 };
 
 //定期実行
-var jobLibrarian = new Cronjob({
-  cronTime: cronLibrarian,
+var cronJob = new Cronjob({
+  cronTime: cronTime,
   onTick: function() {
     libraryHandler(moment());
   },
   start: false
 });
-jobLibrarian.start();
+cronJob.start();
 
-var jobPostman = new Cronjob({
-  cronTime: cronPostman,
-  onTick: function() {
-    postman();
-    logTime(moment());
-  },
-  start: false
-});
-
-jobPostman.start();
 InspectKindlize.listen();
 
 if(process.env.NODE_ENV === "development"){

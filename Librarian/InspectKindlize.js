@@ -192,6 +192,7 @@ InspectKindlize.prototype._update = function(book){
 		itemLookUp(conditionsAPI, success, fail)
 		.done(function(url){
 			update.url = url;
+			book.url = url;
 			updater();
   		socket.emit('librarian-kindlized', book);
 		});

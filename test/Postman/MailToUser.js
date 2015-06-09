@@ -3,7 +3,7 @@
 require('should');
 
 var log = require('common/log');
-var MailToUser = require('postman/lib/MailToUser');
+var MailToUser = require('Postman/lib/MailToUser');
 var User = require('user/');
 
 
