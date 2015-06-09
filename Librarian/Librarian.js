@@ -41,12 +41,15 @@ var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 		ResponseGroup: 'RelatedItems, Small'
 	}
 */
+
 function Librarian(opts){
-	this.books = [];
 	this.limit = LIMIT;
-	this.conditions = opts.conditions;
+	this.conditions = opts.conditions || { isKindlized: true };
 	this.sort = opts.sort;
-	this.amazonConditions = opts.amazonConditions;
+	this.amazonConditions = opts.amazonConditions || { ResponseGroup: 'Small , ItemAttributes , Images' };
+	if(!this.limit) { throw new Error('実行数の上限は必須項目'); }
+	if(!this.conditions) { throw new Error('DBの検索条件は必須項目'); }
+	if(!this.amazonConditions) { throw new Error('APIの検索条件は必須項目'); }
 }
 
 /*
