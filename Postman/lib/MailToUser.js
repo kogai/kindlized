@@ -21,7 +21,7 @@ MailToUser.send = function(user){
 	.then(sendKindlizedNotification)
 	.then(modifyNotifiedStatus)
 	.done(function(user) {
-		log.info(user._id + 'の処理が完了');
+		log.info(user.mail + ' の処理が完了');
 		d.resolve();
 	});
 

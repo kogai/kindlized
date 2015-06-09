@@ -26,7 +26,7 @@ Postman.prototype.run = function(){
 
 		Q.all(users.map(MailToUser.send))
 		.done(function(){
-			log.info('メールの配信が完了');
+			log.info('全メールの配信が完了');
 		});
 	});
 };
