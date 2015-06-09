@@ -12,27 +12,44 @@ function RepairImg(opts){
 
 util.inherits(RepairImg, Librarian);
 
-RepairImg.prototype._updates = function(books, callback){
-	var _self = this;
+/*
+	RepairImg.updateのラッパー
+	@param book 書籍データのオブジェクト
+*/
+RepairImg.prototype._updates = function(book){
+	var d = Q.defer();
 
-	Q.all(books.map(function(book){
-		var d = Q.defer();
+	var update = {};
+	var images;
+	try{
+		images = book.res.ItemLookupResponse.Items[0].Item[0].ImageSets;
+	}catch(e){
+		images = "";
+	}
+	update.images = images;
 
-		_self.Model.findOneAndUpdate({}, {}, function(err){
-			if(err){
-				return d.reject(err);
-			}
+	this.update(book, update, function(err){
+		if(err){
+			return d.reject(err);
+		}
+		d.resolve();
+	});
+
+	return d.promise;
+};
+
+RepairImg.prototype.cron = function(){
+	var d = Q.defer();
+	var _updates = this._updates.bind(this);
+
+	this.run(function(books){
+		Q.all(books.map(_updates))
+		.done(function(){
 			d.resolve();
 		});
+	});
 
-		return d.promise;
-	}))
-	.fail(function(err){
-		callback(err);
-	});
-	.done(function(){
-		callback(null);
-	});
+	return d.promise;
 };
 
 module.exports = function(opts){

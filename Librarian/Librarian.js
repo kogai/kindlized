@@ -44,6 +44,7 @@ var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
 function Librarian(opts){
 	var _opts = opts || {};
+
 	this.limit = _opts.limit || LIMIT;
 	this.conditions = _opts.conditions || { isKindlized: true };
 	this.sort = _opts.sort;
@@ -81,9 +82,9 @@ Librarian.prototype.fetch = function(callback){
 	@ return modifiedBooks inspectメソッドの返り値が格納された配列
 */
 Librarian.prototype.sequential = function(books, callback){
-	var _inspect = this.inspect.bind(this);
+	var _lookup = this.lookup.bind(this);
 
-	promiseSerialize(books, _inspect)
+	promiseSerialize(books, _lookup)
 	.done(function(modifiedBooks){
 		callback(modifiedBooks);
 	});
@@ -91,7 +92,7 @@ Librarian.prototype.sequential = function(books, callback){
 
 
 /*
-	調査対象の書籍についてAmazonAPIを呼び出し
+	調査対象の書籍についてAmazonAPIを呼び出す
 	@param book Object |
 	@param callback | lookupメソッドが実行された後に呼ばれるコールバック関数
 	@return modifiedBook Object | AmazonAPIのレスポンスをメンバに格納したbookオブジェクト
@@ -112,6 +113,7 @@ Librarian.prototype.lookup = function(book, callback){
 	};
 
 	var conditions = objectAssign({}, this.amazonConditions, book.conditions);
+
 	itemLookUp(conditions, success, fail)
 	.done(function(modifiedBook){
 		callback(modifiedBook);
@@ -133,6 +135,28 @@ Librarian.prototype.defer = function(method, opts){
 
 	return d.promise;
 };
+
+/*
+	書籍の更新
+	@param book Objcet 書籍データ
+	@param update Objcet 更新する要素
+	@param callback Function 処理完了後に呼ばれるコールバック関数
+	@return err
+	@return modifiedBook | 更新後の書籍データ
+*/
+Librarian.prototype.update = function(book, update, callback){
+	var conditions = {
+		ASIN: book.ASIN[0]
+	};
+
+	this.Model.findOneAndUpdate(conditions, update, function(err, modifiedBook){
+		if(err){
+			return callback(err);
+		}
+		callback(null, modifiedBook);
+	});
+};
+
 
 /*
 	ハンドラー
