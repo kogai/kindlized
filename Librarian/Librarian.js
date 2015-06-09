@@ -9,7 +9,6 @@ var Q = require('q');
 var moment = require('moment-timezone');
 var objectAssign = require('object-assign');
 
-var BookList = require('models/BookList');
 var LIMIT = require('common/constant').LIMIT.BOOK;
 
 var log = require('common/log');
@@ -48,6 +47,7 @@ function Librarian(opts){
 	this.limit = _opts.limit || LIMIT;
 	this.conditions = _opts.conditions || { isKindlized: true };
 	this.sort = _opts.sort;
+	this.Model = _opts.Model || require('models/BookList');
 	this.amazonConditions = _opts.amazonConditions || { ResponseGroup: 'Small , ItemAttributes , Images' };
 	if(!this.limit) { throw new Error('実行数の上限は必須項目'); }
 	if(!this.conditions) { throw new Error('DBの検索条件は必須項目'); }
@@ -61,7 +61,7 @@ function Librarian(opts){
 	@ return books
 */
 Librarian.prototype.fetch = function(callback){
-	var query = BookList.find(this.conditions).limit(this.limit);
+	var query = this.Model.find(this.conditions).limit(this.limit);
 	if(this.sort){
 		query = query.sort(this.sort);
 	}
