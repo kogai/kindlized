@@ -23,24 +23,8 @@ var logTime = function(currentTime) {
 
 var libraryHandler = function(currentTime) {
   Q.when()
-  .then(function(){
-    var d = Q.defer();
-
-    Shelf.run(function(){
-      d.resolve();
-    });
-
-    return d.promise;
-  })
-  .then(function(){
-    var d = Q.defer();
-
-    InspectKindlize.run(function(){
-      d.resolve();
-    });
-
-    return d.promise;
-  })
+  .then(Shelf.cron.bind(Shelf))
+  .then(InspectKindlize.cron.bind(InspectKindlize))
   .then(fetchParentASIN)
   .then(modifyDetailUrl)
   .done(function() {

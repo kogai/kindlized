@@ -215,6 +215,16 @@ InspectKindlize.prototype.run = function(callback){
 	});
 };
 
+InspectKindlize.prototype.cron = function(){
+	var d = Q.defer();
+
+	this.run(function(){
+		d.resolve();
+	});
+
+	return d.promise;
+};
+
 module.exports = function(){
 	return new InspectKindlize();
 };
