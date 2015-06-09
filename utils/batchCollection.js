@@ -62,7 +62,11 @@ batchModifiedLog.prototype.findAndUpdate = function(collections){
 
 var Batch = new batchModifiedLog({
 	limit: LIMIT,
-	conditions: {},
+	conditions: {
+		modifiedLog: {
+			$exists: false
+		}
+	},
 	update: {
 		"modifiedLog.AddBookAt": current,
 		"modifiedLog.InspectKindlizeAt": current,
