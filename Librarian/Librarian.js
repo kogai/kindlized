@@ -13,32 +13,29 @@ var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
 function Librarian(opts){
 	this.books = [];
+	this.limit = LIMIT;
 	this.conditions = opts.conditions;
+	this.sort = opts.sort;
 }
 
 /*
 	調査対象の書籍をDBから取得
+	@ param callback | 非同期処理完了後に呼ばれるコールバック関数
+	@ return err
 	@ return books
 */
-Librarian.prototype.fetch = function(){
-	var d = Q.defer();
-	var _self = this;
-
-	var query = BookList.find(this.conditions).limit(LIMIT).sort({
-		"modifiedLog.InspectKindlizeAt": 1
-	});
+Librarian.prototype.fetch = function(callback){
+	var query = BookList.find(this.conditions).limit(this.limit);
+	if(this.sort){
+		query = query.sort(this.sort);
+	}
 
 	query.exec(function(err, books) {
 		if(err){
-			log.info(err);
-			return d.reject(err);
+			return callback(err);
 		}
-		log.info(moment().format('YYYY-MM-DD hh:mm') + ":" + books.length + "冊の書籍がkindle化されているか調査");
-		_self.books = books;
-		d.resolve(books);
+		callback(null, books);
 	});
-
-	return d.promise;
 };
 
 /*
