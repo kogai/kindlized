@@ -1,6 +1,6 @@
 "use strict";
 
-var InspectKindlize = require('Librarian/InspectKindlize');
+var InspectKindlize = require('Librarian/InspectKindlize')();
 var fetchParentASIN = require('Librarian/lib/fetchParentASIN');
 var modifyDetailUrl = require('Librarian/lib/modifyDetailUrl');
 
@@ -26,10 +26,13 @@ var libraryHandler = function(currentTime) {
   .then(shelf)
   .then(function() {
     var d = Q.defer();
-    d.resolve([]);
+
+    InspectKindlize.run(function(){
+      d.resolve();
+    });
+
     return d.promise;
   })
-  .then(InspectKindlize.cron)
   .then(fetchParentASIN)
   .then(modifyDetailUrl)
   .done(function() {
@@ -55,7 +58,9 @@ var jobPostman = new Cronjob({
   },
   start: false
 });
+
 jobPostman.start();
+InspectKindlize.listen();
 
 if(process.env.NODE_ENV === "development"){
   libraryHandler(moment());

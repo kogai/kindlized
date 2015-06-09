@@ -98,11 +98,11 @@ InspectKindlize.prototype._inspect = function(book){
 
 	var success = function(res){
 		var relatedItem = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem;
-		var hasEbook = _self._hasEbook(relatedItem);
+		var hasEbook = _self._hasEbook(relatedItem)[0];
 
 		if(hasEbook){
 			update.isKindlized = true;
-    	socket.emit('librarian-kindlized', book);
+			book.ebookASIN = _self._hasEbook(relatedItem)[1];
 		}
 
 		book.err = null;
@@ -133,14 +133,15 @@ InspectKindlize.prototype._inspect = function(book){
 };
 
 InspectKindlize.prototype._hasEbook = function(relatedItem){
-	var hasEbook = false;
+	var hasEbook = false, ebookASIN = null;
 	relatedItem.forEach(function(item) {
 		var relatedBook = item.Item[0].ItemAttributes[0];
 		if (relatedBook.ProductGroup[0] === 'eBooks') {
 			hasEbook = true;
+			ebookASIN = item.Item[0].ASIN;
 		}
 	});
-	return hasEbook;
+	return [hasEbook, ebookASIN];
 };
 
 InspectKindlize.prototype._update = function(book){
@@ -149,19 +150,48 @@ InspectKindlize.prototype._update = function(book){
 	};
 	var update = book.update;
 
-	var msg;
+	var conditionsAPI = {
+		ItemId: book.ebookASIN,
+    RelationshipType: 'AuthorityTitle',
+    ResponseGroup: 'Small'
+	};
+
+	var success = function(res){
+    var ebookUrl = res.ItemLookupResponse.Items[0].Item[0].DetailPageURL[0];
+		update.isKindlizedUrl = true;
+		return ebookUrl;
+	};
+
+	var fail = function(err){
+		log.info(err);
+		return book.url;
+	};
+
+	// ログ文言を調整
+	var msg = '電子版無し';
 	if(book.hasEbook){
 		msg = '電子版有り';
-	}else{
-		msg = '電子版無し';
 	}
 
-	BookList.findOneAndUpdate(conditions, update, function(err, book){
-		if(err){
-			return log.info(err);
-		}
-		log.info(msg + ":" + book.modifiedLog.InspectKindlizeAt + ":" + book.title);
-	});
+	// 更新処理
+	var updater = function(){
+		BookList.findOneAndUpdate(conditions, update, function(err, book){
+			if(err){
+				return log.info(err);
+			}
+			log.info(msg + ":" + book.modifiedLog.InspectKindlizeAt + ":" + book.title);
+    	socket.emit('librarian-kindlized', book);
+		});
+	};
+	if(book.hasEbook){
+		itemLookUp(conditionsAPI, success, fail)
+		.done(function(url){
+			update.url = url;
+			updater();
+		});
+		return ;
+	}
+	updater();
 };
 
 InspectKindlize.prototype.listen = function(){
@@ -183,16 +213,6 @@ InspectKindlize.prototype.run = function(callback){
 	.done(function(books){
 		callback();
 	});
-};
-
-InspectKindlize.prototype.cron = function(){
-	var d = Q.defer();
-
-	this.run(function(){
-		d.resolve();
-	});
-
-	return d.promise;
 };
 
 module.exports = function(){
