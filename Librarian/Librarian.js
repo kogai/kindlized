@@ -43,10 +43,11 @@ var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 */
 
 function Librarian(opts){
-	this.limit = LIMIT;
-	this.conditions = opts.conditions || { isKindlized: true };
-	this.sort = opts.sort;
-	this.amazonConditions = opts.amazonConditions || { ResponseGroup: 'Small , ItemAttributes , Images' };
+	var _opts = opts || {};
+	this.limit = _opts.limit || LIMIT;
+	this.conditions = _opts.conditions || { isKindlized: true };
+	this.sort = _opts.sort;
+	this.amazonConditions = _opts.amazonConditions || { ResponseGroup: 'Small , ItemAttributes , Images' };
 	if(!this.limit) { throw new Error('実行数の上限は必須項目'); }
 	if(!this.conditions) { throw new Error('DBの検索条件は必須項目'); }
 	if(!this.amazonConditions) { throw new Error('APIの検索条件は必須項目'); }

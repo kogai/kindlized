@@ -15,10 +15,7 @@ RepairImg.prototype.read = function(){
 	log.info(this.limit);
 };
 
-var repair = new RepairImg({
-	conditions: {},
-	amazonConditions: {}
-});
+var repair = new RepairImg();
 
 log.info(repair.fetch);
 repair.read();
