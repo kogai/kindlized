@@ -31,9 +31,16 @@ InspectKindlize.prototype._fetch = function(){
 				AuthorityASIN: {
 					$exists: true
 				}
-			}, {
+			},
+			{
+				AuthorityASIN: {
+					$ne: ['']
+				}
+			},
+			{
 				isKindlized: false
-			}, {
+			},
+			{
 				"modifiedLog.InspectKindlizeAt": {
 					"$lte": moment().subtract(PERIODICAL_DAY, 'days')
 				}
@@ -173,13 +180,14 @@ InspectKindlize.prototype._update = function(book){
 
 	// 更新処理
 	var updater = function(){
-		BookList.findOneAndUpdate(conditions, update, function(err, book){
+		BookList.findOneAndUpdate(conditions, update, function(err, savedBook){
 			if(err){
 				return log.info(err);
 			}
-			log.info(msg + ":" + book.modifiedLog.InspectKindlizeAt + ":" + book.title);
+			log.info(msg + ":" + savedBook.modifiedLog.InspectKindlizeAt + ":" + savedBook.title);
 		});
 	};
+
 	if(book.hasEbook){
 		itemLookUp(conditionsAPI, success, fail)
 		.done(function(url){

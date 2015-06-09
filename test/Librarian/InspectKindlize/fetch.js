@@ -28,7 +28,7 @@ describe('AuthorityASINのある書籍を500冊取得する', function(){
 	it('AuthorityASINを持っている', function(){
 		var result = true, i;
 		for (i = 0; i < Books.length; i++) {
-			if(!Books[i].AuthorityASIN){
+			if(Books[i].AuthorityASIN[0].length === 0){
 				result = false;
 			}
 		}
