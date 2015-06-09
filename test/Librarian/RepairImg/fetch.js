@@ -4,7 +4,7 @@ require('should');
 
 var log = require("common/log");
 var RepairImg = require('Librarian/RepairImg')({
-	limit: 300
+	limit: 50
 });
 
 describe('画像を持たない書籍のデータ取得メソッド', function(){

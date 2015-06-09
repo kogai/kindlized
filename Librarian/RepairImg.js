@@ -11,17 +11,18 @@ function RepairImg(opts){
 
 util.inherits(RepairImg, Librarian);
 
-RepairImg.prototype.read = function(){
-	log.info(this.limit);
+module.exports = function(opts){
+	opts.conditions = {
+		$or: [
+			{
+				images: {
+					$exists: false
+				}
+			},
+			{
+				$where: "this.images == 0"
+			}
+		]
+	};
+	return new RepairImg(opts);
 };
-
-var repair = new RepairImg();
-
-log.info(repair.fetch);
-repair.read();
-
-/*
-repair.fetch(function(err, books){
-	log.info(books);
-});
-*/
