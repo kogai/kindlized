@@ -1,5 +1,10 @@
 "use strict";
 
+/*
+	Librarianサービスで使用する処理をまとめたスーパークラス
+	各処理群はこのクラスを継承して作成する
+*/
+
 var Q = require('q');
 var moment = require('moment-timezone');
 
@@ -16,6 +21,15 @@ function Librarian(opts){
 	this.limit = LIMIT;
 	this.conditions = opts.conditions;
 	this.sort = opts.sort;
+	this.amazonConditions = opts.amazonConditions;
+
+/*
+	var conditions = {
+    ItemId: book.AuthorityASIN[0],
+    RelationshipType: 'AuthorityTitle',
+    ResponseGroup: 'RelatedItems, Small'
+	};
+*/
 }
 
 /*
@@ -56,53 +70,42 @@ Librarian.prototype.sequential = function(books, callback){
 
 /*
 	調査対象の書籍についてAmazonAPIを呼び出し
-	@param book Object
-	@return book Object
+	@param book Object |
+	@param callback | lookupメソッドが実行された後に呼ばれるコールバック関数
+	@return modifiedBook Object | AmazonAPIのレスポンスをメンバに格納したbookオブジェクト
 */
-Librarian.prototype.inspect = function(book){
+Librarian.prototype.lookup = function(book, callback){
 	var d = Q.defer();
 
-	var _self = this;
-	var update = {
-		"modifiedLog.InspectKindlizeAt": moment()
-	};
-	var conditions = {
-    ItemId: book.AuthorityASIN[0],
-    RelationshipType: 'AuthorityTitle',
-    ResponseGroup: 'RelatedItems, Small'
-	};
-
 	var success = function(res){
-		var relatedItem = res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem;
-		var hasEbook = _self._hasEbook(relatedItem)[0];
-
-		if(hasEbook){
-			update.isKindlized = true;
-			book.ebookASIN = _self._hasEbook(relatedItem)[1];
-		}
-
 		book.err = null;
-		book.relatedItem = relatedItem;
-		book.hasEbook = hasEbook;
-		book.update = update;
-
-		_self._update(book);
+		book.res = res;
 		return book;
 	};
 
 	var fail = function(err){
 		book.err = err;
-		book.relatedItem = null;
-		book.hasEbook = false;
-		book.update = update;
-
-		_self._update(book);
+		book.res = null;
 		return book;
 	};
 
-	itemLookUp(conditions, success, fail)
-	.done(function(book){
-		d.resolve(book);
+	itemLookUp(this.amazonConditions, success, fail)
+	.done(function(modifiedBook){
+		callback(modifiedBook);
+	});
+
+	return d.promise;
+};
+
+Librarian.prototype.defer = function(method, opts){
+	var d = Q.defer();
+
+	method.bind(this);
+	method(function(err, res){
+		if(err){
+			return d.reject(err);
+		}
+		d.resolve(res);
 	});
 
 	return d.promise;
@@ -110,22 +113,25 @@ Librarian.prototype.inspect = function(book){
 
 /*
 	ハンドラー
+	fetch -> sequential[loocup] の順に実行するメソッド
+	@param callback | 処理完了後に呼ばれるコールバック関数
+	@return books | sequentialメソッドの返り値
 */
 Librarian.prototype.run = function(callback){
-	callback();
-	/*
-	var _fetch = this._fetch.bind(this);
-	var _sequential = this._sequential.bind(this);
+	var _fetch = this.defer(this.fetch);
+	var _sequential = this.defer(this.sequential);
 
 	Q.when()
 	.then(_fetch)
 	.then(_sequential)
 	.done(function(books){
-		callback();
+		callback(books);
 	});
-	*/
 };
 
+/*
+	他のクラスと順次処理するためのハンドラー
+*/
 Librarian.prototype.cron = function(){
 	var d = Q.defer();
 
@@ -136,6 +142,4 @@ Librarian.prototype.cron = function(){
 	return d.promise;
 };
 
-module.exports = function(){
-	return new Librarian();
-};
+module.exports = Librarian;
