@@ -1,11 +1,11 @@
 "use strict";
 
-var fetchBookList = require( 'shelf/lib/fetchAuthor' );
+var fetchBookList = require( 'Librarian/Shelf/lib/fetchAuthor' );
 
 var Q 		= require('q');
 var should 	= require('should');
 
-describe( 'shelf/lib/sortAuthorByModified.jsのテスト', function(){
+describe( 'Librarian/Shelf/lib/sortAuthorByModified.jsのテスト', function(){
 	it( 'テストが動作している', function( done ){
 		(5).should.be.exactly(5);
 		done();

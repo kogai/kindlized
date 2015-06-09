@@ -1,5 +1,6 @@
 "use strict";
 
+var Shelf = require('Librarian/Shelf/')();
 var InspectKindlize = require('Librarian/InspectKindlize')();
 var fetchParentASIN = require('Librarian/lib/fetchParentASIN');
 var modifyDetailUrl = require('Librarian/lib/modifyDetailUrl');
@@ -8,7 +9,6 @@ var Q = require('q');
 var Cronjob = require('cron').CronJob;
 var moment = require('moment-timezone');
 
-var shelf = require('shelf/');
 var postman = require('postman/');
 var log = require('common/log');
 
@@ -23,8 +23,16 @@ var logTime = function(currentTime) {
 
 var libraryHandler = function(currentTime) {
   Q.when()
-  .then(shelf)
-  .then(function() {
+  .then(function(){
+    var d = Q.defer();
+
+    Shelf.run(function(){
+      d.resolve();
+    });
+
+    return d.promise;
+  })
+  .then(function(){
     var d = Q.defer();
 
     InspectKindlize.run(function(){
