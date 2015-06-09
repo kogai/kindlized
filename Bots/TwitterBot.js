@@ -88,6 +88,3 @@ TwitterBot.prototype.listen = function(){
 module.exports = function(credentials, callback){
 	return new TwitterBot(credentials, callback);
 };
-
-/*
-*/
