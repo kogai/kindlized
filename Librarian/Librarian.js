@@ -50,6 +50,7 @@ function Librarian(opts){
 	this.sort = _opts.sort;
 	this.Model = _opts.Model || require('models/BookList');
 	this.amazonConditions = _opts.amazonConditions || { ResponseGroup: 'Small , ItemAttributes , Images' };
+	if(!this.Model) { throw new Error('モデルは必須項目'); }
 	if(!this.limit) { throw new Error('実行数の上限は必須項目'); }
 	if(!this.conditions) { throw new Error('DBの検索条件は必須項目'); }
 	if(!this.amazonConditions) { throw new Error('APIの検索条件は必須項目'); }
@@ -86,7 +87,7 @@ Librarian.prototype.sequential = function(books, callback){
 
 	promiseSerialize(books, _lookup)
 	.done(function(modifiedBooks){
-		callback(modifiedBooks);
+		callback(null, modifiedBooks.resultArray);
 	});
 };
 
@@ -97,7 +98,7 @@ Librarian.prototype.sequential = function(books, callback){
 	@param callback | lookupメソッドが実行された後に呼ばれるコールバック関数
 	@return modifiedBook Object | AmazonAPIのレスポンスをメンバに格納したbookオブジェクト
 */
-Librarian.prototype.lookup = function(book, callback){
+Librarian.prototype.lookup = function(book){
 	var d = Q.defer();
 
 	var success = function(res){
@@ -112,17 +113,17 @@ Librarian.prototype.lookup = function(book, callback){
 		return book;
 	};
 
-	var conditions = objectAssign({}, this.amazonConditions, book.conditions);
+	var conditions = objectAssign({}, this.amazonConditions, book.conditions || { ItemId: book.ASIN[0] });
 
 	itemLookUp(conditions, success, fail)
 	.done(function(modifiedBook){
-		callback(modifiedBook);
+		d.resolve(modifiedBook);
 	});
 
 	return d.promise;
 };
 
-Librarian.prototype.defer = function(method, opts){
+Librarian.prototype.defer = function(method){
 	var d = Q.defer();
 
 	method.bind(this);
@@ -165,12 +166,28 @@ Librarian.prototype.update = function(book, update, callback){
 	@return books | sequentialメソッドの返り値
 */
 Librarian.prototype.run = function(callback){
-	var _fetch = this.defer(this.fetch);
-	var _sequential = this.defer(this.sequential);
+	var _fetch = this.fetch.bind(this);
+	var _sequential = this.sequential.bind(this);
 
 	Q.when()
-	.then(_fetch)
-	.then(_sequential)
+	.then(function(){
+		var d = Q.defer();
+
+		_fetch(function(err, books){
+			d.resolve(books);
+		});
+
+		return d.promise;
+	})
+	.then(function(books){
+		var d = Q.defer();
+
+		_sequential(books, function(err, modifiedBooks){
+			d.resolve(modifiedBooks);
+		});
+
+		return d.promise;
+	})
 	.done(function(books){
 		callback(books);
 	});
