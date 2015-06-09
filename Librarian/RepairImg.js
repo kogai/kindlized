@@ -23,16 +23,17 @@ RepairImg.prototype._updates = function(book){
 	var images;
 	try{
 		images = book.res.ItemLookupResponse.Items[0].Item[0].ImageSets;
+		images = JSON.stringify(images);
 	}catch(e){
 		images = "";
 	}
 	update.images = images;
 
-	this.update(book, update, function(err){
+	this.update(book, update, function(err, modifiedBook){
 		if(err){
 			return d.reject(err);
 		}
-		d.resolve();
+		d.resolve(modifiedBook);
 	});
 
 	return d.promise;
@@ -53,7 +54,9 @@ RepairImg.prototype.cron = function(){
 };
 
 module.exports = function(opts){
-	opts.conditions = {
+	var _opts = opts || {};
+
+	_opts.conditions = {
 		$or: [
 			{
 				images: {
