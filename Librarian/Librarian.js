@@ -39,20 +39,18 @@ Librarian.prototype.fetch = function(callback){
 };
 
 /*
-	調査対象の書籍のシークエンシャル処理
-	@ param books
-	@ return none
+	調査対象の書籍の順次処理
+	@ param books 各要素に順次にinspectメソッドを実行される配列
+	@ param callback 全配列にinspectメソッドが実行された後に呼ばれるコールバック関数
+	@ return modifiedBooks inspectメソッドの返り値が格納された配列
 */
-Librarian.prototype.sequential = function(books){
-	var d = Q.defer();
-	var _inspect = this._inspect.bind(this);
+Librarian.prototype.sequential = function(books, callback){
+	var _inspect = this.inspect.bind(this);
 
 	promiseSerialize(books, _inspect)
-	.done(function(books){
-		d.resolve(books);
+	.done(function(modifiedBooks){
+		callback(modifiedBooks);
 	});
-
-	return d.promise;
 };
 
 
