@@ -10,7 +10,7 @@ var log = require('common/log');
 
 /**
 @constructor
-@classdesc Librarianクラスの継承クラス<br>Imageの更新を行う
+@classdesc Librarianクラスの継承クラス<br>AuthorityASINの更新を行う
 **/
 function AddASIN(opts){
 	Librarian.call(this, opts);
