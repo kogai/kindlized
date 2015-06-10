@@ -3,13 +3,13 @@
 var Q = require('q');
 var moment = require('moment-timezone');
 var objectAssign = require('object-assign');
-
-var LIMIT = require('common/constant').LIMIT.BOOK;
+var util = require('util');
 
 var log = require('common/log');
 var promiseSerialize = require('common/promiseSerialize');
 var itemLookUp = require('common/itemLookUp');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
+var LIMIT = require('common/constant').LIMIT.BOOK;
 
 /**
 	@constructor
@@ -114,26 +114,28 @@ Librarian.prototype.update = function(book, update, callback){
 		ASIN: book.ASIN[0]
 	};
 
+	if(update.modifiedLog === undefined){
+		update.modifiedLog = {};
+	}
+	if(book.modifiedLog.AddBookAt === undefined){
+		update.modifiedLog.AddBookAt = moment();
+	}
+	if(book.modifiedLog.InspectKindlizeAt === undefined){
+		update.modifiedLog.InspectKindlizeAt = moment();
+	}
+	if(book.modifiedLog.AddASINAt === undefined){
+		update.modifiedLog.AddASINAt = moment();
+	}
+	if(book.modifiedLog.UpdateUrlAt === undefined){
+		update.modifiedLog.UpdateUrlAt = moment();
+	}
+
 	this.Model.findOneAndUpdate(conditions, update, function(err, modifiedBook){
 		if(err){
 			return callback(err);
 		}
 		callback(null, modifiedBook);
 	});
-};
-
-Librarian.prototype.defer = function(method){
-	var d = Q.defer();
-
-	method.bind(this);
-	method(function(err, res){
-		if(err){
-			return d.reject(err);
-		}
-		d.resolve(res);
-	});
-
-	return d.promise;
 };
 
 /**
@@ -158,7 +160,6 @@ Librarian.prototype.inspectEbook = function(relatedItems){
 		ebookASIN: ebookASIN
 	};
 };
-
 
 /**
 	ハンドラー

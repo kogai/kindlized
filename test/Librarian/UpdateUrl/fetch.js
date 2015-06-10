@@ -3,7 +3,7 @@
 var moment = require('moment-timezone');
 require('should');
 
-var UpdateUrl = require('Librarian/UpdateUrl')({ limit: 50 });
+var UpdateUrl = require('Librarian/UpdateUrl')({ limit: 5 });
 var log = require("common/log");
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
@@ -11,7 +11,10 @@ UpdateUrl.fetch(function(err, books){
 	if(err){
 		return log.info(err);
 	}
-	log.info(books);
+	books.map(function(book){
+		log.info(book.title);
+		log.info(book.modifiedLog.UpdateUrlAt);
+	});
 });
 
 /*

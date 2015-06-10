@@ -20,21 +20,6 @@ function UpdateUrl(opts){
 
 util.inherits(UpdateUrl, Librarian);
 
-/**
-調査対象の書籍の順次処理
-@param { Object } books - 各要素に順次にinspectメソッドを実行される配列
-@param { Function } callback - 全配列にinspectメソッドが実行された後に呼ばれるコールバック関数
-@return { Array } modifiedBooks inspectメソッドの返り値が格納された配列
-**/
-UpdateUrl.prototype.sequential = function(books, callback){
-	var _lookup = this.lookup.bind(this);
-	var conditinalizeBooks = this._addConditions(books);
-
-	promiseSerialize(conditinalizeBooks, _lookup)
-	.done(function(modifiedBooks){
-		callback(null, modifiedBooks.resultArray);
-	});
-};
 
 UpdateUrl.prototype._addConditions = function(books){
 	return books.map(function(book){
@@ -50,20 +35,23 @@ UpdateUrl.prototype._addConditions = function(books){
 **/
 UpdateUrl.prototype._updates = function(book){
 	var d = Q.defer();
+	var update = {}, url, isKindlizedUrl;
 
-	// var update = {};
-	// var images;
-	/*
 	try{
-		images = book.res.ItemLookupResponse.Items[0].Item[0].ImageSets;
-		images = JSON.stringify(images);
-		log.info('images更新:' + book.title);
+		url = book.res.ItemLookupResponse.Items[0].Item[0].DetailPageURL[0];
+		isKindlizedUrl = true;
+		log.info('URL更新:' + book.title);
 	}catch(e){
-		images = "";
-		log.info('images未更新:' + book.title);
-		log.info(util.inspect(book.res.ItemLookupResponse, null, null));
+		url = book.url;
+		isKindlizedUrl = null;
+		log.info('URL未更新:' + book.title);
 	}
-	update.images = images;
+
+	update.url = url;
+	update.isKindlizedUrl = isKindlizedUrl;
+	update.modifiedLog = {
+		UpdateUrlAt: moment()
+	};
 
 	this.update(book, update, function(err, modifiedBook){
 		if(err){
@@ -71,9 +59,59 @@ UpdateUrl.prototype._updates = function(book){
 		}
 		d.resolve(modifiedBook);
 	});
-	*/
 
 	return d.promise;
+};
+
+UpdateUrl.prototype.run = function(callback){
+	var _fetch = this.fetch.bind(this);
+	var _sequential = this.sequential.bind(this);
+	var _self = this;
+
+	Q.when()
+	.then(function(){
+		var d = Q.defer();
+		_fetch(function(err, books){
+			if(err){
+				return log.info(err);
+			}
+			var conditinalizeBooks = _self._addConditions(books);
+			d.resolve(conditinalizeBooks);
+		});
+
+		return d.promise;
+	})
+	.then(function(books){
+		var d = Q.defer();
+
+		_sequential(books, function(err, modifiedBooks){
+			d.resolve(modifiedBooks);
+		});
+
+		return d.promise;
+	})
+	.then(function(books){
+		var d = Q.defer();
+
+		var ebooks = books.map(function(book){
+			var ebook = _self.inspectEbook(book.res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem);
+			if(ebook.hasEbook){
+				book.ASIN = [ebook.ebookASIN];
+			}
+			book.conditions = null;
+			book.res = null;
+			return book;
+		});
+
+		_sequential(ebooks, function(err, modifiedEbooks){
+			d.resolve(modifiedEbooks);
+		});
+
+		return d.promise;
+	})
+	.done(function(books){
+		callback(books);
+	});
 };
 
 UpdateUrl.prototype.cron = function(){
@@ -103,7 +141,7 @@ module.exports = function(opts){
 
 	_opts.amazonConditions = {
     RelationshipType: 'AuthorityTitle',
-    ResponseGroup: 'RelatedItems, Small'
+    ResponseGroup: 'RelatedItems, Small, ItemAttributes'
 	};
 
 	return new UpdateUrl(_opts);
