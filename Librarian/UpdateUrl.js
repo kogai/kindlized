@@ -12,6 +12,7 @@ var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 /**
 @constructor
 @classdesc Librarianクラスの継承クラス<br>Imageの更新を行う
+@extends Librarian
 **/
 function UpdateUrl(opts){
 	Librarian.call(this, opts);
@@ -20,7 +21,10 @@ function UpdateUrl(opts){
 util.inherits(UpdateUrl, Librarian);
 
 /**
-
+調査対象の書籍の順次処理
+@param { Object } books - 各要素に順次にinspectメソッドを実行される配列
+@param { Function } callback - 全配列にinspectメソッドが実行された後に呼ばれるコールバック関数
+@return { Array } modifiedBooks inspectメソッドの返り値が格納された配列
 **/
 UpdateUrl.prototype.sequential = function(books, callback){
 	var _lookup = this.lookup.bind(this);

@@ -136,6 +136,29 @@ Librarian.prototype.defer = function(method){
 	return d.promise;
 };
 
+/**
+RelatedItem配列の中にeBookがあるか調べる
+@param { Object } relatedItem - AmazonAPIから取得したRelatedItem配列
+@return { Object } object.hasEbook
+@return { Object } object.ebookASIN
+**/
+Librarian.prototype.inspectEbook = function(relatedItems){
+	var hasEbook = false, ebookASIN = '', productionGroup, i;
+
+	for (i = 0; i < relatedItems.length; i++) {
+		productionGroup = relatedItems[i].Item[0].ItemAttributes[0].ProductGroup[0];
+		if(productionGroup === 'eBooks'){
+			hasEbook = true;
+			ebookASIN = relatedItems[i].Item[0].ItemAttributes[0];
+		}
+	}
+
+	return {
+		hasEbook: hasEbook,
+		ebookASIN: ebookASIN
+	};
+};
+
 
 /**
 	ハンドラー

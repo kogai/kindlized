@@ -11,6 +11,7 @@ var log = require('common/log');
 /**
 @constructor
 @classdesc Librarianクラスの継承クラス<br>AuthorityASINの更新を行う
+@extends Librarian
 **/
 function AddASIN(opts){
 	Librarian.call(this, opts);

@@ -9,6 +9,7 @@ var log = require('common/log');
 /**
 @constructor
 @classdesc Librarianクラスの継承クラス<br>Imageの更新を行う
+@extends Librarian
 **/
 function RepairImg(opts){
 	Librarian.call(this, opts);
