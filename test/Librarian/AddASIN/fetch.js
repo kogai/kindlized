@@ -43,7 +43,6 @@ describe('AuthorityASINを持たない書籍のデータ取得メソッド', fun
 		var result = true, i, yesterday = moment().subtract(PERIODICAL_DAY, 'days'), modifiedDay;
 		for (i = 0; i < fetchedBooks.length; i++) {
 			modifiedDay = fetchedBooks[i].modifiedLog.AddASINAt;
-			log.info(modifiedDay);
 			if(moment(modifiedDay).isAfter(yesterday)){
 				result = false;
 			}
