@@ -3,6 +3,8 @@
 require('should');
 
 var InspectKindlize = require('Librarian/InspectKindlize')();
+var log = require('common/log');
+var util = require('util');
 
 describe('Ebookがあるか調べる', function(){
 	this.timeout(0);

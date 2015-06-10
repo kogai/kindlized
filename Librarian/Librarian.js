@@ -149,7 +149,7 @@ Librarian.prototype.inspectEbook = function(relatedItems){
 		productionGroup = relatedItems[i].Item[0].ItemAttributes[0].ProductGroup[0];
 		if(productionGroup === 'eBooks'){
 			hasEbook = true;
-			ebookASIN = relatedItems[i].Item[0].ItemAttributes[0];
+			ebookASIN = relatedItems[i].Item[0].ASIN[0];
 		}
 	}
 
