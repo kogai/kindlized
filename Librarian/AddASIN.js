@@ -27,17 +27,24 @@ AddASIN.prototype._updates = function(book){
 	var d = Q.defer();
 
 	var update = {};
-	var images;
+	var AuthorityASIN, Items;
+
 	try{
-		images = book.res.ItemLookupResponse.Items[0].Item[0].ImageSets;
-		images = JSON.stringify(images);
-		log.info('画像更新:' + book.title);
+		Items = book.res.ItemLookupResponse.Items;
+		Items.map(function(item){
+			if(item.Item[0].RelatedItems[0].RelationshipType[0] === 'AuthorityTitle'){
+				AuthorityASIN = item.Item[0].RelatedItems[0].RelatedItem[0].Item[0].ASIN;
+			}
+		});
+		log.info('AuthorityASIN 更新:' + book.title);
 	}catch(e){
-		images = "";
-		log.info('画像未更新:' + book.title);
-		log.info(util.inspect(book.res.ItemLookupResponse, null, null));
+		AuthorityASIN = undefined;
+		log.info('AuthorityASIN 未更新:' + book.title);
 	}
-	update.images = images;
+	update.AuthorityASIN = AuthorityASIN;
+	update.modifiedLog = {
+		AddASINAt: moment()
+	};
 
 	this.update(book, update, function(err, modifiedBook){
 		if(err){

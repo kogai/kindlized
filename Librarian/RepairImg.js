@@ -29,10 +29,10 @@ RepairImg.prototype._updates = function(book){
 	try{
 		images = book.res.ItemLookupResponse.Items[0].Item[0].ImageSets;
 		images = JSON.stringify(images);
-		log.info('画像更新:' + book.title);
+		log.info('images更新:' + book.title);
 	}catch(e){
 		images = "";
-		log.info('画像未更新:' + book.title);
+		log.info('images未更新:' + book.title);
 		log.info(util.inspect(book.res.ItemLookupResponse, null, null));
 	}
 	update.images = images;

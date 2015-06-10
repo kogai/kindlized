@@ -7,30 +7,20 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 
-var routes = require('./routes/index');
-var search = require('./routes/search');
-var book = require('./routes/book');
-var reduce = require('./routes/reduce');
-var save = require('./routes/save');
-var account = require('./routes/account');
+var routes = require('routes/');
+var search = require('routes/search');
+var book = require('routes/book');
+var reduce = require('routes/reduce');
+var save = require('routes/save');
+var account = require('routes/account');
+var sessinCredential = require('common/makeCredential')('session');
 
-var credential;
-if (process.env.AWSAccessKeyId || process.env.CI) {
-	//heroku用変数
-	credential = {};
-	credential.session = process.env.session;
-} else {
-	//サービスサーバー用変数
-	credential = require('./credential');
-}
 
 var app = express();
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -40,7 +30,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(session({
-	secret: credential.session,
+	secret: sessinCredential,
 	cookie: {
 		maxAge: 30 * 24 * 60 * 60 * 1000
 	}
@@ -66,8 +56,6 @@ app.use(function(req, res, next) {
 });
 
 // error handlers
-
-// development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
 	app.use(function(err, req, res, next) {

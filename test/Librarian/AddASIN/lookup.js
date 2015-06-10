@@ -33,9 +33,9 @@ describe('Ebookがあるか調べる', function(){
 		});
 	});
 
-	it('hasAuthorityはAuthorityASINを持つ', function(){
-		log.info(util.inspect(hasAuthority, null, null));
-		// (hasAuthority.hasAuthority).should.be.exactly(true);
+	it('res.Itemsは配列', function(){
+		(hasAuthority.res.Items).should.be.instanceof(Array);
+		(hasNotAuthority.res.Items).should.be.instanceof(Array);
 	});
 
 	it('hasNotAuthorityはAuthorityASINを持たない', function(){

@@ -92,6 +92,7 @@ module.exports = [{
 			}]
 		}
 	}
+	// book.res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0].Item[0].ASIN;
 }, {
 	title: ['七夕の国　下'],
 	ASIN: ['B003UUWF8W'],
@@ -158,6 +159,7 @@ module.exports = [{
 				}],
 				RequestProcessingTime: ['0.0077245540000000']
 			}],
+	// book.res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem[0].Item[0].ASIN;
 			Items: [{
 				Request: [{
 					IsValid: ['True'],

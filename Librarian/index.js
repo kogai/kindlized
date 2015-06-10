@@ -3,8 +3,9 @@
 var Shelf = require('Librarian/Shelf/')();
 var InspectKindlize = require('Librarian/InspectKindlize')();
 var RepairImg = require('Librarian/RepairImg')();
+var AddASIN = require('Librarian/AddASIN')();
 
-var fetchParentASIN = require('Librarian/lib/fetchParentASIN');
+// var fetchParentASIN = require('Librarian/lib/fetchParentASIN');
 var modifyDetailUrl = require('Librarian/lib/modifyDetailUrl');
 
 var Q = require('q');
@@ -26,7 +27,7 @@ var libraryHandler = function(currentTime) {
   .then(Shelf.cron.bind(Shelf))
   .then(RepairImg.cron.bind(RepairImg))
   .then(InspectKindlize.cron.bind(InspectKindlize))
-  .then(fetchParentASIN)
+  .then(AddASIN.cron.bind(AddASIN))
   .then(modifyDetailUrl)
   .done(function() {
     logTime(currentTime);
