@@ -86,5 +86,11 @@ module.exports = function(opts){
 			}
 		]
 	};
+
+	_opts.amazonConditions = {
+		RelationshipType: 'AuthorityTitle',
+		ResponseGroup: 'RelatedItems'
+	};
+
 	return new AddASIN(opts);
 };

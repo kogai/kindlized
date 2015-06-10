@@ -3,9 +3,9 @@
 var moment = require('moment-timezone');
 require('should');
 
+var AddASIN = require('Librarian/AddASIN')({ limit: 50 });
 var log = require("common/log");
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
-var AddASIN = require('Librarian/AddASIN')({ limit: 50 });
 
 describe('AuthorityASINを持たない書籍のデータ取得メソッド', function(){
 	this.timeout(0);
