@@ -2,26 +2,28 @@
 
 var util = require('util');
 var Q = require('q');
+var moment = require('moment-timezone');
 
 var Librarian = require('Librarian/Librarian');
+var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 var log = require('common/log');
 
 /**
 @constructor
 @classdesc Librarianクラスの継承クラス<br>Imageの更新を行う
 **/
-function FetchAuthority(opts){
+function AddASIN(opts){
 	Librarian.call(this, opts);
 }
 
-util.inherits(FetchAuthority, Librarian);
+util.inherits(AddASIN, Librarian);
 
 /**
-	FetchAuthority.updateのラッパー
+	AddASIN.updateのラッパー
 	@param { Object } book - 書籍データのオブジェクト
 	@return { Object } modifiedBook 書籍データのオブジェクト
 **/
-FetchAuthority.prototype._updates = function(book){
+AddASIN.prototype._updates = function(book){
 	var d = Q.defer();
 
 	var update = {};
@@ -47,7 +49,7 @@ FetchAuthority.prototype._updates = function(book){
 	return d.promise;
 };
 
-FetchAuthority.prototype.cron = function(){
+AddASIN.prototype.cron = function(){
 	var d = Q.defer();
 	var _updates = this._updates.bind(this);
 
@@ -65,16 +67,24 @@ module.exports = function(opts){
 	var _opts = opts || {};
 
 	_opts.conditions = {
-		$or: [
+		$and: [
 			{
-				images: {
-					$exists: false
-				}
+				$or: [
+					{
+						AuthorityASIN: { $exists: false }
+					}, {
+						AuthorityASIN: ['']
+					}, {
+						AuthorityASIN: 'UNDEFINED'
+					}, {
+						AuthorityASIN: ['UNDEFINED']
+					}
+				]
 			},
 			{
-				$where: "this.images == 0"
+				"modifiedLog.AddASINAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') }
 			}
 		]
 	};
-	return new FetchAuthority(opts);
+	return new AddASIN(opts);
 };
