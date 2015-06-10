@@ -49,7 +49,7 @@ Librarian.prototype.fetch = function(callback){
 		if(err){
 			return callback(err);
 		}
-		log.info(moment().format('YYYY-MM-DD hh:mm') + ' ' + books.length + '冊の書籍の処理を開始');
+		log.info( '\n' + moment().format('YYYY-MM-DD hh:mm') + ' ' + books.length + '冊の書籍の処理を開始');
 		callback(null, books);
 	});
 };

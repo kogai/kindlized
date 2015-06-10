@@ -5,6 +5,7 @@ var Q = require('q');
 var moment = require('moment-timezone');
 
 var Librarian = require('Librarian/Librarian');
+var promiseSerialize = require('common/promiseSerialize');
 var log = require('common/log');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
@@ -12,23 +13,42 @@ var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 @constructor
 @classdesc Librarianクラスの継承クラス<br>Imageの更新を行う
 **/
-function RepairImg(opts){
+function UpdateUrl(opts){
 	Librarian.call(this, opts);
 }
 
-util.inherits(RepairImg, Librarian);
+util.inherits(UpdateUrl, Librarian);
 
 /**
-	RepairImg.updateのラッパー
+
+**/
+UpdateUrl.prototype.sequential = function(books, callback){
+	var _lookup = this.lookup.bind(this);
+	var conditinalizeBooks = this._addConditions(books);
+
+	promiseSerialize(conditinalizeBooks, _lookup)
+	.done(function(modifiedBooks){
+		callback(null, modifiedBooks.resultArray);
+	});
+};
+
+UpdateUrl.prototype._addConditions = function(books){
+	return books.map(function(book){
+		book.conditions = { ItemId: book.AuthorityASIN[0] };
+		return book;
+	});
+};
+
+/**
+	UpdateUrl.updateのラッパー
 	@param { Object } book - 書籍データのオブジェクト
 	@return { Object } modifiedBook 書籍データのオブジェクト
 **/
-
-RepairImg.prototype._updates = function(book){
+UpdateUrl.prototype._updates = function(book){
 	var d = Q.defer();
 
-	var update = {};
-	var images;
+	// var update = {};
+	// var images;
 	/*
 	try{
 		images = book.res.ItemLookupResponse.Items[0].Item[0].ImageSets;
@@ -48,11 +68,11 @@ RepairImg.prototype._updates = function(book){
 		d.resolve(modifiedBook);
 	});
 	*/
-	
+
 	return d.promise;
 };
 
-RepairImg.prototype.cron = function(){
+UpdateUrl.prototype.cron = function(){
 	var d = Q.defer();
 	var _updates = this._updates.bind(this);
 
@@ -76,5 +96,11 @@ module.exports = function(opts){
 			{ "modifiedLog.UpdateUrlAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
 		]
 	};
-	return new RepairImg(_opts);
+
+	_opts.amazonConditions = {
+    RelationshipType: 'AuthorityTitle',
+    ResponseGroup: 'RelatedItems, Small'
+	};
+
+	return new UpdateUrl(_opts);
 };

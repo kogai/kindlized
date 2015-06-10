@@ -77,20 +77,13 @@ module.exports = function(opts){
 		$and: [
 			{
 				$or: [
-					{
-						AuthorityASIN: { $exists: false }
-					}, {
-						AuthorityASIN: ['']
-					}, {
-						AuthorityASIN: 'UNDEFINED'
-					}, {
-						AuthorityASIN: ['UNDEFINED']
-					}
+					{ AuthorityASIN: { $exists: false } },
+					{ AuthorityASIN: [''] },
+					{ AuthorityASIN: 'UNDEFINED' },
+					{ AuthorityASIN: ['UNDEFINED'] }
 				]
 			},
-			{
-				"modifiedLog.AddASINAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') }
-			}
+			{ "modifiedLog.AddASINAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
 		]
 	};
 
