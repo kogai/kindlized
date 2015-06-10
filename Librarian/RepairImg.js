@@ -76,5 +76,5 @@ module.exports = function(opts){
 			}
 		]
 	};
-	return new RepairImg(opts);
+	return new RepairImg(_opts);
 };

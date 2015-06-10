@@ -92,5 +92,5 @@ module.exports = function(opts){
 		ResponseGroup: 'RelatedItems'
 	};
 
-	return new AddASIN(opts);
+	return new AddASIN(_opts);
 };
