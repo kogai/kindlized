@@ -4,7 +4,6 @@ var Q = require('q');
 var _ = require('underscore');
 
 var itemLookUp = require('common/itemLookUp');
-var interval = require('common/constant').interval;
 var log = require('common/log');
 var warn = log.warn;
 

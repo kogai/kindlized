@@ -29,13 +29,15 @@ function Operator(opts){
 	this.currentPage = 1; //ItemPage
 	this.maxPage = 0;
 	this.totalItems = 0;
+	this.items = [];
 
 	return this;
 }
 
 /**
-@param { String } type - 検索タイプ ex: author, title
-@return { Object } _conditions AmazonAPIの検索条件. 署名付き. シングルトンは署名がマッチしないので毎回生成する
+@param { String } type - 検索タイプ ex: Author, Title
+@example 'Author'
+@return { Object } _conditions AmazonAPIの検索条件. 署名付き. シングルトンだと署名がマッチしないので毎回生成する
 **/
 Operator.prototype._conditions = function(){
 
@@ -88,12 +90,16 @@ Operator.prototype.search = function(callback){
 					break;
 			}
 			// エラーコードを記録しておく
-			return log.info(errorCode);
+			if(process.env.NODE_ENV === 'development'){
+				return log.info(errorCode);
+			}
+			return log.warn.info(errorCode);
 		}
 		_self.retry = 0;
-		callback(null, res.ItemSearchResponse.Items);
+		callback(null, res.ItemSearchResponse.Items[0]);
 	});
 };
+
 
 Operator.prototype.count = function(callback){
 	var _self = this;
@@ -102,22 +108,37 @@ Operator.prototype.count = function(callback){
 			log.info(err);
 			return callback(err);
 		}
-		_self.totalItems = items[0].TotalResults; //11冊
-		_self.maxPage = items[0].TotalPages; //2ページ
+		_self.totalItems = items.TotalResults; //11冊
+		_self.maxPage = items.TotalPages; //2ページ
 		callback(null);
 	});
 };
 
-Operator.prototype.next = function(done){
-	// var _self = this;
-	// var _count = this.defer(this.count.bind(this));
 
-	if(this.maxPage === this.currentPage){
+/**
+@param { Function } done - ページング完了時に呼ばれるコールバック関数
+**/
+Operator.prototype.next = function(done){
+	var _self = this;
+
+	// 完了時の処理
+	if(this.currentPage > this.maxPage){
+		this.currentPage = 1;
 		return done();
 	}
-	this.next(done);
+
+	this.search(function(err, items){
+		if(err){
+			return log.info(err);
+		}
+		_self.currentPage++;
+		_self.items = _self.items.concat(items.Item);
+		_self.next(done);
+	});
 
 	/*
+	var _self = this;
+	var _count = this.defer(this.count.bind(this));
 	_count()
 	.fail(function(err){
 		log.info(err);

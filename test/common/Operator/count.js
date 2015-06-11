@@ -3,8 +3,10 @@
 var util = require('util');
 
 var Operator = require('common/Operator')({
-	query: "岩明均",
-	type: "Author"
+	query: "ヒストリエ",
+	type: "Title"
+	// query: "岩明均",
+	// type: "Author"
 });
 
 var log = require('common/log');

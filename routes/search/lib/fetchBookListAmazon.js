@@ -10,7 +10,7 @@ var MakeOpConfig = require('common/makeOpConfig');
 var MakeExistenceExpression = require('routes/search/lib/makeExistenceExpression');
 var modelBookList = require('models/BookList');
 var modelAuthor = require('models/Author');
-var constant = require('common/constant');
+var INTERVAL = require('common/constant').INTERVAL;
 
 var opConfig = new MakeOpConfig();
 var opExistenceBook = new OpHelper(opConfig);
@@ -57,7 +57,7 @@ module.exports = function(data) {
 					setTimeout(function() {
 						warn.info(intervalTimeIncrements);
 						recursionOpExistenceBook();
-					}, constant.interval * intervalTimeIncrements);
+					}, INTERVAL * intervalTimeIncrements);
 				}
 			} finally {
 				if (bookListInAmazon === undefined) {

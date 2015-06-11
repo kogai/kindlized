@@ -6,7 +6,7 @@ var OpHelper = require('apac').OperationHelper;
 var MakeOpConfig = require('common/makeOpConfig');
 var num = 0;
 var opConfig = new MakeOpConfig();
-var interval = require('common/constant').interval;
+var INTERVAL = require('common/constant').INTERVAL;
 var log = require('common/log');
 var warn = log.warn;
 
@@ -33,7 +33,7 @@ var execApi = function( expression, callback, errorCallback, defferd ) {
         num++;
         setTimeout(function(){
   				execApi( expression, callback, errorCallback, defferd );
-  			}, interval * num);
+  			}, INTERVAL * num);
       } else {
         var result;
         try {
