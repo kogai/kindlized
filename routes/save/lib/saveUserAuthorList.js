@@ -2,7 +2,7 @@
 
 var Q = require('q');
 var _ = require('underscore');
-var modelUser = require('user');
+var modelUser = require('models/User');
 
 var findUser = function( data ) {
 	var def = Q.defer();

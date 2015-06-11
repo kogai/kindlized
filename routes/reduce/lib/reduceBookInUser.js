@@ -2,7 +2,7 @@ var Q = require('q');
 var _ = require('underscore');
 var express = require('express');
 var router = express.Router();
-var modelUser = require('user');
+var modelUser = require('models/User');
 var constant = require('common/constant');
 
 var fetchModelUser = function (req, res) {
