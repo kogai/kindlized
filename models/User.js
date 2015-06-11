@@ -1,8 +1,11 @@
+"use strict";
+
 var mongoose = require('mongoose');
 var mongodb;
-var modelUser = require('user/lib/modelUser');
-var comparePassword = require('user/lib/comparePassword');
-var hashPassword = require('user/lib/hashPassword');
+
+var modelUser = require('models/User/lib/modelUser');
+var comparePassword = require('models/User/lib/comparePassword');
+var hashPassword = require('models/User/lib/hashPassword');
 
 modelUser.methods.comparePassword = comparePassword;
 modelUser.pre('save', hashPassword);
