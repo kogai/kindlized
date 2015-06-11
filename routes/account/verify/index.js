@@ -1,5 +1,5 @@
 var Q = require('q');
-var modelUser = require('user');
+var modelUser = require('models/User');
 
 var verifyAndModifyUser = function (data) {
 	"use strict";

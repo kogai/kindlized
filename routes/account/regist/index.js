@@ -4,7 +4,7 @@ var Q = require('q');
 var uuid = require('node-uuid');
 var nodemailer = require('nodemailer');
 
-var User = require('user/');
+var User = require('models/User');
 var mailInfo = require('common/constant').mail.info;
 var Mailer = require('common/Mailer');
 var log = require('common/log');
