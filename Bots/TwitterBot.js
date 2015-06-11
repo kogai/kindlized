@@ -3,9 +3,11 @@
 var app = require('express')();
 var server = require('http').Server(app).listen(5000);
 var io = require('socket.io')(server);
+var request = require('superagent');
 
 var Twitter = require('twitter');
 var AuthBot = require('models/AuthBot');
+var slackPostAPI = require('common/makeCredential')('slack');
 var log = require('common/log');
 
 function TwitterBot(credentials, callback){
@@ -65,13 +67,40 @@ TwitterBot.prototype.tweet = function(tweetStrng){
 	});
 };
 
-TwitterBot.prototype.setFavorite = function(tweetId){
-	this.client.post('favorites/create', { id: tweetId }, function(err, tweets, res){
+/**
+@param
+**/
+TwitterBot.prototype.search = function(callback){
+	this.client.stream('statuses/filter', { track: 'kindle化' }, function(stream){
+		log.info("TwitterBotのstreamクライアントを接続");
+		stream.on('data', function(tweet) {
+			if (tweet.text) {
+				callback(tweet.id_str);
+			}
+		});
+	});
+};
+
+TwitterBot.prototype.send = function(str){
+	request
+	.post(slackPostAPI)
+	.send({
+		text: str
+	})
+	.end(function(err, ret){
 		if(err){
 			return log.info(err);
 		}
-		log.info(tweets);
-		log.info(res);
+	});
+};
+
+TwitterBot.prototype.setFavorite = function(tweetId){
+	var _self = this;
+	this.client.post('favorites/create', { id: tweetId }, function(err, tweet, res){
+		if(err){
+			return _self.send(err[0].message);
+		}
+		_self.send(tweet.user.screen_name + 'の "' + tweet.text + '" ' + ' をfavoriteした');
 	});
 };
 
@@ -87,6 +116,7 @@ TwitterBot.prototype.getTweets = function(screen_name, callback){
 TwitterBot.prototype.listen = function(){
 	var _self = this;
 	log.info('Botsサービスを起動');
+
 	io.on('connection', function(socket){
 		log.info('Botsサービスのクライアントを接続');
 
@@ -98,6 +128,8 @@ TwitterBot.prototype.listen = function(){
 			_self.tweet("『" + book.title + "』がもうすぐkindle化されるかも? " + book.url);
 		});
 	});
+
+	this.search(this.setFavorite.bind(this));
 };
 
 module.exports = function(credentials, callback){

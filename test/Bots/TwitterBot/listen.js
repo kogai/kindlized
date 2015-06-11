@@ -4,6 +4,7 @@ var twitterCredential = require('common/makeCredential')('twitter');
 var log = require('common/log');
 
 var TwitterBot = require('Bots/TwitterBot');
+
 var bot = TwitterBot({
 	consumer_key: twitterCredential.consumerKey,
 	consumer_secret: twitterCredential.consumerSecret,
@@ -12,5 +13,5 @@ var bot = TwitterBot({
 	if(err){
 		return log.info(err);
 	}
-	bot.setFavorite("607116319155052544");
+	bot.listen();
 });
