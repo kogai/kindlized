@@ -1,3 +1,5 @@
+var amazon = require('common/makeCredential')('amazon');
+
 module.exports = {
   interval: 500,
   INTERVAL: 500,
@@ -14,5 +16,11 @@ module.exports = {
   },
   mail: {
     info: 'info@kindlize.it'
+  },
+  OPERATION_CONFIG: {
+  	endPoint: 'ecs.amazonaws.jp',
+  	awsId: amazon.AWSAccessKeyId,
+  	awsSecret: amazon.AWSSecretAccessKey,
+  	assocId: amazon.AWSassociatesId
   }
 };
