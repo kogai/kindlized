@@ -72,10 +72,10 @@ TwitterBot.prototype.tweet = function(tweetStrng){
 kindle化したら通知するやつ結構便利な気が。。。
 **/
 TwitterBot.prototype.search = function(callback){
-	this.client.stream('statuses/filter', { track: 'kindle化 通知', language: "ja" }, function(stream){
+	this.client.stream('statuses/filter', { track: 'kindle', language: "ja" }, function(stream){
 		log.info("TwitterBotのstreamクライアントを接続");
 		stream.on('data', function(tweet) {
-			if (tweet.text) {
+			if (tweet.text && tweet.text.match('通知')) {
 				callback(tweet.id_str);
 			}
 		});

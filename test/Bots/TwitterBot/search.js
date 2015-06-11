@@ -14,6 +14,6 @@ var bot = TwitterBot({
 		return log.info(err);
 	}
 	bot.search(function(tweet){
-		log.info(tweet);
+		log.info(tweet.text);
 	});
 });
