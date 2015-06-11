@@ -65,6 +65,16 @@ TwitterBot.prototype.tweet = function(tweetStrng){
 	});
 };
 
+TwitterBot.prototype.setFavorite = function(tweetId){
+	this.client.post('favorites/create', { id: tweetId }, function(err, tweets, res){
+		if(err){
+			return log.info(err);
+		}
+		log.info(tweets);
+		log.info(res);
+	});
+};
+
 TwitterBot.prototype.getTweets = function(screen_name, callback){
 	this.client.get('statuses/user_timeline', { screen_name: screen_name }, function(err, tweets, res){
 		if(err){
