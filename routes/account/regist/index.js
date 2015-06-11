@@ -7,6 +7,7 @@ var nodemailer = require('nodemailer');
 var User = require('user/');
 var mailInfo = require('common/constant').mail.info;
 var Mailer = require('common/Mailer');
+var log = require('common/log');
 
 var makeNewUserModel = function(data) {
   var d = Q.defer();
@@ -113,6 +114,6 @@ module.exports = function(data) {
   .then(renderRouter)
   .fail(renderFailRouter)
   .done(function(data) {
-    console.log('新規ユーザー登録完了');
+    log.info(data.mail + ':新規ユーザー登録完了');
   });
 };

@@ -1,6 +1,7 @@
 "use strict";
 
 var twitterCredential = require('common/makeCredential')('twitter');
+var log = require('common/log');
 
 var TwitterBot = require('Bots/TwitterBot');
 var AuthServer = require('Bots/AuthServer');
@@ -9,7 +10,7 @@ var Bots = {};
 Bots.AuthServer = AuthServer();
 
 Bots.AuthServer.listen(4000, function(){
-	console.log("Authentication server start.");
+	log.info("Authentication server start.");
 });
 
 Bots.TwitterBot = TwitterBot({

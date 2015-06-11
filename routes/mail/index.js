@@ -5,6 +5,9 @@ var log = require('common/log');
 var slackPostAPI = require('common/makeCredential')('slack');
 
 module.exports = function(req, res){
+
+	log.info(req);
+
 	var mandrillEvents = req.body.mandrill_events;
 	var mandrillBody, mandrillHtml;
 

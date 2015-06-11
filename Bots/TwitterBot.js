@@ -76,11 +76,16 @@ TwitterBot.prototype.getTweets = function(screen_name, callback){
 
 TwitterBot.prototype.listen = function(){
 	var _self = this;
+	log.info('Botsサービスを起動');
 	io.on('connection', function(socket){
-		log.info('Botsサービスのソケットサーバーを接続');
+		log.info('Botsサービスのクライアントを接続');
 
 		socket.on('librarian-kindlized', function(book){
 			_self.tweet("『" + book.title + "』がkindle化されました。 " + book.url);
+		});
+
+		socket.on('librarian-addASIN', function(book){
+			_self.tweet("『" + book.title + "』がもうすぐkindle化されるかも? " + book.url);
 		});
 	});
 };

@@ -6,7 +6,7 @@ var moment = require('moment-timezone');
 var Author = require('models/Author');
 
 var log = require('common/log');
-var limitAuthor = require('common/constant').limitAuthor;
+var LIMIT = require('common/constant').LIMIT.AUTHOR;
 var periodicalDay = require('common/constant').periodicalDay;
 
 module.exports = function() {
@@ -29,7 +29,7 @@ module.exports = function() {
   .sort({
     lastModified: 1
   })
-  .limit(limitAuthor);
+  .limit(LIMIT);
 
   query.exec(function( error, authors ){
     log.info( authors.length, '人の著者の処理を実行する');
