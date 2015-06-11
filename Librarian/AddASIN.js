@@ -3,6 +3,8 @@
 var util = require('util');
 var Q = require('q');
 var moment = require('moment-timezone');
+var io = require('socket.io-client');
+var socket = io.connect('http://127.0.0.1:' + 5000, { reconnect: true });
 
 var Librarian = require('Librarian/Librarian');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
@@ -38,6 +40,7 @@ AddASIN.prototype._updates = function(book){
 			}
 		});
 		log.info('AuthorityASIN 更新:' + book.title);
+		socket.emit('librarian-addASIN', book);
 	}catch(e){
 		AuthorityASIN = undefined;
 		log.info('AuthorityASIN 未更新:' + book.title);
@@ -80,6 +83,7 @@ module.exports = function(opts){
 				$or: [
 					{ AuthorityASIN: { $exists: false } },
 					{ AuthorityASIN: [''] },
+					{ AuthorityASIN: undefined },
 					{ AuthorityASIN: 'UNDEFINED' },
 					{ AuthorityASIN: ['UNDEFINED'] }
 				]

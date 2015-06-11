@@ -1,7 +1,9 @@
+"use strict";
+
 var Q = require('q');
 var _ = require('underscore');
-var log = require('common/log');
 
+var log = require('common/log');
 var modelBookList = require('models/BookList');
 var saveBook = require('common/saveBook');
 
@@ -11,7 +13,6 @@ module.exports = function(data) {
 
   Q.all(
       bookListInAmazon.map(function(book) {
-        log.info('保存する書籍は',book.title);
         var def = Q.defer();
         saveBook(book)
           .done(function(book) {

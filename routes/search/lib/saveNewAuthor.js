@@ -1,4 +1,8 @@
+"use strict";
+
 var Q = require('q');
+var _ = require('underscore');
+
 var saveAuthor = require('common/saveAuthor');
 
 module.exports = function(data) {
@@ -9,11 +13,11 @@ module.exports = function(data) {
 	/*
 	[ 'foo', 'bar' ]のように、複数著者がいる場合があるので、concatしておく
 	*/
-  for (var i = 0; i < authorListInAmazon.length; i++) {
-    var authors = authorListInAmazon[i];
-    authorsStore = authorsStore.concat(authors);
+  var i;
+  for (i = 0; i < authorListInAmazon.length; i++) {
+    authorsStore = authorsStore.concat(authorListInAmazon[i]);
+    authorsStore = _.uniq(authorsStore);
   }
-
 
 	Q.all( authorsStore.map(
 		function( author, index, authorList ){

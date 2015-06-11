@@ -1,6 +1,7 @@
 "use strict";
 
 var Q = require('q');
+var util = require('util');
 
 var log = require('common/log');
 var promiseSerialize = require('common/promiseSerialize');
@@ -27,8 +28,7 @@ var handleAuthorData = function(author){
 		log.info(author.name + ' : ' + author.pageCount + 'ページ分' + 'の処理を完了');
 	})
 	.fail(function(result){
-		log.info(result.err);
-		log.info(result.author.name + ' : ' + 'の処理が失敗');
+		log.info(util.inspect(result.err, null, null));
 	})
 	.done(function() {
 		d.resolve();

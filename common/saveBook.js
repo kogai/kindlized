@@ -1,4 +1,8 @@
+"use strict";
+
 var Q = require('q');
+var moment = require('moment-timezone');
+
 var ModelBookList = require('models/BookList.js');
 var log = require('common/log');
 
@@ -22,19 +26,28 @@ module.exports = function( book ) {
             url: book.url,
             images: book.images,
             isKindlized: book.isKindlized,
+            isKindlizedUrl: false,
+            modifiedLog: {
+          		AddBookAt: moment(),
+          		InspectKindlizeAt: moment(),
+          		AddASINAt: moment(),
+          		UpdateUrlAt: moment()
+            },
             AuthorityASIN: book.AuthorityASIN
           });
           newBook.save(function( err ) {
-            if (err) console.log(err);
+            if (err){
+              return log.info(err);
+            }
             log.info( '書籍:' + newBook.title + 'が登録されました'　);
             defferd.resolve( newBook );
           });
         }catch( error ){
           log.info(error);
-          defferd.resolve( undefined );
+          defferd.resolve(undefined);
         }
       }else{
-        defferd.resolve( undefined );
+        defferd.resolve(undefined);
       }
     });
   }catch(error){

@@ -27,24 +27,10 @@ InspectKindlize.prototype._fetch = function(){
 
 	var conditions = {
 		$and: [
-			{
-				AuthorityASIN: {
-					$exists: true
-				}
-			},
-			{
-				AuthorityASIN: {
-					$ne: ['']
-				}
-			},
-			{
-				isKindlized: false
-			},
-			{
-				"modifiedLog.InspectKindlizeAt": {
-					"$lte": moment().subtract(PERIODICAL_DAY, 'days')
-				}
-			}
+			{ AuthorityASIN: { $exists: true } },
+			{ AuthorityASIN: { $ne: [''] } },
+			{ isKindlized: false },
+			{ "modifiedLog.InspectKindlizeAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
 		]
 	};
 
