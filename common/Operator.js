@@ -179,15 +179,18 @@ Operator.prototype.fetch = function(done){
 };
 
 /**
-Operator.fetchをラップするメソッド
+[WIP] Operator.fetchをラップするメソッド
 PAGING_LIMIT * 2 よりもページ数の多いリクエストは、発行年度を検索条件に含めてリクエストを分割する
 @param { Function } done - ページング完了時に呼ばれるコールバック関数
 **/
 Operator.prototype.fetchOverLimit = function(done){
+	throw new Error('this method is work in progress.');
+	/*
 	if(!this.isOverLimitTwice){
 		throw new Error('Operator.isOverLimitTwice required Operator.isOverLimitTwice');
 	}
 	done(null, []);
+	*/
 };
 
 /**
