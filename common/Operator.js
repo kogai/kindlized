@@ -214,16 +214,21 @@ Operator.prototype.defer = function(method){
 
 /**
 ハンドラー
+@param { Function } done - ページング完了時に呼ばれるコールバック関数
 **/
-Operator.prototype.run = function(){
+Operator.prototype.run = function(done){
+	var _self = this;
 	var _count = this.defer(this.count.bind(this));
 	var _fetch = this.defer(this.fetch.bind(this));
 
 	Q.when()
 	.then(_count)
 	.then(_fetch)
+	.fail(function(err){
+		done(err, null);
+	})
 	.done(function(items){
-		log.info(items.length);
+		done(null, _self.normalize(items));
 	});
 };
 
