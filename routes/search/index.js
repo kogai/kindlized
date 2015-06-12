@@ -27,9 +27,6 @@ var fetchBookListFromAmazon = require('routes/search/lib/fetchBookListFromAmazon
 var fetchAuthorListAmazon = require('routes/search/lib/fetchAuthorListAmazon');
 var saveNewAuthor = require('routes/search/lib/saveNewAuthor');
 
-var opConfig = new MakeOpConfig();
-var opExistenceBook = new OpHelper(opConfig);
-
 router.post('/db', function(req, res) {
 	Q.when({
 		res: res,
