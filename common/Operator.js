@@ -74,6 +74,7 @@ Operator.prototype._conditions = function(){
 };
 
 /**
+Operator.query, Operator.currentPage を検索する
 @param { Function } callback
 **/
 Operator.prototype.search = function(callback){
@@ -187,6 +188,49 @@ Operator.prototype.fetchOverLimit = function(done){
 		throw new Error('Operator.isOverLimitTwice required Operator.isOverLimitTwice');
 	}
 	done(null, []);
+};
+
+/**
+@param  { Array } books - AmazonAPIから取得した生の書籍データ配列
+@return  { Array } DB保存用に正規化された書籍データの配列
+**/
+Operator.prototype._normalize = function(books){
+	if(!util.isArray(books)) {
+		throw new Error('Operator._normalize required array');
+	}
+
+	return books.map(function(book){
+
+		var itemAttr = book.ItemAttributes[0], itemImageSets, isKindlized, isKindlizedUrl;
+
+		var normalizedBook = {
+			ASIN: book.ASIN,
+			ISBN: book.ISBN,
+			SKU: book.SKU,
+			EAN: itemAttr.EAN,
+			author: itemAttr.Author,
+			title: itemAttr.Title,
+			publisher: itemAttr.Publisher,
+			publicationDate: itemAttr.PublicationDate,
+			price: itemAttr.ListPrice,
+			url: book.DetailPageURL
+		};
+
+		if(book.ImageSets){
+			itemImageSets = JSON.stringify(book.ImageSets);
+		}
+
+		if(itemAttr.ProductGroup[0] === 'eBooks'){
+			isKindlized = true;
+			isKindlizedUrl = true;
+		}
+
+		normalizedBook.itemImageSets = itemImageSets;
+		normalizedBook.isKindlized = isKindlized;
+		normalizedBook.isKindlizedUrl = isKindlizedUrl;
+
+		return normalizedBook;
+	});
 };
 
 
