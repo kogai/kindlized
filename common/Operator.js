@@ -140,7 +140,7 @@ Operator.prototype.fetch = function(done){
 	var _self = this;
 
 	if(!this.maxPage){
-		throw new Error('this.maxPage required before Operator.fetch method call.');
+		throw new Error('Operator.maxPage required before Operator.fetch method call.');
 	}
 
 	// 完了時の処理
@@ -177,8 +177,11 @@ Operator.fetchをラップするメソッド
 PAGING_LIMIT * 2 よりもページ数の多いリクエストは、発行年度を検索条件に含めてリクエストを分割する
 @param { Function } done - ページング完了時に呼ばれるコールバック関数
 **/
-Operator.prototype.fetchOverLimitTwice = function(done){
-
+Operator.prototype.fetchOverLimit = function(done){
+	if(!this.isOverLimitTwice){
+		throw new Error('Operator.isOverLimitTwice required Operator.isOverLimitTwice');
+	}
+	done(null, []);
 };
 
 // Operator.prototype.prev = function(){};
