@@ -113,11 +113,13 @@ Operator.prototype.search = function(callback){
 };
 
 
+/**
+@param { Function } callback
+**/
 Operator.prototype.count = function(callback){
 	var _self = this;
 	this.search(function(err, items){
 		if(err){
-			log.info(err);
 			return callback(err);
 		}
 		_self.totalItems = Number(items.TotalResults[0]); //11冊
@@ -130,21 +132,23 @@ Operator.prototype.count = function(callback){
 /**
 @param { Function } done - ページング完了時に呼ばれるコールバック関数
 **/
-Operator.prototype.next = function(done){
+Operator.prototype.fetch = function(done){
 	var _self = this;
 
 	if(items === undefined){
 		items = [];
 	}
 	if(!this.maxPage){
-		throw new Error('this.maxPage required before Operator.next method call.');
+		throw new Error('this.maxPage required before Operator.fetch method call.');
 	}
 
 	// 完了時の処理
 	if(this.currentPage > this.maxPage){
 		this.maxPage = null;
 		this.currentPage = 1;
-		// items = _.uniq(items);
+		items = _.uniq(items, function(item){
+			return item.ASIN[0];
+		});
 
 		return done(null, items);
 	}
@@ -153,18 +157,26 @@ Operator.prototype.next = function(done){
 		if(err){
 			return done(err);
 		}
-		log.info(_self.currentPage + '/' + _self.maxPage);
-
 		_self.currentPage++;
+
+		// AmazonAPIのページング上限を超えたら
+		// ソート順を逆にする
 		if(_self.currentPage > PAGING_LIMIT){
 			_self.isOverPagingLimit = true;
 		}
 
 		items = items.concat(searchedItems.Item);
-
-		_self.next(done);
+		_self.fetch(done);
 	});
 
+};
+
+/**
+PAGING_LIMIT * 2 よりもページ数の多いリクエストは発行年度を検索条件に含めてリクエストを分割する
+@param { Function } done - ページング完了時に呼ばれるコールバック関数
+**/
+Operator.prototype.fetchOverLimit = function(done){
+// 
 };
 
 // Operator.prototype.prev = function(){};

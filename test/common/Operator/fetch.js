@@ -11,25 +11,11 @@ var Operator = require('common/Operator')({
 var log = require('common/log');
 
 Operator.count(function(err){
-	Operator.next(function(err, items){
+	Operator.fetch(function(err, items){
 		if(err){
 			return log.info(util.inspect(err, null, null));
 		}
-		// /*
-		var asins = items.map(function(item){
-			/*
-			try{
-				log.info(item.ItemAttributes[0].Title);
-			}catch(e){
-				log.info(item);
-			}
-			*/
-			return item.ASIN[0];
-		});
-		// */
-		asins = _.uniq(asins);
 		log.info(Operator.totalItems);
 		log.info(items.length);
-		log.info(asins.length);
 	});
 });
