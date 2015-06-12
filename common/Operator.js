@@ -12,8 +12,6 @@ var _ = require('underscore');
 
 var log = require('common/log');
 
-var items;
-
 /**
 @constructor
 @param { String } query - search query.
@@ -34,7 +32,8 @@ function Operator(opts){
 	this.maxPage = null;
 	this.totalItems = 0;
 	this.items = [];
-	this.isOverPagingLimit = false; // AmazonAPIの検索ページネーション上限は10P. 降順 <-> 昇順にソート順を切り替えて20Pまで呼び出す
+	this.isOverLimit = false; // AmazonAPIの検索ページネーション上限は10P. 降順 <-> 昇順にソート順を切り替えて20Pまで呼び出す
+	this.isOverLimitTwice = false; // Operator.isOverPagingLimitを超えるリクエストは発行年度を検索条件に含めてリクエストを分割する
 
 	return this;
 }
@@ -47,7 +46,7 @@ function Operator(opts){
 Operator.prototype._conditions = function(){
 
 	var sortConditions = 'titlerank', currentPage = this.currentPage;
-	if(this.isOverPagingLimit){
+	if(this.isOverLimit){
 		sortConditions = '-titlerank';
 		currentPage -= PAGING_LIMIT;
 	}
@@ -135,9 +134,6 @@ Operator.prototype.count = function(callback){
 Operator.prototype.fetch = function(done){
 	var _self = this;
 
-	if(items === undefined){
-		items = [];
-	}
 	if(!this.maxPage){
 		throw new Error('this.maxPage required before Operator.fetch method call.');
 	}
@@ -146,11 +142,11 @@ Operator.prototype.fetch = function(done){
 	if(this.currentPage > this.maxPage){
 		this.maxPage = null;
 		this.currentPage = 1;
-		items = _.uniq(items, function(item){
+		this.items = _.uniq(this.items, function(item){
 			return item.ASIN[0];
 		});
 
-		return done(null, items);
+		return done(null, this.items);
 	}
 
 	this.search(function(err, searchedItems){
@@ -162,40 +158,34 @@ Operator.prototype.fetch = function(done){
 		// AmazonAPIのページング上限を超えたら
 		// ソート順を逆にする
 		if(_self.currentPage > PAGING_LIMIT){
-			_self.isOverPagingLimit = true;
+			_self.isOverLimit = true;
 		}
 
-		items = items.concat(searchedItems.Item);
+		_self.items = _self.items.concat(searchedItems.Item);
 		_self.fetch(done);
 	});
 
 };
 
 /**
-PAGING_LIMIT * 2 よりもページ数の多いリクエストは発行年度を検索条件に含めてリクエストを分割する
+PAGING_LIMIT * 2 よりもページ数の多いリクエストは、発行年度を検索条件に含めてリクエストを分割する
 @param { Function } done - ページング完了時に呼ばれるコールバック関数
 **/
-Operator.prototype.fetchOverLimit = function(done){
-// 
+Operator.prototype.fetchOverLimitTwice = function(done){
+	this.isOverLimitTwice = true;
 };
 
 // Operator.prototype.prev = function(){};
 
+
 /**
+引数にコールバック関数を持つメソッドをPromiseオブジェクトでラップする
 @param { Function } method - callback関数を引数に持つメソッド
+@example
+var _method = this.defer(this.method.bind(this));
+_method().done(function(items){ console.log("done."); });
 **/
 Operator.prototype.defer = function(method){
-	/*
-	var _self = this;
-	var _count = this.defer(this.count.bind(this));
-	_count()
-	.fail(function(err){
-		log.info(err);
-		return done();
-	})
-	.done(function(items){
-	});
-	*/
 	var d = Q.defer();
 
 	method(function(err, res){
