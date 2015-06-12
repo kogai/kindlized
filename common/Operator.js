@@ -33,7 +33,7 @@ function Operator(opts){
 	this.totalItems = 0;
 	this.items = [];
 	this.isOverLimit = false; // AmazonAPIの検索ページネーション上限は10P. 降順 <-> 昇順にソート順を切り替えて20Pまで呼び出す
-	this.isOverLimitTwice = false; // Operator.isOverPagingLimitを超えるリクエストは発行年度を検索条件に含めてリクエストを分割する
+	this.isOverLimitTwice = false;
 
 	return this;
 }
@@ -121,8 +121,13 @@ Operator.prototype.count = function(callback){
 		if(err){
 			return callback(err);
 		}
-		_self.totalItems = Number(items.TotalResults[0]); //11冊
-		_self.maxPage = Number(items.TotalPages[0]); //2ページ
+		_self.totalItems = Number(items.TotalResults[0]); //@example 11冊
+		_self.maxPage = Number(items.TotalPages[0]); //@example 2ページ(10冊 + 1冊)
+
+		// Operator.isOverPagingLimitを超えるリクエストは発行年度を検索条件に含めてリクエストを分割する
+		if(_self.maxPage >= PAGING_LIMIT * 2){
+			_self.isOverLimitTwice = true;
+		}
 		callback(null);
 	});
 };
@@ -168,11 +173,12 @@ Operator.prototype.fetch = function(done){
 };
 
 /**
+Operator.fetchをラップするメソッド
 PAGING_LIMIT * 2 よりもページ数の多いリクエストは、発行年度を検索条件に含めてリクエストを分割する
 @param { Function } done - ページング完了時に呼ばれるコールバック関数
 **/
 Operator.prototype.fetchOverLimitTwice = function(done){
-	this.isOverLimitTwice = true;
+
 };
 
 // Operator.prototype.prev = function(){};
