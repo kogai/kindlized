@@ -2,6 +2,7 @@ var amazon = require('common/makeCredential')('amazon');
 
 module.exports = {
   INTERVAL: 500,
+  PAGING_LIMIT: 10,
   retryInterval: 1000 * 60,
   periodicalDay: 1,
   PERIODICAL_DAY: 1,

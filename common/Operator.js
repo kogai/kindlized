@@ -1,14 +1,18 @@
 "use strict";
 
 var INTERVAL = require('common/constant').INTERVAL;
+var PAGING_LIMIT = require('common/constant').PAGING_LIMIT;
 var OPERATION_CONFIG = require('common/constant').OPERATION_CONFIG;
 var OperationHelper = require('apac').OperationHelper;
 var Operation = new OperationHelper(OPERATION_CONFIG);
 
 var Q = require('q');
 var util = require('util');
+var _ = require('underscore');
 
 var log = require('common/log');
+
+var items;
 
 /**
 @constructor
@@ -27,9 +31,10 @@ function Operator(opts){
 	this.operationType = 'ItemSearch';
 	this.retry = 0;
 	this.currentPage = 1; //ItemPage
-	this.maxPage = 0;
+	this.maxPage = null;
 	this.totalItems = 0;
 	this.items = [];
+	this.isOverPagingLimit = false; // AmazonAPIの検索ページネーション上限は10P. 降順 <-> 昇順にソート順を切り替えて20Pまで呼び出す
 
 	return this;
 }
@@ -41,11 +46,18 @@ function Operator(opts){
 **/
 Operator.prototype._conditions = function(){
 
+	var sortConditions = 'titlerank', currentPage = this.currentPage;
+	if(this.isOverPagingLimit){
+		sortConditions = '-titlerank';
+		currentPage -= PAGING_LIMIT;
+	}
+
 	var _conditions = {
+		Sort: sortConditions,
 		SearchIndex: 'Books',
 		BrowseNode: 465392,
 		Condition: 'New',
-		ItemPage: this.currentPage,
+		ItemPage: currentPage,
 		ResponseGroup: 'Small, ItemAttributes, Images'
 	};
 
@@ -108,8 +120,8 @@ Operator.prototype.count = function(callback){
 			log.info(err);
 			return callback(err);
 		}
-		_self.totalItems = items.TotalResults; //11冊
-		_self.maxPage = items.TotalPages; //2ページ
+		_self.totalItems = Number(items.TotalResults[0]); //11冊
+		_self.maxPage = Number(items.TotalPages[0]); //2ページ
 		callback(null);
 	});
 };
@@ -121,21 +133,46 @@ Operator.prototype.count = function(callback){
 Operator.prototype.next = function(done){
 	var _self = this;
 
-	// 完了時の処理
-	if(this.currentPage > this.maxPage){
-		this.currentPage = 1;
-		return done();
+	if(items === undefined){
+		items = [];
+	}
+	if(!this.maxPage){
+		throw new Error('this.maxPage required before Operator.next method call.');
 	}
 
-	this.search(function(err, items){
+	// 完了時の処理
+	if(this.currentPage > this.maxPage){
+		this.maxPage = null;
+		this.currentPage = 1;
+		// items = _.uniq(items);
+
+		return done(null, items);
+	}
+
+	this.search(function(err, searchedItems){
 		if(err){
-			return log.info(err);
+			return done(err);
 		}
+		log.info(_self.currentPage + '/' + _self.maxPage);
+
 		_self.currentPage++;
-		_self.items = _self.items.concat(items.Item);
+		if(_self.currentPage > PAGING_LIMIT){
+			_self.isOverPagingLimit = true;
+		}
+
+		items = items.concat(searchedItems.Item);
+
 		_self.next(done);
 	});
 
+};
+
+// Operator.prototype.prev = function(){};
+
+/**
+@param { Function } method - callback関数を引数に持つメソッド
+**/
+Operator.prototype.defer = function(method){
 	/*
 	var _self = this;
 	var _count = this.defer(this.count.bind(this));
@@ -147,22 +184,6 @@ Operator.prototype.next = function(done){
 	.done(function(items){
 	});
 	*/
-
-	/*
-	this.search(function(err, items){
-		if(err){
-			return log.info(err);
-		}
-	});
-	*/
-};
-
-// Operator.prototype.prev = function(){};
-
-/**
-@param { Function } method - callback関数を引数に持つメソッド
-**/
-Operator.prototype.defer = function(method){
 	var d = Q.defer();
 
 	method(function(err, res){
@@ -178,6 +199,3 @@ Operator.prototype.defer = function(method){
 module.exports = function(opts){
 	return new Operator(opts);
 };
-
-// this.Title = newBook;
-// this.Author = Author;
