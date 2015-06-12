@@ -114,6 +114,8 @@ Operator.prototype.search = function(callback){
 
 /**
 @param { Function } callback
+@return { Number } totalItems
+@return { Number } maxPage
 **/
 Operator.prototype.count = function(callback){
 	var _self = this;
@@ -128,7 +130,10 @@ Operator.prototype.count = function(callback){
 		if(_self.maxPage >= PAGING_LIMIT * 2){
 			_self.isOverLimitTwice = true;
 		}
-		callback(null);
+		callback(null, {
+			totalItems: _self.totalItems,
+			maxPage: _self.maxPage
+		});
 	});
 };
 
@@ -184,27 +189,42 @@ Operator.prototype.fetchOverLimit = function(done){
 	done(null, []);
 };
 
-// Operator.prototype.prev = function(){};
-
 
 /**
-引数にコールバック関数を持つメソッドをPromiseオブジェクトでラップする
+引数にコールバック関数を持つメソッドをPromiseオブジェクトを返す関数でラップする
 @param { Function } method - callback関数を引数に持つメソッド
 @example
 var _method = this.defer(this.method.bind(this));
-_method().done(function(items){ console.log("done."); });
+_method().done(function(items){ console.log(items, "done."); });
 **/
 Operator.prototype.defer = function(method){
-	var d = Q.defer();
+	return function(){
+		var d = Q.defer();
 
-	method(function(err, res){
-		if(err){
-			return d.reject(err);
-		}
-		d.resolve(res);
+		method(function(err, res){
+			if(err){
+				return d.reject(err);
+			}
+			d.resolve(res);
+		});
+
+		return d.promise;
+	};
+};
+
+/**
+ハンドラー
+**/
+Operator.prototype.run = function(){
+	var _count = this.defer(this.count.bind(this));
+	var _fetch = this.defer(this.fetch.bind(this));
+
+	Q.when()
+	.then(_count)
+	.then(_fetch)
+	.done(function(items){
+		log.info(items.length);
 	});
-
-	return d.promise;
 };
 
 module.exports = function(opts){
