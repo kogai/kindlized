@@ -51,11 +51,11 @@ InspectKindlize.prototype._fetch = function(){
 	return d.promise;
 };
 
-/*
-	調査対象の書籍のシークエンシャル処理
-	@ param books
-	@ return none
-*/
+/**
+調査対象の書籍のシークエンシャル処理
+@param books
+@return none
+**/
 InspectKindlize.prototype._sequential = function(books){
 	var d = Q.defer();
 	var _inspect = this._inspect.bind(this);
@@ -137,7 +137,7 @@ InspectKindlize.prototype._hasEbook = function(relatedItem){
 
 InspectKindlize.prototype._update = function(book){
 	var conditions = {
-		AuthorityASIN: book.AuthorityASIN
+		ASIN: book.ASIN
 	};
 	var update = book.update;
 
@@ -166,7 +166,7 @@ InspectKindlize.prototype._update = function(book){
 
 	// 更新処理
 	var updater = function(){
-		BookList.findOneAndUpdate(conditions, update, function(err, savedBook){
+		BookList.findOneAndUpdate(conditions, update, { upsert: true }, function(err, savedBook){
 			if(err){
 				return log.info(err);
 			}

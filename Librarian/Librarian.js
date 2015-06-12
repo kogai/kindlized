@@ -130,7 +130,7 @@ Librarian.prototype.update = function(book, update, callback){
 		update.modifiedLog.UpdateUrlAt = moment();
 	}
 
-	this.Model.findOneAndUpdate(conditions, update, function(err, modifiedBook){
+	this.Model.findOneAndUpdate(conditions, update, { upsert: true }, function(err, modifiedBook){
 		if(err){
 			return callback(err);
 		}
