@@ -90,6 +90,9 @@ AddBook.prototype.saveBooks = function(done){
 		if(err){
 			return done(err);
 		}
+		books.map(function(book){
+			return log.info("新規登録書籍:" + book.title);
+		});
 		done(books);
 	});
 };
@@ -115,8 +118,14 @@ AddBook.prototype.run = function(done){
 		return done();
 	})
 	.fail(function(err){
-		return done(err);
+		log.info(err);
+		return done();
 	});
+};
+
+
+AddBook.prototype.cron = function(){
+	return this.defer(this.run.bind(this));
 };
 
 module.exports = function(opts){

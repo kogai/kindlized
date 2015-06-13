@@ -40,8 +40,6 @@ Collector.prototype.saveBook = function(book, done){
 	if(typeof book !== 'object' || util.isArray(book)){ throw new Error('saveBook method required Object parametor.'); }
 	if(typeof done !== 'function' || !done){ throw new Error('saveBook method required Function parametor.'); }
 
-	log.info(book);
-
 	// 必須項目の検証
 	if(!book.ASIN){ throw new Error('book param required ASIN property.'); }
 	if(!book.author){ throw new Error('book param required author property.'); }
@@ -162,6 +160,8 @@ Collector.prototype.updateItem = function(item, update, done){
 		if(err){
 			return done(err);
 		}
+		if(item.name){ log.info("更新:" + item.name); }
+		if(item.title){ log.info("更新:" + item.title); }
 		done(null);
 	});
 };
