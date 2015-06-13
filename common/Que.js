@@ -1,12 +1,15 @@
 "use strict";
 
-var EventEmitter = require('event').EventEmitter;
+var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var INTERVAL_TWEET = require('common/constant').INTERVAL_TWEET;
+var log = require('common/log');
 
 function Que(){
 	this.que = [];
 	this.emitter = new EventEmitter();
+	this.isHalt = true;
+	this.INTERVAL = INTERVAL_TWEET;
 	return this;
 }
 
@@ -29,19 +32,33 @@ Que.prototype.push = function(collections){
 	}
 };
 
-
+/**
+Que.queに格納されたデータを消費するメソッド
+registerに登録しておいたイベントへ通知する
+@param { String } type - 通知するイベント名
+**/
 Que.prototype.pull = function(type){
-	var payload = this.items.shift();
+	var payload = this.que.shift();
 	this.emitter.emit(type, payload);
 };
 
-Que.prototype.delay = function(type){
-	var _self = this;
-	if(this.que.length > 0){
-		setInterval(function(){
-			_self.pull(type);
-		}, INTERVAL_TWEET);
-	}
+/**
+Que.pullメソッドをラップするメソッド
+Que.queにデータがある限り、インターバルを挟んでQue.pullし続ける
+@param { String } type - 通知するイベント名
+**/
+Que.prototype.consume = function(type){
+	var _self = this, consumer;
+
+	this.isHalt = false;
+	consumer = setInterval(function(){
+		_self.pull(type);
+		if(_self.que.length === 0){
+			_self.isHalt = true;
+			clearInterval(consumer);
+			return;
+		}
+	}, this.INTERVAL);
 };
 
 module.exports = function(){
