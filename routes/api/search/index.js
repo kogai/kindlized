@@ -1,7 +1,10 @@
 "use strict";
 
+var _ = require('underscore');
+
 var Operator = require('common/Operator');
-var Collector = require('common/Collector')('book');
+var BookCollector = require('common/Collector')('book');
+var AuthorCollector = require('common/Collector')('author');
 var Search = {};
 
 var log = require('common/log');
@@ -14,14 +17,10 @@ Search.amazon = function(req, res){
 	});
 
 	searchOperator.run(function(err, books){
-		if(books){
-			res.send(books);
-		}
+		res.send(books || []);
 
-		if(!books){
-			return log.info('AmazonAPIの検索結果:' + books + '冊');
-		}
-		Collector.saveCollections(books, function(err, savedBooks){
+		// 書籍の登録処理
+		BookCollector.saveCollections(books, function(err, savedBooks){
 			if(err){
 				return log.info(err);
 			}
@@ -29,6 +28,24 @@ Search.amazon = function(req, res){
 				return log.info('新しく登録した書籍はありません');
 			}
 			log.info(savedBooks);
+		});
+
+		// 著者の登録処理
+		var authors = books.map(function(book){
+			return book.author[0];
+		});
+
+		authors = _.uniq(authors);
+		authors = _.compact(authors);
+
+		AuthorCollector.saveCollections(authors, function(err, savedAuthors){
+			if(err){
+				return log.info(err);
+			}
+			if(savedAuthors.length === 0){
+				return log.info('新しく登録した著者はいません');
+			}
+			log.info(savedAuthors);
 		});
 	});
 };
