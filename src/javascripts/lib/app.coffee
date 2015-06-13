@@ -26,7 +26,7 @@ module.exports = ( $scope, $filter, $http ) ->
 
 		httpOptToAmazon =
 			method : 'post'
-			url	 : '/search/amazon'
+			url	 : '/api/search/amazon'
 			data	: { newBook: $scope.newBook }
 
 		$http( httpOptToDB )
@@ -39,12 +39,10 @@ module.exports = ( $scope, $filter, $http ) ->
 		.then ->
 
 			$http( httpOptToAmazon )
-			.success ( data, status ) ->
-				if( data.bookListInAmazon.length > 0 )
-					console.log data.bookListInAmazon
-					$scope.bookListInDB = $scope.bookListInDB.concat( imageStrModifyer(data.bookListInAmazon) )
+			.success (bookListInAmazon, status) ->
+				if( bookListInAmazon.length > 0 )
+					$scope.bookListInDB = $scope.bookListInDB.concat(imageStrModifyer(bookListInAmazon))
 					$scope.showSuggestedBooks = true
-					console.log $scope.bookListInDB
 				return
 			.then ->
 				$scope.isWaiting = false

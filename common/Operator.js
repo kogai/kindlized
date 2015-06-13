@@ -231,7 +231,7 @@ Operator.prototype._normalize = function(books){
 			isKindlizedUrl = true;
 		}
 
-		normalizedBook.itemImageSets = itemImageSets;
+		normalizedBook.images = itemImageSets;
 		normalizedBook.isKindlized = isKindlized;
 		normalizedBook.isKindlizedUrl = isKindlizedUrl;
 
