@@ -1,9 +1,10 @@
+_ = require('underscore')
 imageStrModifyer = require('./imageStrModifyer')
 
 module.exports = ( $scope, $filter, $http ) ->
 	httpOpt =
 		method : 'get'
-		url	 : '/book/user'
+		url : '/book/user'
 
 	$http( httpOpt )
 	.success ( data ) ->
@@ -20,28 +21,33 @@ module.exports = ( $scope, $filter, $http ) ->
 		$scope.bookListInDB = null
 
 		httpOptToDB =
-			method : 'post'
-			url	 : '/search/db'
-			data	: { newBook: $scope.newBook }
+			method : 'get'
+			url : '/api/search/db'
+			params : { query: $scope.newBook }
 
 		httpOptToAmazon =
-			method : 'post'
-			url	 : '/api/search/amazon'
-			data	: { newBook: $scope.newBook }
+			method : 'get'
+			url : '/api/search/amazon'
+			params : { query: $scope.newBook }
 
-		$http( httpOptToDB )
-		.success ( data, status ) ->
-			if(data.bookListInDB.length > 0)
+		$http(httpOptToDB)
+		.success (data, status) ->
+			if(data.length > 0)
 				$scope.isWaiting = false
 				$scope.showSuggestedBooks = true
-			$scope.bookListInDB = imageStrModifyer(data.bookListInDB)
+			$scope.bookListInDB = imageStrModifyer(data)
 			return
 		.then ->
 
 			$http( httpOptToAmazon )
 			.success (bookListInAmazon, status) ->
 				if( bookListInAmazon.length > 0 )
-					$scope.bookListInDB = $scope.bookListInDB.concat(imageStrModifyer(bookListInAmazon))
+					books = $scope.bookListInDB.concat(imageStrModifyer(bookListInAmazon))
+					books = _.uniq(books, (book) ->
+						book.ASIN[0]
+					)
+
+					$scope.bookListInDB = books
 					$scope.showSuggestedBooks = true
 				return
 			.then ->
@@ -56,8 +62,8 @@ module.exports = ( $scope, $filter, $http ) ->
 		$scope.bookListInUser.push( $scope.bookListInDB[ $index ] )
 		httpOpt =
 			method : 'post'
-			url	 : '/save'
-			data	: { newBook: newBook }
+			url : '/save'
+			data : { newBook: newBook }
 
 		$http( httpOpt )
 		.success ( data, status ) ->
@@ -74,7 +80,7 @@ module.exports = ( $scope, $filter, $http ) ->
 
 		httpOpt =
 			method: 'post'
-			url	 : '/reduce'
+			url : '/reduce'
 			data: deleteBookId: _id
 
 		$http( httpOpt )
