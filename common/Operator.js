@@ -104,7 +104,7 @@ Operator.prototype.search = function(callback){
 			}
 			// エラーコードを記録しておく
 			if(process.env.NODE_ENV === 'development'){
-				return log.info(INTERVAL * _self.retry + ":" + errorCode);
+				return log.info(INTERVAL * _self.retry + ":" + errorCode + ':' + _conditions.Author + ':' + _conditions.ItemPage);
 			}
 			return log.warn.info(errorCode);
 		}
@@ -157,10 +157,10 @@ Operator.prototype.fetch = function(done){
 	}
 
 	// 完了時の処理
-	if(this.currentPage === this.maxPage){
+	if(this.currentPage === this.maxPage || this.currentPage > PAGING_LIMIT * 2){
 		this.maxPage = null;
 		this.currentPage = 1;
-		this.items = _.compact(this.items);
+		// this.items = _.compact(this.items);
 		this.items = _.uniq(this.items, function(item){
 			return item.ASIN[0];
 		});

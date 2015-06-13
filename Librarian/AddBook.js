@@ -106,7 +106,6 @@ AddBook.prototype.run = function(done){
 		methods["_" + funcName] = _self.defer(_self[funcName].bind(_self));
 	});
 
-	// /*
 	Q.when()
 	.then(methods._fetch)
 	.then(methods._sequential)
@@ -118,7 +117,6 @@ AddBook.prototype.run = function(done){
 	.fail(function(err){
 		return done(err);
 	});
-	// */
 };
 
 module.exports = function(opts){

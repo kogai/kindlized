@@ -97,7 +97,10 @@ Collector.prototype.saveAuthor = function(author, done){
 	Author.findOne(conditions, function(err, existAuthor){
 		// 既に書籍が存在していたらエラーハンドリングに回す
 		if(err){ return done(err); }
-		if(existAuthor){ return done('登録済みの著者:' + existAuthor.name); }
+		if(existAuthor){
+			log.info('登録済みの著者:' + existAuthor.name);
+			return done();
+		}
 
 		var newAuthor = new Author({
 			name: author,
