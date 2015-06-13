@@ -17,9 +17,10 @@ module.exports = function(req, res){
 
 	searchOperator.run(function(err, books){
 		if(books){
-			return res.send(books);
+			res.send(books);
+		}else{
+			res.send([]);
 		}
-		res.send([]);
 
 		// 書籍の登録処理
 		BookCollector.saveCollections(books, function(err, savedBooks){
@@ -34,9 +35,10 @@ module.exports = function(req, res){
 
 		// 著者の登録処理
 		var authors = books.map(function(book){
-			return book.author[0];
+			return book.author;
 		});
 
+		authors = _.flatten(authors);
 		authors = _.uniq(authors);
 		authors = _.compact(authors);
 
