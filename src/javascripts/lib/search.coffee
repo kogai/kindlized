@@ -32,14 +32,14 @@ module.exports = ($scope, $filter, $http) ->
 		# AmazonAPIの検索ポスト
 		httpOptToAmazon =
 			method: 'post'
-			url	: '/search/amazon'
+			url	: '/api/search/amazon'
 			data: { newBook: $scope.newBook }
 
 		$http(httpOptToAmazon)
 		.success (data, status) ->
-			if(data.bookListInAmazon.length > 0)
+			if(data.length > 0)
 				$scope.showSuggestedBooks = true
-			$scope.bookListInDB = $scope.bookListInDB.concat(imageStrModifyer(data.bookListInAmazon))
+			$scope.bookListInDB = $scope.bookListInDB.concat(imageStrModifyer(data))
 			isCompleteAmazon = true
 			completeTasks()
 			return

@@ -9,6 +9,7 @@ logs
 temp
 
 TODO.md
+BOOKS
 sandbox.js
 sb.js
 sb.sh
@@ -19,3 +20,6 @@ sbapi.js
 kindlized
 
 mongoshell.js
+
+out/
+public/

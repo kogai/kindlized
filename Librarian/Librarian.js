@@ -111,7 +111,7 @@ Librarian.prototype.lookup = function(book){
 **/
 Librarian.prototype.update = function(book, update, callback){
 	var conditions = {
-		ASIN: book.ASIN[0]
+		_id: book._id
 	};
 
 	if(update.modifiedLog === undefined){
@@ -130,7 +130,7 @@ Librarian.prototype.update = function(book, update, callback){
 		update.modifiedLog.UpdateUrlAt = moment();
 	}
 
-	this.Model.findOneAndUpdate(conditions, update, function(err, modifiedBook){
+	this.Model.findOneAndUpdate(conditions, update, { upsert: true }, function(err, modifiedBook){
 		if(err){
 			return callback(err);
 		}
