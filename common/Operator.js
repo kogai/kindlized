@@ -155,8 +155,9 @@ Operator.prototype.fetch = function(done){
 	if(!this.maxPage){
 		throw new Error('Operator.maxPage required before Operator.fetch method call.');
 	}
-	// log.info(this.items);
+
 	// 完了時の処理
+	// if(this.currentPage === this.maxPage){
 	if(this.currentPage > this.maxPage){
 		this.maxPage = null;
 		this.currentPage = 1;
@@ -279,7 +280,10 @@ Operator.prototype.run = function(done){
 	.then(_count)
 	.then(_fetch)
 	.then(function(items){
-		done(null, _self._normalize(items));
+		if(_self.type === 'Title'){
+			return done(null, _self._normalize(items));
+		}
+		done(null, items);
 	})
 	.fail(function(err){
 		done(err, null);
