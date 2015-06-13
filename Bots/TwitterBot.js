@@ -123,7 +123,7 @@ TwitterBot.prototype.listen = function(){
 	io.on('connection', function(socket){
 		log.info('Botsサービスのクライアントを接続');
 
-		Que.register('tweet', _self.tweet);
+		Que.register('tweet', _self.tweet.bind(_self));
 
 		socket.on('librarian-kindlized', function(book){
 			Que.push("『" + book.title + "』がkindle化されました。 " + book.url);
