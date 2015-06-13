@@ -206,7 +206,6 @@ Operator.prototype._normalize = function(books){
 	}
 
 	return books.map(function(book){
-
 		var itemAttr = book.ItemAttributes[0], itemImageSets, isKindlized, isKindlizedUrl;
 
 		var normalizedBook = {
@@ -214,7 +213,7 @@ Operator.prototype._normalize = function(books){
 			ISBN: book.ISBN,
 			SKU: book.SKU,
 			EAN: itemAttr.EAN,
-			author: itemAttr.Author,
+			author: itemAttr.Author || ["HAS_NOT_AUTHOR"],
 			title: itemAttr.Title,
 			publisher: itemAttr.Publisher,
 			publicationDate: itemAttr.PublicationDate,

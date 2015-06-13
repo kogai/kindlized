@@ -10,11 +10,11 @@ var result;
 request(app)
 .post('/api/search/amazon')
 .send({
-	newBook: 'カプチーノ 1'
+	newBook: 'カプチーノ'
 })
 .end(function(err, res){
 	res.body.map(function(book){
-		return log.info(book.isKindlized + ":" + book.title);
+		// return log.info(book.isKindlized + ":" + book.title + ':' + book.author);
 	});
 });
 

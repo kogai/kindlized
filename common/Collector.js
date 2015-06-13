@@ -2,6 +2,8 @@
 
 var util = require('util');
 var moment = require('moment-timezone');
+var Q = require('q');
+var _ = require('underscore');
 
 var log = require('common/log');
 
@@ -50,7 +52,7 @@ Collector.prototype.saveBook = function(book, done){
 	BookList.findOne(conditions, function(err, existBook){
 		// 既に書籍が存在していたらエラーハンドリングに回す
 		if(err){ return done(err); }
-		if(existBook){ return done(existBook.title + ' is already exists.'); }
+		if(existBook){ return done('登録済みの書籍:' + existBook.title); }
 
 		var newBook = new BookList({
 			ASIN: book.ASIN,
@@ -91,7 +93,7 @@ Collector.prototype.saveAuthor = function(author, done){
 	Author.findOne(conditions, function(err, existAuthor){
 		// 既に書籍が存在していたらエラーハンドリングに回す
 		if(err){ return done(err); }
-		if(existAuthor){ return done(existAuthor.name + ' is already exists.'); }
+		if(existAuthor){ return done('登録済みの著者:' + existAuthor.name); }
 
 		var newAuthor = new Author({
 			name: author,
@@ -115,13 +117,24 @@ Collector.prototype.saveCollections = function(collections, done){
 
 	var _self = this;
 
-	collections.map(function(item){
-		_self._saveMethod(item, function(err, savedItem){
-			if(err){
-				return done(err);
-			}
-			done(null, savedItem);
-		});
+	Q.all(
+		collections.map(function(item){
+			var d = Q.defer();
+			_self._saveMethod(item, function(err, savedItem){
+				if(err){
+					log.info(err);
+					return d.resolve(undefined);
+				}
+				d.resolve(savedItem);
+			});
+			return d.promise;
+		})
+	)
+	.fail(function(err){
+		done(err);
+	})
+	.done(function(savedItems){
+		done(null, _.compact(savedItems));
 	});
 };
 
