@@ -134,6 +134,12 @@ Operator.prototype.count = function(callback){
 		if(_self.maxPage >= PAGING_LIMIT * 2){
 			_self.isOverLimitTwice = true;
 		}
+
+		// 検索結果がなかった場合の処理
+		if(_self.maxPage === 0){
+			return callback('Error: "' + _self.query + '" has not result.');
+		}
+
 		callback(null, {
 			totalItems: _self.totalItems,
 			maxPage: _self.maxPage
@@ -151,7 +157,7 @@ Operator.prototype.fetch = function(done){
 	if(!this.maxPage){
 		throw new Error('Operator.maxPage required before Operator.fetch method call.');
 	}
-
+	// log.info(this.items);
 	// 完了時の処理
 	if(this.currentPage > this.maxPage){
 		this.maxPage = null;
@@ -274,11 +280,11 @@ Operator.prototype.run = function(done){
 	Q.when()
 	.then(_count)
 	.then(_fetch)
+	.then(function(items){
+		done(null, _self._normalize(items));
+	})
 	.fail(function(err){
 		done(err, null);
-	})
-	.done(function(items){
-		done(null, _self._normalize(items));
 	});
 };
 

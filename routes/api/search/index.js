@@ -14,7 +14,13 @@ Search.amazon = function(req, res){
 	});
 
 	searchOperator.run(function(err, books){
-		res.send(books);
+		if(books){
+			res.send(books);
+		}
+
+		if(!books){
+			return log.info('AmazonAPIの検索結果:' + books + '冊');
+		}
 		Collector.saveCollections(books, function(err, savedBooks){
 			if(err){
 				return log.info(err);
