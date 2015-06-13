@@ -3,8 +3,9 @@
 require('should');
 var moment = require('moment-timezone');
 
-var InspectKindlize = require('Librarian/InspectKindlize')();
+var InspectKindlize = require('Librarian/InspectKindlize')({ limit: 50000 });
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
+var log = require('common/log');
 var Books;
 
 describe('AuthorityASINのある書籍を500冊取得する', function(){
@@ -12,6 +13,13 @@ describe('AuthorityASINのある書籍を500冊取得する', function(){
 
 	before(function(done){
 		InspectKindlize._fetch().then(function(books){
+			log.info(books.length);
+			for (var i = 0; i < books.length; i++) {
+				if(books[i].ASIN[0] === '4063880648'){
+					log.info(books[i].title[0]);
+				}
+			}
+			log.info(books.length);
 			Books = books;
 			done();
 		});

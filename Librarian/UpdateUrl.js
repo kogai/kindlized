@@ -135,7 +135,12 @@ module.exports = function(opts){
 		$and: [
 		  { isKindlized: true },
 		  { isKindlizedUrl: { $ne: true } },
-			{ "modifiedLog.UpdateUrlAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+			{
+				$or: [
+					{ "modifiedLog.UpdateUrlAt": { $exists: false } },
+					{ "modifiedLog.UpdateUrlAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+				]
+			}
 		]
 	};
 

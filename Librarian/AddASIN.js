@@ -88,7 +88,12 @@ module.exports = function(opts){
 					{ AuthorityASIN: ['UNDEFINED'] }
 				]
 			},
-			{ "modifiedLog.AddASINAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+			{
+				$or: [
+					{ "modifiedLog.AddASINAt": { $exists: false } },
+					{ "modifiedLog.AddASINAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+				]
+			}
 		]
 	};
 

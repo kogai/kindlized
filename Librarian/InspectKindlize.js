@@ -13,7 +13,8 @@ var promiseSerialize = require('common/promiseSerialize');
 var itemLookUp = require('common/itemLookUp');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
-function InspectKindlize(){
+function InspectKindlize(_opts){
+	this.limit = _opts.limit || LIMIT;
 	this.books = [];
 }
 
@@ -30,11 +31,16 @@ InspectKindlize.prototype._fetch = function(){
 			{ AuthorityASIN: { $exists: true } },
 			{ AuthorityASIN: { $ne: [''] } },
 			{ isKindlized: false },
-			{ "modifiedLog.InspectKindlizeAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+			{
+				$or: [
+					{ "modifiedLog.InspectKindlizeAt": { $exists: false } },
+					{ "modifiedLog.InspectKindlizeAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+				]
+			}
 		]
 	};
 
-	var query = BookList.find(conditions).limit(LIMIT).sort({
+	var query = BookList.find(conditions).limit(this.limit).sort({
 		"modifiedLog.InspectKindlizeAt": 1
 	});
 
@@ -218,6 +224,7 @@ InspectKindlize.prototype.cron = function(){
 	return d.promise;
 };
 
-module.exports = function(){
-	return new InspectKindlize();
+module.exports = function(opts){
+	var _opts = opts || {};
+	return new InspectKindlize(_opts);
 };
