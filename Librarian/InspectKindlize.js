@@ -30,6 +30,7 @@ InspectKindlize.prototype._fetch = function(){
 		$and: [
 			{ AuthorityASIN: { $exists: true } },
 			{ AuthorityASIN: { $ne: [''] } },
+			{ AuthorityASIN: { $ne: null } },
 			{ isKindlized: false },
 			{
 				$or: [
