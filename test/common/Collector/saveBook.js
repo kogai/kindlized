@@ -2,7 +2,7 @@
 
 var util = require('util');
 
-var Collector = require('common/Collector')({ type: "book" });
+var Collector = require('common/Collector')("book");
 var log = require('common/log');
 
 Collector.saveBook({

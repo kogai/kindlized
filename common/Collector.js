@@ -8,13 +8,13 @@ var log = require('common/log');
 /**
 @constructor
 **/
-function Collector(opts){
-	if(!opts.type || typeof opts.type !== 'string'){
-		throw new Error('string型のtypeプロパティは必須');
+function Collector(type){
+	if(!type || typeof type !== 'string'){
+		throw new Error('string型のtypeパラメータは必須');
 	}
-	this.type = opts.type;
+	this.type = type;
 
-	switch(opts.type){
+	switch(type){
 		case "author":
 			this._saveMethod = this.saveAuthor;
 			this._Model = require('models/Author');
@@ -33,21 +33,14 @@ function Collector(opts){
 @param { Function } done - 完了時に呼ばれるコールバック関数
 **/
 Collector.prototype.saveBook = function(book, done){
-	if(typeof book !== 'object' || util.isArray(book)){
-		throw new Error('saveBook method required Object parametor.');
-	}
-	if(typeof done !== 'function' || !done){
-		throw new Error('saveBook method required Function parametor.');
-	}
-	if(!book.ASIN){
-		throw new Error('book param required ASIN property.');
-	}
-	if(!book.author){
-		throw new Error('book param required author property.');
-	}
-	if(!book.title){
-		throw new Error('book param required title property.');
-	}
+	// 必須パラメータの検証
+	if(typeof book !== 'object' || util.isArray(book)){ throw new Error('saveBook method required Object parametor.'); }
+	if(typeof done !== 'function' || !done){ throw new Error('saveBook method required Function parametor.'); }
+
+	// 必須項目の検証
+	if(!book.ASIN){ throw new Error('book param required ASIN property.'); }
+	if(!book.author){ throw new Error('book param required author property.'); }
+	if(!book.title){ throw new Error('book param required title property.'); }
 
 	var conditions = {
 		ASIN: book.ASIN
@@ -114,21 +107,24 @@ Collector.prototype.saveAuthor = function(author, done){
 
 /**
 @param { Array } collections
+@param { Function } done - 完了時に呼ばれるコールバック関数
 **/
-Collector.prototype.saveCollections = function(collections){
+Collector.prototype.saveCollections = function(collections, done){
+	if(!util.isArray(collections)){ throw new Error('collections parametor must be Array.'); }
+	if(typeof done !== 'function' || !done){ throw new Error('done parametor must be Function.'); }
+
 	var _self = this;
 
 	collections.map(function(item){
 		_self._saveMethod(item, function(err, savedItem){
 			if(err){
-				return log.info(err);
+				return done(err);
 			}
-			log.info(savedItem);
+			done(null, savedItem);
 		});
 	});
 };
 
-module.exports = function(opts){
-	var _opts = opts || {};
-	return new Collector(_opts);
+module.exports = function(type){
+	return new Collector(type);
 };
