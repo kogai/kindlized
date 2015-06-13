@@ -162,6 +162,28 @@ Librarian.prototype.inspectEbook = function(relatedItems){
 };
 
 /**
+引数にコールバック関数を持つメソッドをPromiseオブジェクトを返す関数でラップする
+@param { Function } method - callback関数を引数に持つメソッド
+@example
+var _method = this.defer(this.method.bind(this));
+_method().done(function(items){ console.log(items, "done."); });
+**/
+Librarian.prototype.defer = function(method){
+	return function(){
+		var d = Q.defer();
+
+		method(function(err, res){
+			if(err){
+				return d.reject(err);
+			}
+			d.resolve(res);
+		});
+
+		return d.promise;
+	};
+};
+
+/**
 	ハンドラー
 	fetch -> sequential[loocup] の順に実行するメソッド
 	@param { Function } callback - 処理完了後に呼ばれるコールバック関数
