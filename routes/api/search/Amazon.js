@@ -5,19 +5,21 @@ var _ = require('underscore');
 var Operator = require('common/Operator');
 var BookCollector = require('common/Collector')('book');
 var AuthorCollector = require('common/Collector')('author');
-var Search = {};
 
 var log = require('common/log');
 
-Search.amazon = function(req, res){
-	var query = req.body.newBook;
+module.exports = function(req, res){
+	var query = req.query.query;
 	var searchOperator = Operator({
 		type: "Title",
 		query: query
 	});
 
 	searchOperator.run(function(err, books){
-		res.send(books || []);
+		if(books){
+			return res.send(books);
+		}
+		res.send([]);
 
 		// 書籍の登録処理
 		BookCollector.saveCollections(books, function(err, savedBooks){
@@ -49,5 +51,3 @@ Search.amazon = function(req, res){
 		});
 	});
 };
-
-module.exports = Search;

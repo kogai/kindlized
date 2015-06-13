@@ -1,3 +1,6 @@
 module.exports = {
-	search: require('routes/api/search')
+	search: {
+		db: require('routes/api/search/Mongo'),
+		amazon: require('routes/api/search/Amazon')
+	}
 };
