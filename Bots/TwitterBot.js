@@ -58,8 +58,8 @@ function TwitterBot(credentials, callback){
 	}
 }
 
-TwitterBot.prototype.tweet = function(tweetStrng){
-	this.client.post('statuses/update', { status: tweetStrng }, function(err, tweet, res){
+TwitterBot.prototype.tweet = function(tweetString){
+	this.client.post('statuses/update', { status: tweetString }, function(err, tweet, res){
 		if(err){
 			return log.info(err);
 		}
