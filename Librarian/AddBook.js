@@ -36,7 +36,7 @@ AddBook.prototype.sequential = function(done){
 		return done('This process has not any authors.');
 	}
 
-	if(this.total > this.completion){
+	if(this.completion === this.total){
 		return done(null, this.books);
 	}
 
