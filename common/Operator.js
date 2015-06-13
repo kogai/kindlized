@@ -156,6 +156,7 @@ Operator.prototype.fetch = function(done){
 	if(this.currentPage > this.maxPage){
 		this.maxPage = null;
 		this.currentPage = 1;
+		this.items = _.compact(this.items);
 		this.items = _.uniq(this.items, function(item){
 			return item.ASIN[0];
 		});

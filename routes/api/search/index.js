@@ -19,6 +19,9 @@ Search.amazon = function(req, res){
 			if(err){
 				return log.info(err);
 			}
+			if(savedBooks.length === 0){
+				return log.info('新しく登録した書籍はありません');
+			}
 			log.info(savedBooks);
 		});
 	});

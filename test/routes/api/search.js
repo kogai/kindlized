@@ -10,7 +10,7 @@ var result;
 request(app)
 .post('/api/search/amazon')
 .send({
-	newBook: 'カプチーノ'
+	newBook: '刃牙'
 })
 .end(function(err, res){
 	res.body.map(function(book){
