@@ -157,11 +157,9 @@ Operator.prototype.fetch = function(done){
 	}
 
 	// 完了時の処理
-	// if(this.currentPage === this.maxPage){
-	if(this.currentPage > this.maxPage){
+	if(this.currentPage === this.maxPage){
 		this.maxPage = null;
 		this.currentPage = 1;
-		this.items = _.compact(this.items);
 		this.items = _.uniq(this.items, function(item){
 			return item.ASIN[0];
 		});
