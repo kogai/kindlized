@@ -111,7 +111,7 @@ Librarian.prototype.lookup = function(book){
 **/
 Librarian.prototype.update = function(book, update, callback){
 	var conditions = {
-		ASIN: book.ASIN[0]
+		_id: book._id
 	};
 
 	if(update.modifiedLog === undefined){
