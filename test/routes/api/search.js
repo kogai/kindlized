@@ -8,7 +8,7 @@ var log = require('common/log');
 var result;
 
 request(app)
-.post('/api/search/amazon')
+.get('/api/search/amazon')
 .send({
 	newBook: '刃牙'
 })
