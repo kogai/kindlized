@@ -22,6 +22,6 @@ router.get('/', function(req, res) {
 router.get('/author/*', author);
 router.post('/mail', mail);
 
-router.post('/api/search', api.search);
+router.post('/api/search/amazon', api.search.amazon);
 
 module.exports = router;

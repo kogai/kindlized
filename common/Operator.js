@@ -222,6 +222,7 @@ Operator.prototype._normalize = function(books){
 		if(book.ImageSets){
 			itemImageSets = JSON.stringify(book.ImageSets);
 		}
+		log.info(book.ASIN + ":" + itemAttr.Title);
 
 		if(itemAttr.ProductGroup[0] === 'eBooks'){
 			isKindlized = true;
@@ -275,7 +276,7 @@ Operator.prototype.run = function(done){
 		done(err, null);
 	})
 	.done(function(items){
-		done(null, _self.normalize(items));
+		done(null, _self._normalize(items));
 	});
 };
 

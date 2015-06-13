@@ -1,8 +1,9 @@
 "use strict";
 
 var Operator = require('common/Operator');
+var Search = {};
 
-module.exports = function(req, res){
+Search.amazon = function(req, res){
 	var query = req.body.newBook;
 	var searchOperator = Operator({
 		type: "Title",
@@ -13,3 +14,5 @@ module.exports = function(req, res){
 		res.send(books);
 	});
 };
+
+module.exports = Search;
