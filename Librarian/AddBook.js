@@ -7,7 +7,6 @@ var Q = require('q');
 var Author = require('models/Author');
 var Librarian = require('Librarian/Librarian');
 
-
 var log = require('common/log');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 var LIMIT = require('common/constant').LIMIT.AUTHOR;
@@ -61,28 +60,65 @@ AddBook.prototype.sequential = function(done){
 	});
 };
 
-/**
-AddBook.prototype.updateAuthors = function(){};
-AddBook.prototype.updateBooks= function(){};
-Collectorクラスにメソッドを追加する
-**/
-
 
 /**
 **/
-AddBook.prototype.run = function(){
-	var _fetch = this.defer(this.fetch.bind(this));
-	var _sequential = this.defer(this.sequential.bind(this));
+AddBook.prototype.updateAuthors = function(done){
+	var authors = this.fetchedItems;
+	var Collector = require('common/Collector')('author');
+	var update = { lastModified: moment() };
 
+	Collector.updateCollections(authors, update, function(err){
+		if(err){
+			return done(err);
+		}
+		done();
+	});
+};
+
+/**
+**/
+AddBook.prototype.saveBooks = function(done){
+	var books = this.books;
+	var Collector = require('common/Collector')('book');
+	var Operator = require('common/Operator')({
+		type: "Title",
+		query: "_"
+	});
+
+	Collector.saveCollections(Operator._normalize(books), function(err, books){
+		if(err){
+			return done(err);
+		}
+		done(books);
+	});
+};
+
+
+/**
+**/
+AddBook.prototype.run = function(done){
+	var _self = this;
+	var methods = {};
+	var functions = ["fetch", "sequential", "updateAuthors", "saveBooks"];
+
+	functions.map(function(funcName){
+		methods["_" + funcName] = _self.defer(_self[funcName].bind(_self));
+	});
+
+	// /*
 	Q.when()
-	.then(_fetch)
-	.then(_sequential)
-	.then(function(items){
-		log.info(items);
+	.then(methods._fetch)
+	.then(methods._sequential)
+	.then(methods._updateAuthors)
+	.then(methods._saveBooks)
+	.then(function(){
+		return done();
 	})
 	.fail(function(err){
-		return log.info(err);
+		return done(err);
 	});
+	// */
 };
 
 module.exports = function(opts){

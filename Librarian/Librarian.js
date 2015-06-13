@@ -52,7 +52,7 @@ Librarian.prototype.fetch = function(callback){
 		if(err){
 			return callback(err);
 		}
-		log.info( '\n' + moment().format('YYYY-MM-DD hh:mm') + ' ' + books.length + '冊の書籍の処理を開始');
+		log.info( '\n' + moment().format('YYYY-MM-DD hh:mm') + ' ' + books.length + '個のデータ処理を開始');
 		_self.fetchedItems = books;
 		_self.total = books.length;
 		callback(null, books);
