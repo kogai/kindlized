@@ -1,3 +1,4 @@
+_ = require('underscore')
 imageStrModifyer = require('./imageStrModifyer')
 
 module.exports = ($scope, $filter, $http) ->
@@ -16,36 +17,40 @@ module.exports = ($scope, $filter, $http) ->
 
 		# DBの検索ポスト
 		httpOptToDB =
-			method: 'post'
-			url: '/search/db'
-			data: { newBook: $scope.newBook }
+			method: 'get'
+			url: '/api/search/db'
+			params: { query: $scope.newBook }
 
 		$http(httpOptToDB)
 		.success (data, status) ->
-			if(data.bookListInDB.length > 0)
+			if(data.length > 0)
 				$scope.showSuggestedBooks = true
-			$scope.bookListInDB = $scope.bookListInDB.concat(imageStrModifyer(data.bookListInDB))
+			$scope.bookListInDB = $scope.bookListInDB.concat(imageStrModifyer(data))
 			isCompleteDB = true
 			completeTasks()
 			return
 
 		# AmazonAPIの検索ポスト
 		httpOptToAmazon =
-			method: 'post'
+			method: 'get'
 			url	: '/api/search/amazon'
-			data: { newBook: $scope.newBook }
+			params: { query: $scope.newBook }
 
 		$http(httpOptToAmazon)
 		.success (data, status) ->
 			if(data.length > 0)
 				$scope.showSuggestedBooks = true
-			$scope.bookListInDB = $scope.bookListInDB.concat(imageStrModifyer(data))
+
+			books = $scope.bookListInDB.concat(imageStrModifyer(data))
+			books = _.uniq(books, (book) ->
+				book.ASIN[0]
+			)
+
+			$scope.bookListInDB = books
 			isCompleteAmazon = true
 			completeTasks()
 			return
 		.error (data, status, headers, config) ->
-			console.log data
-			console.log status
 			return
 
 		return

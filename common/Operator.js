@@ -21,7 +21,6 @@ var Author = require('models/Author');
 @param { String } type - type of search. Title or Author
 **/
 function Operator(opts){
-
 	var _opts = opts || {};
 
 	if((typeof _opts.query) !== 'string' || _opts.query === undefined){ throw new Error('query parameter required string.'); }
@@ -37,7 +36,6 @@ function Operator(opts){
 	this.items = [];
 	this.isOverLimit = false; // AmazonAPIの検索ページネーション上限は10P. 降順 <-> 昇順にソート順を切り替えて20Pまで呼び出す
 	this.isOverLimitTwice = false;
-
 	return this;
 }
 
