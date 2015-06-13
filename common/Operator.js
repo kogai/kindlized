@@ -3,6 +3,7 @@
 var INTERVAL = require('common/constant').INTERVAL;
 var PAGING_LIMIT = require('common/constant').PAGING_LIMIT;
 var OPERATION_CONFIG = require('common/constant').OPERATION_CONFIG;
+
 var OperationHelper = require('apac').OperationHelper;
 var Operation = new OperationHelper(OPERATION_CONFIG);
 
@@ -11,6 +12,8 @@ var util = require('util');
 var _ = require('underscore');
 
 var log = require('common/log');
+var BookList = require('models/BookList');
+var Author = require('models/Author');
 
 /**
 @constructor
@@ -222,7 +225,6 @@ Operator.prototype._normalize = function(books){
 		if(book.ImageSets){
 			itemImageSets = JSON.stringify(book.ImageSets);
 		}
-		log.info(book.ASIN + ":" + itemAttr.Title);
 
 		if(itemAttr.ProductGroup[0] === 'eBooks'){
 			isKindlized = true;
