@@ -67,14 +67,8 @@ module.exports = function(opts){
 
 	_opts.conditions = {
 		$or: [
-			{
-				images: {
-					$exists: false
-				}
-			},
-			{
-				$where: "this.images == 0"
-			}
+			{ images: { $exists: false } },
+			{ $where: "this.images == 0" }
 		]
 	};
 	return new RepairImg(_opts);
