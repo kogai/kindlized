@@ -3,6 +3,7 @@
 var util = require('util');
 var moment = require('moment-timezone');
 var Q = require('q');
+var _ = require('underscore');
 
 var Author = require('models/Author');
 var Librarian = require('Librarian/Librarian');
@@ -40,7 +41,7 @@ AddBook.prototype.sequential = function(done){
 	}
 
 	if(this.completion === 0){
-		this.authors = this.fetchedItems;
+		this.authors = _.compact(this.fetchedItems);
 	}
 
 	var authorName = this.authors[this.completion].name;
