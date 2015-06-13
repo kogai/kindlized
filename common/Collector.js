@@ -27,6 +27,7 @@ function Collector(type){
 			break;
 	}
 
+	this.collections = [];
 	return this;
 }
 
@@ -57,7 +58,7 @@ Collector.prototype.saveBook = function(book, done){
 		var newBook = new BookList({
 			ASIN: book.ASIN,
 			AuthorityASIN: book.AuthorityASIN || [''],
-			author: book.author,
+			author: book.author || undefined,
 			title: book.title,
 			publisher: book.publisher || [''],
 			publicationDate: book.publicationDate || [''],
@@ -80,6 +81,7 @@ Collector.prototype.saveBook = function(book, done){
 	});
 };
 
+
 /**
 @param { String } author - 保存する著者の名前
 @param { Function } done - 完了時に呼ばれるコールバック関数
@@ -93,7 +95,10 @@ Collector.prototype.saveAuthor = function(author, done){
 	Author.findOne(conditions, function(err, existAuthor){
 		// 既に書籍が存在していたらエラーハンドリングに回す
 		if(err){ return done(err); }
-		if(existAuthor){ return done('登録済みの著者:' + existAuthor.name); }
+		if(existAuthor){
+			log.info('登録済みの著者:' + existAuthor.name);
+			return done();
+		}
 
 		var newAuthor = new Author({
 			name: author,
@@ -106,6 +111,7 @@ Collector.prototype.saveAuthor = function(author, done){
 		});
 	});
 };
+
 
 /**
 @param { Array } collections
@@ -122,19 +128,68 @@ Collector.prototype.saveCollections = function(collections, done){
 			var d = Q.defer();
 			_self._saveMethod(item, function(err, savedItem){
 				if(err){
-					log.info(err);
-					return d.resolve(undefined);
+					return d.reject(err);
 				}
 				d.resolve(savedItem);
 			});
 			return d.promise;
 		})
 	)
+	.then(function(savedItems){
+		done(null, _.compact(savedItems));
+	})
 	.fail(function(err){
 		done(err);
+	});
+};
+
+
+/**
+@param { Object } item
+@param { Object } update
+@param { Function } done - 完了時に呼ばれるコールバック関数
+**/
+Collector.prototype.updateItem = function(item, update, done){
+	if(!item._id){
+		throw new Error('itemには_idが必要');
+	}
+	var query = { _id: item._id };
+	var options = { upsert: true };
+
+	this._Model.findOneAndUpdate(query, update, options, function(err){
+		if(err){
+			return done(err);
+		}
+		if(item.name){ log.info("更新:" + item.name); }
+		if(item.title){ log.info("更新:" + item.title); }
+		done(null);
+	});
+};
+
+
+/**
+@param { Object } update
+@param { Function } done - 完了時に呼ばれるコールバック関数
+**/
+Collector.prototype.updateCollections = function(collections, update, done){
+	var _self = this;
+	Q.all(
+		collections.map(function(item){
+			var d = Q.defer();
+			_self.updateItem(item, update, function(err){
+				if(err){
+					return d.reject(err);
+				}
+				d.resolve();
+			});
+			return d.promise;
+		})
+	)
+	.then(function(){
+		done();
 	})
-	.done(function(savedItems){
-		done(null, _.compact(savedItems));
+	.fail(function(err){
+		done(err);
 	});
 };
 

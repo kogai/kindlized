@@ -104,7 +104,7 @@ Operator.prototype.search = function(callback){
 			}
 			// エラーコードを記録しておく
 			if(process.env.NODE_ENV === 'development'){
-				return log.info(errorCode);
+				return log.info(INTERVAL * _self.retry + ":" + errorCode + ':' + _conditions.Author + ':' + _conditions.ItemPage);
 			}
 			return log.warn.info(errorCode);
 		}
@@ -155,12 +155,12 @@ Operator.prototype.fetch = function(done){
 	if(!this.maxPage){
 		throw new Error('Operator.maxPage required before Operator.fetch method call.');
 	}
-	// log.info(this.items);
+
 	// 完了時の処理
-	if(this.currentPage > this.maxPage){
+	if(this.currentPage === this.maxPage || this.currentPage > PAGING_LIMIT * 2){
 		this.maxPage = null;
 		this.currentPage = 1;
-		this.items = _.compact(this.items);
+		// this.items = _.compact(this.items);
 		this.items = _.uniq(this.items, function(item){
 			return item.ASIN[0];
 		});
@@ -279,7 +279,10 @@ Operator.prototype.run = function(done){
 	.then(_count)
 	.then(_fetch)
 	.then(function(items){
-		done(null, _self._normalize(items));
+		if(_self.type === 'Title'){
+			return done(null, _self._normalize(items));
+		}
+		done(null, items);
 	})
 	.fail(function(err){
 		done(err, null);

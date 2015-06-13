@@ -2,7 +2,7 @@
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
-var INTERVAL_TWEET = require('common/constant').INTERVAL_TWEET;
+var INTERVAL_TWEET = require('common/constant').LIMIT.INTERVAL_TWEET;
 var log = require('common/log');
 
 function Que(){

@@ -26,6 +26,8 @@ function Librarian(opts){
 	this.conditions = _opts.conditions || { isKindlized: true };
 	this.sort = _opts.sort;
 	this.Model = _opts.Model || require('models/BookList');
+	this.fetchedItems = [];
+	this.total = 0;
 	this.amazonConditions = _opts.amazonConditions || { ResponseGroup: 'Small , ItemAttributes , Images' };
 	if(!this.Model) { throw new Error('モデルは必須項目'); }
 	if(!this.limit) { throw new Error('実行数の上限は必須項目'); }
@@ -34,12 +36,13 @@ function Librarian(opts){
 }
 
 /**
-	調査対象の書籍をDBから取得
-	@param { Function } callback - 非同期処理完了後に呼ばれるコールバック関数
-	@return { Error } err 第一引数はエラーオブジェクト
-	@return { Array } books this.conditionsによるクエリ結果を返す
+調査対象の書籍をDBから取得
+@param { Function } callback - 非同期処理完了後に呼ばれるコールバック関数
+@return { Error } err 第一引数はエラーオブジェクト
+@return { Array } books this.conditionsによるクエリ結果を返す
 **/
 Librarian.prototype.fetch = function(callback){
+	var _self = this;
 	var query = this.Model.find(this.conditions).limit(this.limit);
 	if(this.sort){
 		query = query.sort(this.sort);
@@ -49,32 +52,34 @@ Librarian.prototype.fetch = function(callback){
 		if(err){
 			return callback(err);
 		}
-		log.info( '\n' + moment().format('YYYY-MM-DD hh:mm') + ' ' + books.length + '冊の書籍の処理を開始');
+		log.info( '\n' + moment().format('YYYY-MM-DD hh:mm') + ' ' + books.length + '個のデータ処理を開始');
+		_self.fetchedItems = books;
+		_self.total = books.length;
 		callback(null, books);
 	});
 };
 
 /**
-	調査対象の書籍の順次処理
-	@param { Object } books - 各要素に順次にinspectメソッドを実行される配列
-	@param { Function } callback - 全配列にinspectメソッドが実行された後に呼ばれるコールバック関数
-	@return { Array } modifiedBooks inspectメソッドの返り値が格納された配列
+調査対象の書籍の順次処理
+@param { Object } books - 各要素に順次にinspectメソッドを実行される配列
+@param { Function } done - 全配列にinspectメソッドが実行された後に呼ばれるコールバック関数
+@return { Array } modifiedBooks inspectメソッドの返り値が格納された配列
 **/
-Librarian.prototype.sequential = function(books, callback){
+Librarian.prototype.sequential = function(books, done){
 	var _lookup = this.lookup.bind(this);
 
 	promiseSerialize(books, _lookup)
-	.done(function(modifiedBooks){
-		callback(null, modifiedBooks.resultArray);
+	.done(function(fetchedItems){
+		done(null, fetchedItems.resultArray);
 	});
 };
 
 
 /**
-	調査対象の書籍についてAmazonAPIを呼び出す
-	@param { Object } book - DBから呼び出した1つの書籍データ
-	@param { Function } callback - lookupメソッドが実行された後に呼ばれるコールバック関数
-	@return { Object } modifiedBook AmazonAPIのレスポンスをメンバに格納したbookオブジェクト
+調査対象の書籍についてAmazonAPIを呼び出す
+@param { Object } book - DBから呼び出した1つの書籍データ
+@param { Function } callback - lookupメソッドが実行された後に呼ばれるコールバック関数
+@return { Object } modifiedBook AmazonAPIのレスポンスをメンバに格納したbookオブジェクト
 **/
 Librarian.prototype.lookup = function(book){
 	var d = Q.defer();
@@ -109,7 +114,7 @@ Librarian.prototype.lookup = function(book){
 	@return { Error } err
 	@return { Object } modifiedBook 更新後の書籍データ
 **/
-Librarian.prototype.update = function(book, update, callback){
+Librarian.prototype.update = function(book, update, done){
 	var conditions = {
 		_id: book._id
 	};
@@ -132,9 +137,9 @@ Librarian.prototype.update = function(book, update, callback){
 
 	this.Model.findOneAndUpdate(conditions, update, { upsert: true }, function(err, modifiedBook){
 		if(err){
-			return callback(err);
+			return done(err);
 		}
-		callback(null, modifiedBook);
+		done(null, modifiedBook);
 	});
 };
 
@@ -158,6 +163,28 @@ Librarian.prototype.inspectEbook = function(relatedItems){
 	return {
 		hasEbook: hasEbook,
 		ebookASIN: ebookASIN
+	};
+};
+
+/**
+引数にコールバック関数を持つメソッドをPromiseオブジェクトを返す関数でラップする
+@param { Function } method - callback関数を引数に持つメソッド
+@example
+var _method = this.defer(this.method.bind(this));
+_method().done(function(items){ console.log(items, "done."); });
+**/
+Librarian.prototype.defer = function(method){
+	return function(){
+		var d = Q.defer();
+
+		method(function(err, res){
+			if(err){
+				return d.reject(err);
+			}
+			d.resolve(res);
+		});
+
+		return d.promise;
 	};
 };
 
