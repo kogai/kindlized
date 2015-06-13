@@ -7,6 +7,8 @@ var request = require('superagent');
 
 var Twitter = require('twitter');
 var AuthBot = require('models/AuthBot');
+var Que = require('common/Que')();
+
 var slackPostAPI = require('common/makeCredential')('slack');
 var log = require('common/log');
 
@@ -121,12 +123,20 @@ TwitterBot.prototype.listen = function(){
 	io.on('connection', function(socket){
 		log.info('Botsサービスのクライアントを接続');
 
+		Que.register('tweet', _self.tweet);
+
 		socket.on('librarian-kindlized', function(book){
-			_self.tweet("『" + book.title + "』がkindle化されました。 " + book.url);
+			Que.push("『" + book.title + "』がkindle化されました。 " + book.url);
+			if(Que.isHalt){
+				Que.consume("tweet");
+			}
 		});
 
 		socket.on('librarian-addASIN', function(book){
-			_self.tweet("『" + book.title + "』がもうすぐkindle化されるかも? " + book.url);
+			Que.push("『" + book.title + "』がもうすぐkindle化されるかも? " + book.url);
+			if(Que.isHalt){
+				Que.consume("tweet");
+			}
 		});
 	});
 
