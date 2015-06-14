@@ -1,5 +1,19 @@
 var MakeModel = require('common/makeModel');
 
+/**
+@example
+{
+  mail: "kogai0121@gmail.com",
+  password: '',
+  verifyId: '',
+  isVerified: true,
+  bookList: [],
+  seriesList: [{
+    _id: 'foobarbuzz',
+    seriesKeyword: '我が愛しのヲタ彼女'
+  }]
+}
+**/
 var userSchema = {
   mail: {
     type: String,
@@ -12,6 +26,7 @@ var userSchema = {
   isVerified: Boolean,
   bookList: Array,
   authorList: Array,
+  seriesList: Array,
   reccomendBookList: [
     {
       _id: String,

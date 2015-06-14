@@ -5,7 +5,7 @@ var Q = require('q');
 var MailToUser = require('Postman/lib/MailToUser');
 
 var log = require('common/log');
-var User = require('user/');
+var User = require('models/User');
 
 function Postman(){
 	this.conditions = {

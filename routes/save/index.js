@@ -14,11 +14,6 @@ var BookList = require('models/BookList');
 var log = require('common/log');
 
 var saveBook = function(req, res, newBook){
-	// temp
-	req.session.passport = {
-		user: "55098ed6c0fa27f716c0717e"
-	};
-
 	Q.when({
 		req: req,
 		res: res,

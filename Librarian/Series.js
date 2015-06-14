@@ -123,13 +123,14 @@ Series.prototype._trimChar = function(title){
 **/
 Series.prototype.saveSeries = function(title, done){
 	var _self = this;
+	title = this._trimChar(title);
 
-	this.Collections.find({ seriesKeyword: title }, function(err, series){
+	this.Collections.findOne({ seriesKeyword: title }, function(err, series){
 		if(err){
 			return done(err);
 		}
-		if(series.length > 0){
-			return done('This series is already exists.');
+		if(series){
+			return done(null, series);
 		}
 
 		var query = new RegExp(escape(title));
@@ -163,7 +164,6 @@ Series.prototype.saveSeries = function(title, done){
 			});
 		});
 	});
-	return;
 };
 
 
