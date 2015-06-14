@@ -17,3 +17,7 @@ var cronJob = new Cronjob({
 });
 
 cronJob.start();
+
+if(process.env.NODE_ENV === "development"){
+  Postman.run();
+}
