@@ -3,6 +3,7 @@
 var moment = require('moment-timezone');
 var escape = require('escape-regexp');
 
+var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 var log = require('common/log');
 
 /**
@@ -11,9 +12,28 @@ var log = require('common/log');
 function Series(){
 	this.Collections = require('models/Series');
 	this.BookList = require('models/BookList');
+	this.conditions = {
+		lastModified: { "$lte": moment().subtract(PERIODICAL_DAY, 'days') }
+	};
+	// this.items = [];
+
 	return this;
 }
 
+
+Series.prototype.fetch = function(done){
+	this.Collections.find(this.conditions, function(err, items){
+		if(err){
+			return done(err);
+		}
+		done(null, items);
+	});
+	return;
+};
+
+Series.prototype.crawl = function(){
+	return;
+};
 
 /**
 () （）で囲まれた文字列を削除する
@@ -35,11 +55,8 @@ Series.prototype._trimChar = function(title){
 **/
 Series.prototype.saveSeries = function(title, done){
 	var _self = this;
-	var conditions = {
-		seriesKeyword: title
-	};
 
-	this.Collections.find(conditions, function(err, series){
+	this.Collections.find({ seriesKeyword: title }, function(err, series){
 		if(err){
 			return done(err);
 		}
@@ -81,6 +98,8 @@ Series.prototype.saveSeries = function(title, done){
 	return;
 };
 
-module.exports = function () {
-	return new Series();
+module.exports = function (opts) {
+	var _opts = opts || {};
+
+	return new Series(_opts);
 };
