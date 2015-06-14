@@ -1,10 +1,16 @@
 "use strict";
 
+var moment = require('moment-timezone');
 var escape = require('escape-regexp');
+
 var log = require('common/log');
 
+/**
+@constructor
+**/
 function Series(){
 	this.Collections = require('models/Series');
+	this.BookList = require('models/BookList');
 	return this;
 }
 
@@ -23,6 +29,57 @@ Series.prototype._trimChar = function(title){
 	return trimTailSpace;
 };
 
+
+/**
+書籍シリーズの保存メソッド
+**/
+Series.prototype.saveSeries = function(title, done){
+	var _self = this;
+	var conditions = {
+		seriesKeyword: title
+	};
+
+	this.Collections.find(conditions, function(err, series){
+		if(err){
+			return done(err);
+		}
+		if(series.length > 0){
+			return done('This series is already exists.');
+		}
+
+		var query = new RegExp(escape(title));
+
+		_self.BookList.find({ title: query }, function(err, books){
+			if(err){
+				return done(err);
+			}
+			var contains = books.map(function(book){
+				return {
+					_id: book._id,
+					title: book.title,
+					url: book.url[0]
+				};
+			});
+			var newSeries = new _self.Collections({
+				seriesKeyword: title,
+				lastModified: moment(),
+				recentCount: books.length,
+				recentContains: contains,
+				currentCount: books.length,
+				currentContains: contains,
+				hasNewRelease: false
+			});
+
+			newSeries.save(function(err){
+				if(err){
+					return done(err);
+				}
+				done(null, newSeries);
+			});
+		});
+	});
+	return;
+};
 
 module.exports = function () {
 	return new Series();
