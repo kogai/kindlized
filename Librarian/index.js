@@ -1,5 +1,6 @@
 "use strict";
 
+var Series = require('Librarian/Series')();
 var AddBook = require('Librarian/AddBook')();
 var InspectKindlize = require('Librarian/InspectKindlize')();
 var RepairImg = require('Librarian/RepairImg')();
@@ -15,6 +16,7 @@ var log = require('common/log');
 var cronTime = "0 0 * * * *";
 
 var libraryHandler = function(currentTime) {
+  var _series = Series.cron.bind(Series)();
   var _addBook = AddBook.cron.bind(AddBook)();
   var _repairImg = RepairImg.cron.bind(RepairImg);
   var _inspectKindlize = InspectKindlize.cron.bind(InspectKindlize);
@@ -22,6 +24,7 @@ var libraryHandler = function(currentTime) {
   var _updateUrl = UpdateUrl.cron.bind(UpdateUrl);
 
   Q.when()
+  .then(_series)
   .then(_addBook)
   .then(_repairImg)
   .then(_inspectKindlize)

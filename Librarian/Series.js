@@ -2,38 +2,106 @@
 
 var moment = require('moment-timezone');
 var escape = require('escape-regexp');
+var Q = require('q');
 
+var Librarian = require('Librarian/Librarian');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 var log = require('common/log');
 
 /**
 @constructor
 **/
-function Series(){
+function Series(opts){
 	this.Collections = require('models/Series');
 	this.BookList = require('models/BookList');
+	this.Librarian = new Librarian();
+	this._defer = this.Librarian.defer;
 	this.conditions = {
 		lastModified: { "$lte": moment().subtract(PERIODICAL_DAY, 'days') }
 	};
-	// this.items = [];
+	this.series = [];
 
 	return this;
 }
 
 
 Series.prototype.fetch = function(done){
+	var _self = this;
 	this.Collections.find(this.conditions, function(err, items){
 		if(err){
 			return done(err);
 		}
+		log.info(items.length + "個のシリーズの調査を開始");
+		_self.series = items;
 		done(null, items);
 	});
 	return;
 };
 
-Series.prototype.crawl = function(){
+
+/**
+seriesItemのアイテムを更新する
+seriesKeywordでBookListを検索して、前回とlengthが違えば
+新刊があると判定
+@param { Object } seriesItem
+@param { Function } done
+**/
+Series.prototype._inspect = function(seriesItem, done){
+	var _self = this;
+	this.BookList.find({ title: seriesItem.seriesKeyword }, function(err, books){
+		if(err){
+			return done(err);
+		}
+		if(seriesItem.currentCount === books.length){
+			return done(null, seriesItem);
+		}
+		var update = {
+			seriesKeyword: seriesItem.seriesKeyword,
+			lastModified: moment(),
+			recentCount: seriesItem.currentCount,
+			recentContains: seriesItem.currentContains,
+			currentCount: books.length,
+			currentContains: books,
+			hasNewRelease: true
+		};
+		_self.Collections.findOneAndUpdate({ seriesKeyword: seriesItem.seriesKeyword }, update, function(err){
+			if(err){
+				return done(err);
+			}
+			done(null, update);
+		});
+	});
 	return;
 };
+
+
+/**
+**/
+Series.prototype.inspectSeries = function(done){
+	var _self = this;
+	if(this.series.length === 0){
+		done(null, 'inspectSeries required Series.series.');
+	}
+	Q.all(this.series.map(function(item){
+		var d = Q.defer();
+
+		_self._inspect(item, function(err, updatedItem){
+			if(err){
+				return d.reject(err);
+			}
+			d.resolve(updatedItem);
+		});
+
+		return d.promise;
+	}))
+	.then(function(series){
+		done(null, series);
+	})
+	.fail(function(err){
+		done(err);
+	});
+};
+
 
 /**
 () （）で囲まれた文字列を削除する
@@ -97,6 +165,28 @@ Series.prototype.saveSeries = function(title, done){
 	});
 	return;
 };
+
+
+Series.prototype.run = function(done){
+	var _fetch = this._defer(this.fetch.bind(this));
+	var _inspectSeries = this._defer(this.inspectSeries.bind(this));
+
+	Q.when()
+	.then(_fetch)
+	.then(_inspectSeries)
+	.then(function(){
+		return done();
+	})
+	.fail(function(err){
+		return done(err);
+	});
+};
+
+
+Series.prototype.cron = function(){
+	return this._defer(this.run.bind(this));
+};
+
 
 module.exports = function (opts) {
 	var _opts = opts || {};

@@ -120,7 +120,7 @@ AddBook.prototype.run = function(done){
 	})
 	.fail(function(err){
 		log.info(err);
-		return done();
+		return done(err);
 	});
 };
 
