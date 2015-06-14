@@ -84,7 +84,7 @@ AddBook.prototype.saveBooks = function(done){
 	var Collector = require('common/Collector')('book');
 	var Operator = require('common/Operator')({
 		type: "Title",
-		query: "_"
+		query: "_" // Operator._normalizeを使うためにインスタンス化しているので、queryは無効な値で良い。
 	});
 
 	Collector.saveCollections(Operator._normalize(books), function(err, books){
