@@ -23,6 +23,7 @@
   "author": "https://twitter.com/iamchawan",
   "license": "ISC",
   "dependencies": {
+    "JSONStream": "^1.0.4",
     "apac": "^1.0.0",
     "bcrypt": "^0.8.1",
     "body-parser": "~1.8.1",

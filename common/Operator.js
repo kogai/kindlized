@@ -36,6 +36,7 @@ function Operator(opts){
 	this.items = [];
 	this.isOverLimit = false; // AmazonAPIの検索ページネーション上限は10P. 降順 <-> 昇順にソート順を切り替えて20Pまで呼び出す
 	this.isOverLimitTwice = false;
+	this.ResponseGroup = _opts.ResponseGroup || 'Small, ItemAttributes, Images';
 	return this;
 }
 
@@ -58,7 +59,7 @@ Operator.prototype._conditions = function(){
 		BrowseNode: 465392,
 		Condition: 'New',
 		ItemPage: currentPage,
-		ResponseGroup: 'Small, ItemAttributes, Images'
+		ResponseGroup: this.ResponseGroup
 	};
 
 	switch(this.type){

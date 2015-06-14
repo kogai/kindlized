@@ -5,7 +5,8 @@ var _ = require('underscore');
 
 var Operator = require('common/Operator')({
 	query: "岩明均",
-	type: "Author"
+	type: "Author",
+	ResponseGroup: 'ItemAttributes, Large'
 });
 
 var log = require('common/log');
