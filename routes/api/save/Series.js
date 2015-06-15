@@ -1,5 +1,7 @@
 "use strict";
 
+var moment = require('moment-timezone');
+
 var User = require('models/User');
 var Series = require('Librarian/Series')();
 var log = require('common/log');
@@ -26,7 +28,8 @@ module.exports = function(req, res){
 			$push: {
 				seriesList: {
 					_id: newSeries._id,
-					seriesKeyword: newSeries.seriesKeyword
+					seriesKeyword: newSeries.seriesKeyword,
+					lastModified: moment()
 				}
 			}
 		};

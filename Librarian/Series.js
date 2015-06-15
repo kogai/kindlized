@@ -17,7 +17,7 @@ function Series(opts){
 	this.Librarian = new Librarian();
 	this._defer = this.Librarian.defer;
 	this.conditions = {
-		lastModified: { "$lte": moment().subtract(PERIODICAL_DAY, 'days') }
+		// lastModified: { "$lte": moment().subtract(PERIODICAL_DAY, 'days') }
 	};
 	this.series = [];
 
@@ -47,11 +47,19 @@ seriesKeywordでBookListを検索して、前回とlengthが違えば
 @param { Function } done
 **/
 Series.prototype._inspect = function(seriesItem, done){
+
 	var _self = this;
-	this.BookList.find({ title: seriesItem.seriesKeyword }, function(err, books){
+	var query = new RegExp(escape('我が愛しのヲタ彼女    '));
+
+	// log.info(query);
+
+	this.BookList.find({ title: query }, function(err, books){
 		if(err){
 			return done(err);
 		}
+
+		log.info(books.length + ':' + seriesItem.seriesKeyword);
+
 		if(seriesItem.currentCount === books.length){
 			return done(null, seriesItem);
 		}
@@ -61,7 +69,13 @@ Series.prototype._inspect = function(seriesItem, done){
 			recentCount: seriesItem.currentCount,
 			recentContains: seriesItem.currentContains,
 			currentCount: books.length,
-			currentContains: books,
+			currentContains: books.map(function(book){
+				return {
+					_id: book._id,
+					title: book.title,
+					url: book.url[0]
+				};
+			}),
 			hasNewRelease: true
 		};
 		_self.Collections.findOneAndUpdate({ seriesKeyword: seriesItem.seriesKeyword }, update, function(err){
@@ -82,6 +96,7 @@ Series.prototype.inspectSeries = function(done){
 	if(this.series.length === 0){
 		done(null, 'inspectSeries required Series.series.');
 	}
+
 	Q.all(this.series.map(function(item){
 		var d = Q.defer();
 

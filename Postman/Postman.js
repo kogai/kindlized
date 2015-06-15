@@ -2,10 +2,12 @@
 
 var Q = require('q');
 var _ = require('underscore');
+var moment = require('moment-timezone');
 
 var MailToUser = require('Postman/lib/MailToUser');
 var Librarian = require('Librarian/Librarian');
 var log = require('common/log');
+var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
 
 /**
@@ -55,6 +57,7 @@ Postman.prototype.sent = function(done){
 @return { Error | Array }
 **/
 Postman.prototype.fetchSeries = function(user, done){
+	var _self = this;
 	var conditions = {
 		$and: [
 			{
@@ -72,8 +75,29 @@ Postman.prototype.fetchSeries = function(user, done){
 		if(err){
 			return done(err);
 		}
-		done(null, seriesItems);
+		done(null, _self._filterSeries(user, seriesItems));
 	});
+};
+
+
+/**
+2015-06-01 < 2015-06-10
+UserDocument.seriesList[*].lastModified < SeriesDocument.lastModified
+@param { Array } seriesItems
+@return { Array }
+**/
+Postman.prototype._filterSeries = function(user, seriesItems){
+	var filteredSeriesItems = seriesItems.map(function(seriesItem){
+		user.seriesList.map(function(userSeries){
+			if(userSeries.seriesKeyword === seriesItem.seriesKeyword){
+				var isBeforeNewRelease = moment(seriesItem.lastModified).isBefore(userSeries.lastModified);
+				if(isBeforeNewRelease){
+					return seriesItem;
+				}
+			}
+		});
+	});
+	return _.compact(filteredSeriesItems);
 };
 
 
@@ -96,6 +120,8 @@ Postman.prototype.inspectSeries = function(seriesItems, done){
 };
 
 
+/**
+**/
 Postman.prototype._diffItems = function(srcArray, criteriaArray){
 	var diffArray = _.filter(srcArray, function(obj){
 		return !_.findWhere(criteriaArray, obj);
