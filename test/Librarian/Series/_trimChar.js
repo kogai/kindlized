@@ -2,9 +2,16 @@
 
 var log = require('common/log');
 var Series = require('Librarian/Series')();
-var mock = '新装版 寄生獣(2) (KCデラックス アフタヌーン)（テス ト）';
+var mocks = [
+	"我が愛しのヲタ彼女(1) (エッジスタコミックス)",
+	"お前ら全2回員めんどくさい! (1) (メテオCOMICS)	",
+	"新黒沢 最強伝説 3 (ビッグコミックス)",
+	"ひとりぼっちの地球侵略 8 (ゲッサン少年サンデーコミックス)"
+];
 
-var _mock = Series._trimChar(mock);
+mocks.forEach(function(mock){
+	var res = Series._trimChar(mock);
+	log.info(res.length + ':' + res);
+});
 
-log.info(_mock);
-log.info(_mock.length);
+log.info('test');

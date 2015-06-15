@@ -124,12 +124,20 @@ Series.prototype.inspectSeries = function(done){
 @return { String } 括弧で囲まれた文字列を削除した書籍のタイトルデータ
 **/
 Series.prototype._trimChar = function(title){
+	var trimedStr;
 	// 括弧で囲まれた文字列の削除
-	var trimParentheses = title.replace(/(\(|\（)[\s\S]*?(\)|\）)/g, '');
+	trimedStr = title.replace(/(\(|\（)[\s\S]*?(\)|\）)/g, '');
 
 	// 最後に空白があれば削除
-	var trimTailSpace = trimParentheses.replace(/\ +$/, '');
-	return trimTailSpace;
+	trimedStr = trimedStr.replace(/(\s+)$/, '');
+
+	// 末尾に巻数を表す数字があれば削除
+	trimedStr = trimedStr.replace(/(\d+)$/, '');
+
+	// 再度末尾の空白を削除
+	trimedStr = trimedStr.replace(/(\s+)$/, '');
+
+	return trimedStr;
 };
 
 
