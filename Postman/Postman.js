@@ -1,17 +1,22 @@
 "use strict";
 
 var Q = require('q');
+var _ = require('underscore');
 
 var MailToUser = require('Postman/lib/MailToUser');
 var Librarian = require('Librarian/Librarian');
-
 var log = require('common/log');
-var User = require('models/User');
 
+
+/**
+@constructor
+**/
 function Postman(){
 	this.conditions = {
 		isVerified: true
 	};
+	this.User = require('models/User');
+	this.Series = require('models/Series');
 	this.users = [];
 	this.Librarian = new Librarian();
 	this._defer = this.Librarian.defer;
@@ -19,9 +24,10 @@ function Postman(){
 	return this;
 }
 
+
 Postman.prototype.fetch = function(done){
 	var _self = this;
-	User.find(this.conditions, function(err, users){
+	this.User.find(this.conditions, function(err, users){
 		if(err){
 			return done(err);
 		}
@@ -29,6 +35,7 @@ Postman.prototype.fetch = function(done){
 		done(null, users);
 	});
 };
+
 
 Postman.prototype.sent = function(done){
 	Q.all(this.users.map(MailToUser.send))
@@ -38,6 +45,62 @@ Postman.prototype.sent = function(done){
 	.fail(function(err){
 		done(null, err);
 	});
+};
+
+
+/**
+ユーザーの登録しているSeries配列の新刊を持っているSeriesコレクションを取得する
+@param { Object } user - Userドキュメント
+@param { FUnction } done
+@return { Error | Array }
+**/
+Postman.prototype.fetchSeries = function(user, done){
+	var conditions = {
+		$and: [
+			{
+				_id: {
+					$in: user.seriesList.map(function(userSeriesItem){
+						return userSeriesItem._id;
+					})
+				}
+			},
+			{ hasNewRelease: true }
+		]
+	};
+
+	this.Series.find(conditions, function(err, seriesItems){
+		if(err){
+			return done(err);
+		}
+		done(null, seriesItems);
+	});
+};
+
+
+/**
+Seriesコレクションから新刊のBookListドキュメントを抽出する
+@param { Array } seriesItems - Seriesコレクション
+@param { FUnction } done
+@return { Error | Array } 新刊のBookListコレクション
+**/
+Postman.prototype.inspectSeries = function(seriesItems, done){
+	var i, seriesItem, newReleasies;
+	for (i = 0; i < seriesItems.length; i++) {
+		seriesItem = seriesItems[i];
+		newReleasies = this._diffItems(seriesItem.recentContains, seriesItem.currentContains);
+	}
+	i = null;
+	seriesItem = null;
+
+	done(null, newReleasies);
+};
+
+
+Postman.prototype._diffItems = function(srcArray, criteriaArray){
+	var diffArray = _.filter(srcArray, function(obj){
+		return !_.findWhere(criteriaArray, obj);
+	});
+	return diffArray;
 };
 
 Postman.prototype.run = function(){
