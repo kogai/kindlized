@@ -49,9 +49,7 @@ seriesKeywordでBookListを検索して、前回とlengthが違えば
 Series.prototype._inspect = function(seriesItem, done){
 
 	var _self = this;
-	var query = new RegExp(escape('我が愛しのヲタ彼女    '));
-
-	// log.info(query);
+	var query = new RegExp(escape(seriesItem.seriesKeyword));
 
 	this.BookList.find({ title: query }, function(err, books){
 		if(err){
@@ -134,8 +132,11 @@ Series.prototype._trimChar = function(title){
 	// 末尾に巻数を表す数字があれば削除
 	trimedStr = trimedStr.replace(/(\d+)$/, '');
 
-	// 再度末尾の空白を削除
+	// 再度末尾の空白を削除(巻数とタイトルの間)
 	trimedStr = trimedStr.replace(/(\s+)$/, '');
+
+	// 末尾に!！?？があれば削除
+	trimedStr = trimedStr.replace(/([\!！|?？]+)$/, '');
 
 	return trimedStr;
 };

@@ -11,10 +11,12 @@ var mongodb = require('common/makeCredential')('mongodb');
   verifyId: '',
   isVerified: true,
   bookList: [],
+  modifiedLog: [
+    seriesListAt: { "$date": "2015-06-01T04:00:00.000Z" }
+  ],
   seriesList: [{
     _id: 'foobarbuzz',
     seriesKeyword: '我が愛しのヲタ彼女',
-		lastModified: { "$date": "2015-06-01T04:00:00.000Z" }
   }]
 }
 **/

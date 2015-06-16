@@ -83,19 +83,16 @@ Postman.prototype.fetchSeries = function(user, done){
 /**
 2015-06-01 < 2015-06-10
 UserDocument.seriesList[*].lastModified < SeriesDocument.lastModified
-@param { Array } seriesItems
+@param { Object } user - Userドキュメント
+@param { Array } seriesItems- Seriesコレクション
 @return { Array }
 **/
 Postman.prototype._filterSeries = function(user, seriesItems){
 	var filteredSeriesItems = seriesItems.map(function(seriesItem){
-		user.seriesList.map(function(userSeries){
-			if(userSeries.seriesKeyword === seriesItem.seriesKeyword){
-				var isBeforeNewRelease = moment(seriesItem.lastModified).isBefore(userSeries.lastModified);
-				if(isBeforeNewRelease){
-					return seriesItem;
-				}
-			}
-		});
+		var isBeforeNewRelease = moment(seriesItem.lastModified).isBefore(user.modifiedLog.seriesListAt);
+		if(isBeforeNewRelease){
+			return seriesItem;
+		}
 	});
 	return _.compact(filteredSeriesItems);
 };

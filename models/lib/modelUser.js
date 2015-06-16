@@ -13,6 +13,9 @@ var userSchema = {
   bookList: Array,
   authorList: Array,
   seriesList: Array,
+	modifiedLog: {
+		seriesListAt: Date,
+	},
   reccomendBookList: [
     {
       _id: String,
