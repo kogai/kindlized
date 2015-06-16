@@ -81,7 +81,7 @@ Postman.prototype.fetchSeries = function(user, done){
 
 
 /**
-2015-06-01 < 2015-06-10
+ユーザーが新刊を調べた日:2015-06-01 < 新刊が確認された日:2015-06-10
 UserDocument.seriesList[*].lastModified < SeriesDocument.lastModified
 @param { Object } user - Userドキュメント
 @param { Array } seriesItems- Seriesコレクション
@@ -125,6 +125,7 @@ Postman.prototype._diffItems = function(srcArray, criteriaArray){
 	});
 	return diffArray;
 };
+
 
 Postman.prototype.run = function(){
 	var _fetch = this._defer(this.fetch.bind(this));

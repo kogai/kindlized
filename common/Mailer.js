@@ -3,8 +3,11 @@
 var validator = require('validator');
 var nodemailer = require('nodemailer');
 var mandrillTransport = require('nodemailer-mandrill-transport');
+var emailTemplates = require('email-templates');
+var templatesDir = require('path').resolve(__dirname, '..',  "email-templates");
 
 var credentialMandrill = require('common/makeCredential')('mandrill');
+var log = require('common/log');
 
 function Mailer(opts){
 	// 必須項目のチェック
@@ -27,7 +30,7 @@ function Mailer(opts){
 	this.html = opts.html || "";
 }
 
-Mailer.prototype.send = function(callback){
+Mailer.prototype.send = function(done){
   var transporter = nodemailer.createTransport(mandrillTransport({
     auth: {
       apiKey: credentialMandrill
@@ -44,10 +47,52 @@ Mailer.prototype.send = function(callback){
 
   transporter.sendMail(mailOptions, function(error, info) {
     if (error) {
-			callback(error);
+			return done(error);
     }
-    callback(null, info);
+    done(null, info);
   });
+};
+
+
+/**
+@param { String } type - テンプレートのタイプ
+@param { Array } books - BookListコレクション
+**/
+Mailer.prototype.createMail = function(type, books, done){
+	emailTemplates(templatesDir, function(err, template){
+		if(err){
+			return done(err);
+		}
+
+		var templateArgv = {
+			books: books.map(function(book){
+				var img;
+		    try {
+		      img = JSON.parse(book.images);
+		      img = img[0].ImageSet[0].MediumImage[0].URL[0];
+		    } catch (e) {
+		      img = '';
+		    }
+
+				return {
+					title: book.title,
+					url: book.url,
+					img: img
+				};
+			})
+		};
+
+		template(type, templateArgv, function(err, html, text){
+			if(err){
+				return done(err);
+			}
+			done(null, {
+				html: html,
+				text: text
+			});
+		});
+
+	});
 };
 
 module.exports = function(opts){

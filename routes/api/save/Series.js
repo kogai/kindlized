@@ -16,20 +16,20 @@ module.exports = function(req, res){
 		}
 		var resMessage = "『" + newSeries.seriesKeyword + '』を登録しました。';
 
-		/**
-		req.session.passport = {
-			user: "55098ed6c0fa27f716c0717e"
-		};
-		**/
+		if(process.env.NODE_DEV === 'development'){
+			req.session.passport = {
+				user: "55098ed6c0fa27f716c0717e"
+			};
+		}
 
 		var conditions = { _id: req.session.passport.user };
 
 		var update = {
+			"modifiedLog.seriesListAt": moment(),
 			$push: {
 				seriesList: {
 					_id: newSeries._id,
-					seriesKeyword: newSeries.seriesKeyword,
-					lastModified: moment()
+					seriesKeyword: newSeries.seriesKeyword
 				}
 			}
 		};
