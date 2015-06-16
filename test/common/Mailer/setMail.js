@@ -9,5 +9,11 @@ Mailer.createTemplate("series", mock, function(err, mailStrings){
 	if(err){
 		return log.info(err);
 	}
-	log.info(mailStrings);
+	Mailer.setMail("info@kindlized.it", "kogai0121@gmail.com", "test-subject", mailStrings);
+	Mailer.send(function(err, info){
+		if(err){
+			return log.info(err);
+		}
+		log.info(info);
+	});
 });

@@ -11,17 +11,17 @@ var log = require('common/log');
 
 function Mailer(opts){
 	// 必須項目のチェック
-	if(!opts.subject){ throw new Error("Mailer must have subject."); }
-	if(!opts.from){ throw new Error("Mailer must have from mail-address."); }
-	if(!opts.to){ throw new Error("Mailer must have to mail-address."); }
-	if(!opts.text && !opts.html){
-		throw new Error("Mailer must pass text or html.");
-	}
+	// if(!opts.subject){ throw new Error("Mailer must have subject."); }
+	// if(!opts.from){ throw new Error("Mailer must have from mail-address."); }
+	// if(!opts.to){ throw new Error("Mailer must have to mail-address."); }
+	// if(!opts.text && !opts.html){
+	// 	throw new Error("Mailer must pass text or html.");
+	// }
 
 	// バリデーション
-	if(!validator.isEmail(opts.from) || !validator.isEmail(opts.to)){
-		throw new Error("to and from should exactly mail-address.");
-	}
+	// if(!validator.isEmail(opts.from) || !validator.isEmail(opts.to)){
+	// 	throw new Error("to and from should exactly mail-address.");
+	// }
 
 	this.subject = opts.subject;
 	this.from = opts.from;
@@ -55,10 +55,28 @@ Mailer.prototype.send = function(done){
 
 
 /**
+@param { String } from - from@kindlize.it
+@param { String } to - to@user.it
+@param { Object } templates - メールの文面
+@example {
+	html: '<a href="/">url</a>',
+	text: 'url'
+}
+**/
+Mailer.prototype.setMail = function(from, to, subject, templates){
+	this.from = from;
+	this.to = to;
+	this.subject = subject;
+	this.html = templates.html;
+	this.text = templates.text;
+};
+
+
+/**
 @param { String } type - テンプレートのタイプ
 @param { Array } books - BookListコレクション
 **/
-Mailer.prototype.createMail = function(type, books, done){
+Mailer.prototype.createTemplate = function(type, books, done){
 	emailTemplates(templatesDir, function(err, template){
 		if(err){
 			return done(err);
@@ -91,10 +109,10 @@ Mailer.prototype.createMail = function(type, books, done){
 				text: text
 			});
 		});
-
 	});
 };
 
 module.exports = function(opts){
-	return new Mailer(opts);
+	var _opts = opts || {};
+	return new Mailer(_opts);
 };
