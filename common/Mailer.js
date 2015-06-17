@@ -48,9 +48,9 @@ Mailer.prototype.send = function(done){
     html: this.html
   };
 
-  transporter.sendMail(mailOptions, function(error, info) {
-    if (error) {
-			return done(error);
+  transporter.sendMail(mailOptions, function(err, info) {
+    if (err) {
+			return done(err);
     }
     done(null, info);
   });

@@ -5,19 +5,23 @@ var moment = require('moment-timezone');
 
 var Postman = require('Postman/Postman')();
 
-var cronTime = "0 0 21 * * *";
+var morning = "0 0 21 * * *";
+var night = "0 0 9 * * *";
+
+var registerJob = function(cronTime, onTick){
+  var job = new Cronjob({
+    cronTime: cronTime,
+    onTick: onTick,
+    start: false
+  });
+  job.start();
+};
 
 //定期実行
-var cronJob = new Cronjob({
-  cronTime: cronTime,
-  onTick: function() {
-    Postman.run();
-  },
-  start: false
-});
-
-cronJob.start();
+registerJob(morning, Postman.run);
+registerJob(morning, Postman.runSeries);
 
 if(process.env.NODE_ENV === "development"){
   Postman.run();
+  Postman.runSeries();
 }

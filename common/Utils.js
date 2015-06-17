@@ -1,6 +1,7 @@
 "use strict";
 
 var Q = require('q');
+var _ = require('underscore');
 
 var log = require('common/log');
 
@@ -20,6 +21,7 @@ Utils.prototype.defer = function(method){
 	return function(){
 		var d = Q.defer();
 		var args = Array.prototype.slice.call(arguments);
+				args = _.compact(args);
 
 		// methodに渡されているdoneコールバック関数を
 		// Promiseのdefer.resolve/rejectする関数

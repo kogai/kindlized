@@ -5,11 +5,10 @@ var _ = require('underscore');
 var moment = require('moment-timezone');
 
 var MailToUser = require('Postman/lib/MailToUser');
-var Mailer = require('common/Mailer')();
 var Librarian = require('Librarian/Librarian');
 var log = require('common/log');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
-var Utils = require('common/Utils')();
+
 
 /**
 @constructor
@@ -18,6 +17,8 @@ function Postman(){
 	this.conditions = {
 		isVerified: true
 	};
+	this.Mailer = require('common/Mailer')();
+	this.Utils = require('common/Utils')();
 	this.User = require('models/User');
 	this.Series = require('models/Series');
 	this.users = [];
@@ -142,54 +143,62 @@ Postman.prototype.run = function(){
 };
 
 
-Postman.prototype.runSeries = function(){
-	var _self = this;
-	var _fetch = this._defer(this.fetch.bind(this));
 
-	Q.when()
-	.then(_fetch)
-	.then(function(users){
-		Utils.map(users, _self.fetchSeries.bind(_self), function(err, series){
+Postman.prototype.sentSeries = function(user, users, done){
+	var _Mailer = this.Mailer;
+
+	var _fetchSeries = this.Utils.defer(this.fetchSeries.bind(this));
+	var _inspectSeries = this.Utils.defer(this.inspectSeries.bind(this));
+
+	var _createTemplate = this.Utils.defer(function(series, done){
+		_Mailer.createTemplate('series', series, function(err, mailStrings){
 			if(err){
-				return log.info(err);
+				return done(err);
 			}
-			log.info(series);
+			_Mailer.setMail("info@kindlized.it", user.mail, "[kindlize.it] 新刊通知", mailStrings);
+			done();
 		});
 	});
 
-	/*
+	var _sendMail = this.Utils.defer(_Mailer.send.bind(_Mailer));
+
+	Q.when(user)
+	.then(_fetchSeries)
+	.then(_inspectSeries)
+	.then(_createTemplate)
+	.then(_sendMail)
+	.then(function(series){
+		return done(null, series);
+	})
+	.fail(function(err){
+		return done(err);
+	});
+};
+
+
+Postman.prototype.runSeries = function(){
+	var _fetch = this._defer(this.fetch.bind(this));
+	var _sentSeries = this.Utils.defer(this.sentSeries.bind(this));
+	var _sentAllUsers = this.Utils.defer(function(users, done){
+
+		Q.all(users.map(_sentSeries))
+		.then(function(sendStatus){
+			done(null, sendStatus);
+		})
+		.fail(function(err){
+			done(err);
+		});
+	});
+
 	Q.when()
 	.then(_fetch)
-	.then(function(users){
-		Q.all(users.map(function(user){
-			_self.fetchSeries(user, function(err, series){
-
-				log.info(series);
-
-				_self.inspectSeries(series, function(err, newSeries){
-					if(err){
-						return log.info(err);
-					}
-
-					log.info(newSeries);
-
-					Mailer.createTemplate("series", newSeries, function(err, mailStrings){
-						if(err){
-							return log.info(err);
-						}
-						Mailer.setMail("info@kindlized.it", "kogai0121@gmail.com", "[kindlize.it] 新刊通知", mailStrings);
-						Mailer.send(function(err, info){
-							if(err){
-								return log.info(err);
-							}
-							log.info(info);
-						});
-					});
-				});
-			});
-		}));
+	.then(_sentAllUsers)
+	.then(function(sendStatus){
+		return log.info(sendStatus);
+	})
+	.fail(function(err){
+		return log.info(err);
 	});
-	*/
 };
 
 

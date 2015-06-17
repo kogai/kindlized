@@ -5,13 +5,13 @@ var util = require('util');
 var INTERVAL_TWEET = require('common/constant').LIMIT.INTERVAL_TWEET;
 var log = require('common/log');
 
-function Que(){
+function Que(opts){
 	this.que = [];
 	this.emitter = new EventEmitter();
 	this.isHalt = true;
-	this.INTERVAL = INTERVAL_TWEET;
-	return this;
+	this.INTERVAL = opts.INTERVAL || INTERVAL_TWEET;
 }
+
 
 /**
 @param { String } type - Publisherに登録するイベント名
@@ -20,6 +20,7 @@ function Que(){
 Que.prototype.register = function(type, callback){
 	this.emitter.on(type, callback);
 };
+
 
 /**
 @param { Array | String | Object } collections
@@ -32,6 +33,7 @@ Que.prototype.push = function(collections){
 	}
 };
 
+
 /**
 Que.queに格納されたデータを消費するメソッド
 registerに登録しておいたイベントへ通知する
@@ -41,6 +43,7 @@ Que.prototype.pull = function(type){
 	var payload = this.que.shift();
 	this.emitter.emit(type, payload);
 };
+
 
 /**
 Que.pullメソッドをラップするメソッド
@@ -61,6 +64,7 @@ Que.prototype.consume = function(type){
 	}, this.INTERVAL);
 };
 
-module.exports = function(){
-	return new Que();
+module.exports = function(opts){
+	var _opts = opts || {};
+	return new Que(_opts);
 };
