@@ -14,7 +14,7 @@ var userSchema = {
   authorList: Array,
   seriesList: Array,
 	modifiedLog: {
-		seriesListAt: Date,
+		seriesListAt: Date
 	},
   reccomendBookList: [
     {

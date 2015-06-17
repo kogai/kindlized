@@ -15,17 +15,23 @@ module.exports = function(req, res){
 			return res.send("Error.");
 		}
 		var resMessage = "『" + newSeries.seriesKeyword + '』を登録しました。';
+		var existMessage = "『" + newSeries.seriesKeyword + '』は登録済みです。';
 
-		if(process.env.NODE_DEV === 'development'){
+		if(process.env.NODE_ENV === 'development'){
 			req.session.passport = {
 				user: "55098ed6c0fa27f716c0717e"
 			};
 		}
 
-		var conditions = { _id: req.session.passport.user };
+		var conditions = {
+			_id: req.session.passport.user,
+			"seriesList.seriesKeyword": {
+				$nin: [ newSeries.seriesKeyword ]
+			}
+		};
 
 		var update = {
-			// "modifiedLog.seriesListAt": moment(),
+			"modifiedLog.seriesListAt": moment(),
 			$push: {
 				seriesList: {
 					_id: newSeries._id,
@@ -34,15 +40,21 @@ module.exports = function(req, res){
 			}
 		};
 
-		var option = { upsert: true };
+		var option = { new: true };
 
-		User.findOneAndUpdate(conditions, update, option, function(err){
+		User.findOneAndUpdate(conditions, update, option, function(err, user){
 			if(err){
 				return log.info(err);
 			}
-			res.send({
-				message: resMessage
-			});
+			if(user){
+				res.send({
+					message: resMessage
+				});
+			}else{
+				res.send({
+					message: existMessage
+				});
+			}
 		});
 	});
 };

@@ -7,6 +7,7 @@ var log = require('common/log');
 
 var mock = [
 	"屋上姫 1 (フレックスコミックス)",
+	// /*
 	"女の友情と筋肉(1) (星海社COMICS)	",
 	"いぶり暮らし 2 (ゼノンコミックス)",
 	"君に届け",
@@ -37,11 +38,17 @@ var mock = [
 	"達人伝 -9万里を風に乗り-(4) (アクションコミックス)	",
 	"デンキ街の本屋さん 5―BOOKSうまのほね (MFコミックス フラッパーシリーズ)	",
 	"逃げるは恥だが役に立つ（４）	",
-	"虹色デイズ 1 (マーガレットコミックス)	"];
+	"虹色デイズ 1 (マーガレットコミックス)	"
+	// */
+	];
+
+// request = require('superagent');
 
 mock.forEach(function(query){
 	request(app)
+	// request
 	.post('/api/save/series')
+	// .post('http://kindlize.it/api/save/series')
 	.send({
 		query: query
 	})
