@@ -157,7 +157,7 @@ Series.prototype._trimChar = function(title){
 	trimedStr = trimedStr.replace(/(\s+)$/, '');
 
 	// 末尾に!！?？があれば削除
-	trimedStr = trimedStr.replace(/([\!！|?？]+)$/, '');
+	trimedStr = trimedStr.replace(/([\!！|?？||\:：|;；]+)$/, '');
 
 	return trimedStr;
 };
