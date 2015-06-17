@@ -1,6 +1,6 @@
 "use strict";
 
-var AddASIN = require('Librarian/AddASIN')({ limit: 100 });
+var AddASIN = require('Librarian/AddASIN')();
 
 var log = require('common/log');
 

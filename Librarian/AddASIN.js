@@ -29,7 +29,6 @@ util.inherits(AddASIN, Librarian);
 AddASIN.prototype._updates = function(book){
 	var d = Q.defer();
 
-	var update = {};
 	var AuthorityASIN, Items;
 
 	try{
@@ -45,12 +44,15 @@ AddASIN.prototype._updates = function(book){
 		AuthorityASIN = undefined;
 		log.info('AuthorityASIN 未更新:' + book.title);
 	}
-	update.AuthorityASIN = AuthorityASIN;
-	update.modifiedLog = {
-		AddASINAt: moment()
+
+	var update = {
+		AuthorityASIN: AuthorityASIN,
+		"modifiedLog.AddASINAt": moment()
 	};
 
-	this.update(book, update, function(err, modifiedBook){
+	var options = { new: true };
+
+	this.update(book, update, options, function(err, modifiedBook){
 		if(err){
 			return d.reject(err);
 		}

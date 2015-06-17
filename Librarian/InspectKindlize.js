@@ -173,7 +173,7 @@ InspectKindlize.prototype._update = function(book){
 
 	// 更新処理
 	var updater = function(){
-		BookList.findOneAndUpdate(conditions, update, { upsert: true }, function(err, savedBook){
+		BookList.findOneAndUpdate(conditions, update, { upsert: true, new: true }, function(err, savedBook){
 			if(err){
 				return log.info(err);
 			}

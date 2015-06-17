@@ -53,7 +53,10 @@ Collector.prototype.saveBook = function(book, done){
 	BookList.findOne(conditions, function(err, existBook){
 		// 既に書籍が存在していたらエラーハンドリングに回す
 		if(err){ return done(err); }
-		if(existBook){ return done('登録済みの書籍:' + existBook.title); }
+		if(existBook){
+			log.info('登録済みの書籍:' + existBook.title);
+			return done();
+		}
 
 		var newBook = new BookList({
 			ASIN: book.ASIN,

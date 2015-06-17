@@ -35,7 +35,7 @@ UpdateUrl.prototype._addConditions = function(books){
 **/
 UpdateUrl.prototype._updates = function(book){
 	var d = Q.defer();
-	var update = {}, url, isKindlizedUrl;
+	var url, isKindlizedUrl;
 
 	try{
 		url = book.res.ItemLookupResponse.Items[0].Item[0].DetailPageURL[0];
@@ -47,13 +47,15 @@ UpdateUrl.prototype._updates = function(book){
 		log.info('URL未更新:' + book.title);
 	}
 
-	update.url = url;
-	update.isKindlizedUrl = isKindlizedUrl;
-	update.modifiedLog = {
-		UpdateUrlAt: moment()
+	var update = {
+		url: url,
+		isKindlizedUrl: isKindlizedUrl,
+		"modifiedLog.UpdateUrlAt": moment()
 	};
 
-	this.update(book, update, function(err, modifiedBook){
+	var options = { new: true };
+
+	this.update(book, update, options, function(err, modifiedBook){
 		if(err){
 			return d.reject(err);
 		}

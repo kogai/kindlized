@@ -17,7 +17,7 @@ function Series(opts){
 	this.Librarian = new Librarian();
 	this._defer = this.Librarian.defer;
 	this.conditions = {
-		// lastModified: { "$lte": moment().subtract(PERIODICAL_DAY, 'days') }
+		lastModified: { "$lte": moment().subtract(PERIODICAL_DAY, 'days') }
 	};
 	this.series = [];
 
@@ -77,13 +77,12 @@ Series.prototype._inspect = function(seriesItem, done){
 			return done(err);
 		}
 
-		log.info(books.length + ':' + seriesItem.seriesKeyword);
-
 		if(seriesItem.currentCount === books.length){
+			log.info('新刊無し ' + books.length + '冊: ' + seriesItem.seriesKeyword);
 			return done(null, seriesItem);
 		}
+
 		var update = {
-			seriesKeyword: seriesItem.seriesKeyword,
 			lastModified: moment(),
 			recentCount: seriesItem.currentCount,
 			recentContains: seriesItem.currentContains,
@@ -97,10 +96,13 @@ Series.prototype._inspect = function(seriesItem, done){
 			}),
 			hasNewRelease: true
 		};
-		_self.Collections.findOneAndUpdate({ seriesKeyword: seriesItem.seriesKeyword }, update, function(err){
+		var options = { new: true };
+
+		_self.Collections.findOneAndUpdate({ seriesKeyword: seriesItem.seriesKeyword }, update, options, function(err, newSeriesItem){
 			if(err){
 				return done(err);
 			}
+			log.info('新刊有り ' + newSeriesItem.currentCount + '冊: ' + newSeriesItem.seriesKeyword);
 			done(null, update);
 		});
 	});

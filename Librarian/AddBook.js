@@ -94,7 +94,7 @@ AddBook.prototype.saveBooks = function(done){
 		books.map(function(book){
 			return log.info("新規登録書籍:" + book.title);
 		});
-		done(books);
+		done(null, books);
 	});
 };
 

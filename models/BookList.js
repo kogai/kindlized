@@ -4,7 +4,12 @@ var MakeModel = require('common/makeModel');
 
 var bookrSchema = {
   status: String,
-  ASIN: Array,
+  ASIN: {
+    type: Array,
+    index: {
+      unique: true
+    }
+  },
   AuthorityASIN: Array,
   EAN: Array,
   author: Array,

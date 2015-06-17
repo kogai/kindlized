@@ -11,9 +11,9 @@ module.exports = function(req, res){
 
 	Series.saveSeries(query, function(err, newSeries){
 		if(err){
-			log.info(err);
-			return res.send("Error.");
+			return log.info(err);
 		}
+
 		var resMessage = "『" + newSeries.seriesKeyword + '』を登録しました。';
 		var existMessage = "『" + newSeries.seriesKeyword + '』は登録済みです。';
 

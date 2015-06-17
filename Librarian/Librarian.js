@@ -114,28 +114,16 @@ Librarian.prototype.lookup = function(book){
 	@return { Error } err
 	@return { Object } modifiedBook 更新後の書籍データ
 **/
-Librarian.prototype.update = function(book, update, done){
+Librarian.prototype.update = function(book, update, options, done){
+	if((typeof options) === 'function'){
+		done = options;
+	}
+
 	var conditions = {
 		_id: book._id
 	};
 
-	if(update.modifiedLog === undefined){
-		update.modifiedLog = {};
-	}
-	if(book.modifiedLog.AddBookAt === undefined){
-		update.modifiedLog.AddBookAt = moment();
-	}
-	if(book.modifiedLog.InspectKindlizeAt === undefined){
-		update.modifiedLog.InspectKindlizeAt = moment();
-	}
-	if(book.modifiedLog.AddASINAt === undefined){
-		update.modifiedLog.AddASINAt = moment();
-	}
-	if(book.modifiedLog.UpdateUrlAt === undefined){
-		update.modifiedLog.UpdateUrlAt = moment();
-	}
-
-	this.Model.findOneAndUpdate(conditions, update, { upsert: true }, function(err, modifiedBook){
+	this.Model.findOneAndUpdate(conditions, update, { upsert: true, new: true }, function(err, modifiedBook){
 		if(err){
 			return done(err);
 		}
