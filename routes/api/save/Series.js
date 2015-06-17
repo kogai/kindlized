@@ -25,7 +25,7 @@ module.exports = function(req, res){
 		var conditions = { _id: req.session.passport.user };
 
 		var update = {
-			"modifiedLog.seriesListAt": moment(),
+			// "modifiedLog.seriesListAt": moment(),
 			$push: {
 				seriesList: {
 					_id: newSeries._id,

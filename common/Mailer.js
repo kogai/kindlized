@@ -23,6 +23,9 @@ function Mailer(opts){
 	// 	throw new Error("to and from should exactly mail-address.");
 	// }
 
+	this.UserCollections = require('models/User');
+	this.BookListCollections = require('models/BookList');
+
 	this.subject = opts.subject;
 	this.from = opts.from;
 	this.to = opts.to;

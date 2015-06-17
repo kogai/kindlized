@@ -5,10 +5,11 @@ var _ = require('underscore');
 var moment = require('moment-timezone');
 
 var MailToUser = require('Postman/lib/MailToUser');
+var Mailer = require('common/Mailer')();
 var Librarian = require('Librarian/Librarian');
 var log = require('common/log');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
-
+var Utils = require('common/Utils')();
 
 /**
 @constructor
@@ -88,6 +89,7 @@ UserDocument.seriesList[*].lastModified < SeriesDocument.lastModified
 @return { Array }
 **/
 Postman.prototype._filterSeries = function(user, seriesItems){
+
 	var filteredSeriesItems = seriesItems.map(function(seriesItem){
 		var isBeforeNewRelease = moment(seriesItem.lastModified).isBefore(user.modifiedLog.seriesListAt);
 		if(isBeforeNewRelease){
@@ -110,9 +112,6 @@ Postman.prototype.inspectSeries = function(seriesItems, done){
 		seriesItem = seriesItems[i];
 		newReleasies = this._diffItems(seriesItem.recentContains, seriesItem.currentContains);
 	}
-	i = null;
-	seriesItem = null;
-
 	done(null, newReleasies);
 };
 
@@ -141,6 +140,58 @@ Postman.prototype.run = function(){
 		log.info(err);
 	});
 };
+
+
+Postman.prototype.runSeries = function(){
+	var _self = this;
+	var _fetch = this._defer(this.fetch.bind(this));
+
+	Q.when()
+	.then(_fetch)
+	.then(function(users){
+		Utils.map(users, _self.fetchSeries.bind(_self), function(err, series){
+			if(err){
+				return log.info(err);
+			}
+			log.info(series);
+		});
+	});
+
+	/*
+	Q.when()
+	.then(_fetch)
+	.then(function(users){
+		Q.all(users.map(function(user){
+			_self.fetchSeries(user, function(err, series){
+
+				log.info(series);
+
+				_self.inspectSeries(series, function(err, newSeries){
+					if(err){
+						return log.info(err);
+					}
+
+					log.info(newSeries);
+
+					Mailer.createTemplate("series", newSeries, function(err, mailStrings){
+						if(err){
+							return log.info(err);
+						}
+						Mailer.setMail("info@kindlized.it", "kogai0121@gmail.com", "[kindlize.it] 新刊通知", mailStrings);
+						Mailer.send(function(err, info){
+							if(err){
+								return log.info(err);
+							}
+							log.info(info);
+						});
+					});
+				});
+			});
+		}));
+	});
+	*/
+};
+
 
 module.exports = function(){
 	return new Postman();

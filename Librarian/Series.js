@@ -40,6 +40,27 @@ Series.prototype.fetch = function(done){
 
 
 /**
+SeriesコレクションからBookListコレクションを取得する
+**/
+Series.prototype.join = function(seriesItems, done){
+	var conditions = {
+		_id: {
+			$in: seriesItems.map(function(seriesItem){
+				return seriesItem._id;
+			})
+		}
+	};
+
+	this.BookList.find(conditions, function(err, books){
+		if(err){
+			return done(err);
+		}
+		done(null, books);
+	});
+};
+
+
+/**
 seriesItemのアイテムを更新する
 seriesKeywordでBookListを検索して、前回とlengthが違えば
 新刊があると判定

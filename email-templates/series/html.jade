@@ -4,7 +4,8 @@ table
 		-var book = books[i]
 		tr
 			th
-				img(src="#{ book.img }", alt="#{ book.title }")
+				-if(book.img)
+					img(src="#{ book.img }", alt="#{ book.title }")
 			td
 				a(href="#{ book.url }")
 					|#{ book.title }
