@@ -1,0 +1,11 @@
+|登録していたシリーズに新刊が発行されました。<br>
+table
+	-for(var i = 0; i < books.length; i++)
+		-var book = books[i]
+		tr
+			th
+				-if(book.img)
+					img(src="#{ book.img }", alt="#{ book.title }")
+			td
+				a(href="#{ book.url }")
+					|#{ book.title }

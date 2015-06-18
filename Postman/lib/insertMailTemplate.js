@@ -1,17 +1,16 @@
+'use strict';
 // postListをメールのテンプレートに挿入
-// @todo
-// mailchimpに切り替える
 
 var Q = require('q');
 
 module.exports = function(user) {
-  'use strict';
   var d = Q.defer();
 
   var kindlizedList = user.kindlizedList;
 
   var sendHtmlBook = '';
-  for (var i = 0; i < kindlizedList.length; i++) {
+  var i;
+  for (i = 0; i < kindlizedList.length; i++) {
     var book = kindlizedList[i];
     var images;
     var image = {};

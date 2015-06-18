@@ -27,4 +27,6 @@ router.post('/mail', mail);
 router.get('/api/search/db', api.search.db);
 router.get('/api/search/amazon', api.search.amazon);
 
+router.post('/api/save/series', api.save.series);
+
 module.exports = router;
