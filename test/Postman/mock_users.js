@@ -5,7 +5,6 @@ module.exports = [{
 	verifyId: '0151ed70-cd7d-11e4-9e98-c127f64ce694',
 	isVerified: true,
 	__v: 0,
-	reccomendBookList: [],
 	seriesList: [{
 		_id: null,
 		seriesKeyword: null

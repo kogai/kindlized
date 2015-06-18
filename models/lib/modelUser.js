@@ -11,18 +11,10 @@ var userSchema = {
   verifyId: String,
   isVerified: Boolean,
   bookList: Array,
-  authorList: Array,
   seriesList: Array,
 	modifiedLog: {
 		seriesListAt: Date
-	},
-  reccomendBookList: [
-    {
-      _id: String,
-      title: String,
-      isNotified: Boolean
-    }
-  ]
+	}
 };
 
 module.exports = new MakeModel('User', userSchema, true);
