@@ -8,8 +8,6 @@ var isNewBook = require('routes/save/lib/isNewBook');
 var saveBookList = require('routes/save/lib/saveBookList');
 var saveUserBookList = require('routes/save/lib/saveUserBookList');
 
-var isNewAuthor = require('routes/save/lib/isNewAuthor');
-var saveUserAuthorList = require('routes/save/lib/saveUserAuthorList');
 var BookList = require('models/BookList');
 var log = require('common/log');
 
@@ -22,8 +20,6 @@ var saveBook = function(req, res, newBook){
 	.then(isNewBook)
 	.then(saveBookList)
 	.then(saveUserBookList)
-	.then(isNewAuthor)
-	.then(saveUserAuthorList)
 	.done(function() {
 		res.send({
 			newBook: newBook

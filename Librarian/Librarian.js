@@ -42,6 +42,7 @@ function Librarian(opts){
 @return { Array } books this.conditionsによるクエリ結果を返す
 **/
 Librarian.prototype.fetch = function(callback){
+
 	var _self = this;
 	var query = this.Model.find(this.conditions).limit(this.limit);
 	if(this.sort){
@@ -52,7 +53,7 @@ Librarian.prototype.fetch = function(callback){
 		if(err){
 			return callback(err);
 		}
-		log.info( '\n' + moment().format('YYYY-MM-DD hh:mm') + ' ' + books.length + '個のデータ処理を開始');
+		log.info( '\n' + moment().format('YYYY-MM-DD hh:mm') + ' [' + _self.constructor.name + '] ' + books.length + '個のデータ処理を開始');
 		_self.fetchedItems = books;
 		_self.total = books.length;
 		callback(null, books);

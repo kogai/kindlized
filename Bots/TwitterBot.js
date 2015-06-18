@@ -71,7 +71,6 @@ TwitterBot.prototype.tweet = function(tweetString){
 
 /**
 @param
-kindle化したら通知するやつ結構便利な気が。。。
 **/
 TwitterBot.prototype.search = function(callback){
 	this.client.stream('statuses/filter', { track: 'kindle', language: "ja" }, function(stream){

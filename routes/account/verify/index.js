@@ -1,5 +1,5 @@
 var Q = require('q');
-var modelUser = require('models/User');
+var User = require('models/User');
 
 var verifyAndModifyUser = function (data) {
 	"use strict";
@@ -7,7 +7,7 @@ var verifyAndModifyUser = function (data) {
 	var req = data.req;
 	var verifyId = req.query.id;
 
-	modelUser.findOneAndUpdate({
+	User.findOneAndUpdate({
 		verifyId: verifyId
 	}, {
 		isVerified: true

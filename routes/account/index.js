@@ -7,7 +7,6 @@ var verify = require('routes/account/verify');
 var regist = require('routes/account/regist');
 var login = require('routes/account/login');
 var localPassport = login.localPassport;
-var Author = require('models/Author');
 
 router.get('/login/success', function(req, res) {
 	res.redirect(303, '/');
