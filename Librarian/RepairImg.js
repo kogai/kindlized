@@ -54,8 +54,12 @@ RepairImg.prototype.cron = function(){
 
 	this.run(function(books){
 		Q.all(books.map(_updates))
-		.done(function(modifiedBooks){
+		.then(function(modifiedBooks){
 			d.resolve(modifiedBooks);
+		})
+		.fail(function(err){
+			log.info(err);
+			d.resolve();
 		});
 	});
 

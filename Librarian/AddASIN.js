@@ -68,8 +68,12 @@ AddASIN.prototype.cron = function(){
 
 	this.run(function(books){
 		Q.all(books.map(_updates))
-		.done(function(modifiedBooks){
-			d.resolve(modifiedBooks);
+		.then(function(modifiedBooks){
+			d.resolve();
+		})
+		.fail(function(err){
+			log.info(err);
+			d.resolve();
 		});
 	});
 

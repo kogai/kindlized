@@ -203,15 +203,19 @@ InspectKindlize.prototype.listen = function(){
 /*
 	ハンドラー
 */
-InspectKindlize.prototype.run = function(callback){
+InspectKindlize.prototype.run = function(done){
 	var _fetch = this._fetch.bind(this);
 	var _sequential = this._sequential.bind(this);
 
 	Q.when()
 	.then(_fetch)
 	.then(_sequential)
-	.done(function(books){
-		callback();
+	.then(function(books){
+		done();
+	})
+	.fail(function(err){
+		log.info(err);
+		done();
 	});
 };
 

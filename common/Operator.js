@@ -23,8 +23,8 @@ var Author = require('models/Author');
 function Operator(opts){
 	var _opts = opts || {};
 
-	if((typeof _opts.query) !== 'string' || _opts.query === undefined){ throw new Error('query parameter required string.'); }
-	if((typeof _opts.type) !== 'string' || _opts.type === undefined){ throw new Error('type parameter required string.'); }
+	if((typeof _opts.query) !== 'string' || _opts.query === undefined){ throw new Error('[' + _opts.query + '] query parameter required string.'); }
+	if((typeof _opts.type) !== 'string' || _opts.type === undefined){ throw new Error('[' + _opts.type + '] type parameter required string.'); }
 
 	this.query = _opts.query;
 	this.type = _opts.type;

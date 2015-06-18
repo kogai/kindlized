@@ -225,7 +225,8 @@ Series.prototype.run = function(done){
 		return done();
 	})
 	.fail(function(err){
-		return done(err);
+		log.info(err);
+		return done();
 	});
 };
 
