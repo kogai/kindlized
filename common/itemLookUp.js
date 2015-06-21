@@ -20,7 +20,7 @@ var CreateExpression = function (expression){
   return this;
 };
 
-var execApi = function( expression, callback, errorCallback, defferd ) {
+var execApi = function(expression, callback, errorCallback, defferd) {
   var opInspectBook = new OpHelper(opConfig);
   var searchExpression = new CreateExpression(expression);
 

@@ -8,11 +8,15 @@ var Operator = require('common/Operator')({
 });
 var log = require('common/log');
 
+log.info(process.memoryUsage());
 
 Operator.search(function(err, res){
 	if(err){
 		return log.info(util.inspect(err, null, null));
 	}
+
+log.info(process.memoryUsage());
+
 	log.info("done.");
 	// log.info(util.inspect(res, null, null));
 });

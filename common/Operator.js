@@ -110,6 +110,7 @@ Operator.prototype.count = function(callback){
 /**
 @param { Function } done - ページング完了時に呼ばれるコールバック関数
 **/
+
 Operator.prototype.fetch = function(done){
 	var _self = this;
 
