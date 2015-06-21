@@ -4,11 +4,11 @@ var MailToUser = {};
 
 var log = require('common/log');
 
-var inspectNotifiedBooks = require('postman/lib/inspectNotifiedBooks');
-var inspectKindlizedBooks = require('postman/lib/inspectKindlizedBooks');
-var insertMailTemplate = require('postman/lib/insertMailTemplate');
-var sendKindlizedNotification = require('postman/lib/sendKindlizedNotification');
-var modifyNotifiedStatus = require('postman/lib/modifyNotifiedStatus');
+var inspectNotifiedBooks = require('Postman/lib/inspectNotifiedBooks');
+var inspectKindlizedBooks = require('Postman/lib/inspectKindlizedBooks');
+var insertMailTemplate = require('Postman/lib/insertMailTemplate');
+var sendKindlizedNotification = require('Postman/lib/sendKindlizedNotification');
+var modifyNotifiedStatus = require('Postman/lib/modifyNotifiedStatus');
 
 var Q = require('q');
 

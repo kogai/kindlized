@@ -37,7 +37,6 @@ function Operator(opts){
 	this.isOverLimit = false; // AmazonAPIの検索ページネーション上限は10P. 降順 <-> 昇順にソート順を切り替えて20Pまで呼び出す
 	this.isOverLimitTwice = false;
 	this.ResponseGroup = _opts.ResponseGroup || 'Small, ItemAttributes, Images';
-	return this;
 }
 
 /**
@@ -73,45 +72,6 @@ Operator.prototype._conditions = function(){
 	}
 
 	return _conditions;
-};
-
-/**
-Operator.query, Operator.currentPage を検索する
-@param { Function } callback
-**/
-Operator.prototype.search = function(callback){
-
-	var _self = this;
-	var _conditions = this._conditions();
-
-	Operation.execute(this.operationType, _conditions, function(err, res){
-		if(err){
-			return callback(err);
-		}
-
-		if(res.ItemSearchErrorResponse){
-			var errorCode = res.ItemSearchErrorResponse.Error[0].Code[0];
-
-			switch(errorCode){
-				case 'RequestThrottled':
-					_self.retry++;
-					setTimeout(function(){
-						_self.search(callback);
-					}, INTERVAL * _self.retry);
-					break;
-				case 'SignatureDoesNotMatch':
-					callback(res.ItemSearchErrorResponse);
-					break;
-			}
-			// エラーコードを記録しておく
-			if(process.env.NODE_ENV === 'development'){
-				return log.info(INTERVAL * _self.retry + ":" + errorCode + ':' + _conditions.Author + ':' + _conditions.ItemPage);
-			}
-			return log.warn.info(errorCode);
-		}
-		_self.retry = 0;
-		callback(null, res.ItemSearchResponse.Items[0]);
-	});
 };
 
 
@@ -161,7 +121,6 @@ Operator.prototype.fetch = function(done){
 	if(this.currentPage === this.maxPage || this.currentPage > PAGING_LIMIT * 2){
 		this.maxPage = null;
 		this.currentPage = 1;
-		// this.items = _.compact(this.items);
 		this.items = _.uniq(this.items, function(item){
 			return item.ASIN[0];
 		});
@@ -186,6 +145,47 @@ Operator.prototype.fetch = function(done){
 	});
 
 };
+
+
+/**
+Operator.query, Operator.currentPage を検索する
+@param { Function } done
+**/
+Operator.prototype.search = function(done){
+	var _self = this;
+	var _conditions = this._conditions();
+
+	Operation.execute(this.operationType, _conditions, function(err, res){
+		if(err){
+			return done(err);
+		}
+
+		if(res.ItemSearchErrorResponse){
+			var errorCode = res.ItemSearchErrorResponse.Error[0].Code[0];
+
+			switch(errorCode){
+				case 'RequestThrottled':
+					_self.retry++;
+					setTimeout(function(){
+						_self.search(done);
+					}, INTERVAL * _self.retry);
+					break;
+				case 'SignatureDoesNotMatch':
+					done(res.ItemSearchErrorResponse);
+					break;
+			}
+			// エラーコードを記録しておく
+			if(process.env.NODE_ENV === 'development'){
+				return log.info(INTERVAL * _self.retry + ":" + errorCode + ':' + _conditions.Author + ':' + _conditions.ItemPage);
+			}
+			return log.warn.info(errorCode);
+		}
+
+		_self.retry = 0;
+		done(null, res.ItemSearchResponse.Items[0]);
+	});
+};
+
 
 /**
 [WIP] Operator.fetchをラップするメソッド
@@ -235,7 +235,6 @@ Operator.prototype._normalize = function(books){
 			isKindlized = true;
 			isKindlizedUrl = true;
 		}
-
 		normalizedBook.images = itemImageSets;
 		normalizedBook.isKindlized = isKindlized;
 		normalizedBook.isKindlizedUrl = isKindlizedUrl;
@@ -273,6 +272,7 @@ Operator.prototype.defer = function(method){
 **/
 Operator.prototype.run = function(done){
 	var _self = this;
+
 	var _count = this.defer(this.count.bind(this));
 	var _fetch = this.defer(this.fetch.bind(this));
 

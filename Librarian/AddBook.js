@@ -7,6 +7,7 @@ var _ = require('underscore');
 
 var Author = require('models/Author');
 var Librarian = require('Librarian/Librarian');
+var Operator = require('common/Operator');
 
 var log = require('common/log');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
@@ -21,6 +22,7 @@ function AddBook(opts){
 	Librarian.call(this, opts);
 	this.books = [];
 	this.completion = 0;
+	this.limit = LIMIT;
 	return this;
 }
 
@@ -45,15 +47,16 @@ AddBook.prototype.sequential = function(done){
 	}
 
 	var authorName = this.authors[this.completion].name;
-	var Operator = require('common/Operator')({
+	var operator = Operator({
 		type: "Author",
 		query: authorName
 	});
 
-	Operator.run(function(err, books){
+	operator.run(function(err, books){
 		if(err){
 			return done(err);
 		}
+
 		log.info(authorName + ':' + books.length);
 		_self.books = _self.books.concat(books);
 		_self.completion++;
@@ -109,6 +112,8 @@ AddBook.prototype.run = function(done){
 	functions.map(function(funcName){
 		methods["_" + funcName] = _self.defer(_self[funcName].bind(_self));
 	});
+
+log.info(process.memoryUsage());
 
 	Q.when()
 	.then(methods._fetch)

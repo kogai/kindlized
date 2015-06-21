@@ -3,7 +3,7 @@
 var AddBook = require('Librarian/AddBook')();
 var log = require('common/log');
 
-AddBook.limit = 5;
+// AddBook.limit = 5;
 
 AddBook.fetch(function(err, authors){
 	if(err){
@@ -13,6 +13,6 @@ AddBook.fetch(function(err, authors){
 		if(err){
 			return log.info(err);
 		}
-		log.info(items);
+		log.info(items.length);
 	});
 });

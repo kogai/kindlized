@@ -54,7 +54,7 @@ Collector.prototype.saveBook = function(book, done){
 		// 既に書籍が存在していたらエラーハンドリングに回す
 		if(err){ return done(err); }
 		if(existBook){
-			log.info('登録済みの書籍:' + existBook.title);
+			log.warn.info('登録済みの書籍:' + existBook.title);
 			return done();
 		}
 

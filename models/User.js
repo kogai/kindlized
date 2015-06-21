@@ -5,7 +5,7 @@ var mongodb = require('common/makeCredential')('mongodb');
 var db = mongoose.createConnection(mongodb);
 
 var Q = require('q');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 var SALT_WORK_FACTOR = require('common/constant').SALT_WORK_FACTOR;
 var Utils = require('common/Utils');
 
