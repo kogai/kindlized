@@ -57,10 +57,18 @@ AddBook.prototype.sequential = function(done){
 			return done(err);
 		}
 
+		operator = null;
 		log.info(authorName + ':' + books.length);
-		_self.books = _self.books.concat(books);
-		_self.completion++;
-		_self.sequential(done);
+
+		_self.saveBooks(books, function(err){
+			if(err){
+				return log.info(err);
+			}
+			_self.completion++;
+			_self.sequential(done);
+		});
+
+
 	});
 };
 
@@ -82,8 +90,7 @@ AddBook.prototype.updateAuthors = function(done){
 
 /**
 **/
-AddBook.prototype.saveBooks = function(done){
-	var books = this.books;
+AddBook.prototype.saveBooks = function(books, done){
 	var Collector = require('common/Collector')('book');
 	var Operator = require('common/Operator')({
 		type: "Title",
@@ -97,7 +104,7 @@ AddBook.prototype.saveBooks = function(done){
 		books.map(function(book){
 			return log.info("新規登録書籍:" + book.title);
 		});
-		done(null, books);
+		done();
 	});
 };
 
@@ -106,21 +113,21 @@ AddBook.prototype.saveBooks = function(done){
 **/
 AddBook.prototype.run = function(done){
 	var _self = this;
-	var methods = {};
+	var _methods = {};
 	var functions = ["fetch", "sequential", "updateAuthors", "saveBooks"];
 
 	functions.map(function(funcName){
-		methods["_" + funcName] = _self.defer(_self[funcName].bind(_self));
+		_methods["_" + funcName] = _self.defer(_self[funcName].bind(_self));
 	});
 
-log.info(process.memoryUsage());
-
 	Q.when()
-	.then(methods._fetch)
-	.then(methods._sequential)
-	.then(methods._updateAuthors)
-	.then(methods._saveBooks)
+	.then(_methods._fetch)
+	.then(_methods._sequential)
+	.then(_methods._updateAuthors)
+	// .then(_methods._saveBooks)
 	.then(function(){
+		_methods = null;
+		_self.books = null;
 		return done();
 	})
 	.fail(function(err){

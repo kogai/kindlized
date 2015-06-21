@@ -77,11 +77,6 @@ Series.prototype._inspect = function(seriesItem, done){
 			return done(err);
 		}
 
-		if(seriesItem.currentCount === books.length){
-			log.info('新刊無し ' + books.length + '冊: ' + seriesItem.seriesKeyword);
-			return done(null, seriesItem);
-		}
-
 		var update = {
 			lastModified: moment(),
 			recentCount: seriesItem.currentCount,
@@ -93,17 +88,24 @@ Series.prototype._inspect = function(seriesItem, done){
 					title: book.title,
 					url: book.url[0]
 				};
-			}),
-			hasNewRelease: true
+			})
 		};
+
+		if(seriesItem.currentCount === books.length){
+			update.hasNewRelease = false;
+			log.info('新刊無し ' + books.length + '冊: ' + seriesItem.seriesKeyword);
+		}else{
+			update.hasNewRelease = true;
+			log.info('新刊有り ' + seriesItem.currentCount + '冊: ' + seriesItem.seriesKeyword);
+		}
+
 		var options = { new: true };
 
 		_self.Collections.findOneAndUpdate({ seriesKeyword: seriesItem.seriesKeyword }, update, options, function(err, newSeriesItem){
 			if(err){
 				return done(err);
 			}
-			log.info('新刊有り ' + newSeriesItem.currentCount + '冊: ' + newSeriesItem.seriesKeyword);
-			done(null, update);
+			done(null, newSeriesItem);
 		});
 	});
 	return;
