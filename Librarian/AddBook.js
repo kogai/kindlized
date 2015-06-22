@@ -124,7 +124,6 @@ AddBook.prototype.run = function(done){
 	.then(_methods._fetch)
 	.then(_methods._sequential)
 	.then(_methods._updateAuthors)
-	// .then(_methods._saveBooks)
 	.then(function(){
 		_methods = null;
 		_self.books = null;

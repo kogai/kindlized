@@ -51,5 +51,8 @@ module.exports = function(req, res){
 			}
 			log.info(savedAuthors);
 		});
+
+		searchOperator = null;
+		books = null;
 	});
 };

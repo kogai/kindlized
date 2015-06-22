@@ -12,20 +12,7 @@ var AuthorSchema = new mongoose.Schema({
 			unique: true
 		}
 	},
-	wroteBooks: {
-		lastModified: Date,
-		isChanged: Boolean,
-		recent: {
-			publicationBooks: Array,
-			publicationNumber: Number
-		},
-		current: {
-			publicationBooks: Array,
-			publicationNumber: Number
-		}
-	},
 	lastModified: Date,
-	haveId: Boolean,
   pageId: Number
 });
 
