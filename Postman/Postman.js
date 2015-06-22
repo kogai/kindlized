@@ -108,10 +108,16 @@ Seriesコレクションから新刊のBookListドキュメントを抽出する
 @return { Error | Array } 新刊のBookListコレクション
 **/
 Postman.prototype.inspectSeries = function(seriesItems, done){
-	var i, seriesItem, newReleasies;
+	var i, seriesItem, newReleasies = [];
 	for (i = 0; i < seriesItems.length; i++) {
 		seriesItem = seriesItems[i];
 		newReleasies = this._diffItems(seriesItem.recentContains, seriesItem.currentContains);
+	}
+	if(newReleasies.length === 0){
+		return done({
+			"status": 'not-sent',
+			"message": "通知するシリーズ書籍がありません"
+		});
 	}
 	done(null, newReleasies);
 };
@@ -144,7 +150,11 @@ Postman.prototype.run = function(){
 
 
 
-Postman.prototype.sentSeries = function(user, users, done){
+Postman.prototype.sentSeries = function(user){
+	var args = Array.prototype.slice.call(arguments);
+			args = _.compact(args);
+	var done = args[args.length - 1];
+
 	var _Mailer = this.Mailer;
 
 	var _fetchSeries = this.Utils.defer(this.fetchSeries.bind(this));
@@ -168,10 +178,10 @@ Postman.prototype.sentSeries = function(user, users, done){
 	.then(_createTemplate)
 	.then(_sendMail)
 	.then(function(series){
-		return done(null, series);
+		done(null, series);
 	})
 	.fail(function(err){
-		return done(err);
+		done(null, err);
 	});
 };
 

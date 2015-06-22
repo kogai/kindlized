@@ -20,10 +20,6 @@ var bookrSchema = {
   url: Array,
   images: String,
   lastModified: Date,
-  lastModifiedLogs: {
-    fetchParentASIN: Date,
-    modifyUrl: Date
-  },
 	modifiedLog: {
 		AddBookAt: Date,
 		InspectKindlizeAt: Date,
