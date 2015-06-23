@@ -10,16 +10,17 @@ var log = require('common/log');
 
 module.exports = function(req, res){
 	var query = req.query.query;
+
 	var searchOperator = Operator({
 		type: "Title",
 		query: query
 	});
 
 	searchOperator.run(function(err, books){
-		if(err){
-			log.info(err);
-			res.send([]);
-		}
+
+		books.map(function(book){
+			return log.info(book.title);
+		});
 
 		if(books){
 			res.send(books);
