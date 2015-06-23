@@ -80,11 +80,11 @@ Operator.prototype._conditions = function(){
 @return { Number } totalItems
 @return { Number } maxPage
 **/
-Operator.prototype.count = function(callback){
+Operator.prototype.count = function(done){
 	var _self = this;
 	this.search(function(err, items){
 		if(err){
-			return callback(err);
+			return done(err);
 		}
 		_self.totalItems = Number(items.TotalResults[0]); //@example 11冊
 		_self.maxPage = Number(items.TotalPages[0]); //@example 2ページ(10冊 + 1冊)
@@ -96,10 +96,10 @@ Operator.prototype.count = function(callback){
 
 		// 検索結果がなかった場合の処理
 		if(_self.maxPage === 0){
-			return callback('Error: "' + _self.query + '" has not result.');
+			return done('Error: "' + _self.query + '" has not result.');
 		}
 
-		callback(null, {
+		done(null, {
 			totalItems: _self.totalItems,
 			maxPage: _self.maxPage
 		});
@@ -119,7 +119,7 @@ Operator.prototype.fetch = function(done){
 	}
 
 	// 完了時の処理
-	if(this.currentPage === this.maxPage || this.currentPage > PAGING_LIMIT * 2){
+	if(this.currentPage > this.maxPage || this.currentPage > PAGING_LIMIT * 2){
 		this.maxPage = null;
 		this.currentPage = 1;
 		this.items = _.uniq(this.items, function(item){
