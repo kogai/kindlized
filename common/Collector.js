@@ -71,10 +71,10 @@ Collector.prototype.saveBook = function(book, done){
 			isKindlized: book.isKindlized || false,
 			isKindlizedUrl: book.isKindlizedUrl || false,
 			modifiedLog: {
-				AddBookAt: moment(),
-				InspectKindlizeAt: moment(),
-				AddASINAt: moment(),
-				UpdateUrlAt: moment()
+				AddBookAt: moment('2000-01-01'),
+				InspectKindlizeAt: moment('2000-01-01'),
+				AddASINAt: moment('2000-01-01'),
+				UpdateUrlAt: moment('2000-01-01')
 			}
 		});
 		newBook.save(function(err){

@@ -30,54 +30,47 @@ execute 'wait for starting mongod-service' do
   command "wait"
 end
 
-execute 'create DB and User' do
-  user "root"
-  command "mongo /vagrant/mongoshell.js"
-  not_if "mongo kindlized"
-end
-
-execute 'import' do
-  command "mongorestore -h 127.0.0.1:27017 -d kindlized -u root -p root /vagrant/kindlized"
-  not_if "mongo kindlized"
-end
-
 
 # サーバー関連のインストール
 
-execute 'fetch specific node' do
+execute 'Install nvm' do
   user "root"
-  command "curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -"
-  not_if "which node"
+  command "curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | bash"
+  not_if "which nvm"
 end
 
-package 'nodejs' do
-  action :install
-  not_if "which node"
-end
-
-package 'nginx' do
-  action :install
-  not_if "which nginx"
-end
-
-remote_file "/etc/nginx/nginx.conf" do
-  owner "root"
-  group "root"
-  source "conf/nginx.conf"
-end
-
-service "nginx" do
-  user "root"
-  action :start
-  only_if "which nginx"
-end
-
-execute 'wait for starting nginx-service' do
+execute 'wait for installing nvm' do
   command "wait"
 end
+
+# execute 'Install iojs' do
+#   user "root"
+#   command "nvm install iojs-v2.3.0 && nvm alias default iojs-v2.3.0"
+# end
 
 remote_file "/home/vagrant/.bash_profile" do
   owner "root"
   group "root"
-  source "conf/.bash_profile"
+  source "conf/.bash_profile_development"
+  only_if 'test -d /home/vagrant/'
+  not_if 'test -e /home/vagrant/.bash_profile'
 end
+
+remote_file "/root/.bash_profile" do
+  owner "root"
+  group "root"
+  source "conf/.bash_profile"
+  only_if 'test -d /root/'
+  not_if 'test -e /root/.bash_profile'
+end
+
+# execute 'create DB and User' do
+#   user "root"
+#   command "mongo /vagrant/conf/mongo.js"
+#   only_if "mongo"
+# end
+#
+# execute 'import' do
+#   command "mongorestore -h 127.0.0.1:27017 -d kindlized -u <user> -p <password> /vagrant/backups/kindlized"
+#   only_if "mongo"
+# end
