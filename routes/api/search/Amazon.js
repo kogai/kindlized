@@ -16,6 +16,11 @@ module.exports = function(req, res){
 	});
 
 	searchOperator.run(function(err, books){
+		if(err){
+			log.info(err);
+			res.send([]);
+		}
+
 		if(books){
 			res.send(books);
 		}else{
