@@ -71,6 +71,7 @@ module.exports = function(opts){
 
 	_opts.conditions = {
 		$or: [
+			{ images: null },
 			{ images: { $exists: false } },
 			{ $where: "this.images == 0" }
 		]
