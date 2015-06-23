@@ -19,7 +19,9 @@ sbapi.js
 .vagrant
 kindlized
 
-mongoshell.js
+conf/mongo.js
 
 out/
 public/
+
+template.json
