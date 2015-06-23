@@ -2,53 +2,53 @@
   "apps": [
     {
       "exec_mode": "fork_mode",
-      "script": "/var/www/bin/www",
+      "script": "/vagrant/bin/www",
       "name": "App",
       "node_args": [ "--harmony" ],
       "env": {
         "PORT": 80,
         "NODE_ENV": "production",
-        "NODE_PATH": "/var/www/"
+        "NODE_PATH": "/vagrant/"
       },
-      "error_file": "/var/www/logs/app-err.log",
-      "out_file": "/var/www/logs/app-out.log"
+      "error_file": "/vagrant/logs/app-err.log",
+      "out_file": "/vagrant/logs/app-out.log"
     },
     {
       "exec_mode": "fork_mode",
-      "script": "/var/www/Librarian/",
+      "script": "/vagrant/Librarian/",
       "name": "Librarian",
       "max_memory_restart": "400M",
       "node_args": [ "--harmony" ],
       "env": {
         "NODE_ENV": "production",
-        "NODE_PATH": "/var/www/"
+        "NODE_PATH": "/vagrant/"
       },
-      "error_file": "/var/www/logs/Librarian-err.log",
-      "out_file": "/var/www/logs/Librarian-out.log"
+      "error_file": "/vagrant/logs/Librarian-err.log",
+      "out_file": "/vagrant/logs/Librarian-out.log"
     },
     {
       "exec_mode": "fork_mode",
-      "script": "/var/www/Bots/",
+      "script": "/vagrant/Bots/",
       "name": "Bots",
       "node_args": [ "--harmony" ],
       "env": {
         "NODE_ENV": "production",
-        "NODE_PATH": "/var/www/"
+        "NODE_PATH": "/vagrant/"
       },
-      "error_file": "/var/www/logs/Bots.err.log",
-      "out_file": "/var/www/logs/Bots.out.log"
+      "error_file": "/vagrant/logs/Bots.err.log",
+      "out_file": "/vagrant/logs/Bots.out.log"
     },
     {
       "exec_mode": "fork_mode",
-      "script": "/var/www/Postman/",
+      "script": "/vagrant/Postman/",
       "name": "Postman",
       "node_args": [ "--harmony" ],
       "env": {
         "NODE_ENV": "production",
-        "NODE_PATH": "/var/www/"
+        "NODE_PATH": "/vagrant/"
       },
-      "error_file": "/var/www/logs/Postman.err.log",
-      "out_file": "/var/www/logs/Postman.out.log"
+      "error_file": "/vagrant/logs/Postman.err.log",
+      "out_file": "/vagrant/logs/Postman.out.log"
     }
   ]
 }
