@@ -3,4 +3,4 @@
 source .bashrc
 
 export NODE_PATH="/vagrant/"
-export NODE_ENV="production"
+export NODE_ENV="development"
