@@ -1,8 +1,9 @@
+"use strict";
+
 var Q = require('q');
 var User = require('models/User');
 
 var verifyAndModifyUser = function (data) {
-	"use strict";
 	var d = Q.defer();
 	var req = data.req;
 	var verifyId = req.query.id;
@@ -22,7 +23,6 @@ var verifyAndModifyUser = function (data) {
 };
 
 var renderRouter = function (data) {
-	"use strict";
 	var res = data.res;
 	var d = Q.defer();
 
@@ -32,11 +32,10 @@ var renderRouter = function (data) {
 	return d.promise;
 }
 
-module.exports = function (data) {
-	"use strict";
+module.exports = function(data){
 	verifyAndModifyUser(data)
-		.then(renderRouter)
-		.done(function(data) {
-			console.log('新規ユーザー認証完了');
-		});
+	.then(renderRouter)
+	.done(function(data) {
+		console.log('新規ユーザー認証完了');
+	});
 };
