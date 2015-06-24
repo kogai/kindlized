@@ -184,7 +184,7 @@ Librarian.prototype.defer = function(method){
 	@param { Function } callback - 処理完了後に呼ばれるコールバック関数
 	@return { Array } books sequentialメソッドの返り値
 **/
-Librarian.prototype.run = function(callback){
+Librarian.prototype.run = function(done){
 	var _fetch = this.fetch.bind(this);
 	var _sequential = this.sequential.bind(this);
 
@@ -208,7 +208,7 @@ Librarian.prototype.run = function(callback){
 		return d.promise;
 	})
 	.done(function(books){
-		callback(books);
+		done(books);
 	});
 };
 

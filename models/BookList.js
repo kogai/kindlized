@@ -24,6 +24,7 @@ var bookrSchema = {
 		AddBookAt: Date,
 		InspectKindlizeAt: Date,
 		AddASINAt: Date,
+		RepairImgAt: Date,
 		UpdateUrlAt: Date
 	},
   isKindlized: Boolean,
