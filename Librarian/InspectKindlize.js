@@ -50,7 +50,7 @@ InspectKindlize.prototype._fetch = function(){
 			log.info(err);
 			return d.reject(err);
 		}
-		log.info(moment().format('YYYY-MM-DD hh:mm') + ":" + books.length + "冊の書籍がkindle化されているか調査");
+		log.info(moment().format('YYYY-MM-DD hh:mm') + ":" + books.length + "冊の書籍がkindle化されているか調査を開始");
 		_self.books = books;
 		d.resolve(books);
 	});
