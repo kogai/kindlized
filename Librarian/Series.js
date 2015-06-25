@@ -13,7 +13,7 @@ var log = require('common/log');
 **/
 function Series(opts){
 	this.Collections = require('models/Series');
-	this.BookList = require('models/BookList');
+	this.BookList = require('models/Book');
 	this.Librarian = new Librarian();
 	this._defer = this.Librarian.defer;
 	this.conditions = {

@@ -14,6 +14,6 @@ var updateBooks = new Batch({
 		"modifiedLog.AddASINAt": moment("2015-06-01"),
 		"modifiedLog.UpdateUrlAt": moment("2015-06-01")
 	},
-	Model: require('models/BookList')
+	Model: require('models/Book')
 });
 updateBooks.run();

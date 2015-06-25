@@ -23,7 +23,7 @@ function Collector(type){
 			break;
 		case "book":
 			this._saveMethod = this.saveBook;
-			this._Model = require('models/BookList');
+			this._Model = require('models/Book');
 			break;
 	}
 

@@ -24,7 +24,7 @@ function Mailer(opts){
 	// }
 
 	this.UserCollections = require('models/User');
-	this.BookListCollections = require('models/BookList');
+	this.BookListCollections = require('models/Book');
 
 	this.subject = opts.subject;
 	this.from = opts.from;

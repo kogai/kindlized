@@ -25,7 +25,7 @@ function Librarian(opts){
 	this.limit = _opts.limit || LIMIT;
 	this.conditions = _opts.conditions || { isKindlized: true };
 	this.sort = _opts.sort;
-	this.Model = _opts.Model || require('models/BookList');
+	this.Model = _opts.Model || require('models/Book');
 	this.fetchedItems = [];
 	this.total = 0;
 	this.amazonConditions = _opts.amazonConditions || { ResponseGroup: 'Small , ItemAttributes , Images' };

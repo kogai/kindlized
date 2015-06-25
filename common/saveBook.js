@@ -3,7 +3,7 @@
 var Q = require('q');
 var moment = require('moment-timezone');
 
-var ModelBookList = require('models/BookList.js');
+var ModelBookList = require('models/Book');
 var log = require('common/log');
 
 module.exports = function( book ) {
@@ -15,9 +15,7 @@ module.exports = function( book ) {
       if (!dbBook) {
         try{
           var newBook = new ModelBookList({
-            status: book.satus,
             ASIN: book.ASIN,
-            EAN: book.EAN,
             author: book.author,
             title: book.title,
             publisher: book.publisher,

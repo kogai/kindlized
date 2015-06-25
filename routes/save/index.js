@@ -8,7 +8,7 @@ var isNewBook = require('routes/save/lib/isNewBook');
 var saveBookList = require('routes/save/lib/saveBookList');
 var saveUserBookList = require('routes/save/lib/saveUserBookList');
 
-var BookList = require('models/BookList');
+var BookList = require('models/Book');
 var log = require('common/log');
 
 var saveBook = function(req, res, newBook){

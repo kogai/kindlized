@@ -5,7 +5,7 @@ var moment = require('moment-timezone');
 var io = require('socket.io-client');
 var socket = io.connect('http://127.0.0.1:' + 5000, { reconnect: true });
 
-var BookList = require('models/BookList');
+var BookList = require('models/Book');
 var LIMIT = require('common/constant').LIMIT.BOOK;
 
 var log = require('common/log');
