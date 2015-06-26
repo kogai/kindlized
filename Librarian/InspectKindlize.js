@@ -14,7 +14,7 @@ var itemLookUp = require('common/itemLookUp');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
 function InspectKindlize(_opts){
-	this.limit = _opts.limit || LIMIT;
+	this.limit = _opts.limit || LIMIT * 3;
 	this.books = [];
 }
 
