@@ -39,7 +39,7 @@ AddASIN.prototype._updates = function(book){
 			}
 		});
 		log.info('AuthorityASIN 更新:' + book.title);
-		socket.emit('librarian-addASIN', book);
+		// socket.emit('librarian-addASIN', book);
 	}catch(e){
 		AuthorityASIN = undefined;
 		log.info('AuthorityASIN 未更新:' + book.title);
