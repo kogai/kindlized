@@ -6,10 +6,9 @@ var moment = require('moment-timezone');
 
 var MailToUser = require('Postman/lib/MailToUser');
 var Librarian = require('Librarian/Librarian');
-var Series = require('Librarian/Series')();
-
 var log = require('common/log');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
+
 
 /**
 @constructor
@@ -188,11 +187,10 @@ Postman.prototype.sentSeries = function(user){
 
 
 Postman.prototype.runSeries = function(){
-	var _series = Series.cron.bind(Series)();
 	var _fetch = this._defer(this.fetch.bind(this));
 	var _sentSeries = this.Utils.defer(this.sentSeries.bind(this));
-
 	var _sentAllUsers = this.Utils.defer(function(users, done){
+
 		Q.all(users.map(_sentSeries))
 		.then(function(sendStatus){
 			done(null, sendStatus);
@@ -203,7 +201,6 @@ Postman.prototype.runSeries = function(){
 	});
 
 	Q.when()
-	.then(_series)
 	.then(_fetch)
 	.then(_sentAllUsers)
 	.then(function(sendStatus){
