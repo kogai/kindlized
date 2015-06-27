@@ -69,13 +69,13 @@ class User {
 
 	/**
 	@param { String } property - 編集するプロパティ名
-	@param { String | Array | Object } body - 編集するデータ
+	@param { String | Array | Object } data - 編集するデータ
 	@param { Function } done - 完了後に呼ばれるコールバック関数
 	**/
-	modifiyProfile(property, body, done){
+	modifiyProfile(property, data, done){
 		let conditions = { _id: this.userId }
 		let updates = {}
-		updates[property] = body
+		updates[property] = data
 		let options = {
 			upsert: true
 		}
