@@ -20,7 +20,7 @@ class User {
 		let conditions = { _id: this.userId }
 		let newBook = {
 			bookId: book._id,
-			title: book.title,
+			title: book.title[0],
 			isNotified: false
 		}
 		let updates = {
@@ -58,8 +58,24 @@ class User {
 
 	}
 
-	fetchRegisteredBooks(){
 
+	/**
+	@param { Function } done - 完了後に呼ばれるコールバック関数
+	**/
+	fetchRegisteredBooks(done){
+		let conditions = { _id: this.userId }
+		this.UserCollections.findOne(conditions, function(err, user){
+			if(err){
+				return done(err)
+			}
+			let notNotifiedBooks = user.bookList.map(function(book){
+				if(!book.isNotified){
+					return book
+				}
+			})
+			notNotifiedBooks = _.compact(notNotifiedBooks)
+			done(null, notNotifiedBooks)
+		})
 	}
 
 	fetchRegisteredSeries(){

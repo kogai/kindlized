@@ -2,21 +2,27 @@ _ = require('underscore')
 imageStrModifyer = require('./imageStrModifyer')
 
 module.exports = ($scope, $filter, $http) ->
-	$scope.modifyMessage = ''
 	$scope.editable = false
 
-	httpOpt =
-		method : 'get'
-		url : '/book/user'
-
-	$http( httpOpt )
-	.success ( data ) ->
-		bookListInUser = imageStrModifyer(data.newBooks)
-		user = data.user
-		$scope.bookListInUser = bookListInUser
-		$scope.mail = user.mail
+	# 登録済みの書籍の取得
+	$http({
+		method: 'get'
+		url: '/api/user/book'
+	})
+	.success (res) ->
+		$scope.bookListInUser = res.books
 		return
-	.then () ->
+
+	# メールアドレスの取得
+	$http({
+		method: 'get'
+		url: '/api/user/account'
+		params: {
+			props: 'mail'
+		}
+	})
+	.success (res) ->
+		$scope.mail = res.mail
 		return
 
 	$scope.switchEditable = ->
@@ -34,7 +40,6 @@ module.exports = ($scope, $filter, $http) ->
 		})
 		.success (data, status) ->
 			$scope.mail = modifiedMail
-			$scope.modifyMessage = data
 			$scope.editable = !$scope.editable
 			return
 		return

@@ -75,22 +75,10 @@ block content
 				tbody
 					tr( ng-repeat="bookInUser in bookListInUser" )
 						td
-							a( href="{{ bookInUser.url[0] }}" target="_blank" style='display:block;')
+							a( href="{{ bookInUser.url }}" target="_blank" style='display:block;')
 								img(ng-src="{{bookInUser.images}}")
-							|{{ bookInUser.title[0] }}
-						td
-							div( ng-if="!bookInUser.isNotified" ).label.label-danger.m-icon-mail
-								span.is-pc
-									|メール未通知
-								span.is-sp
-									|未通知
-					
-							div( ng-if="bookInUser.isNotified" ).label.label-success.m-icon-mail
-								span.is-pc
-									|メール通知済み
-								span.is-p
-									|通知済
-						
+							|{{ bookInUser.title }}
+
 						td
 							div( ng-if="!bookInUser.isKindlized" ).label.label-danger.m-icon-book
 								span.is-pc
