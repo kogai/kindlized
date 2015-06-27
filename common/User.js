@@ -58,6 +58,7 @@ class User {
 
 	}
 
+
 	/**
 	@param { Function } done - 完了後に呼ばれるコールバック関数
 	**/

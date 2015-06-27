@@ -67,6 +67,7 @@ class Book{
 		let sanitizedBook = {
 			_id: book._id,
 			url: book.url[0],
+			title: book.title[0],
 			isKindlized: book.isKindlized
 		}
 		let images
