@@ -13,9 +13,7 @@ block content
 		
 		div( ng-if="showSuggestedBooks" )
 			.panel.panel-default
-				table(
-					class="table m-table"
-				)
+				table.table.m-table
 					thead
 						tr
 							th タイトル
@@ -57,18 +55,18 @@ block content
 										|メール通知登録済みです
 									span.is-sp
 										|通知登録済
-
-		h2(
-			class="l-mt-40 l-mb-10"
-		) メール通知登録済みの書籍
+	
+		.l-clr.l-mt-40.l-mb-10
+			.l-left
+				|メール通知登録済みの書籍
+			.l-right
+				include partials/pager
+						
 		.panel.panel-default
-			table(
-				class="table m-table"
-			)
+			table.table.m-table
 				thead
 					tr
 						th タイトル
-						th ステータス
 						th 出版状況
 						th リンク
 						th 
@@ -93,7 +91,7 @@ block content
 									|Kindle済
 							
 						td
-							a( href="{{ bookInUser.url[0] }}" target="_blank" ).btn.btn-default.m-icon-buy
+							a( href="{{ bookInUser.url[0] }}" target="_blank" ).btn.btn-default.btn-sm.m-icon-buy
 								span.is-pc
 									|Amazonで購入する
 								span.is-sp
@@ -104,3 +102,5 @@ block content
 									|登録を解除
 								span.is-sp
 									|解除
+		.l-mb-40.l-center
+			include partials/pager

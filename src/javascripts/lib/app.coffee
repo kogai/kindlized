@@ -3,15 +3,29 @@ imageStrModifyer = require('./imageStrModifyer')
 
 module.exports = ($scope, $filter, $http) ->
 	$scope.editable = false
+	$scope.maxCount = 0
+	$scope.pagenation = []
+	$scope.activePage = 0
 
 	# 登録済みの書籍の取得
-	$http({
-		method: 'get'
-		url: '/api/user/book'
-	})
-	.success (res) ->
-		$scope.bookListInUser = res.books
-		return
+	$scope.fetchPage = (page) ->
+		$http({
+			method: 'get'
+			url: '/api/user/book'
+			params: {
+				page: page
+			}
+		})
+		.success (res) ->
+			$scope.bookListInUser = res.books
+			$scope.pagenation = _.range(Math.round(res.maxCount / 10))
+			$scope.activePage = Number(page)
+			return
+
+	$scope.fetchPage(1)
+
+	$scope.isActivePage = (index) ->
+		$scope.activePage == index + 1
 
 	# メールアドレスの取得
 	$http({
