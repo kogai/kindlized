@@ -58,8 +58,17 @@ class User {
 
 	}
 
-	fetchRegisteredBooks(){
-
+	/**
+	@param { Function } done - 完了後に呼ばれるコールバック関数
+	**/
+	fetchRegisteredBooks(done){
+		let conditions = { _id: this.userId }
+		this.UserCollections.findOne(conditions, function(err, user){
+			if(err){
+				return done(err)
+			}
+			done(null, user.bookList)
+		})
 	}
 
 	fetchRegisteredSeries(){

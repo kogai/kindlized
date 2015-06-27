@@ -15,7 +15,7 @@ class Book{
 
 		var query = this.BookCollections
 		.find(conditions)
-		.sort({ _id: -1 })
+		.sort({ title: 1 })
 		.skip(pageIndex * this.itemPerPage)
 		.limit(this.itemPerPage + 1);
 
