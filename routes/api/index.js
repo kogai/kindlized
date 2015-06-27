@@ -3,7 +3,8 @@ module.exports = {
 		db: require('routes/api/search/Mongo'),
 		amazon: require('routes/api/search/Amazon')
 	},
-	save: {
-		series: require('routes/api/save/Series')
+	user: {
+		series: require('routes/api/user/Series'),
+		book: require('routes/api/user/Book')
 	}
 };

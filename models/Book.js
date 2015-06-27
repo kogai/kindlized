@@ -3,7 +3,6 @@
 var MakeModel = require('common/makeModel');
 
 var bookrSchema = {
-  status: String,
   ASIN: {
     type: Array,
     index: {
@@ -11,7 +10,6 @@ var bookrSchema = {
     }
   },
   AuthorityASIN: Array,
-  EAN: Array,
   author: Array,
   title: Array,
   publisher: Array,
@@ -19,15 +17,15 @@ var bookrSchema = {
   price: Array,
   url: Array,
   images: String,
-  lastModified: Date,
 	modifiedLog: {
 		AddBookAt: Date,
 		InspectKindlizeAt: Date,
 		AddASINAt: Date,
+		RepairImgAt: Date,
 		UpdateUrlAt: Date
 	},
   isKindlized: Boolean,
   isKindlizedUrl: Boolean
 };
 
-module.exports = new MakeModel('BookList', bookrSchema);
+module.exports = new MakeModel('Book', bookrSchema);

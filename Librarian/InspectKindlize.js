@@ -5,7 +5,7 @@ var moment = require('moment-timezone');
 var io = require('socket.io-client');
 var socket = io.connect('http://127.0.0.1:' + 5000, { reconnect: true });
 
-var BookList = require('models/BookList');
+var BookList = require('models/Book');
 var LIMIT = require('common/constant').LIMIT.BOOK;
 
 var log = require('common/log');
@@ -14,7 +14,7 @@ var itemLookUp = require('common/itemLookUp');
 var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
 function InspectKindlize(_opts){
-	this.limit = _opts.limit || LIMIT;
+	this.limit = _opts.limit || LIMIT * 3;
 	this.books = [];
 }
 
@@ -50,7 +50,7 @@ InspectKindlize.prototype._fetch = function(){
 			log.info(err);
 			return d.reject(err);
 		}
-		log.info(moment().format('YYYY-MM-DD hh:mm') + ":" + books.length + "冊の書籍がkindle化されているか調査");
+		log.info(moment().format('YYYY-MM-DD hh:mm') + ":" + books.length + "冊の書籍がkindle化されているか調査を開始");
 		_self.books = books;
 		d.resolve(books);
 	});

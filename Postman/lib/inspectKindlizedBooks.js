@@ -3,7 +3,7 @@
 
 var Q = require('q');
 var _ = require('underscore');
-var modelBookList = require('models/BookList');
+var modelBookList = require('models/Book');
 var log = require('common/log');
 
 module.exports = function(user) {

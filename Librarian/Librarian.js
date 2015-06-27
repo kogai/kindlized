@@ -25,7 +25,7 @@ function Librarian(opts){
 	this.limit = _opts.limit || LIMIT;
 	this.conditions = _opts.conditions || { isKindlized: true };
 	this.sort = _opts.sort;
-	this.Model = _opts.Model || require('models/BookList');
+	this.Model = _opts.Model || require('models/Book');
 	this.fetchedItems = [];
 	this.total = 0;
 	this.amazonConditions = _opts.amazonConditions || { ResponseGroup: 'Small , ItemAttributes , Images' };
@@ -184,7 +184,7 @@ Librarian.prototype.defer = function(method){
 	@param { Function } callback - 処理完了後に呼ばれるコールバック関数
 	@return { Array } books sequentialメソッドの返り値
 **/
-Librarian.prototype.run = function(callback){
+Librarian.prototype.run = function(done){
 	var _fetch = this.fetch.bind(this);
 	var _sequential = this.sequential.bind(this);
 
@@ -208,7 +208,7 @@ Librarian.prototype.run = function(callback){
 		return d.promise;
 	})
 	.done(function(books){
-		callback(books);
+		done(books);
 	});
 };
 

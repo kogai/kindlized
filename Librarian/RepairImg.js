@@ -1,10 +1,15 @@
 "use strict";
 
 var util = require('util');
+var moment = require('moment-timezone');
 var Q = require('q');
 
 var Librarian = require('Librarian/Librarian');
+var Collector = require('common/Collector')('book');
+var Utils = require('common/Utils')();
 var log = require('common/log');
+
+var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 
 /**
 @constructor
@@ -22,45 +27,47 @@ util.inherits(RepairImg, Librarian);
 	@param { Object } book - 書籍データのオブジェクト
 	@return { Object } modifiedBook 書籍データのオブジェクト
 **/
-RepairImg.prototype._updates = function(book){
-	var d = Q.defer();
-
-	var update = {};
+RepairImg.prototype._updates = function(books, done){
+	var update = { "modifiedLog.RepairImgAt": moment() };
 	var images;
-	try{
-		images = book.res.ItemLookupResponse.Items[0].Item[0].ImageSets;
-		images = JSON.stringify(images);
-		log.info('images更新:' + book.title);
-	}catch(e){
-		images = "";
-		log.info('images未更新:' + book.title);
-		log.info(util.inspect(book.res.ItemLookupResponse, null, null));
-	}
-	update.images = images;
 
-	this.update(book, update, function(err, modifiedBook){
-		if(err){
-			return d.reject(err);
+	var repairedBooks = books.map(function(book){
+		try{
+			images = book.res.ItemLookupResponse.Items[0].Item[0].ImageSets;
+			images = JSON.stringify(images);
+			log.info('images更新: ' + book.title);
+		}catch(e){
+			images = "";
+			log.warn.info(util.inspect(book.res.ItemLookupResponse, null, null));
 		}
-		d.resolve(modifiedBook);
+		book.images = images;
+		return book;
 	});
 
-	return d.promise;
+	Collector.updateCollections(repairedBooks, update, function(err){
+		if(err){
+			return done(err);
+		}
+		done();
+	});
 };
 
 RepairImg.prototype.cron = function(){
 	var d = Q.defer();
-	var _updates = this._updates.bind(this);
 
-	this.run(function(books){
-		Q.all(books.map(_updates))
-		.then(function(modifiedBooks){
-			d.resolve(modifiedBooks);
-		})
-		.fail(function(err){
-			log.info(err);
-			d.resolve();
-		});
+	var _fetch = Utils.defer(this.fetch.bind(this));
+	var _sequential = Utils.defer(this.sequential.bind(this));
+	var _updates = Utils.defer(this._updates.bind(this));
+
+	Q.when()
+	.then(_fetch)
+	.then(_sequential)
+	.then(_updates)
+	.fail(function(err){
+		return log.info(err);
+	})
+	.done(function(){
+		d.resolve();
 	});
 
 	return d.promise;
@@ -70,9 +77,20 @@ module.exports = function(opts){
 	var _opts = opts || {};
 
 	_opts.conditions = {
-		$or: [
-			{ images: { $exists: false } },
-			{ $where: "this.images == 0" }
+		$and: [
+			{
+				$or: [
+					{ images: null },
+					{ images: { $exists: false } },
+					{ $where: "this.images == 0" }
+				]
+			},
+			{
+				$or: [
+					{ "modifiedLog.RepairImgAt": { $exists: false } },
+					{ "modifiedLog.RepairImgAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+				]
+			}
 		]
 	};
 	return new RepairImg(_opts);

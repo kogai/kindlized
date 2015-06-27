@@ -23,7 +23,7 @@ function Collector(type){
 			break;
 		case "book":
 			this._saveMethod = this.saveBook;
-			this._Model = require('models/BookList');
+			this._Model = require('models/Book');
 			break;
 	}
 
@@ -71,7 +71,7 @@ Collector.prototype.saveBook = function(book, done){
 			isKindlized: book.isKindlized || false,
 			isKindlizedUrl: book.isKindlizedUrl || false,
 			modifiedLog: {
-				AddBookAt: moment('2000-01-01'),
+				AddBookAt: moment(),
 				InspectKindlizeAt: moment('2000-01-01'),
 				AddASINAt: moment('2000-01-01'),
 				UpdateUrlAt: moment('2000-01-01')

@@ -16,7 +16,11 @@ var Utils = require('common/Utils');
   password: '',
   verifyId: '',
   isVerified: true,
-  bookList: [],
+  bookList: [{
+    bookId: "foobarbuzz",
+    isNotified: false,
+    title: "お前ら全員面倒くさい(1)"
+  }],
   modifiedLog: [
     seriesListAt: { "$date": "2015-06-01T04:00:00.000Z" }
   ],

@@ -2,7 +2,7 @@
 
 var escape = require('escape-regexp');
 
-var BookList = require('models/BookList');
+var BookList = require('models/Book');
 var log = require('common/log');
 
 module.exports = function(req, res){

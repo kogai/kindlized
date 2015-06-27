@@ -12,7 +12,7 @@ var util = require('util');
 var _ = require('underscore');
 
 var log = require('common/log');
-var BookList = require('models/BookList');
+var BookList = require('models/Book');
 var Author = require('models/Author');
 
 /**

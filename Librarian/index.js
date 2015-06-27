@@ -13,7 +13,7 @@ var moment = require('moment-timezone');
 
 var log = require('common/log');
 
-var cronTime = "0 0 * * * *";
+var cronTime = "0 */20 * * * *";
 
 var libraryHandler = function(currentTime) {
   var _series = Series.cron.bind(Series)();
@@ -27,9 +27,9 @@ var libraryHandler = function(currentTime) {
   .then(_series)
   .then(_addBook)
   .then(_repairImg)
-  .then(_inspectKindlize)
   .then(_addAsin)
   .then(_updateUrl)
+  .then(_inspectKindlize)
   .then(function(){
     return log.info(moment().format('YYYY-MM-DD hh:mm') + ': Librarian process is End.');
   })

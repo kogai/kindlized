@@ -13,7 +13,7 @@ var log = require('common/log');
 **/
 function Series(opts){
 	this.Collections = require('models/Series');
-	this.BookList = require('models/BookList');
+	this.BookList = require('models/Book');
 	this.Librarian = new Librarian();
 	this._defer = this.Librarian.defer;
 	this.conditions = {
@@ -31,7 +31,9 @@ Series.prototype.fetch = function(done){
 		if(err){
 			return done(err);
 		}
-		log.info(items.length + "個のシリーズの調査を開始");
+
+		log.info( '\n' + moment().format('YYYY-MM-DD hh:mm') + ' [' + _self.constructor.name + '] ' + items.length + '個のデータ処理を開始');
+
 		_self.series = items;
 		done(null, items);
 	});

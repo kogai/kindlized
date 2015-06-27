@@ -2,7 +2,7 @@
 
 var Q = require('q');
 var moment = require('moment-timezone');
-var ModelBookList = require('models/BookList');
+var ModelBookList = require('models/Book');
 var INTRO = require('common/constant').LIMIT.INTRO;
 var periodicalDay = require('common/constant').periodicalDay;
 var _ = require('underscore');
