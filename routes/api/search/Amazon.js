@@ -36,7 +36,7 @@ module.exports = function(req, res){
 			if(savedBooks.length === 0){
 				return log.info('新しく登録した書籍はありません');
 			}
-			log.info(savedBooks);
+			log.info('新規書籍登録: ' + savedBooks.title);
 		});
 
 		// 著者の登録処理
