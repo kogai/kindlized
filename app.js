@@ -8,7 +8,6 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 
 var routes = require('routes/');
-var book = require('routes/book');
 var reduce = require('routes/reduce');
 var account = require('routes/account');
 var sessinCredential = require('common/makeCredential')('session');
@@ -39,7 +38,6 @@ app.use(passport.session());
 
 app.use('/', routes);
 app.use('/reduce', reduce);
-app.use('/book', book);
 app.use('/account', account);
 
 
