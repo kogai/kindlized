@@ -35,7 +35,7 @@ class User {
 			if(err){
 				return done(err);
 			}
-			
+
 			if(_.where(user.bookList, newBook).length > 0){
 				return done(null, 'この書籍は登録済みです。');
 			}
@@ -47,6 +47,10 @@ class User {
 				done(null, savedUser);
 			});
 		});
+	}
+
+	reduceBook(book, done){
+		
 	}
 
 	saveSeries(seriesKeyword){
@@ -61,3 +65,7 @@ class User {
 
 	}
 }
+
+module.exports = function(userId){
+	return new User(userId);
+};
