@@ -7,7 +7,7 @@ const Book = require('common/Book')()
 module.exports = {
 	get: function(req, res){
 		let user = User(req.session.passport.user)
-		let page = req.query.page
+		let page = Number(req.query.page)
 
 		user.fetchRegisteredBooks(function(err, bookList){
 			if(err){
