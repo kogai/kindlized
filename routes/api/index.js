@@ -4,7 +4,8 @@ module.exports = {
 		amazon: require('routes/api/search/Amazon')
 	},
 	user: {
-		series: require('routes/api/user/Series'),
-		book: require('routes/api/user/Book')
+		account: require('routes/api/user/account'),
+		series: require('routes/api/user/series'),
+		book: require('routes/api/user/book')
 	}
 };
