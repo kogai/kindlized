@@ -33,9 +33,9 @@ var LocalStrategyCallBack = function( mail, password, done ){
 		var user = data.user;
 		var done = data.done;
 
-		user.comparePassword( password , user.password, function( err , isMatch ) {
+		user.comparePassword( password , user.password, function(err, isMatch) {
 	        if (err) return done(err);
-	        if ( isMatch ){
+	        if (isMatch){
 	        	return done( null, user );
 	        }else{
 	        	return done( null, false, { message: 'パスワードが間違っています。' } );

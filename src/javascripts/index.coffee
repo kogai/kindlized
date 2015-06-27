@@ -16,7 +16,7 @@ angular.module('App',[])
 			)
 	])
 	.controller(
-		'postNewBook',
+		'app',
 		[ '$scope', '$filter', '$http', app ]
 	)
 	.controller(

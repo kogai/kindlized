@@ -1,7 +1,10 @@
 _ = require('underscore')
 imageStrModifyer = require('./imageStrModifyer')
 
-module.exports = ( $scope, $filter, $http ) ->
+module.exports = ($scope, $filter, $http) ->
+	$scope.modifyMessage = ''
+	$scope.editable = false
+
 	httpOpt =
 		method : 'get'
 		url : '/book/user'
@@ -11,9 +14,29 @@ module.exports = ( $scope, $filter, $http ) ->
 		bookListInUser = imageStrModifyer(data.newBooks)
 		user = data.user
 		$scope.bookListInUser = bookListInUser
-		$scope.userName = user.mail
+		$scope.mail = user.mail
 		return
 	.then () ->
+		return
+
+	$scope.switchEditable = ->
+		$scope.editable = !$scope.editable
+		return
+
+	$scope.modify = (property, modifiedMail) ->
+		$http({
+			method: 'put'
+			url: '/api/user/account/'
+			data: {
+				property: property
+				data: modifiedMail
+			}
+		})
+		.success (data, status) ->
+			$scope.mail = modifiedMail
+			$scope.modifyMessage = data
+			$scope.editable = !$scope.editable
+			return
 		return
 
 	$scope.search = ( newBook ) ->
