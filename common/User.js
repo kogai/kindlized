@@ -16,6 +16,7 @@ class User {
 	@param { Function } done - 完了後に呼ばれるコールバック関数
 	**/
 	saveBook(book, done){
+		let _self = this;
 		let conditions = { _id: this.userId };
 		let newBook = {
 			bookId: book._id,
@@ -40,7 +41,7 @@ class User {
 				return done(null, 'この書籍は登録済みです。');
 			}
 
-			this.UserCollections.findOneAndUpdate(conditions, updates, options, function(err, savedUser){
+			_self.UserCollections.findOneAndUpdate(conditions, updates, options, function(err, savedUser){
 				if(err){
 					return done(err);
 				}
@@ -50,7 +51,7 @@ class User {
 	}
 
 	reduceBook(book, done){
-		
+
 	}
 
 	saveSeries(seriesKeyword){

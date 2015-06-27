@@ -62,7 +62,7 @@ module.exports = ( $scope, $filter, $http ) ->
 		$scope.bookListInUser.push( $scope.bookListInDB[ $index ] )
 		httpOpt =
 			method : 'post'
-			url : '/save'
+			url : '/api/user/book'
 			data : { newBook: newBook }
 
 		$http( httpOpt )

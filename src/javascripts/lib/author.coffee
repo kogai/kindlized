@@ -3,7 +3,7 @@ module.exports = ( $scope, $filter, $http ) ->
 	$scope.registBook = ( ASIN ) ->
 		httpOpt =
 			method : 'post'
-			url	 : '/save'
+			url	 : '/api/user/book'
 			data	: {
 				ASIN: ASIN
 				isAuthorPage: true
