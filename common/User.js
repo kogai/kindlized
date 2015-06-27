@@ -20,7 +20,7 @@ class User {
 		let conditions = { _id: this.userId }
 		let newBook = {
 			bookId: book._id,
-			title: book.title,
+			title: book.title[0],
 			isNotified: false
 		}
 		let updates = {
