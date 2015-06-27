@@ -67,7 +67,13 @@ class User {
 			if(err){
 				return done(err)
 			}
-			done(null, user.bookList)
+			let notNotifiedBooks = user.bookList.map(function(book){
+				if(!book.isNotified){
+					return book
+				}
+			})
+			notNotifiedBooks = _.compact(notNotifiedBooks)
+			done(null, notNotifiedBooks)
 		})
 	}
 

@@ -15,13 +15,13 @@ User.fetchRegisteredBooks(function(err, bookList){
 			})
 		}
 	}
-	Book.fetchPage(conditions, 1, function(err, books, hasNext){
+	Book.fetchAll(conditions, function(err, books){
 		if(err){
 			return log.info(err)
 		}
 		books.map(function(book){
 			return log.info(book.title)
 		})
-		log.info(hasNext)
+		log.info(books.length)
 	})
 })
