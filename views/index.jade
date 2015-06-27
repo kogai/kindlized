@@ -1,16 +1,10 @@
 extends partials/layout
 
 block content
-	div( ng-controller="postNewBook" )
-		.l-clr.l-mt-10.l-mb-10
-			.l-left.l-flex.ss-flex-center
-				|ようこそ、{{ userName }}
-
-		form( ng-submit="search( newBook )" ).input-group
-			input( type="text" required placeholder="検索したい書籍のタイトルを入力して下さい" ng-model="newBook" ).form-control
-			.input-group-btn
-				button( type="submit").btn.btn-default 書籍を検索
-				
+	div( ng-controller="app" )
+		include ./app/modify
+		include ./app/search
+		
 		div( ng-if="isWaiting" class="l-mt-10" )
 			|検索中...
 
