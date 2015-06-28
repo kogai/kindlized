@@ -50,8 +50,29 @@ class User {
 		})
 	}
 
-	reduceBook(book, done){
+	reduceBook(deleteBookId, done){
+		let _self = this
+		let conditions = { _id: this.userId }
 
+		this.UserCollections.findOne(conditions, function(err, user){
+			if(err){
+				return done(err)
+			}
+			let reducedBookList = user.bookList.map(function(book){
+				if(book.bookId.toString() !== deleteBookId){
+					return book
+				}
+			})
+			let updates = {
+				bookList: _.compact(reducedBookList)
+			}
+			_self.UserCollections.findOneAndUpdate(conditions, updates, function(err, savedUser){
+				if(err){
+					return done(err)
+				}
+				done(null, savedUser)
+			})
+		})
 	}
 
 	saveSeries(seriesKeyword){

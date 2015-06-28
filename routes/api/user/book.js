@@ -72,6 +72,16 @@ module.exports = {
 	},
 
 	delete: function(req, res){
-
+		if(!req.session.passport.user){
+			return res.status(500).send()
+		}
+		let user = User(req.session.passport.user)
+		let deleteBookId = req.query.deleteBookId
+		user.reduceBook(deleteBookId, function(err, savedUser){
+			if(err){
+				return log.info(err)
+			}
+			res.status(200).send('書籍がメール通知リストから削除されました。')
+		})
 	}
 }

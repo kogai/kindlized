@@ -115,20 +115,16 @@ module.exports = ($scope, $filter, $http) ->
 		return
 
 	$scope.unRegistBook = ( $index ) ->
-		_id = $scope.bookListInUser[ $index ]._id
-		$scope.bookListInUser.splice( $index, 1 )
+		deleteBookId = $scope.bookListInUser[$index]._id
+		$scope.bookListInUser.splice($index, 1)
 
 		# 更新したモデルをDBに保存
-
-		httpOpt =
-			method: 'post'
-			url : '/reduce'
-			data: deleteBookId: _id
-
-		$http( httpOpt )
+		$http({
+			method: 'delete'
+			url : '/api/user/book'
+			params : { deleteBookId: deleteBookId }
+		})
 		.success () ->
-			return
-		.then () ->
 			return
 		return
 	return
