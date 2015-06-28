@@ -58,7 +58,7 @@ module.exports = ($scope, $filter, $http) ->
 			return
 		return
 
-	$scope.search = ( newBook ) ->
+	$scope.search = (newBook) ->
 		$scope.isWaiting = true
 		$scope.bookListInDB = null
 

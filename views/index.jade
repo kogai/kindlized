@@ -11,7 +11,7 @@ block content
 		h2( ng-if="showSuggestedBooks" class="l-mt-10 l-mb-10")
 			|検索結果
 		
-		div( ng-if="showSuggestedBooks" )
+		div(ng-if="showSuggestedBooks" )
 			.panel.panel-default
 				table.table.m-table
 					thead
@@ -20,7 +20,7 @@ block content
 							th 出版状況
 							th リンク/登録
 					tbody
-						tr( ng-repeat="bookInDB in bookListInDB" )
+						tr(ng-repeat="bookInDB in bookListInDB")
 							td
 								a( href="{{ bookInDB.url[0] }}" target="_blank" style='display:block;' )
 									img(ng-src="{{bookInDB.images}}")
@@ -45,7 +45,11 @@ block content
 										|Amazonで購入する
 									span.is-sp
 										|購入
-								button( type="button" ng-click="registBook( bookInDB, $index )" ng-if="!bookInDB.isKindlized && !bookInDB.isRegisterd" ).btn.btn-default.m-icon-ok
+								button(
+									type="button"
+									ng-click="registBook(bookInDB, $index)"
+									ng-if="!bookInDB.isKindlized && !bookInDB.isRegisterd"
+								).btn.btn-default.m-icon-ok
 									span.is-pc
 										|メール通知登録
 									span.is-sp

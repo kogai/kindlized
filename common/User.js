@@ -18,34 +18,38 @@ class User {
 	saveBook(book, done){
 		let _self = this
 		let conditions = { _id: this.userId }
-		let newBook = {
-			bookId: book._id,
-			title: book.title[0],
-			isNotified: false
-		}
-		let updates = {
-			$push: {
-				bookList: newBook
-			}
-		}
 		let options = {
 			upsert: true
 		}
 
-		this.UserCollections.findOne(conditions, function(err, user){
-			if(err){
-				return done(err)
+		this.BookCollections.findOne({
+			ASIN: book.ASIN,
+		}, function(err, searchedBook){
+			let newBook = {
+				bookId: searchedBook._id,
+				title: searchedBook.title[0],
+				isNotified: false
 			}
-
-			if(_.where(user.bookList, newBook).length > 0){
-				return done(null, 'この書籍は登録済みです。')
+			let updates = {
+				$push: {
+					bookList: newBook
+				}
 			}
-
-			_self.UserCollections.findOneAndUpdate(conditions, updates, options, function(err, savedUser){
+			_self.UserCollections.findOne(conditions, function(err, user){
 				if(err){
 					return done(err)
 				}
-				done(null, savedUser)
+
+				if(_.where(user.bookList, newBook).length > 0){
+					return done(null, 'この書籍は登録済みです。')
+				}
+
+				_self.UserCollections.findOneAndUpdate(conditions, updates, options, function(err, savedUser){
+					if(err){
+						return done(err)
+					}
+					done(null, savedUser)
+				})
 			})
 		})
 	}
