@@ -80,6 +80,21 @@ class Book{
 		sanitizedBook.images = images
 		return sanitizedBook
 	}
+
+	count(conditions, done){
+		if(typeof conditions === 'function'){
+			done = conditions
+			conditions = {}
+		}
+
+		let query = this.BookCollections.find(conditions).count()
+		query.exec(function(err, count){
+			if(err){
+				return done(err)
+			}
+			done(null, count)
+		})
+	}
 }
 
 module.exports = function(opts){

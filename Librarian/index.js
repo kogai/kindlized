@@ -6,6 +6,7 @@ var InspectKindlize = require('Librarian/InspectKindlize')();
 var RepairImg = require('Librarian/RepairImg')();
 var AddASIN = require('Librarian/AddASIN')();
 var UpdateUrl = require('Librarian/UpdateUrl')();
+var SendStatus = require('Librarian/SendStatus')();
 
 var Q = require('q');
 var Cronjob = require('cron').CronJob;
@@ -14,6 +15,7 @@ var moment = require('moment-timezone');
 var log = require('common/log');
 
 var cronTime = "0 */20 * * * *";
+var cronTimePerDay = "0 0 9 * * *";
 
 var libraryHandler = function(currentTime) {
   var _series = Series.cron.bind(Series)();
@@ -46,7 +48,17 @@ var cronJob = new Cronjob({
   },
   start: false
 });
+
+var cronJobPerDay = new Cronjob({
+  cronTime: cronTimePerDay,
+  onTick: function() {
+    SendStatus.sentAllStatus();
+  },
+  start: false
+});
+
 cronJob.start();
+cronJobPerDay.start();
 
 InspectKindlize.listen();
 
