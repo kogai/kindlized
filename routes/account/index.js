@@ -3,10 +3,13 @@
 var Q = require('q');
 var express = require('express');
 var router = express.Router();
-var verify = require('routes/account/verify');
+
 var regist = require('routes/account/regist');
 var login = require('routes/account/login');
 var localPassport = login.localPassport;
+
+const UserCollections = require('models/User');
+const Utils = require('common/Utils')()
 
 router.get('/login/success', function(req, res) {
 	res.redirect(303, '/');
@@ -28,10 +31,21 @@ router.post('/logout', function(req, res) {
 });
 
 router.get('/verify', function(req, res) {
-	verify({
-		res: res,
-		req: req
-	});
+	let verifyId = req.query.id
+	let conditions = { verifyId: verifyId }
+	let updates = { isVerified: true }
+	let options = {
+		new: true,
+		upsert: true
+	}
+	UserCollections.findOneAndUpdate(conditions, updates, options, function(err, savedUser){
+		if(err){
+			Utils.postSlack(err)
+			return res.status(403).send('認証は拒否されました。')
+		}
+		Utils.postSlack('[' + savedUser.mail + '] が新規ユーザーとして認証されました。')
+		res.redirect(303, '/account/login')
+	})
 });
 
 router.post('/regist', function(req, res) {

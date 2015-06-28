@@ -6,6 +6,9 @@ const log = require('common/log')
 
 module.exports = {
 	get: function(req, res){
+		if(!req.session.passport.user){
+			return res.status(500).send()
+		}
 		let conditions = {
 			_id: req.session.passport.user
 		}
@@ -21,6 +24,9 @@ module.exports = {
 	},
 
 	put: function(req, res){
+		if(!req.session.passport.user){
+			return res.status(500).send()
+		}
 		let user = User(req.session.passport.user)
 		let property = req.body.property
 		let data = req.body.data
