@@ -6,6 +6,9 @@ const Book = require('common/Book')()
 
 module.exports = {
 	get: function(req, res){
+		if(!req.session.passport.user){
+			return res.status(500).send()
+		}
 		let user = User(req.session.passport.user)
 		let page = Number(req.query.page)
 
@@ -49,6 +52,9 @@ module.exports = {
 	},
 
 	post: function(req, res){
+		if(!req.session.passport.user){
+			return res.status(500).send()
+		}
 		let user = User(req.session.passport.user)
 		let book = req.body.newBook
 
