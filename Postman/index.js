@@ -1,27 +1,21 @@
-"use strict";
+require('babel/register');
 
-var Cronjob = require('cron').CronJob;
-var moment = require('moment-timezone');
+const Cronjob = require('cron').CronJob;
+const Postman = require('Postman/Postman')();
+const runPostSeries = require('Postman/PostSeries').runPostSeries;
 
-var Postman = require('Postman/Postman')();
+const morning = '0 0 21 * * *';
+const jobPerWeek = '0 0 21 * * 5';
 
-var morning = "0 0 21 * * *";
-var night = "0 0 9 * * *";
-
-var registerJob = function(cronTime, onTick){
-  var job = new Cronjob({
+function registerJob(cronTime, onTick) {
+  const job = new Cronjob({
     cronTime: cronTime,
     onTick: onTick,
-    start: false
+    start: false,
   });
   job.start();
-};
-
-//定期実行
-registerJob(morning, Postman.run.bind(Postman));
-registerJob(night, Postman.runSeries.bind(Postman));
-
-if(process.env.NODE_ENV === "development"){
-  Postman.run();
-  Postman.runSeries();
 }
+
+// ジョブ登録
+registerJob(morning, Postman.run.bind(Postman));
+registerJob(jobPerWeek, runPostSeries);

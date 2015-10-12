@@ -1,67 +1,79 @@
-"use strict";
+require('babel/register');
 
-var Series = require('Librarian/Series')();
-var AddBook = require('Librarian/AddBook')();
-var InspectKindlize = require('Librarian/InspectKindlize')();
-var RepairImg = require('Librarian/RepairImg')();
-var AddASIN = require('Librarian/AddASIN')();
-var UpdateUrl = require('Librarian/UpdateUrl')();
-var SendStatus = require('Librarian/SendStatus')();
+const Series = require('Librarian/Series')();
+const AddBook = require('Librarian/AddBook')();
+const InspectKindlize = require('Librarian/InspectKindlize')();
+const RepairImg = require('Librarian/RepairImg')();
+const AddASIN = require('Librarian/AddASIN')();
+const UpdateUrl = require('Librarian/UpdateUrl')();
+const SendStatus = require('Librarian/SendStatus')();
 
-var Q = require('q');
-var Cronjob = require('cron').CronJob;
-var moment = require('moment-timezone');
+const Q = require('q');
+const CronJob = require('cron').CronJob;
+const moment = require('moment-timezone');
 
-var log = require('common/log');
+const log = require('common/log');
 
-var cronTime = "0 */20 * * * *";
-var cronTimePerDay = "0 0 9 * * *";
+const cronTime = '0 */20 * * * *';
+const cronTimePerDay = '0 0 9 * * *';
+const cronTimePerWeek = '0 0 9 * * 5';
 
-var libraryHandler = function(currentTime) {
-  var _series = Series.cron.bind(Series)();
-  var _addBook = AddBook.cron.bind(AddBook)();
-  var _repairImg = RepairImg.cron.bind(RepairImg);
-  var _inspectKindlize = InspectKindlize.cron.bind(InspectKindlize);
-  var _addAsin = AddASIN.cron.bind(AddASIN);
-  var _updateUrl = UpdateUrl.cron.bind(UpdateUrl);
+function libraryHandler() {
+  const _addBook = AddBook.cron.bind(AddBook)();
+  const _repairImg = RepairImg.cron.bind(RepairImg);
+  const _inspectKindlize = InspectKindlize.cron.bind(InspectKindlize);
+  const _addAsin = AddASIN.cron.bind(AddASIN);
+  const _updateUrl = UpdateUrl.cron.bind(UpdateUrl);
 
   Q.when()
-  .then(_series)
   .then(_addBook)
   .then(_repairImg)
   .then(_addAsin)
   .then(_updateUrl)
   .then(_inspectKindlize)
-  .then(function(){
+  .then(()=> {
     return log.info(moment().format('YYYY-MM-DD hh:mm') + ': Librarian process is End.');
   })
-  .fail(function(err){
+  .fail((err)=> {
     return log.info(err);
   });
-};
+}
 
-//定期実行
-var cronJob = new Cronjob({
+function seriesHandler() {
+  Series.run((err)=> {
+    if (err) {
+      return log.info(err);
+    }
+    log.info(`新刊調査ジョブが完了 ${moment().format('YYYY-MM-DD hh:mm')}`);
+  });
+}
+
+// 定期実行
+const cronJob = new CronJob({
   cronTime: cronTime,
-  onTick: function() {
-    libraryHandler();
-  },
-  start: false
+  onTick: libraryHandler,
+  start: false,
 });
 
-var cronJobPerDay = new Cronjob({
+const cronJobPerDay = new CronJob({
   cronTime: cronTimePerDay,
-  onTick: function() {
-    SendStatus.sentAllStatus();
-  },
-  start: false
+  onTick: SendStatus.sentAllStatus,
+  start: false,
+});
+
+const cronJobPerWeek = new CronJob({
+  cronTime: cronTimePerWeek,
+  onTick: seriesHandler,
+  start: false,
 });
 
 cronJob.start();
 cronJobPerDay.start();
+cronJobPerWeek.start();
 
 InspectKindlize.listen();
 
-if(process.env.NODE_ENV === "development"){
+if (process.env.NODE_ENV === 'development') {
   libraryHandler();
+  seriesHandler();
 }
