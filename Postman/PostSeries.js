@@ -1,3 +1,6 @@
+import Promise from 'bluebird';
+import UserModel from 'models/User';
+import BookModel from 'models/Book';
 import Mailer from 'common/Mailer';
 import SeriesModel from 'models/Series';
 
@@ -88,7 +91,58 @@ class PostSeries {
       mail.send(done);
     });
   }
+
+}
+
+function postSeriesHandler(user) {
+  return new Promise((resolve, reject)=> {
+    const ps = new PostSeries();
+    ps.getHasNewReleases((releaseError)=> {
+      if (releaseError) {
+        return reject(releaseError);
+      }
+      if (ps.seriesReleases.length === 0) {
+        return resolve();
+      }
+      ps.getNewBookIDs(user, (ownError, notifyBookIDs)=> {
+        if (ownError) {
+          return reject(ownError);
+        }
+        if (notifyBookIDs.length === 0) {
+          console.log(`${user.mail} には配信する新刊通知がない`);
+          return resolve();
+        }
+
+        const conditions = {
+          _id: {
+            $in: notifyBookIDs,
+          },
+        };
+        BookModel.find(conditions, (bookError, books)=> {
+          if (bookError) {
+            return reject(bookError);
+          }
+          ps.sendMail(user, books, (mailError)=> {
+            if (mailError) {
+              return reject(mailError);
+            }
+            console.log(`${user.mail} に${books.length}冊の新刊通知を配信した`);
+          });
+        });
+      });
+    });
+  });
 }
 
 // クラスのエクスポート
 export default PostSeries;
+export function runPostSeries() {
+  const conditions = {
+    isVerified: true,
+  };
+  UserModel.find(conditions, (err, users)=> {
+    Promise.all(users.map(user => postSeriesHandler(user)))
+      .then()
+      .catch(handlingError => console.log(handlingError));
+  });
+}
