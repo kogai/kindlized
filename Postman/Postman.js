@@ -109,6 +109,7 @@ Postman.prototype.inspectSeries = function inspectSeries(seriesItems, done) {
     seriesItem = seriesItems[index];
     newReleasies = this._diffItems(seriesItem.recentContains, seriesItem.currentContains);
   }
+
   if (newReleasies.length === 0) {
     return done({
       'status': 'not-sent',
@@ -163,17 +164,16 @@ Postman.prototype.sentSeries = function sentSeries(user) {
   });
 
   const _sendMail = this.Utils.defer(_Mailer.send.bind(_Mailer));
-
   Q.when(user)
   .then(_fetchSeries)
   .then(_inspectSeries)
   .then(_createTemplate)
   .then(_sendMail)
   .then((info)=> {
-    done(null, info);
+    return done(null, info);
   })
   .fail((err)=> {
-    done(null, err);
+    return done(null, err);
   });
 };
 
@@ -184,10 +184,10 @@ Postman.prototype.runSeries = function runSeries() {
   const _sentAllUsers = this.Utils.defer((users, done)=> {
     Q.all(users.map(_sentSeries))
     .then((sendStatus)=> {
-      done(null, sendStatus);
+      return done(null, sendStatus);
     })
     .fail((err)=> {
-      done(err);
+      return done(err);
     });
   });
 
