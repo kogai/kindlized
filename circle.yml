@@ -1,28 +1,13 @@
-general:
-  branches:
-    only:
-      - master
-      - develop
-
 machine:
   timezone:
     Asia/Tokyo
   pre:
     - curl https://raw.githubusercontent.com/creationix/nvm/v0.23.3/install.sh | bash
   node:
-    version: 0.12.0
-
-test:
-  post:
-    - npm test
+    version: 4.2.0
 
 deployment:
   staging:
     branch: develop
     commands:
       - ./sh/github.sh
-
-  # production:
-  #   branch: master
-  #   commands:
-  #     - ./sh/production.sh
