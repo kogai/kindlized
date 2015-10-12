@@ -10,6 +10,7 @@
     "test": "$(npm bin)/mocha --recursive --compilers js:babel/register",
     "doc": "$(npm bin)/jsdoc common/*.js Librarian/*.js Bots/*.js",
     "start": "NODE_PATH=./ $(npm bin)/node-dev bin/www",
+    "librarian": "NODE_PATH=./ $(npm bin)/node-dev Librarian/",
     "deploy": "rsync -r --exclude='.git/' --exclude='node_modules' --exclude='logs/' ./ root@128.199.90.218:/vagrant/"
   },
   "repository": {
