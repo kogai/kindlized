@@ -4,7 +4,7 @@
   "description": "notification kindlized books.",
   "main": "app.js",
   "engines": {
-    "node": "0.12.x"
+    "node": "4.1.2"
   },
   "scripts": {
     "test": "$(npm bin)/mocha --recursive --compilers js:babel/register",
