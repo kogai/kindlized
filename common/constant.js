@@ -32,3 +32,4 @@ if(process.env.NODE_ENV === "development"){
 }
 
 module.exports = CONSTANT;
+export const PERIODICAL_DAY = PERIODICAL_DAY;

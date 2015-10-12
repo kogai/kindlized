@@ -1,43 +1,39 @@
-"use strict";
+import moment from 'moment-timezone';
+import escape from 'escape-regexp';
+import Q from 'q';
 
-var moment = require('moment-timezone');
-var escape = require('escape-regexp');
-var Q = require('q');
-
-var Librarian = require('Librarian/Librarian');
-var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
-var log = require('common/log');
+import Librarian from 'Librarian/Librarian';
+import { PERIODICAL_DAY } from 'common/constant';
+import log from 'common/log';
 
 /**
 @constructor
 **/
 function Series(opts){
-	this.Collections = require('models/Series');
-	this.BookList = require('models/Book');
-	this.Librarian = new Librarian();
-	this._defer = this.Librarian.defer;
-	this.conditions = {
-		lastModified: { "$lte": moment().subtract(PERIODICAL_DAY, 'days') }
-	};
-	this.series = [];
+  this.Collections = require('models/Series');
+  this.BookList = require('models/Book');
+  this.Librarian = new Librarian();
+  this._defer = this.Librarian.defer;
+  this.conditions = {
+    lastModified: { '$lte': moment().subtract(PERIODICAL_DAY, 'days') },
+  };
+  this.series = [];
 
-	return this;
+  return this;
 }
 
 
-Series.prototype.fetch = function(done){
-	var _self = this;
-	this.Collections.find(this.conditions, function(err, items){
-		if(err){
-			return done(err);
-		}
-
-		log.info( '\n' + moment().format('YYYY-MM-DD hh:mm') + ' [' + _self.constructor.name + '] ' + items.length + '個のデータ処理を開始');
-
-		_self.series = items;
-		done(null, items);
-	});
-	return;
+Series.prototype.fetch = (done)=> {
+  const _self = this;
+  this.Collections.find(this.conditions, (err, items)=> {
+    if (err) {
+      return done(err);
+    }
+    log.info(`${moment().format('YYYY-MM-DD hh:mm')}[${_self.constructor.name}]${items.length}個のデータ処理を開始`);
+    _self.series = items;
+    done(null, items);
+  });
+  return;
 };
 
 
@@ -45,20 +41,20 @@ Series.prototype.fetch = function(done){
 SeriesコレクションからBookListコレクションを取得する
 **/
 Series.prototype.join = function(seriesItems, done){
-	var conditions = {
-		_id: {
-			$in: seriesItems.map(function(seriesItem){
-				return seriesItem._id;
-			})
-		}
-	};
+  var conditions = {
+    _id: {
+      $in: seriesItems.map(function(seriesItem){
+        return seriesItem._id;
+      })
+    }
+  };
 
-	this.BookList.find(conditions, function(err, books){
-		if(err){
-			return done(err);
-		}
-		done(null, books);
-	});
+  this.BookList.find(conditions, function(err, books){
+    if(err){
+      return done(err);
+    }
+    done(null, books);
+  });
 };
 
 
@@ -69,77 +65,71 @@ seriesKeywordでBookListを検索して、前回とlengthが違えば
 @param { Object } seriesItem
 @param { Function } done
 **/
-Series.prototype._inspect = function(seriesItem, done){
+Series.prototype._inspect = (seriesItem, done)=> {
+  const _self = this;
+  const query = new RegExp(escape(seriesItem.seriesKeyword));
 
-	var _self = this;
-	var query = new RegExp(escape(seriesItem.seriesKeyword));
+  this.BookList.find({ title: query }, (err, books)=> {
+    if (err) {
+      return done(err);
+    }
+    var update = {
+      lastModified: moment(),
+      recentCount: seriesItem.currentCount,
+      recentContains: seriesItem.currentContains,
+      currentCount: books.length,
+      currentContains: books.map((book)=> {
+        return {
+          _id: book._id,
+          title: book.title,
+          url: book.url[0],
+        };
+      }),
+    };
 
-	this.BookList.find({ title: query }, function(err, books){
-		if(err){
-			return done(err);
-		}
+    if (seriesItem.currentCount === books.length) {
+      update.hasNewRelease = false;
+      log.info(`新刊無し ${books.length}冊: ${seriesItem.seriesKeyword}`);
+    } else {
+      update.hasNewRelease = true;
+      log.info('新刊有り ' + seriesItem.currentCount + '冊: ' + seriesItem.seriesKeyword);
+    }
 
-		var update = {
-			lastModified: moment(),
-			recentCount: seriesItem.currentCount,
-			recentContains: seriesItem.currentContains,
-			currentCount: books.length,
-			currentContains: books.map(function(book){
-				return {
-					_id: book._id,
-					title: book.title,
-					url: book.url[0]
-				};
-			})
-		};
-
-		if(seriesItem.currentCount === books.length){
-			update.hasNewRelease = false;
-			log.info('新刊無し ' + books.length + '冊: ' + seriesItem.seriesKeyword);
-		}else{
-			update.hasNewRelease = true;
-			log.info('新刊有り ' + seriesItem.currentCount + '冊: ' + seriesItem.seriesKeyword);
-		}
-
-		var options = { new: true };
-
-		_self.Collections.findOneAndUpdate({ seriesKeyword: seriesItem.seriesKeyword }, update, options, function(err, newSeriesItem){
-			if(err){
-				return done(err);
-			}
-			done(null, newSeriesItem);
-		});
-	});
-	return;
+    const options = { new: true };
+    _self.Collections.findOneAndUpdate({ seriesKeyword: seriesItem.seriesKeyword }, update, options, (err, newSeriesItem)=> {
+      if (err) {
+        return done(err);
+      }
+      done(null, newSeriesItem);
+    });
+  });
 };
 
 
 /**
 **/
-Series.prototype.inspectSeries = function(done){
-	var _self = this;
-	if(this.series.length === 0){
-		done(null, 'inspectSeries required Series.series.');
-	}
+Series.prototype.inspectSeries = (done)=> {
+  const _self = this;
+  if (this.series.length === 0) {
+    done(null, 'inspectSeries required Series.series.');
+  }
 
-	Q.all(this.series.map(function(item){
-		var d = Q.defer();
-
-		_self._inspect(item, function(err, updatedItem){
-			if(err){
-				return d.reject(err);
-			}
-			d.resolve(updatedItem);
-		});
-
-		return d.promise;
-	}))
-	.then(function(series){
-		done(null, series);
-	})
-	.fail(function(err){
-		done(err);
-	});
+  Q.all(this.series.map((item)=> {
+    const deffered = Q.defer();
+    _self._inspect(item, (err, updatedItem)=> {
+      if (err) {
+        return deffered.reject(err);
+      }
+      deffered.resolve(updatedItem);
+    });
+    return deffered.promise;
+  }))
+  .then((series)=> {
+    done(null, series);
+  })
+  .fail((err)=> {
+    done(err);
+  });
 };
 
 
@@ -148,24 +138,24 @@ Series.prototype.inspectSeries = function(done){
 @param { String } title - 書籍のタイトルデータ
 @return { String } 括弧で囲まれた文字列を削除した書籍のタイトルデータ
 **/
-Series.prototype._trimChar = function(title){
-	var trimedStr;
-	// 括弧で囲まれた文字列の削除
-	trimedStr = title.replace(/(\(|\（)[\s\S]*?(\)|\）)/g, '');
+Series.prototype._trimChar = (title)=> {
+  let trimedStr;
+  // 括弧で囲まれた文字列の削除
+  trimedStr = title.replace(/(\(|\（)[\s\S]*?(\)|\）)/g, '');
 
-	// 最後に空白があれば削除
-	trimedStr = trimedStr.replace(/(\s+)$/, '');
+  // 最後に空白があれば削除
+  trimedStr = trimedStr.replace(/(\s+)$/, '');
 
-	// 末尾に巻数を表す数字があれば削除
-	trimedStr = trimedStr.replace(/(\d+)$/, '');
+  // 末尾に巻数を表す数字があれば削除
+  trimedStr = trimedStr.replace(/(\d+)$/, '');
 
-	// 再度末尾の空白を削除(巻数とタイトルの間)
-	trimedStr = trimedStr.replace(/(\s+)$/, '');
+  // 再度末尾の空白を削除(巻数とタイトルの間)
+  trimedStr = trimedStr.replace(/(\s+)$/, '');
 
-	// 末尾に!！?？があれば削除
-	trimedStr = trimedStr.replace(/([\!！|?？||\:：|;；]+)$/, '');
+  // 末尾に!！?？があれば削除
+  trimedStr = trimedStr.replace(/([\!！|?？||\:：|;；]+)$/, '');
 
-	return trimedStr;
+  return trimedStr;
 };
 
 
@@ -173,75 +163,74 @@ Series.prototype._trimChar = function(title){
 書籍シリーズの保存メソッド
 **/
 Series.prototype.saveSeries = function(title, done){
-	var _self = this;
-	title = this._trimChar(title);
+  var _self = this;
+  title = this._trimChar(title);
 
-	this.Collections.findOne({ seriesKeyword: title }, function(err, series){
-		if(err){
-			return done(err);
-		}
-		if(series){
-			return done(null, series);
-		}
+  this.Collections.findOne({ seriesKeyword: title }, function(err, series){
+    if(err){
+      return done(err);
+    }
+    if(series){
+      return done(null, series);
+    }
 
-		var query = new RegExp(escape(title));
+    var query = new RegExp(escape(title));
 
-		_self.BookList.find({ title: query }, function(err, books){
-			if(err){
-				return done(err);
-			}
-			var contains = books.map(function(book){
-				return {
-					_id: book._id,
-					title: book.title,
-					url: book.url[0]
-				};
-			});
-			var newSeries = new _self.Collections({
-				seriesKeyword: title,
-				lastModified: moment(),
-				recentCount: books.length,
-				recentContains: contains,
-				currentCount: books.length,
-				currentContains: contains,
-				hasNewRelease: false
-			});
+    _self.BookList.find({ title: query }, function(err, books){
+      if(err){
+        return done(err);
+      }
+      var contains = books.map(function(book){
+        return {
+          _id: book._id,
+          title: book.title,
+          url: book.url[0]
+        };
+      });
+      var newSeries = new _self.Collections({
+        seriesKeyword: title,
+        lastModified: moment(),
+        recentCount: books.length,
+        recentContains: contains,
+        currentCount: books.length,
+        currentContains: contains,
+        hasNewRelease: false
+      });
 
-			newSeries.save(function(err){
-				if(err){
-					return done(err);
-				}
-				done(null, newSeries);
-			});
-		});
-	});
+      newSeries.save(function(err){
+        if(err){
+          return done(err);
+        }
+        done(null, newSeries);
+      });
+    });
+  });
 };
 
 
-Series.prototype.run = function(done){
-	var _fetch = this._defer(this.fetch.bind(this));
-	var _inspectSeries = this._defer(this.inspectSeries.bind(this));
+Series.prototype.run = (done)=> {
+  const _fetch = this._defer(this.fetch.bind(this));
+  const _inspectSeries = this._defer(this.inspectSeries.bind(this));
 
-	Q.when()
-	.then(_fetch)
-	.then(_inspectSeries)
-	.then(function(){
-		return done();
-	})
-	.fail(function(err){
-		log.info(err);
-		return done();
-	});
+  Q.when()
+  .then(_fetch)
+  .then(_inspectSeries)
+  .then(()=> {
+    return done();
+  })
+  .fail((err)=> {
+    log.info(err);
+    return done();
+  });
 };
 
 
-Series.prototype.cron = function(){
-	return this._defer(this.run.bind(this));
+Series.prototype.cron = ()=> {
+  return this._defer(this.run.bind(this));
 };
 
 
-module.exports = function (opts) {
-	var _opts = opts || {};
-
-	return new Series(_opts);
+module.exports = (opts)=>  {
+  var _opts = opts || {};
+  return new Series(_opts);
 };

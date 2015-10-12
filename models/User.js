@@ -27,6 +27,8 @@ var Utils = require('common/Utils');
   seriesList: [{
     _id: 'foobarbuzz',
     seriesKeyword: '我が愛しのヲタ彼女',
+    currentPublished: Number,
+    pastPublished: Number,
   }]
 }
 **/
@@ -43,13 +45,13 @@ var UserSchema = new mongoose.Schema({
   isVerified: Boolean,
   bookList: Array,
   seriesList: Array,
-	modifiedLog: {
-		seriesListAt: Date
-	}
+  modifiedLog: {
+    seriesListAt: Date,
+  },
 });
 
-UserSchema.methods.comparePassword = function(candidatePassword, hashedPassword, done) {
-  bcrypt.compare(candidatePassword, hashedPassword, function(err, isMatch) {
+UserSchema.methods.comparePassword = (candidatePassword, hashedPassword, done)=> {
+  bcrypt.compare(candidatePassword, hashedPassword, (err, isMatch)=> {
     if (err) {
       return done(err);
     }
@@ -60,43 +62,43 @@ UserSchema.methods.comparePassword = function(candidatePassword, hashedPassword,
 
 
 UserSchema.pre('save', function(next) {
-	var _user = this;
+  var _user = this;
 
-	// only hash the password if it has been modified (or is new)
-	if (!_user.isModified('password')){
+  // only hash the password if it has been modified (or is new)
+  if (!_user.isModified('password')){
     return next();
   }
 
-	var generateSalt = function() {
-		var d = Q.defer();
-		bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-			if(err){
+  var generateSalt = function() {
+    var d = Q.defer();
+    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+      if(err){
         return next(err);
       }
 
-			d.resolve(salt);
-		});
-		return d.promise;
-	};
+      d.resolve(salt);
+    });
+    return d.promise;
+  };
 
-	var hashPassword = function(salt) {
-		var d = Q.defer();
-		bcrypt.hash(_user.password, salt, function(err, hash) {
-			if (err){
+  var hashPassword = function(salt) {
+    var d = Q.defer();
+    bcrypt.hash(_user.password, salt, function(err, hash) {
+      if (err){
         return next(err);
       }
 
-			_user.password = hash;
-			d.resolve(hash);
-		});
-		return d.promise;
-	};
+      _user.password = hash;
+      d.resolve(hash);
+    });
+    return d.promise;
+  };
 
-	generateSalt()
-	.then(hashPassword)
-	.done(function(hash) {
-		next();
-	});
+  generateSalt()
+  .then(hashPassword)
+  .done(function(hash) {
+    next();
+  });
 });
 
 module.exports = db.model('user', UserSchema);
