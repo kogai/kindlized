@@ -1,8 +1,7 @@
-"use strict";
+import assert from 'power-assert';
 
-describe('circleCiのテスト', function() {
-	it('circleCiが動作している', function(done) {
-		(5).should.be.exactly(5);
-		done();
-	});
+describe('mochaのテスト', ()=> {
+  it('circleCiが動作している', ()=> {
+    assert(true);
+  });
 });
