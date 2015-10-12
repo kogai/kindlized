@@ -18,12 +18,12 @@ const cronTime = '0 */20 * * * *';
 const cronTimePerDay = '0 0 9 * * *';
 const cronTimePerWeek = '0 0 9 * * 5';
 
-var libraryHandler = function(currentTime) {
-  var _addBook = AddBook.cron.bind(AddBook)();
-  var _repairImg = RepairImg.cron.bind(RepairImg);
-  var _inspectKindlize = InspectKindlize.cron.bind(InspectKindlize);
-  var _addAsin = AddASIN.cron.bind(AddASIN);
-  var _updateUrl = UpdateUrl.cron.bind(UpdateUrl);
+function libraryHandler() {
+  const _addBook = AddBook.cron.bind(AddBook)();
+  const _repairImg = RepairImg.cron.bind(RepairImg);
+  const _inspectKindlize = InspectKindlize.cron.bind(InspectKindlize);
+  const _addAsin = AddASIN.cron.bind(AddASIN);
+  const _updateUrl = UpdateUrl.cron.bind(UpdateUrl);
 
   Q.when()
   .then(_addBook)
@@ -37,7 +37,7 @@ var libraryHandler = function(currentTime) {
   .fail((err)=> {
     return log.info(err);
   });
-};
+}
 
 function seriesHandler() {
   Series.run((err)=> {
@@ -51,17 +51,13 @@ function seriesHandler() {
 // 定期実行
 const cronJob = new CronJob({
   cronTime: cronTime,
-  onTick: ()=> {
-    libraryHandler();
-  },
+  onTick: libraryHandler,
   start: false,
 });
 
 const cronJobPerDay = new CronJob({
   cronTime: cronTimePerDay,
-  onTick: ()=> {
-    SendStatus.sentAllStatus();
-  },
+  onTick: SendStatus.sentAllStatus,
   start: false,
 });
 
@@ -77,6 +73,7 @@ cronJobPerWeek.start();
 
 InspectKindlize.listen();
 
-if(process.env.NODE_ENV === "development"){
+if (process.env.NODE_ENV === 'development') {
   libraryHandler();
+  seriesHandler();
 }
