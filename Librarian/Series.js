@@ -9,7 +9,7 @@ import log from 'common/log';
 /**
 @constructor
 **/
-function Series(opts){
+function Series() {
   this.Collections = require('models/Series');
   this.BookList = require('models/Book');
   this.Librarian = new Librarian();
@@ -18,12 +18,9 @@ function Series(opts){
     lastModified: { '$lte': moment().subtract(PERIODICAL_DAY, 'days') },
   };
   this.series = [];
-
-  return this;
 }
 
-
-Series.prototype.fetch = (done)=> {
+Series.prototype.fetch = function fetch(done) {
   const _self = this;
   this.Collections.find(this.conditions, (err, items)=> {
     if (err) {
@@ -39,17 +36,17 @@ Series.prototype.fetch = (done)=> {
 /**
 SeriesコレクションからBookListコレクションを取得する
 **/
-Series.prototype.join = function(seriesItems, done){
-  var conditions = {
+Series.prototype.join = function join(seriesItems, done) {
+  const conditions = {
     _id: {
-      $in: seriesItems.map(function(seriesItem){
+      $in: seriesItems.map((seriesItem)=> {
         return seriesItem._id;
-      })
-    }
+      }),
+    },
   };
 
-  this.BookList.find(conditions, function(err, books){
-    if(err){
+  this.BookList.find(conditions, (err, books)=> {
+    if (err) {
       return done(err);
     }
     done(null, books);
@@ -64,7 +61,7 @@ seriesKeywordでBookListを検索して、前回とlengthが違えば
 @param { Object } seriesItem
 @param { Function } done
 **/
-Series.prototype._inspect = (seriesItem, done)=> {
+Series.prototype._inspect = function _inspect(seriesItem, done) {
   const _self = this;
   const query = new RegExp(escape(seriesItem.seriesKeyword));
 
@@ -72,7 +69,7 @@ Series.prototype._inspect = (seriesItem, done)=> {
     if (err) {
       return done(err);
     }
-    var update = {
+    const update = {
       lastModified: moment(),
       recentCount: seriesItem.currentCount,
       recentContains: seriesItem.currentContains,
@@ -107,7 +104,7 @@ Series.prototype._inspect = (seriesItem, done)=> {
 
 /**
 **/
-Series.prototype.inspectSeries = (done)=> {
+Series.prototype.inspectSeries = function inspectSeries(done) {
   const _self = this;
   if (this.series.length === 0) {
     done(null, 'inspectSeries required Series.series.');
@@ -137,7 +134,7 @@ Series.prototype.inspectSeries = (done)=> {
 @param { String } title - 書籍のタイトルデータ
 @return { String } 括弧で囲まれた文字列を削除した書籍のタイトルデータ
 **/
-Series.prototype._trimChar = (title)=> {
+Series.prototype._trimChar = function _trimChar(title) {
   let trimedStr;
   // 括弧で囲まれた文字列の削除
   trimedStr = title.replace(/(\(|\（)[\s\S]*?(\)|\）)/g, '');
@@ -161,7 +158,7 @@ Series.prototype._trimChar = (title)=> {
 /**
 書籍シリーズの保存メソッド
 **/
-Series.prototype.saveSeries = function(title, done){
+Series.prototype.saveSeries = function saveSeries(title, done) {
   var _self = this;
   title = this._trimChar(title);
 
@@ -207,7 +204,7 @@ Series.prototype.saveSeries = function(title, done){
 };
 
 
-Series.prototype.run = (done)=> {
+Series.prototype.run = function run(done) {
   const _fetch = this._defer(this.fetch.bind(this));
   const _inspectSeries = this._defer(this.inspectSeries.bind(this));
 
@@ -218,18 +215,17 @@ Series.prototype.run = (done)=> {
     return done();
   })
   .fail((err)=> {
-    log.info(err);
-    return done();
+    return done(err);
   });
 };
 
 
-Series.prototype.cron = ()=> {
+Series.prototype.cron = function cron() {
   return this._defer(this.run.bind(this));
 };
 
 
-module.exports = (opts)=>  {
-  var _opts = opts || {};
-  return new Series(_opts);
+module.exports = (opts = {})=> {
+  const seriesInstanse = new Series(opts);
+  return seriesInstanse;
 };
