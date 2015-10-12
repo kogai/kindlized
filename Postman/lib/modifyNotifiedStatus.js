@@ -25,7 +25,7 @@ module.exports = function(user){
     }
   }
 
-	modelUser.findOneAndUpdate( { _id: _id }, { bookList: bookList }, function( err, user ){
+  modelUser.findOneAndUpdate( { _id: _id }, { bookList: bookList }, function( err, user ){
     if(err){
       return d.reject(err);
     }

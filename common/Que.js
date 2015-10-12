@@ -6,10 +6,10 @@ var INTERVAL_TWEET = require('common/constant').LIMIT.INTERVAL_TWEET;
 var log = require('common/log');
 
 function Que(opts){
-	this.que = [];
-	this.emitter = new EventEmitter();
-	this.isHalt = true;
-	this.INTERVAL = opts.INTERVAL || INTERVAL_TWEET;
+  this.que = [];
+  this.emitter = new EventEmitter();
+  this.isHalt = true;
+  this.INTERVAL = opts.INTERVAL || INTERVAL_TWEET;
 }
 
 
@@ -18,7 +18,7 @@ function Que(opts){
 @param { Function } callback - Publisherに登録する関数
 **/
 Que.prototype.register = function(type, callback){
-	this.emitter.on(type, callback);
+  this.emitter.on(type, callback);
 };
 
 
@@ -26,11 +26,11 @@ Que.prototype.register = function(type, callback){
 @param { Array | String | Object } collections
 **/
 Que.prototype.push = function(collections){
-	if(util.isArray(collections)){
-		this.que = this.que.concat(collections);
-	}else{
-		this.que.push(collections);
-	}
+  if(util.isArray(collections)){
+    this.que = this.que.concat(collections);
+  }else{
+    this.que.push(collections);
+  }
 };
 
 
@@ -40,8 +40,8 @@ registerに登録しておいたイベントへ通知する
 @param { String } type - 通知するイベント名
 **/
 Que.prototype.pull = function(type){
-	var payload = this.que.shift();
-	this.emitter.emit(type, payload);
+  var payload = this.que.shift();
+  this.emitter.emit(type, payload);
 };
 
 
@@ -51,20 +51,20 @@ Que.queにデータがある限り、インターバルを挟んでQue.pullし�
 @param { String } type - 通知するイベント名
 **/
 Que.prototype.consume = function(type){
-	var _self = this, consumer;
+  var _self = this, consumer;
 
-	this.isHalt = false;
-	consumer = setInterval(function(){
-		_self.pull(type);
-		if(_self.que.length === 0){
-			_self.isHalt = true;
-			clearInterval(consumer);
-			return;
-		}
-	}, this.INTERVAL);
+  this.isHalt = false;
+  consumer = setInterval(function(){
+    _self.pull(type);
+    if(_self.que.length === 0){
+      _self.isHalt = true;
+      clearInterval(consumer);
+      return;
+    }
+  }, this.INTERVAL);
 };
 
 module.exports = function(opts){
-	var _opts = opts || {};
-	return new Que(_opts);
+  var _opts = opts || {};
+  return new Que(_opts);
 };

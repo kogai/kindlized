@@ -6,13 +6,13 @@ var mongodb = require('common/makeCredential')('mongodb');
 var db = mongoose.createConnection(mongodb);
 
 var AuthorSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		index: {
-			unique: true
-		}
-	},
-	lastModified: Date,
+  name: {
+    type: String,
+    index: {
+      unique: true
+    }
+  },
+  lastModified: Date,
   pageId: Number
 });
 
