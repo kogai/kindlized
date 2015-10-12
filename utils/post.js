@@ -10,8 +10,8 @@ console.log(url);
 request
 .post(url)
 .send({
-	ASIN: '486269098X',
-	isAuthorPage: true
+  ASIN: '486269098X',
+  isAuthorPage: true
 })
 .end(function(err, ret){
   if(err){

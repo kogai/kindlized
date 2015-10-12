@@ -9,27 +9,27 @@ var Q = require('q');
 
 module.exports = function(array, callback){
 
-	var result = Q({
-		array: array,
-		resultArray: [],
-		count: 0
-	});
+  var result = Q({
+    array: array,
+    resultArray: [],
+    count: 0
+  });
 
-	array.forEach(function(array){
-		result = result.then(function(data){
-			var deferd = Q.defer();
-			var ele = data.array[data.count];
-			data.count++;
+  array.forEach(function(array){
+    result = result.then(function(data){
+      var deferd = Q.defer();
+      var ele = data.array[data.count];
+      data.count++;
 
-			callback(ele)
-			.done(function(res){
-				data.resultArray.push(res);
-				deferd.resolve( data );
-			});
+      callback(ele)
+      .done(function(res){
+        data.resultArray.push(res);
+        deferd.resolve( data );
+      });
 
-			return deferd.promise;
-		});
-	});
-	return result;
+      return deferd.promise;
+    });
+  });
+  return result;
 
 };

@@ -10,13 +10,13 @@ var Bots = {};
 Bots.AuthServer = AuthServer();
 
 Bots.AuthServer.listen(4000, function(){
-	log.info("Authentication server start.");
+  log.info("Authentication server start.");
 });
 
 Bots.TwitterBot = TwitterBot({
-	consumer_key: twitterCredential.consumerKey,
-	consumer_secret: twitterCredential.consumerSecret,
-	screen_name: 'info_kindlize'
+  consumer_key: twitterCredential.consumerKey,
+  consumer_secret: twitterCredential.consumerSecret,
+  screen_name: 'info_kindlize'
 }, function(err, client){
-	Bots.TwitterBot.listen();
+  Bots.TwitterBot.listen();
 });
