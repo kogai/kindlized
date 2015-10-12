@@ -7,9 +7,9 @@
     "node": "0.12.x"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --recursive",
-    "doc": "./node_modules/.bin/jsdoc common/*.js Librarian/*.js Bots/*.js",
-    "start": "node-dev bin/www",
+    "test": "$(npm bin)/mocha --recursive --compilers js:babel/register",
+    "doc": "$(npm bin)/jsdoc common/*.js Librarian/*.js Bots/*.js",
+    "start": "NODE_PATH=./ $(npm bin)/node-dev bin/www",
     "deploy": "rsync -r --exclude='.git/' --exclude='node_modules' --exclude='logs/' ./ root@128.199.90.218:/vagrant/"
   },
   "repository": {
@@ -23,7 +23,6 @@
   "author": "https://twitter.com/iamchawan",
   "license": "ISC",
   "dependencies": {
-    "JSONStream": "^1.0.4",
     "apac": "^1.0.0",
     "bcryptjs": "^2.1.0",
     "body-parser": "~1.8.1",
@@ -46,7 +45,6 @@
     "mongoose-unique-validator": "^0.4.1",
     "morgan": "~1.3.0",
     "multer": "^0.1.6",
-    "newrelic": "^1.19.2",
     "node-uuid": "^1.4.1",
     "nodemailer": "^1.3.0",
     "nodemailer-mandrill-transport": "^0.2.0",
@@ -70,7 +68,7 @@
     "coffee-script": "^1.9.0",
     "coffeeify": "^1.0.0",
     "debowerify": "^1.2.0",
-    "gulp": "^3.8.10",
+    "gulp": "^3.9.0",
     "gulp-coffee": "^2.3.1",
     "gulp-coffeeify": "^0.1.2",
     "gulp-coffeelint": "^0.4.0",
@@ -91,10 +89,9 @@
     "gulp-watch": "^4.1.1",
     "heapdump": "^0.3.6",
     "imagemin-jpegtran": "^4.1.0",
-    "jshint-stylish": "^1.0.0",
     "licensify": "^1.0.0",
     "nib": "^1.1.0",
-    "node-dev": "^2.6.0",
+    "node-dev": "^2.7.1",
     "should": "^4.3.0",
     "supertest": "^0.15.0",
     "vinyl-source-stream": "^1.0.0"
