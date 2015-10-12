@@ -36,7 +36,6 @@ Series.prototype.fetch = (done)=> {
   return;
 };
 
-
 /**
 SeriesコレクションからBookListコレクションを取得する
 **/
