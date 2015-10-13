@@ -10,6 +10,7 @@
     "start": "NODE_PATH=./ $(npm bin)/node-dev bin/www",
     "test": "npm run test:unit && npm run eslint",
     "test:unit": "$(npm bin)/mocha --recursive --compilers js:espower-babel/guess",
+    "test:unit:watch": "$(npm bin)/mocha --recursive --watch --compilers js:espower-babel/guess",
     "eslint": "$(npm bin)/eslint .",
     "doc": "$(npm bin)/jsdoc common/*.js Librarian/*.js Bots/*.js",
     "librarian": "NODE_PATH=./ $(npm bin)/node-dev Librarian/",
