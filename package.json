@@ -17,6 +17,7 @@
     "deploy": "rsync -r --exclude='.git/' --exclude='node_modules' --exclude='logs/' ./ root@128.199.88.174:/vagrant/",
     "pm2:restart": "$(npm bin)/pm2 restart",
     "pm2:stop": "$(npm bin)/pm2 stop",
+    "pm2:logs": "$(npm bin)/pm2 logs",
     "pm2:restartall": "$(npm bin)/pm2 restart all",
     "pm2:stopall": "$(npm bin)/pm2 stop all",
     "pm2:kill": "$(npm bin)/pm2 kill"
