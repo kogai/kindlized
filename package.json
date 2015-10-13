@@ -7,11 +7,11 @@
     "node": "4.1.2"
   },
   "scripts": {
+    "start": "NODE_PATH=./ $(npm bin)/node-dev bin/www",
     "test": "npm run test:unit && npm run eslint",
     "test:unit": "$(npm bin)/mocha --recursive --compilers js:espower-babel/guess",
     "eslint": "$(npm bin)/eslint .",
     "doc": "$(npm bin)/jsdoc common/*.js Librarian/*.js Bots/*.js",
-    "start": "NODE_PATH=./ $(npm bin)/node-dev bin/www",
     "librarian": "NODE_PATH=./ $(npm bin)/node-dev Librarian/",
     "postman": "NODE_PATH=./ $(npm bin)/node-dev Postman/",
     "deploy": "rsync -r --exclude='.git/' --exclude='node_modules' --exclude='logs/' ./ root@128.199.88.174:/vagrant/",

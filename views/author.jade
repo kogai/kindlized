@@ -1,69 +1,69 @@
 extends partials/layout
 
 block content
-	div( ng-controller="author" )
-		.l-clr.l-mt-10.l-mb-10
-			.l-left
-				|#{ title } | #{ books.length }冊中 #{ kindlizedBooks.length }冊がKindle化済み
-			.l-right
-				a(href="/").btn.btn-default ホームに戻る
-		
-		table.table.m-table
-			thead
-				tr
-					th タイトル
-					th 出版状況
-					th リンク
-			tbody
-				- for(var i = 0; i < books.length; i++)
-					- var book = books[i]
-					tr
-						td
-							-if(book.images)
-								a( href="#{ book.url[0] }" target="_blank")
-									img(src="#{ book.images }" alt="#{ book.title }" style='display:block;')
-									|#{ book.title }
-							-else
-								a( href="#{ book.url[0] }" target="_blank" style='display:block;' )
-									|#{ book.title }
-						td
-							-if(book.isKindlized)
-								.label.label-success.m-icon-book
-									span.is-pc
-										|Kindle化済み
-									span.is-sp
-										|Kindle済
-							-else
-								.label.label-danger.m-icon-book
-									span.is-pc
-										|Kindle版がありません
-									span.is-sp
-										|未Kindle
-						td
-							-if(book.isKindlized)
-								a( href="#{ book.url[0] }" target="_blank" ).btn.btn-default.m-icon-buy
-									span.is-pc
-										|Amazonで購入する
-									span.is-sp
-										|購入
-							-else
-								-if(isLogined)
-									button(ng-click="registBook('#{book.ASIN[0]}')").btn.btn-default.m-icon-mail
-										span.is-pc
-											|この本がkindle化されたら通知を受ける
-										span.is-sp
-											|kindle化通知を受ける
-								-else
-									a(href="/account?ASIN=#{ book.ASIN[0] }").btn.btn-default.m-icon-mail
-										span.is-pc
-											|この本がkindle化されたら通知を受ける
-										span.is-sp
-											|kindle化通知を受ける
+  div
+    .l-clr.l-mt-10.l-mb-10
+      .l-left
+        |#{ title } | #{ books.length }冊中 #{ kindlizedBooks.length }冊がKindle化済み
+      .l-right
+        a(href="/").btn.btn-default ホームに戻る
+    
+    table.table.m-table
+      thead
+        tr
+          th タイトル
+          th 出版状況
+          th リンク
+      tbody
+        - for(var i = 0; i < books.length; i++)
+          - var book = books[i]
+          tr
+            td
+              -if(book.images)
+                a( href="#{ book.url[0] }" target="_blank")
+                  img(src="#{ book.images }" alt="#{ book.title }" style='display:block;')
+                  |#{ book.title }
+              -else
+                a( href="#{ book.url[0] }" target="_blank" style='display:block;' )
+                  |#{ book.title }
+            td
+              -if(book.isKindlized)
+                .label.label-success.m-icon-book
+                  span.is-pc
+                    |Kindle化済み
+                  span.is-sp
+                    |Kindle済
+              -else
+                .label.label-danger.m-icon-book
+                  span.is-pc
+                    |Kindle版がありません
+                  span.is-sp
+                    |未Kindle
+            td
+              -if(book.isKindlized)
+                a( href="#{ book.url[0] }" target="_blank" ).btn.btn-default.m-icon-buy
+                  span.is-pc
+                    |Amazonで購入する
+                  span.is-sp
+                    |購入
+              -else
+                -if(isLogined)
+                  button(ng-click="registBook('#{book.ASIN[0]}')").btn.btn-default.m-icon-mail
+                    span.is-pc
+                      |この本がkindle化されたら通知を受ける
+                    span.is-sp
+                      |kindle化通知を受ける
+                -else
+                  a(href="/account?ASIN=#{ book.ASIN[0] }").btn.btn-default.m-icon-mail
+                    span.is-pc
+                      |この本がkindle化されたら通知を受ける
+                    span.is-sp
+                      |kindle化通知を受ける
 
-		.l-clr.l-m-20
-			.l-left
-				-if(!pager.prev.isNotExist)
-					a(href="/author/#{ pager.prev.pageId }").btn.btn-default #{ pager.prev.name }先生のページへ
-			.l-right
-				-if(!pager.next.isNotExist)
-					a(href="/author/#{ pager.next.pageId }").btn.btn-default #{ pager.next.name }先生のページへ
+    .l-clr.l-m-20
+      .l-left
+        -if(!pager.prev.isNotExist)
+          a(href="/author/#{ pager.prev.pageId }").btn.btn-default #{ pager.prev.name }先生のページへ
+      .l-right
+        -if(!pager.next.isNotExist)
+          a(href="/author/#{ pager.next.pageId }").btn.btn-default #{ pager.next.name }先生のページへ
