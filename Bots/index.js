@@ -1,22 +1,25 @@
-"use strict";
+require('babel/register');
 
-var twitterCredential = require('common/makeCredential')('twitter');
-var log = require('common/log');
+const twitterCredential = require('common/makeCredential')('twitter');
+const log = require('common/log');
 
-var TwitterBot = require('Bots/TwitterBot');
-var AuthServer = require('Bots/AuthServer');
-var Bots = {};
+const TwitterBot = require('Bots/TwitterBot');
+const AuthServer = require('Bots/AuthServer');
+const Bots = {};
 
 Bots.AuthServer = AuthServer();
 
-Bots.AuthServer.listen(4000, function(){
-  log.info("Authentication server start.");
+Bots.AuthServer.listen(4000, ()=> {
+  log.info('Authentication server start.');
 });
 
 Bots.TwitterBot = TwitterBot({
   consumer_key: twitterCredential.consumerKey,
   consumer_secret: twitterCredential.consumerSecret,
-  screen_name: 'info_kindlize'
-}, function(err, client){
+  screen_name: 'info_kindlize',
+}, (err)=> {
+  if (err) {
+    return log.info(err);
+  }
   Bots.TwitterBot.listen();
 });
