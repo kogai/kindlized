@@ -1,32 +1,33 @@
-"use strict";
+import request from 'superagent';
+import log from 'common/log';
+import makeCredential from 'common/makeCredential';
+const slackPostAPI = makeCredential('slack');
 
-var request = require('superagent');
-var log = require('common/log');
-var slackPostAPI = require('common/makeCredential')('slack');
-
-module.exports = function(req, res){
-
+export default function(req, res) {
   log.info(req);
+  const mandrillEvents = req.body.mandrill_events;
+  let mandrillBody;
+  let mandrillHtml;
 
-  var mandrillEvents = req.body.mandrill_events;
-  var mandrillBody, mandrillHtml;
-
-  try{
+  try {
     mandrillBody = JSON.parse(mandrillEvents);
-  }catch(err){
+  } catch (err) {
     log.info(err);
     return res.send('no');
-  }finally{
+  } finally {
     mandrillHtml = mandrillBody[0].msg.html;
   }
 
   request
   .post(slackPostAPI)
   .send({
-    text: mandrillHtml
+    text: mandrillHtml,
   })
-  .end(function(err, ret){
-    res.send(ret.text);
+  .end((err, ret)=> {
+    if (err) {
+      log.info(err);
+      return res.status(500).send(err);
+    }
+    res.status(200).send(ret.text);
   });
-
-};
+}

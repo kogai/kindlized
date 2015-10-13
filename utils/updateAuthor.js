@@ -1,5 +1,3 @@
-"use strict";
-
 var Author = require('models/Author');
 
 var LIMIT = process.argv[2];

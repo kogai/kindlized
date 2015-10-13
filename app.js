@@ -1,35 +1,33 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var bodyParser = require('body-parser');
-var passport = require('passport');
+import path from 'path';
+import express from 'express';
+import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import bodyParser from 'body-parser';
+import passport from 'passport';
 
-var routes = require('routes/');
-var account = require('routes/account');
-var sessinCredential = require('common/makeCredential')('session');
+import routes from 'routes/';
+import account from 'routes/account';
+import makeCredential from 'common/makeCredential';
 
-
-var app = express();
+const sessinCredential = makeCredential('session');
+const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-//app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-	extended: false
+  extended: false,
 }));
 app.use(cookieParser());
 app.use(session({
-	secret: sessinCredential,
-	cookie: {
-		maxAge: 30 * 24 * 60 * 60 * 1000
-	}
+  secret: sessinCredential,
+  cookie: {
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  },
 }));
 
 app.use(passport.initialize());
@@ -40,35 +38,32 @@ app.use('/account', account);
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-	'use strict';
-	var err = new Error('Not Found');
-	err.status = 404;
-	next(err);
+app.use((req, res, next)=> {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 // error handlers
 // will print stacktrace
 if (app.get('env') === 'development') {
-	app.use(function(err, req, res, next) {
-		'use strict';
-		res.status(err.status || 500);
-		res.render('error', {
-			message: err.message,
-			error: err
-		});
-	});
+  app.use((err, req, res)=> {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err,
+    });
+  });
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-	'use strict';
-	res.status(err.status || 500);
-	res.render('error', {
-		message: err.message,
-		error: {}
-	});
+app.use((err, req, res)=> {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {},
+  });
 });
 
 module.exports = app;

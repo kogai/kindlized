@@ -1,18 +1,16 @@
-var express = require('express');
-var router = express.Router();
+import express from 'express';
+const router = express.Router();
 
-var author = require('routes/author');
-var mail = require('routes/mail');
-var api = require('routes/api');
+import author from 'routes/author';
+import mail from 'routes/mail';
+import api from 'routes/api';
 
-var log = require('common/log');
-
-router.get('/', function(req, res) {
-  var isLogin = req.session.passport.user;
+router.get('/', (req, res)=> {
+  const isLogin = req.session.passport.user;
   if (isLogin) {
     res.render('index', {
       title: 'ホーム',
-      isLogin: true
+      isLogin: true,
     });
   } else {
     res.redirect(303, '/account/login');
