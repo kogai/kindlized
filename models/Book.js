@@ -35,4 +35,4 @@ const BookSchema = new mongoose.Schema({
   isKindlizedUrl: Boolean,
 });
 
-module.exports = new MakeModel('Book', bookrSchema);
+export default db.model('Book', BookSchema);
