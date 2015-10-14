@@ -46,5 +46,26 @@ describe('/routes/author', ()=> {
   it('意図したコンテンツを配信している', ()=> {
     assert(response.text.match(/テスト先生のKindle化された著書/));
   });
+
+  it('無効なパラメータには404を返す', (done)=> {
+    request(app)
+      .get('/author/test')
+      .end((err, ret)=> {
+        assert(err === null);
+        assert(ret.status === 404);
+        assert(ret.text.match(/ページが見つかりません。/));
+        done();
+      });
+  });
+
+  it('存在しないパラメータには404を返す', (done)=> {
+    request(app)
+      .get('/author/2')
+      .end((err, ret)=> {
+        assert(err === null);
+        assert(ret.status === 404);
+        assert(ret.text.match(/ページが見つかりません。/));
+        done();
+      });
   });
 });
