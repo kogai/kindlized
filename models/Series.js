@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
+import mockgoose from 'mockgoose';
+if (process.env.NODE_ENV === 'test') {
+  mockgoose(mongoose);
+}
 const mongodbCredential = process.env.KINDLIZED_MONGODB;
 const db = mongoose.createConnection(mongodbCredential);
+
 
 /**
 @example

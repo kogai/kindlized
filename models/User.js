@@ -1,7 +1,11 @@
 import mongoose from 'mongoose';
+import mockgoose from 'mockgoose';
 import Q from 'q';
 import bcrypt from 'bcryptjs';
 import { SALT_WORK_FACTOR } from 'common/constant';
+if (process.env.NODE_ENV === 'test') {
+  mockgoose(mongoose);
+}
 
 const mongodbCredential = process.env.KINDLIZED_MONGODB;
 const db = mongoose.createConnection(mongodbCredential);

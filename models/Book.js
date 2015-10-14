@@ -1,12 +1,9 @@
 import mongoose from 'mongoose';
 import mockgoose from 'mockgoose';
-import makeCredential from 'common/makeCredential';
-
 if (process.env.NODE_ENV === 'test') {
   mockgoose(mongoose);
 }
-
-const mongodbCredential = makeCredential('mongodb');
+const mongodbCredential = process.env.KINDLIZED_MONGODB;
 const db = mongoose.createConnection(mongodbCredential);
 
 const BookSchema = new mongoose.Schema({
