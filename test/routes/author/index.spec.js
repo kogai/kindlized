@@ -34,10 +34,10 @@ describe('/routes/author', ()=> {
   it('リダイレクトされていない', ()=> {
     assert(response.redirect === false);
   });
-  it('x-powered-byを送信していてる', ()=> {
+  it('x-powered-byを送信している', ()=> {
     assert(response.header['x-powered-by'] === 'Express');
   });
-  it('text/htmlを送信していてる', ()=> {
+  it('text/htmlを送信している', ()=> {
     assert(response.header['content-type'] === 'text/html; charset=utf-8');
   });
   it('APIエンドポイントではない', ()=> {

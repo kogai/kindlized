@@ -56,7 +56,7 @@ export default function(req, res) {
   }
 
   function getAuthorParallel() {
-    let authorIds = [
+    const authorIds = [
       authorId - 1,
       authorId,
       authorId + 1,
@@ -69,12 +69,12 @@ export default function(req, res) {
       authorIds[0] = authors.count;
     }
 
-    var d = Q.defer();
+    const deffered = Q.defer();
     Q.all(authorIds.map(getAuthor))
-    .done(function(authors){
-      d.resolve(authors);
+    .done((resultAuthors)=> {
+      deffered.resolve(resultAuthors);
     });
-    return d.promise;
+    return deffered.promise;
   }
 
 
@@ -110,8 +110,8 @@ export default function(req, res) {
       books = encodeImgSrc(books);
       const title = `${author.name}先生のKindle化された著書`;
       res.render('author', {
-        title : title,
-        description: title + 'の一覧ページです',
+        title: title,
+        description: `${title}の一覧ページです`,
         books: books,
         isLogined: isLogined,
         kindlizedBooks: (function(books){
@@ -127,14 +127,14 @@ export default function(req, res) {
           prev: {
             pageId: authorPrev.pageId,
             name: authorPrev.name,
-            isNotExist: authorPrev.isNotExist
+            isNotExist: authorPrev.isNotExist,
           },
           next: {
             pageId: authorNext.pageId,
             name: authorNext.name,
-            isNotExist: authorNext.isNotExist
-          }
-        }
+            isNotExist: authorNext.isNotExist,
+          },
+        },
       });
     });
   };
