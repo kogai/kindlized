@@ -1,13 +1,10 @@
-"use strict";
+import mongoose from 'mongoose';
+import Q from 'q';
+import bcrypt from 'bcryptjs';
+import { SALT_WORK_FACTOR } from 'common/constant';
 
-var mongoose = require('mongoose');
-var mongodb = require('common/makeCredential')('mongodb');
-var db = mongoose.createConnection(mongodb);
-
-var Q = require('q');
-var bcrypt = require('bcryptjs');
-var SALT_WORK_FACTOR = require('common/constant').SALT_WORK_FACTOR;
-var Utils = require('common/Utils');
+const mongodbCredential = process.env.KINDLIZED_MONGODB;
+const db = mongoose.createConnection(mongodbCredential);
 
 /**
 @example
@@ -33,12 +30,12 @@ var Utils = require('common/Utils');
 }
 **/
 
-var UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   mail: {
     type: String,
     index: {
-      unique: true
-    }
+      unique: true,
+    },
   },
   password: String,
   verifyId: String,

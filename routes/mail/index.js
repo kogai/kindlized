@@ -1,7 +1,6 @@
 import request from 'superagent';
 import log from 'common/log';
-import makeCredential from 'common/makeCredential';
-const slackPostAPI = makeCredential('slack');
+const slackPostAPI = process.env.KINDLIZED_SLACK;
 
 export default function(req, res) {
   log.info(req);

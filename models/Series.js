@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
-import makeCredential from 'common/makeCredential';
-const mongodb = makeCredential('mongodb');
-const db = mongoose.createConnection(mongodb);
+const mongodbCredential = process.env.KINDLIZED_MONGODB;
+const db = mongoose.createConnection(mongodbCredential);
 
 /**
 @example

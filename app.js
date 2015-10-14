@@ -5,12 +5,10 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import passport from 'passport';
-
 import routes from 'routes/';
 import account from 'routes/account';
-import makeCredential from 'common/makeCredential';
 
-const sessinCredential = makeCredential('session');
+const sessinCredential = process.env.KINDLIZED_SESSION;
 const app = express();
 
 app.set('views', path.join(__dirname, 'views'));

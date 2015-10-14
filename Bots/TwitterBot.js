@@ -1,36 +1,35 @@
-"use strict";
+import { Server } from 'http';
+import express from 'express';
+import socketIO from 'socket.io';
+import request from 'superagent';
+import Twitter from 'twitter';
+import AuthBot from 'models/AuthBot';
+import que from 'common/Que';
+import log from 'common/log';
 
-var app = require('express')();
-var server = require('http').Server(app).listen(5000);
-var io = require('socket.io')(server);
-var request = require('superagent');
+const app = express();
+const server = Server(app).listen(5000);
+const io = socketIO(server);
+const Que = que();
+const slackPostAPI = process.env.KINDLIZED_SLACK;
 
-var Twitter = require('twitter');
-var AuthBot = require('models/AuthBot');
-var Que = require('common/Que')();
-
-var slackPostAPI = require('common/makeCredential')('slack');
-var log = require('common/log');
-
-function TwitterBot(credentials, callback){
-  if(!credentials.consumer_key){ throw new Error("Must set consumer_key."); }
-  if(!credentials.consumer_secret){ throw new Error("Must set consumer_secret."); }
-
-  if((!credentials.access_token_key && !credentials.access_token_secret) && !credentials.screen_name){
-    throw new Error("Must set access_token_key and access_token_secret or screen_name.");
+function TwitterBot(credentials, callback) {
+  if (!credentials.consumer_key) { throw new Error('Must set consumer_key.'); }
+  if (!credentials.consumer_secret) { throw new Error('Must set consumer_secret.'); }
+  if ((!credentials.access_token_key && !credentials.access_token_secret) && !credentials.screen_name) {
+    throw new Error('Must set access_token_key and access_token_secret or screen_name.');
   }
-
   this.consumer_key = credentials.consumer_key;
   this.consumer_secret = credentials.consumer_secret;
 
   // アクセストークンが渡されていればそのまま使う
-  if(credentials.access_token_key && credentials.access_token_secret){
+  if (credentials.access_token_key && credentials.access_token_secret) {
     this.access_token_key = credentials.access_token_key;
     this.access_token_secret = credentials.access_token_secret;
   }
 
   // ユーザーアカウント名が渡されていればDBをルックアップ
-  if(credentials.screen_name){
+  if (credentials.screen_name) {
     var _self = this;
     AuthBot.findOne({ screen_name: credentials.screen_name }, function(err, bot){
       if(err){
