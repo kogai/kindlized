@@ -32,9 +32,9 @@ AuthorSchema.pre('save', function preSave(next) {
   if (!author.isNew) {
     return next();
   }
-  const query = {};
+  const query = { name: 'sequencialID' };
   const update = { $inc: { seq: 1 } };
-  const options = { upsert: true };
+  const options = { upsert: true, new: true };
 
   SequenceModel.find({}, (err, sequencialIDs)=> {
     if (err) {
@@ -46,6 +46,7 @@ AuthorSchema.pre('save', function preSave(next) {
           return next(updateError);
         }
         author.pageId = updatedSequencialID.seq;
+        next();
       });
     }
     const sequencialID = new SequenceModel({
@@ -57,7 +58,7 @@ AuthorSchema.pre('save', function preSave(next) {
         return next(saveError);
       }
       author.pageId = sequencialID.seq;
-      return next();
+      next();
     });
   });
 });
