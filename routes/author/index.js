@@ -28,6 +28,11 @@ export default function(req, res) {
 
   const authorId = Number(req.params[0]);
   const authors = {};
+  if (isNaN(authorId)) {
+    return res.status(404).render('error', {
+      title: 'ページが見つかりません。',
+    });
+  }
 
   function countAuthors() {
     const deffered = Q.defer();
@@ -91,6 +96,11 @@ export default function(req, res) {
         isNotExist: true
       };
     }
+    if (!author) {
+      return res.status(404).render('error', {
+        title: 'ページが見つかりません。',
+      });
+    }
     Booklist.find({
       author: author.name
     }, function (err, books) {
@@ -98,10 +108,10 @@ export default function(req, res) {
         console.log(err);
       }
       books = encodeImgSrc(books);
-      var title = author.name + "先生のKindle化された著書";
-      res.render( 'author', {
+      const title = `${author.name}先生のKindle化された著書`;
+      res.render('author', {
         title : title,
-        description: title + "の一覧ページです",
+        description: title + 'の一覧ページです',
         books: books,
         isLogined: isLogined,
         kindlizedBooks: (function(books){
