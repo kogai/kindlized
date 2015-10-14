@@ -62,30 +62,30 @@ UserSchema.methods.comparePassword = (candidatePassword, hashedPassword, done)=>
 
 
 
-UserSchema.pre('save', function(next) {
-  var _user = this;
+UserSchema.pre('save', function preSave(next) {
+  const _user = this;
 
   // only hash the password if it has been modified (or is new)
-  if (!_user.isModified('password')){
+  if (!_user.isModified('password')) {
     return next();
   }
 
-  var generateSalt = function() {
+  function generateSalt() {
     var d = Q.defer();
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-      if(err){
+      if (err) {
         return next(err);
       }
 
       d.resolve(salt);
     });
     return d.promise;
-  };
+  }
 
-  var hashPassword = function(salt) {
+  function hashPassword(salt) {
     var d = Q.defer();
     bcrypt.hash(_user.password, salt, function(err, hash) {
-      if (err){
+      if (err) {
         return next(err);
       }
 
@@ -93,7 +93,7 @@ UserSchema.pre('save', function(next) {
       d.resolve(hash);
     });
     return d.promise;
-  };
+  }
 
   generateSalt()
   .then(hashPassword)
