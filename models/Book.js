@@ -1,13 +1,20 @@
-"use strict";
+import mongoose from 'mongoose';
+import mockgoose from 'mockgoose';
+import makeCredential from 'common/makeCredential';
 
-var MakeModel = require('common/makeModel');
+if (process.env.NODE_ENV === 'test') {
+  mockgoose(mongoose);
+}
 
-var bookrSchema = {
+const mongodbCredential = makeCredential('mongodb');
+const db = mongoose.createConnection(mongodbCredential);
+
+const BookSchema = new mongoose.Schema({
   ASIN: {
     type: Array,
     index: {
-      unique: true
-    }
+      unique: true,
+    },
   },
   AuthorityASIN: Array,
   author: Array,
@@ -17,15 +24,15 @@ var bookrSchema = {
   price: Array,
   url: Array,
   images: String,
-	modifiedLog: {
-		AddBookAt: Date,
-		InspectKindlizeAt: Date,
-		AddASINAt: Date,
-		RepairImgAt: Date,
-		UpdateUrlAt: Date
-	},
+  modifiedLog: {
+    AddBookAt: Date,
+    InspectKindlizeAt: Date,
+    AddASINAt: Date,
+    RepairImgAt: Date,
+    UpdateUrlAt: Date,
+  },
   isKindlized: Boolean,
-  isKindlizedUrl: Boolean
-};
+  isKindlizedUrl: Boolean,
+});
 
 module.exports = new MakeModel('Book', bookrSchema);

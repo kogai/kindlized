@@ -96,7 +96,7 @@ UserSchema.pre('save', function(next) {
 
   generateSalt()
   .then(hashPassword)
-  .done(function(hash) {
+  .done(()=> {
     next();
   });
 });
