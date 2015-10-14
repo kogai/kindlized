@@ -9,50 +9,58 @@ if (process.env.NODE_ENV === 'test') {
 const mongodbCredential = makeCredential('mongodb');
 const db = mongoose.createConnection(mongodbCredential);
 
-var AuthorSchema = new mongoose.Schema({
+const AuthorSchema = new mongoose.Schema({
   name: {
     type: String,
     index: {
-      unique: true
-    }
+      unique: true,
+    },
   },
   lastModified: Date,
-  pageId: Number
+  pageId: Number,
 });
 
-var SequenceSchema = new mongoose.Schema({
+const SequenceSchema = new mongoose.Schema({
   name: String,
-  seq: Number
+  seq: Number,
 });
 
 SequenceSchema.index = { name: 1 };
-var SequenceModel = db.model('Sequence', SequenceSchema );
+const SequenceModel = db.model('Sequence', SequenceSchema );
 
-AuthorSchema.pre('save', function (next) {
-  var author = this;
-  var query, options, update;
-  if(!author.isNew){
+AuthorSchema.pre('save', function preSave(next) {
+  const author = this;
+  if (!author.isNew) {
     return next();
   }
-  query = {
-  };
-  update = {
-    $inc: {
-      seq: 1
+  const query = {};
+  const update = { $inc: { seq: 1 } };
+  const options = { upsert: true };
+
+  SequenceModel.find({}, (err, sequencialIDs)=> {
+    if (err) {
+      return next(err);
     }
-  };
-  options = {
-    upsert: true
-  };
-  return SequenceModel.findOneAndUpdate(query, update, options, (function(_this) {
-    return function(err, data) {
-      if (!err && data) {
-        _this.pageId = data.seq;
-        return next();
+    if (sequencialIDs.length > 0) {
+      return SequenceModel.findOneAndUpdate(query, update, options, (updateError, updatedSequencialID)=> {
+        if (updateError) {
+          return next(updateError);
+        }
+        author.pageId = updatedSequencialID.seq;
+      });
+    }
+    const sequencialID = new SequenceModel({
+      name: 'sequencialID',
+      seq: 1,
+    });
+    sequencialID.save((saveError)=> {
+      if (saveError) {
+        return next(saveError);
       }
-      return next(err || data);
-    };
-  }(author)));
+      author.pageId = sequencialID.seq;
+      return next();
+    });
+  });
 });
 
 module.exports = db.model('Author', AuthorSchema );
