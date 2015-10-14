@@ -8,7 +8,7 @@ describe('/routes/author', ()=> {
 
   before((done)=> {
     const author = new AutherModel({
-      name: 'テスト',
+      name: '鳥山明',
       lastModified: new Date(),
     });
 
@@ -44,7 +44,7 @@ describe('/routes/author', ()=> {
     assert(Object.keys(response.body).length === 0);
   });
   it('意図したコンテンツを配信している', ()=> {
-    assert(response.text.match(/テスト先生のKindle化された著書/));
+    assert(response.text.match(/鳥山明先生のKindle化された著書/));
   });
 
   it('無効なパラメータには404を返す', (done)=> {

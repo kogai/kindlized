@@ -8,7 +8,7 @@ describe('/models/Author', ()=> {
     mockgoose.reset();
   });
 
-  it('AuthorコレクションはpageIDを持つ', (done)=> {
+  it('Authorコレクションは自動で付与されたpageIDを持つ', (done)=> {
     const author = new AutherModel({
       name: '和月伸宏',
       lastModified: new Date(),
