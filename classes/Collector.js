@@ -2,7 +2,6 @@ import util from 'util';
 import moment from 'moment-timezone';
 import Q from 'q';
 import Promise from 'bluebird';
-import _ from 'underscore';
 import log from 'common/log';
 import BookModel from 'models/Book';
 import AuthorModel from 'models/Author';
@@ -17,17 +16,14 @@ function Collector(type) {
 
   switch (type) {
   case 'author':
-    this._saveMethod = this.saveAuthor;
     this.save = this.saveAuthor;
     this._Model = AuthorModel;
     break;
   case 'book':
-    this._saveMethod = this.saveBook;
     this.save = this.saveBook;
     this._Model = BookModel;
     break;
   default:
-    this._saveMethod = this.saveBook;
     this.save = this.saveBook;
     this._Model = BookModel;
     break;

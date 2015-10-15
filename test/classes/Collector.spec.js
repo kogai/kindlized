@@ -1,6 +1,7 @@
 import assert from 'power-assert';
 import mockgoose from 'mockgoose';
 import moment from 'moment-timezone';
+import _ from 'lodash';
 import Collector from 'classes/Collector';
 const AuthorCollector = Collector('author');
 const BookCollector = Collector('book');
@@ -52,8 +53,52 @@ describe('/classes/Collector', ()=> {
       done();
     });
   });
-  it('保存時の必須パラメータを検証できる', (done)=> {
-    done();
+  it('保存時の必須パラメータを検証できる', ()=> {
+    try {
+      BookCollector.save('井上雄彦');
+    } catch (err) {
+      assert(_.isError(err));
+    }
+    try {
+      BookCollector.save({
+        ASIN: 'BASKETBALL',
+      });
+    } catch (err) {
+      assert(_.isError(err));
+    }
+    try {
+      BookCollector.save({
+        ASIN: 'BASKETBALL',
+        author: '井上雄彦',
+      });
+    } catch (err) {
+      assert(_.isError(err));
+    }
+  });
+  it('書籍を同時に保存できる', (done)=> {
+    const books = [
+      {
+        ASIN: 'BASKETBALL',
+        author: '井上雄彦',
+        title: 'SLAM DUNK',
+      }, {
+        ASIN: 'KURAIYAGARE',
+        author: '冨樫義博',
+        title: '幽☆遊☆白書',
+      }, {
+        ASIN: 'ROKUDENASI',
+        author: '森田まさのり',
+        title: 'ろくでなしBLUES',
+      },
+    ];
+    BookCollector.saveCollections(books, (err, savedBooks)=> {
+      assert(err === null);
+      assert(savedBooks.length === 3);
+      assert(savedBooks[0].author[0] === books[0].author);
+      assert(savedBooks[1].author[0] === books[1].author);
+      assert(savedBooks[2].author[0] === books[2].author);
+      done();
+    });
   });
 
   afterEach(()=> {
