@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var modelUser = require('models/User');
 

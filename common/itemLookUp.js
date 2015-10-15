@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var Q = require('q');
 var util = require('util');
@@ -10,11 +10,11 @@ var INTERVAL = require('common/constant').INTERVAL;
 var log = require('common/log');
 var warn = log.warn;
 
-var CreateExpression = function (expression){
+var CreateExpression = function(expression) {
   var key;
   for (key in expression) {
     if (expression.hasOwnProperty(key)) {
-       this[key] = expression[key];
+      this[key] = expression[key];
     }
   }
   return this;
@@ -25,32 +25,32 @@ var execApi = function(expression, callback, errorCallback, defferd) {
   var searchExpression = new CreateExpression(expression);
 
   opInspectBook.execute('ItemLookup', searchExpression, function(err, res) {
-      if (err) {
+    if (err) {
         return warn.info(err);
       }
-      if (res.ItemLookupErrorResponse) {
+    if (res.ItemLookupErrorResponse) {
         warn.info(res.ItemLookupErrorResponse);
         num++;
-        setTimeout(function(){
-  				execApi( expression, callback, errorCallback, defferd );
-  			}, INTERVAL * num);
+        setTimeout(function() {
+  				        execApi( expression, callback, errorCallback, defferd );
+  			      }, INTERVAL * num);
       } else {
         var result;
         try {
           result = callback(res);
         } catch (error) {
           result = errorCallback(error);
-        }finally{
+        }finally  {
           num = 0;
           warn.info(result);
           defferd.resolve(result);
         }
       }
-    }
+  }
   );
 };
 
-module.exports = function( expression, callback, errorCallback ){
+module.exports = function( expression, callback, errorCallback ) {
   var defferd = Q.defer();
   execApi(expression, callback, errorCallback, defferd);
   return defferd.promise;

@@ -31,8 +31,8 @@ function TwitterBot(credentials, callback) {
   // ユーザーアカウント名が渡されていればDBをルックアップ
   if (credentials.screen_name) {
     var _self = this;
-    AuthBot.findOne({ screen_name: credentials.screen_name }, function(err, bot){
-      if(err){
+    AuthBot.findOne({ screen_name: credentials.screen_name }, function(err, bot) {
+      if (err) {
         return callback(err);
       }
       _self.access_token_key = bot.accessToken;
@@ -47,7 +47,7 @@ function TwitterBot(credentials, callback) {
       callback(null, _self.client);
       return _self;
     });
-  }else{
+  }else  {
     this.client = new Twitter({
       consumer_key: this.consumer_key,
       consumer_secret: this.consumer_secret,
@@ -59,9 +59,9 @@ function TwitterBot(credentials, callback) {
   }
 }
 
-TwitterBot.prototype.tweet = function(tweetString){
-  this.client.post('statuses/update', { status: tweetString }, function(err, tweet, res){
-    if(err){
+TwitterBot.prototype.tweet = function(tweetString) {
+  this.client.post('statuses/update', { status: tweetString }, function(err, tweet, res) {
+    if (err) {
       return log.info(err);
     }
     log.info(tweet.created_at + tweet.text);
@@ -71,9 +71,9 @@ TwitterBot.prototype.tweet = function(tweetString){
 /**
 @param
 **/
-TwitterBot.prototype.search = function(callback){
-  this.client.stream('statuses/filter', { track: 'kindle', language: "ja" }, function(stream){
-    log.info("TwitterBotのstreamクライアントを接続");
+TwitterBot.prototype.search = function(callback) {
+  this.client.stream('statuses/filter', { track: 'kindle', language: 'ja' }, function(stream) {
+    log.info('TwitterBotのstreamクライアントを接続');
     stream.on('data', function(tweet) {
       if (tweet.text && tweet.text.match('通知')) {
         callback(tweet.id_str);
@@ -82,58 +82,58 @@ TwitterBot.prototype.search = function(callback){
   });
 };
 
-TwitterBot.prototype.send = function(str){
+TwitterBot.prototype.send = function(str) {
   request
   .post(slackPostAPI)
   .send({
     text: str
   })
-  .end(function(err, ret){
-    if(err){
+  .end(function(err, ret) {
+    if (err) {
       return log.info(err);
     }
   });
 };
 
-TwitterBot.prototype.setFavorite = function(tweetId){
+TwitterBot.prototype.setFavorite = function(tweetId) {
   var _self = this;
-  this.client.post('favorites/create', { id: tweetId }, function(err, tweet, res){
-    if(err){
+  this.client.post('favorites/create', { id: tweetId }, function(err, tweet, res) {
+    if (err) {
       return _self.send(err[0].message);
     }
     _self.send(tweet.user.screen_name + 'の "' + tweet.text + '" ' + ' をfavoriteした');
   });
 };
 
-TwitterBot.prototype.getTweets = function(screen_name, callback){
-  this.client.get('statuses/user_timeline', { screen_name: screen_name }, function(err, tweets, res){
-    if(err){
+TwitterBot.prototype.getTweets = function(screen_name, callback) {
+  this.client.get('statuses/user_timeline', { screen_name: screen_name }, function(err, tweets, res) {
+    if (err) {
       return callback(err);
     }
     callback(null, tweets);
   });
 };
 
-TwitterBot.prototype.listen = function(){
+TwitterBot.prototype.listen = function() {
   var _self = this;
   log.info('Botsサービスを起動');
 
-  io.on('connection', function(socket){
+  io.on('connection', function(socket) {
     log.info('Botsサービスのクライアントを接続');
 
     Que.register('tweet', _self.tweet.bind(_self));
 
-    socket.on('librarian-kindlized', function(book){
-      Que.push("『" + book.title + "』がkindle化されました。 " + book.url);
-      if(Que.isHalt){
-        Que.consume("tweet");
+    socket.on('librarian-kindlized', function(book) {
+      Que.push('『' + book.title + '』がkindle化されました。 ' + book.url);
+      if (Que.isHalt) {
+        Que.consume('tweet');
       }
     });
 
-    socket.on('librarian-addASIN', function(book){
-      Que.push("『" + book.title + "』がもうすぐkindle化されるかも? " + book.url);
-      if(Que.isHalt){
-        Que.consume("tweet");
+    socket.on('librarian-addASIN', function(book) {
+      Que.push('『' + book.title + '』がもうすぐkindle化されるかも? ' + book.url);
+      if (Que.isHalt) {
+        Que.consume('tweet');
       }
     });
   });
@@ -141,6 +141,6 @@ TwitterBot.prototype.listen = function(){
   this.search(this.setFavorite.bind(this));
 };
 
-module.exports = function(credentials, callback){
+module.exports = function(credentials, callback) {
   return new TwitterBot(credentials, callback);
 };

@@ -1,4 +1,4 @@
-var modelAuthor = require('models/Author');;
+var modelAuthor = require('models/Author');
 var moment = require('moment-timezone');
 var Q = require('q');
 
@@ -7,7 +7,7 @@ module.exports = function( author ) {
   modelAuthor.findOne({ name: author }, function( err, authorInDB ) {
     if (!authorInDB) {
       var currentDay = new Date();
-          currentDay.setDate( currentDay.getDate() - 30 );
+      currentDay.setDate( currentDay.getDate() - 30 );
 
       var initialModifiedTime = moment( currentDay );
 
@@ -20,7 +20,7 @@ module.exports = function( author ) {
         if (err) console.log(err);
         d.resolve();
       });
-    }else{
+    }else  {
       d.resolve();
     }
   });

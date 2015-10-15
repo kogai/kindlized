@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var Q = require('q');
 var moment = require('moment-timezone');
@@ -8,12 +8,12 @@ var log = require('common/log');
 
 module.exports = function( book ) {
   var defferd = Q.defer();
-  try{
+  try  {
     ModelBookList.findOne({
       ASIN: book.ASIN
     }, function( err, dbBook ) {
       if (!dbBook) {
-        try{
+        try  {
           var newBook = new ModelBookList({
             ASIN: book.ASIN,
             author: book.author,
@@ -26,32 +26,32 @@ module.exports = function( book ) {
             isKindlized: book.isKindlized,
             isKindlizedUrl: false,
             modifiedLog: {
-          		AddBookAt: moment(),
-          		InspectKindlizeAt: moment(),
-          		AddASINAt: moment(),
-          		UpdateUrlAt: moment()
+          		    AddBookAt: moment(),
+          		    InspectKindlizeAt: moment(),
+          		    AddASINAt: moment(),
+          		    UpdateUrlAt: moment()
             },
             AuthorityASIN: book.AuthorityASIN
           });
           newBook.save(function( err ) {
-            if (err){
+            if (err) {
               return log.info(err);
             }
             log.info( '書籍:' + newBook.title + 'が登録されました'　);
             defferd.resolve( newBook );
           });
-        }catch( error ){
+        }catch ( error ) {
           log.info(error);
           defferd.resolve(undefined);
         }
-      }else{
+      }else  {
         defferd.resolve(undefined);
       }
     });
-  }catch(error){
+  }catch (error) {
     log.info(error);
     defferd.resolve( undefined );
-  }finally{
+  }finally  {
     return defferd.promise;
   }
 };

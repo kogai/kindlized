@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // メールを送信
 
@@ -16,12 +16,12 @@ module.exports = function(user) {
     var notifyMailer = Mailer({
       from: mailInfo,
       to: user.mail,
-      subject: "[kindlize.it] 登録していた書籍がKindle化されました",
+      subject: '[kindlize.it] 登録していた書籍がKindle化されました',
       text: user.sendHtml,
       html: user.sendHtml
     });
 
-    notifyMailer.send(function(err, info){
+    notifyMailer.send(function(err, info) {
       if (err) {
         user.info = err;
       }
@@ -29,7 +29,7 @@ module.exports = function(user) {
       d.resolve(user);
     });
 
-  }else{
+  }else  {
     d.resolve(user);
   }
 

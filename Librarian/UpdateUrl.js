@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var util = require('util');
 var Q = require('q');
@@ -14,15 +14,15 @@ var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 @classdesc Librarianクラスの継承クラス<br>Imageの更新を行う
 @extends Librarian
 **/
-function UpdateUrl(opts){
+function UpdateUrl(opts) {
   Librarian.call(this, opts);
 }
 
 util.inherits(UpdateUrl, Librarian);
 
 
-UpdateUrl.prototype._addConditions = function(books){
-  return books.map(function(book){
+UpdateUrl.prototype._addConditions = function(books) {
+  return books.map(function(book) {
     book.conditions = { ItemId: book.AuthorityASIN[0] };
     return book;
   });
@@ -33,15 +33,15 @@ UpdateUrl.prototype._addConditions = function(books){
   @param { Object } book - 書籍データのオブジェクト
   @return { Object } modifiedBook 書籍データのオブジェクト
 **/
-UpdateUrl.prototype._updates = function(book){
+UpdateUrl.prototype._updates = function(book) {
   var d = Q.defer();
   var url, isKindlizedUrl;
 
-  try{
+  try  {
     url = book.res.ItemLookupResponse.Items[0].Item[0].DetailPageURL[0];
     isKindlizedUrl = true;
     log.info('URL更新:' + book.title);
-  }catch(e){
+  }catch (e) {
     url = book.url;
     isKindlizedUrl = null;
     log.info('URL未更新:' + book.title);
@@ -50,13 +50,13 @@ UpdateUrl.prototype._updates = function(book){
   var update = {
     url: url,
     isKindlizedUrl: isKindlizedUrl,
-    "modifiedLog.UpdateUrlAt": moment()
+    'modifiedLog.UpdateUrlAt': moment()
   };
 
   var options = { new: true };
 
-  this.update(book, update, options, function(err, modifiedBook){
-    if(err){
+  this.update(book, update, options, function(err, modifiedBook) {
+    if (err) {
       return d.reject(err);
     }
     d.resolve(modifiedBook);
@@ -65,16 +65,16 @@ UpdateUrl.prototype._updates = function(book){
   return d.promise;
 };
 
-UpdateUrl.prototype.run = function(callback){
+UpdateUrl.prototype.run = function(callback) {
   var _fetch = this.fetch.bind(this);
   var _sequential = this.sequential.bind(this);
   var _self = this;
 
   Q.when()
-  .then(function(){
+  .then(function() {
     var d = Q.defer();
-    _fetch(function(err, books){
-      if(err){
+    _fetch(function(err, books) {
+      if (err) {
         return log.info(err);
       }
       var conditinalizeBooks = _self._addConditions(books);
@@ -83,21 +83,21 @@ UpdateUrl.prototype.run = function(callback){
 
     return d.promise;
   })
-  .then(function(books){
+  .then(function(books) {
     var d = Q.defer();
 
-    _sequential(books, function(err, modifiedBooks){
+    _sequential(books, function(err, modifiedBooks) {
       d.resolve(modifiedBooks);
     });
 
     return d.promise;
   })
-  .then(function(books){
+  .then(function(books) {
     var d = Q.defer();
 
-    var ebooks = books.map(function(book){
+    var ebooks = books.map(function(book) {
       var ebook = _self.inspectEbook(book.res.ItemLookupResponse.Items[0].Item[0].RelatedItems[0].RelatedItem);
-      if(ebook.hasEbook){
+      if (ebook.hasEbook) {
         book.ASIN = [ebook.ebookASIN];
       }
       book.conditions = null;
@@ -105,27 +105,27 @@ UpdateUrl.prototype.run = function(callback){
       return book;
     });
 
-    _sequential(ebooks, function(err, modifiedEbooks){
+    _sequential(ebooks, function(err, modifiedEbooks) {
       d.resolve(modifiedEbooks);
     });
 
     return d.promise;
   })
-  .done(function(books){
+  .done(function(books) {
     callback(books);
   });
 };
 
-UpdateUrl.prototype.cron = function(){
+UpdateUrl.prototype.cron = function() {
   var d = Q.defer();
   var _updates = this._updates.bind(this);
 
-  this.run(function(books){
+  this.run(function(books) {
     Q.all(books.map(_updates))
-    .then(function(modifiedBooks){
+    .then(function(modifiedBooks) {
       d.resolve();
     })
-    .fail(function(err){
+    .fail(function(err) {
       log.info(err);
       d.resolve();
     });
@@ -134,7 +134,7 @@ UpdateUrl.prototype.cron = function(){
   return d.promise;
 };
 
-module.exports = function(opts){
+module.exports = function(opts) {
   var _opts = opts || {};
 
   _opts.conditions = {
@@ -143,8 +143,8 @@ module.exports = function(opts){
       { isKindlizedUrl: { $ne: true } },
       {
         $or: [
-          { "modifiedLog.UpdateUrlAt": { $exists: false } },
-          { "modifiedLog.UpdateUrlAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+          { 'modifiedLog.UpdateUrlAt': { $exists: false } },
+          { 'modifiedLog.UpdateUrlAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
         ]
       }
     ]

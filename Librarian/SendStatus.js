@@ -1,14 +1,14 @@
-"use strict"
+'use strict';
 
-const moment = require('moment-timezone')
+const moment = require('moment-timezone');
 
 const PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
-const log = require('common/log')
-const Book = require('common/Book')()
-const Utils = require('common/Utils')()
+const log = require('common/log');
+const Book = require('common/Book')();
+const Utils = require('common/Utils')();
 
-class SendStatus{
-  constructor(){
+class SendStatus {
+  constructor() {
     this.conditions = {
       RepairImg: {
         $and: [
@@ -16,13 +16,13 @@ class SendStatus{
             $or: [
               { images: null },
               { images: { $exists: false } },
-              { $where: "this.images == 0" }
+              { $where: 'this.images == 0' }
             ]
           },
           {
             $or: [
-              { "modifiedLog.RepairImgAt": { $exists: false } },
-              { "modifiedLog.RepairImgAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+              { 'modifiedLog.RepairImgAt': { $exists: false } },
+              { 'modifiedLog.RepairImgAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
             ]
           }
         ]
@@ -35,8 +35,8 @@ class SendStatus{
           { isKindlized: false },
           {
             $or: [
-              { "modifiedLog.InspectKindlizeAt": { $exists: false } },
-              { "modifiedLog.InspectKindlizeAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+              { 'modifiedLog.InspectKindlizeAt': { $exists: false } },
+              { 'modifiedLog.InspectKindlizeAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
             ]
           }
         ]
@@ -54,8 +54,8 @@ class SendStatus{
           },
           {
             $or: [
-              { "modifiedLog.AddASINAt": { $exists: false } },
-              { "modifiedLog.AddASINAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+              { 'modifiedLog.AddASINAt': { $exists: false } },
+              { 'modifiedLog.AddASINAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
             ]
           }
         ]
@@ -66,38 +66,38 @@ class SendStatus{
           { isKindlizedUrl: { $ne: true } },
           {
             $or: [
-              { "modifiedLog.UpdateUrlAt": { $exists: false } },
-              { "modifiedLog.UpdateUrlAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+              { 'modifiedLog.UpdateUrlAt': { $exists: false } },
+              { 'modifiedLog.UpdateUrlAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
             ]
           }
         ]
       }
-    }
+    };
   }
 
-  sentAllStatus(){
-    let val
+  sentAllStatus() {
+    let val;
     for (val in this.conditions) {
       if (this.conditions.hasOwnProperty(val)) {
-        let _val = val
-        Book.count(this.conditions[val], function(err, count){
-          if(err){
-            return log.info(err)
+        let _val = val;
+        Book.count(this.conditions[val], function(err, count) {
+          if (err) {
+            return log.info(err);
           }
-          Utils.postSlack('[' + _val + ']の調査対象 ' + count + '冊')
-        })
+          Utils.postSlack('[' + _val + ']の調査対象 ' + count + '冊');
+        });
       }
     }
-    Book.count(function(err, count){
-      if(err){
-        return log.info(err)
+    Book.count(function(err, count) {
+      if (err) {
+        return log.info(err);
       }
-      Utils.postSlack('[全書籍]の調査対象 ' + count + '冊')
-    })
+      Utils.postSlack('[全書籍]の調査対象 ' + count + '冊');
+    });
   }
 
 }
 
-module.exports = function(){
-  return new SendStatus()
-}
+module.exports = function() {
+  return new SendStatus();
+};

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /*
 配列とThenableな関数を渡すと配列の各要素に対して
@@ -7,7 +7,7 @@
 
 var Q = require('q');
 
-module.exports = function(array, callback){
+module.exports = function(array, callback) {
 
   var result = Q({
     array: array,
@@ -15,14 +15,14 @@ module.exports = function(array, callback){
     count: 0
   });
 
-  array.forEach(function(array){
-    result = result.then(function(data){
+  array.forEach(function(array) {
+    result = result.then(function(data) {
       var deferd = Q.defer();
       var ele = data.array[data.count];
       data.count++;
 
       callback(ele)
-      .done(function(res){
+      .done(function(res) {
         data.resultArray.push(res);
         deferd.resolve( data );
       });

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var util = require('util');
 var Q = require('q');
@@ -15,7 +15,7 @@ var log = require('common/log');
 @classdesc Librarianクラスの継承クラス<br>AuthorityASINの更新を行う
 @extends Librarian
 **/
-function AddASIN(opts){
+function AddASIN(opts) {
   Librarian.call(this, opts);
 }
 
@@ -26,34 +26,34 @@ util.inherits(AddASIN, Librarian);
   @param { Object } book - 書籍データのオブジェクト
   @return { Object } modifiedBook 書籍データのオブジェクト
 **/
-AddASIN.prototype._updates = function(book){
+AddASIN.prototype._updates = function(book) {
   var d = Q.defer();
 
   var AuthorityASIN, Items;
 
-  try{
+  try  {
     Items = book.res.ItemLookupResponse.Items;
-    Items.map(function(item){
-      if(item.Item[0].RelatedItems[0].RelationshipType[0] === 'AuthorityTitle'){
+    Items.map(function(item) {
+      if (item.Item[0].RelatedItems[0].RelationshipType[0] === 'AuthorityTitle') {
         AuthorityASIN = item.Item[0].RelatedItems[0].RelatedItem[0].Item[0].ASIN;
       }
     });
     log.info('AuthorityASIN 更新:' + book.title);
     // socket.emit('librarian-addASIN', book);
-  }catch(e){
+  }catch (e) {
     AuthorityASIN = undefined;
     log.info('AuthorityASIN 未更新:' + book.title);
   }
 
   var update = {
     AuthorityASIN: AuthorityASIN,
-    "modifiedLog.AddASINAt": moment()
+    'modifiedLog.AddASINAt': moment()
   };
 
   var options = { new: true };
 
-  this.update(book, update, options, function(err, modifiedBook){
-    if(err){
+  this.update(book, update, options, function(err, modifiedBook) {
+    if (err) {
       return d.reject(err);
     }
     d.resolve(modifiedBook);
@@ -62,16 +62,16 @@ AddASIN.prototype._updates = function(book){
   return d.promise;
 };
 
-AddASIN.prototype.cron = function(){
+AddASIN.prototype.cron = function() {
   var d = Q.defer();
   var _updates = this._updates.bind(this);
 
-  this.run(function(books){
+  this.run(function(books) {
     Q.all(books.map(_updates))
-    .then(function(modifiedBooks){
+    .then(function(modifiedBooks) {
       d.resolve();
     })
-    .fail(function(err){
+    .fail(function(err) {
       log.info(err);
       d.resolve();
     });
@@ -80,7 +80,7 @@ AddASIN.prototype.cron = function(){
   return d.promise;
 };
 
-module.exports = function(opts){
+module.exports = function(opts) {
   var _opts = opts || {};
 
   _opts.conditions = {
@@ -96,8 +96,8 @@ module.exports = function(opts){
       },
       {
         $or: [
-          { "modifiedLog.AddASINAt": { $exists: false } },
-          { "modifiedLog.AddASINAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+          { 'modifiedLog.AddASINAt': { $exists: false } },
+          { 'modifiedLog.AddASINAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
         ]
       }
     ]

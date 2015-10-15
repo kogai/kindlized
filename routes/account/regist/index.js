@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var Q = require('q');
 var uuid = require('node-uuid');
@@ -47,7 +47,7 @@ var makeMailTemplate = function(data) {
   var d = Q.defer();
   var req = data.req;
   var verifyId = data.verifyId;
-  var verifyLink = req.protocol + '://' + req.get('host') + "/account/verify?id=" + verifyId;
+  var verifyLink = req.protocol + '://' + req.get('host') + '/account/verify?id=' + verifyId;
 
   var sendHtml = '';
   sendHtml += 'アカウント認証のために以下のURLをクリックして下さい。<br>';
@@ -67,18 +67,18 @@ var sendVerifyMail = function(data) {
     var verifyMailer = Mailer({
       from: mailInfo,
       to: data.mail,
-      subject: "[kindlize.it]アカウント認証",
+      subject: '[kindlize.it]アカウント認証',
       text: data.sendHtml,
       html: data.sendHtml
     });
 
-    verifyMailer.send(function(error, info){
-      if(error){
+    verifyMailer.send(function(error, info) {
+      if (error) {
         d.reject(error);
       }
       d.resolve(data);
     });
-  }else{
+  }else  {
     d.resolve(data);
   }
 

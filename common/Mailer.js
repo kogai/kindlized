@@ -96,7 +96,7 @@ Mailer.prototype.createTemplate = function createTemplate(type, books, done) {
   });
 };
 
-module.exports = function(opts){
+module.exports = function(opts) {
   var _opts = opts || {};
   return new Mailer(_opts);
 };

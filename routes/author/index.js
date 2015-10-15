@@ -78,18 +78,18 @@ export default function(req, res) {
   }
 
 
-  var handleAuthorRoute = function(){
+  var handleAuthorRoute = function() {
     var author = authors['1'];
     var authorPrev = authors['0'];
     var authorNext = authors['2'];
-    if(authorPrev === null){
+    if (authorPrev === null) {
       authorPrev = {
         pageId: null,
         name: null,
         isNotExist: true
       };
     }
-    if(authorNext === null){
+    if (authorNext === null) {
       authorNext = {
         pageId: null,
         name: null,
@@ -103,8 +103,8 @@ export default function(req, res) {
     }
     Booklist.find({
       author: author.name
-    }, function (err, books) {
-      if(err){
+    }, function(err, books) {
+      if (err) {
         console.log(err);
       }
       books = encodeImgSrc(books);
@@ -114,9 +114,9 @@ export default function(req, res) {
         description: `${title}の一覧ページです`,
         books: books,
         isLogined: isLogined,
-        kindlizedBooks: (function(books){
-          books = books.map(function(book){
-            if(book.isKindlized){
+        kindlizedBooks: (function(books) {
+          books = books.map(function(book) {
+            if (book.isKindlized) {
               return book;
             }
           });

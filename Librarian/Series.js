@@ -162,21 +162,21 @@ Series.prototype.saveSeries = function saveSeries(title, done) {
   var _self = this;
   title = this._trimChar(title);
 
-  this.Collections.findOne({ seriesKeyword: title }, function(err, series){
-    if(err){
+  this.Collections.findOne({ seriesKeyword: title }, function(err, series) {
+    if (err) {
       return done(err);
     }
-    if(series){
+    if (series) {
       return done(null, series);
     }
 
     var query = new RegExp(escape(title));
 
-    _self.BookList.find({ title: query }, function(err, books){
-      if(err){
+    _self.BookList.find({ title: query }, function(err, books) {
+      if (err) {
         return done(err);
       }
-      var contains = books.map(function(book){
+      var contains = books.map(function(book) {
         return {
           _id: book._id,
           title: book.title,
@@ -193,8 +193,8 @@ Series.prototype.saveSeries = function saveSeries(title, done) {
         hasNewRelease: false
       });
 
-      newSeries.save(function(err){
-        if(err){
+      newSeries.save(function(err) {
+        if (err) {
           return done(err);
         }
         done(null, newSeries);

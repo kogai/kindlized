@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 // userモデルのbookListからkindle化されているものを抽出してpostList配列に格納
 
 var Q = require('q');
@@ -16,7 +16,7 @@ module.exports = function(user) {
       $in: postList
     }
   }, function(err, books) {
-    if(err){
+    if (err) {
       log.warn.info(err);
       return d.reject(err);
     }
@@ -28,7 +28,7 @@ module.exports = function(user) {
     });
 
     user.kindlizedList = _.compact(user.kindlizedList);
-    log.info("通知対象の書籍: " + user.kindlizedList.length + "冊");
+    log.info('通知対象の書籍: ' + user.kindlizedList.length + '冊');
     d.resolve(user);
   });
 

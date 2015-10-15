@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var INTERVAL = require('common/constant').INTERVAL;
 var PAGING_LIMIT = require('common/constant').PAGING_LIMIT;
@@ -20,11 +20,11 @@ var Author = require('models/Author');
 @param { String } query - search query.
 @param { String } type - type of search. Title or Author
 **/
-function Operator(opts){
+function Operator(opts) {
   var _opts = opts || {};
 
-  if((typeof _opts.query) !== 'string' || _opts.query === undefined){ throw new Error('[' + _opts.query + '] query parameter required string.'); }
-  if((typeof _opts.type) !== 'string' || _opts.type === undefined){ throw new Error('[' + _opts.type + '] type parameter required string.'); }
+  if ((typeof _opts.query) !== 'string' || _opts.query === undefined) { throw new Error('[' + _opts.query + '] query parameter required string.'); }
+  if ((typeof _opts.type) !== 'string' || _opts.type === undefined) { throw new Error('[' + _opts.type + '] type parameter required string.'); }
 
   this.query = _opts.query;
   this.type = _opts.type;
@@ -44,10 +44,10 @@ function Operator(opts){
 @example 'Author'
 @return { Object } _conditions AmazonAPIの検索条件. 署名付き. シングルトンだと署名がマッチしないので毎回生成する
 **/
-Operator.prototype._conditions = function(){
+Operator.prototype._conditions = function() {
 
   var sortConditions = 'titlerank', currentPage = this.currentPage;
-  if(this.isOverLimit){
+  if (this.isOverLimit) {
     sortConditions = '-titlerank';
     currentPage -= PAGING_LIMIT;
   }
@@ -61,14 +61,14 @@ Operator.prototype._conditions = function(){
     ResponseGroup: this.ResponseGroup
   };
 
-  switch(this.type){
-    case 'Author':
-      _conditions.Author = this.query;
-      break;
+  switch (this.type) {
+  case 'Author':
+    _conditions.Author = this.query;
+    break;
 
-    case 'Title':
+  case 'Title':
     _conditions.Title = this.query;
-      break;
+    break;
   }
 
   return _conditions;
@@ -80,22 +80,22 @@ Operator.prototype._conditions = function(){
 @return { Number } totalItems
 @return { Number } maxPage
 **/
-Operator.prototype.count = function(done){
+Operator.prototype.count = function(done) {
   var _self = this;
-  this.search(function(err, items){
-    if(err){
+  this.search(function(err, items) {
+    if (err) {
       return done(err);
     }
     _self.totalItems = Number(items.TotalResults[0]); //@example 11冊
     _self.maxPage = Number(items.TotalPages[0]); //@example 2ページ(10冊 + 1冊)
 
     // Operator.isOverPagingLimitを超えるリクエストは発行年度を検索条件に含めてリクエストを分割する
-    if(_self.maxPage >= PAGING_LIMIT * 2){
+    if (_self.maxPage >= PAGING_LIMIT * 2) {
       _self.isOverLimitTwice = true;
     }
 
     // 検索結果がなかった場合の処理
-    if(_self.maxPage === 0){
+    if (_self.maxPage === 0) {
       return done('Error: "' + _self.query + '" has not result.');
     }
 
@@ -111,33 +111,33 @@ Operator.prototype.count = function(done){
 @param { Function } done - ページング完了時に呼ばれるコールバック関数
 **/
 
-Operator.prototype.fetch = function(done){
+Operator.prototype.fetch = function(done) {
   var _self = this;
 
-  if(!this.maxPage){
+  if (!this.maxPage) {
     throw new Error('Operator.maxPage required before Operator.fetch method call.');
   }
 
   // 完了時の処理
-  if(this.currentPage > this.maxPage || this.currentPage > PAGING_LIMIT * 2){
+  if (this.currentPage > this.maxPage || this.currentPage > PAGING_LIMIT * 2) {
     this.maxPage = null;
     this.currentPage = 1;
-    this.items = _.uniq(this.items, function(item){
+    this.items = _.uniq(this.items, function(item) {
       return item.ASIN[0];
     });
 
     return done(null, this.items);
   }
 
-  this.search(function(err, searchedItems){
-    if(err){
+  this.search(function(err, searchedItems) {
+    if (err) {
       return done(err);
     }
     _self.currentPage++;
 
     // AmazonAPIのページング上限を超えたら
     // ソート順を逆にする
-    if(_self.currentPage > PAGING_LIMIT){
+    if (_self.currentPage > PAGING_LIMIT) {
       _self.isOverLimit = true;
     }
 
@@ -152,32 +152,32 @@ Operator.prototype.fetch = function(done){
 Operator.query, Operator.currentPage を検索する
 @param { Function } done
 **/
-Operator.prototype.search = function(done){
+Operator.prototype.search = function(done) {
   var _self = this;
   var _conditions = this._conditions();
 
-  Operation.execute(this.operationType, _conditions, function(err, res){
-    if(err){
+  Operation.execute(this.operationType, _conditions, function(err, res) {
+    if (err) {
       return done(err);
     }
 
-    if(res.ItemSearchErrorResponse){
+    if (res.ItemSearchErrorResponse) {
       var errorCode = res.ItemSearchErrorResponse.Error[0].Code[0];
 
-      switch(errorCode){
-        case 'RequestThrottled':
-          _self.retry++;
-          setTimeout(function(){
+      switch (errorCode) {
+      case 'RequestThrottled':
+        _self.retry++;
+        setTimeout(function() {
             _self.search(done);
           }, INTERVAL * _self.retry);
-          break;
-        case 'SignatureDoesNotMatch':
-          done(res.ItemSearchErrorResponse);
-          break;
+        break;
+      case 'SignatureDoesNotMatch':
+        done(res.ItemSearchErrorResponse);
+        break;
       }
       // エラーコードを記録しておく
-      if(process.env.NODE_ENV === 'development'){
-        return log.info(INTERVAL * _self.retry + ":" + errorCode + ':' + _conditions.Author + ':' + _conditions.ItemPage);
+      if (process.env.NODE_ENV === 'development') {
+        return log.info(INTERVAL * _self.retry + ':' + errorCode + ':' + _conditions.Author + ':' + _conditions.ItemPage);
       }
       return log.warn.info(errorCode);
     }
@@ -193,7 +193,7 @@ Operator.prototype.search = function(done){
 PAGING_LIMIT * 2 よりもページ数の多いリクエストは、発行年度を検索条件に含めてリクエストを分割する
 @param { Function } done - ページング完了時に呼ばれるコールバック関数
 **/
-Operator.prototype.fetchOverLimit = function(done){
+Operator.prototype.fetchOverLimit = function(done) {
   throw new Error('this method is work in progress.');
   /*
   if(!this.isOverLimitTwice){
@@ -207,12 +207,12 @@ Operator.prototype.fetchOverLimit = function(done){
 @param  { Array } books - AmazonAPIから取得した生の書籍データ配列
 @return  { Array } DB保存用に正規化された書籍データの配列
 **/
-Operator.prototype._normalize = function(books){
-  if(!util.isArray(books)) {
+Operator.prototype._normalize = function(books) {
+  if (!util.isArray(books)) {
     throw new Error('Operator._normalize required array');
   }
 
-  return books.map(function(book){
+  return books.map(function(book) {
     var itemAttr = book.ItemAttributes[0], itemImageSets, isKindlized, isKindlizedUrl;
 
     var normalizedBook = {
@@ -220,7 +220,7 @@ Operator.prototype._normalize = function(books){
       ISBN: book.ISBN,
       SKU: book.SKU,
       EAN: itemAttr.EAN,
-      author: itemAttr.Author || ["HAS_NOT_AUTHOR"],
+      author: itemAttr.Author || ['HAS_NOT_AUTHOR'],
       title: itemAttr.Title,
       publisher: itemAttr.Publisher,
       publicationDate: itemAttr.PublicationDate,
@@ -228,11 +228,11 @@ Operator.prototype._normalize = function(books){
       url: book.DetailPageURL
     };
 
-    if(book.ImageSets){
+    if (book.ImageSets) {
       itemImageSets = JSON.stringify(book.ImageSets);
     }
 
-    if(itemAttr.ProductGroup[0] === 'eBooks'){
+    if (itemAttr.ProductGroup[0] === 'eBooks') {
       isKindlized = true;
       isKindlizedUrl = true;
     }
@@ -252,12 +252,12 @@ Operator.prototype._normalize = function(books){
 var _method = this.defer(this.method.bind(this));
 _method().done(function(items){ console.log(items, "done."); });
 **/
-Operator.prototype.defer = function(method){
-  return function(){
+Operator.prototype.defer = function(method) {
+  return function() {
     var d = Q.defer();
 
-    method(function(err, res){
-      if(err){
+    method(function(err, res) {
+      if (err) {
         return d.reject(err);
       }
       d.resolve(res);
@@ -271,7 +271,7 @@ Operator.prototype.defer = function(method){
 ハンドラー
 @param { Function } done - ページング完了時に呼ばれるコールバック関数
 **/
-Operator.prototype.run = function(done){
+Operator.prototype.run = function(done) {
   var _self = this;
 
   var _count = this.defer(this.count.bind(this));
@@ -280,17 +280,17 @@ Operator.prototype.run = function(done){
   Q.when()
   .then(_count)
   .then(_fetch)
-  .then(function(items){
-    if(_self.type === 'Title'){
+  .then(function(items) {
+    if (_self.type === 'Title') {
       return done(null, _self._normalize(items));
     }
     done(null, items);
   })
-  .fail(function(err){
+  .fail(function(err) {
     done(err, null);
   });
 };
 
-module.exports = function(opts){
+module.exports = function(opts) {
   return new Operator(opts);
 };

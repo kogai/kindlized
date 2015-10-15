@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var util = require('util');
 var moment = require('moment-timezone');
@@ -16,7 +16,7 @@ var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
 @classdesc Librarianクラスの継承クラス<br>Imageの更新を行う
 @extends Librarian
 **/
-function RepairImg(opts){
+function RepairImg(opts) {
   Librarian.call(this, opts);
 }
 
@@ -27,32 +27,32 @@ util.inherits(RepairImg, Librarian);
   @param { Object } book - 書籍データのオブジェクト
   @return { Object } modifiedBook 書籍データのオブジェクト
 **/
-RepairImg.prototype._updates = function(books, done){
-  var update = { "modifiedLog.RepairImgAt": moment() };
+RepairImg.prototype._updates = function(books, done) {
+  var update = { 'modifiedLog.RepairImgAt': moment() };
   var images;
 
-  var repairedBooks = books.map(function(book){
-    try{
+  var repairedBooks = books.map(function(book) {
+    try  {
       images = book.res.ItemLookupResponse.Items[0].Item[0].ImageSets;
       images = JSON.stringify(images);
       log.info('images更新: ' + book.title);
-    }catch(e){
-      images = "";
+    }catch (e) {
+      images = '';
       log.warn.info(util.inspect(book.res.ItemLookupResponse, null, null));
     }
     book.images = images;
     return book;
   });
 
-  Collector.updateCollections(repairedBooks, update, function(err){
-    if(err){
+  Collector.updateCollections(repairedBooks, update, function(err) {
+    if (err) {
       return done(err);
     }
     done();
   });
 };
 
-RepairImg.prototype.cron = function(){
+RepairImg.prototype.cron = function() {
   var d = Q.defer();
 
   var _fetch = Utils.defer(this.fetch.bind(this));
@@ -63,17 +63,17 @@ RepairImg.prototype.cron = function(){
   .then(_fetch)
   .then(_sequential)
   .then(_updates)
-  .fail(function(err){
+  .fail(function(err) {
     return log.info(err);
   })
-  .done(function(){
+  .done(function() {
     d.resolve();
   });
 
   return d.promise;
 };
 
-module.exports = function(opts){
+module.exports = function(opts) {
   var _opts = opts || {};
 
   _opts.conditions = {
@@ -82,13 +82,13 @@ module.exports = function(opts){
         $or: [
           { images: null },
           { images: { $exists: false } },
-          { $where: "this.images == 0" }
+          { $where: 'this.images == 0' }
         ]
       },
       {
         $or: [
-          { "modifiedLog.RepairImgAt": { $exists: false } },
-          { "modifiedLog.RepairImgAt": { "$lte": moment().subtract(PERIODICAL_DAY, 'days') } }
+          { 'modifiedLog.RepairImgAt': { $exists: false } },
+          { 'modifiedLog.RepairImgAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
         ]
       }
     ]

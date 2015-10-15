@@ -18,7 +18,7 @@ module.exports = function(user) {
       images = JSON.parse(book.images);
       image = images[0].ImageSet[0].MediumImage[0];
     } catch (e) {
-      image.url = ''
+      image.url = '';
     }
 
     sendHtmlBook += '<tr>' +
