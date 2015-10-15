@@ -5,7 +5,7 @@ var moment = require('moment-timezone');
 var Q = require('q');
 
 var Librarian = require('Librarian/Librarian');
-var Collector = require('common/Collector')('book');
+var Collector = require('classes/Collector')('book');
 var Utils = require('common/Utils')();
 var log = require('common/log');
 
