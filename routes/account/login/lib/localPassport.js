@@ -3,9 +3,9 @@ var passport        = require('passport');
 var LocalStrategy   = require('passport-local').Strategy;
 var modelUser       = require('models/User');
 
-var LocalStrategyField = {
+const LocalStrategyField = {
   usernameField: 'mail',
-  passwordField: 'password'
+  passwordField: 'password',
 };
 
 var LocalStrategyCallBack = function( mail, password, done ){

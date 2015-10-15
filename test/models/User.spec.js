@@ -33,10 +33,37 @@ describe('/models/User', ()=> {
   });
 
   it('パスワードは暗号化されて保存される', (done)=> {
-    done();
+    const accountInput = {
+      mail: 'yuyuhakusho@jump.com',
+      password: 'datenianoyoha',
+    };
+    const account = new UserModel(accountInput);
+    account.save((saveError)=> {
+      assert(saveError === null);
+      UserModel.find({}, (queryError, users)=> {
+        assert(queryError === null);
+        assert(users[0].mail === account.mail);
+        assert(users[0].password !== accountInput.password);
+        assert(users[0].password === account.password);
+        assert(users[0].password.length === 60);
+        done();
+      });
+    });
   });
 
-  it('パスワードは復元して読み込める', (done)=> {
-    done();
+  it('パスワードは照合できる', (done)=> {
+    const accountInput = {
+      mail: 'slumdunk@jump.com',
+      password: 'tensaidesukara',
+    };
+    const account = new UserModel(accountInput);
+    account.save((saveError)=> {
+      assert(saveError === null);
+      account.comparePassword(accountInput.password, account.password, (matchError, isMatch)=> {
+        assert(matchError === null);
+        assert(isMatch);
+        done();
+      });
+    });
   });
 });
