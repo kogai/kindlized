@@ -115,10 +115,10 @@ function updateItem(item, update, model, done) {
     if (err) {
       return done(err);
     }
-    if (item.name) {
+    if (item.name && process.env.NODE_ENV !== 'test') {
       log.info('更新:' + item.name);
     }
-    if (item.title) {
+    if (item.title && process.env.NODE_ENV !== 'test') {
       log.info('更新:' + item.title);
     }
     done(null);
