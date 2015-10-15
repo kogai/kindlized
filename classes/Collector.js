@@ -1,30 +1,36 @@
-"use strict";
-
-var util = require('util');
-var moment = require('moment-timezone');
-var Q = require('q');
-var _ = require('underscore');
-
-var log = require('common/log');
-
+import util from 'util';
+import moment from 'moment-timezone';
+import Q from 'q';
+import Promise from 'bluebird';
+import _ from 'underscore';
+import log from 'common/log';
+import BookModel from 'models/Book';
+import AuthorModel from 'models/Author';
 /**
 @constructor
 **/
-function Collector(type){
-  if(!type || typeof type !== 'string'){
+function Collector(type) {
+  if (!type || typeof type !== 'string') {
     throw new Error('string型のtypeパラメータは必須');
   }
   this.type = type;
 
-  switch(type){
-    case "author":
-      this._saveMethod = this.saveAuthor;
-      this._Model = require('models/Author');
-      break;
-    case "book":
-      this._saveMethod = this.saveBook;
-      this._Model = require('models/Book');
-      break;
+  switch (type) {
+  case 'author':
+    this._saveMethod = this.saveAuthor;
+    this.save = this.saveAuthor;
+    this._Model = AuthorModel;
+    break;
+  case 'book':
+    this._saveMethod = this.saveBook;
+    this.save = this.saveBook;
+    this._Model = BookModel;
+    break;
+  default:
+    this._saveMethod = this.saveBook;
+    this.save = this.saveBook;
+    this._Model = BookModel;
+    break;
   }
 
   this.collections = [];
@@ -89,27 +95,31 @@ Collector.prototype.saveBook = function(book, done){
 @param { String } author - 保存する著者の名前
 @param { Function } done - 完了時に呼ばれるコールバック関数
 **/
-Collector.prototype.saveAuthor = function(author, done){
-  var conditions = {
-    name: author
+Collector.prototype.saveAuthor = function saveAuthor(author, done) {
+  const conditions = {
+    name: author,
   };
-  var Author = this._Model;
+  const Author = this._Model;
 
-  Author.findOne(conditions, function(err, existAuthor){
-    // 既に書籍が存在していたらエラーハンドリングに回す
-    if(err){ return done(err); }
-    if(existAuthor){
+  Author.findOne(conditions, function findAuthor(err, existAuthor) {
+    // 既に著者が存在していたらエラーハンドリングに回す
+    if (err) {
+      return done(err);
+    }
+    if (existAuthor) {
       log.info('登録済みの著者:' + existAuthor.name);
       return done();
     }
 
-    var newAuthor = new Author({
+    const newAuthor = new Author({
       name: author,
-      lastModified: moment()
+      lastModified: moment(),
     });
 
-    newAuthor.save(function(err){
-      if(err){ return done(err); }
+    newAuthor.save((saveError)=> {
+      if (saveError) {
+        return done(saveError);
+      }
       done(null, newAuthor);
     });
   });
@@ -120,29 +130,32 @@ Collector.prototype.saveAuthor = function(author, done){
 @param { Array } collections
 @param { Function } done - 完了時に呼ばれるコールバック関数
 **/
-Collector.prototype.saveCollections = function(collections, done){
-  if(!util.isArray(collections)){ throw new Error('collections parametor must be Array.'); }
-  if(typeof done !== 'function' || !done){ throw new Error('done parametor must be Function.'); }
+Collector.prototype.saveCollections = function saveCollections(collections, done) {
+  if (!util.isArray(collections)) {
+    throw new Error('collections parametor must be Array.');
+  }
+  if (typeof done !== 'function' || !done) {
+    throw new Error('done parametor must be Function.');
+  }
 
-  var _self = this;
-
-  Q.all(
-    collections.map(function(item){
-      var d = Q.defer();
-      _self._saveMethod(item, function(err, savedItem){
-        if(err){
-          return d.reject(err);
+  const save = this.save.bind(this);
+  const savedItems = [];
+  Promise.reduce(collections, (total, item)=> {
+    return new Promise((resolve, reject)=> {
+      save(item, (err, savedItem)=> {
+        if (err) {
+          return reject(err);
         }
-        d.resolve(savedItem);
+        savedItems.push(savedItem);
+        resolve();
       });
-      return d.promise;
-    })
-  )
-  .then(function(savedItems){
-    done(null, _.compact(savedItems));
+    });
+  }, null)
+  .then(()=> {
+    return done(null, savedItems);
   })
-  .fail(function(err){
-    done(err);
+  .catch((err)=> {
+    return done(err);
   });
 };
 
