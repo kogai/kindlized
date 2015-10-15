@@ -3,8 +3,8 @@
 var _ = require('underscore');
 
 var Operator = require('common/Operator');
-var BookCollector = require('common/Collector')('book');
-var AuthorCollector = require('common/Collector')('author');
+var BookCollector = require('classes/Collector')('book');
+var AuthorCollector = require('classes/Collector')('author');
 
 var log = require('common/log');
 

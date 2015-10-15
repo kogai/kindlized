@@ -77,7 +77,7 @@ AddBook.prototype.sequential = function(done){
 **/
 AddBook.prototype.updateAuthors = function(done){
   var authors = this.fetchedItems;
-  var Collector = require('common/Collector')('author');
+  var Collector = require('classes/Collector')('author');
   var update = { lastModified: moment() };
 
   Collector.updateCollections(authors, update, function(err){
@@ -91,7 +91,7 @@ AddBook.prototype.updateAuthors = function(done){
 /**
 **/
 AddBook.prototype.saveBooks = function(books, done){
-  var Collector = require('common/Collector')('book');
+  var Collector = require('classes/Collector')('book');
   var Operator = require('common/Operator')({
     type: "Title",
     query: "_" // Operator._normalizeを使うためにインスタンス化しているので、queryは無効な値で良い。
