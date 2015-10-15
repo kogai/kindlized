@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import mockgoose from 'mockgoose';
-import Q from 'q';
+import Promise from 'bluebird';
 import bcrypt from 'bcryptjs';
 import { SALT_WORK_FACTOR } from 'common/constant';
 if (process.env.NODE_ENV === 'test') {
@@ -60,44 +60,44 @@ UserSchema.methods.comparePassword = (candidatePassword, hashedPassword, done)=>
   });
 };
 
+function generateSalt(rawPassword) {
+  return new Promise((resolve, reject)=> {
+    bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt)=> {
+      if (err) {
+        return reject(err);
+      }
+      resolve({ rawPassword, salt });
+    });
+  });
+}
 
+function hashPassword({ rawPassword, salt }) {
+  return new Promise((resolve, reject)=> {
+    bcrypt.hash(rawPassword, salt, (err, hash)=> {
+      if (err) {
+        return reject(err);
+      }
+      resolve(hash);
+    });
+  });
+}
 
 UserSchema.pre('save', function preSave(next) {
   const _user = this;
-
   // only hash the password if it has been modified (or is new)
   if (!_user.isModified('password')) {
     return next();
   }
 
-  function generateSalt() {
-    var d = Q.defer();
-    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-      if (err) {
-        return next(err);
-      }
-
-      d.resolve(salt);
-    });
-    return d.promise;
-  }
-
-  function hashPassword(salt) {
-    var d = Q.defer();
-    bcrypt.hash(_user.password, salt, function(err, hash) {
-      if (err) {
-        return next(err);
-      }
-
-      _user.password = hash;
-      d.resolve(hash);
-    });
-    return d.promise;
-  }
-
-  generateSalt()
+  generateSalt(_user.password)
   .then(hashPassword)
-  .done(()=> {
+  .then((hash)=> {
+    _user.password = hash;
+  })
+  .catch((err)=> {
+    return next(err);
+  })
+  .finally(()=> {
     next();
   });
 });
