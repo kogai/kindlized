@@ -1,7 +1,7 @@
 import assert from 'power-assert';
 import mockgoose from 'mockgoose';
-import moment from 'moment-timezone';
 import _ from 'lodash';
+import AutherModel from 'models/Author';
 import Collector from 'classes/Collector';
 const AuthorCollector = Collector('author');
 const BookCollector = Collector('book');
@@ -98,6 +98,25 @@ describe('/classes/Collector', ()=> {
       assert(savedBooks[1].author[0] === books[1].author);
       assert(savedBooks[2].author[0] === books[2].author);
       done();
+    });
+  });
+
+  it('一括して更新できる', (done)=> {
+    const authors = ['井上雄彦', '冨樫義博', '森田まさのり'];
+    const update = {
+      name: '尾田栄一郎',
+    };
+    AuthorCollector.saveCollections(authors, (err, savedAuthors)=> {
+      AuthorCollector.updateCollections(savedAuthors, update, (updateError)=> {
+        assert(updateError === null);
+        AutherModel.find({}, (findError, updatedAuthors)=> {
+          assert(findError === null);
+          assert(updatedAuthors[0].name === update.name);
+          assert(updatedAuthors[1].name === update.name);
+          assert(updatedAuthors[2].name === update.name);
+          done();
+        });
+      });
     });
   });
 
