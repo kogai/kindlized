@@ -5,39 +5,12 @@ import Promise from 'bluebird';
 import log from 'common/log';
 import BookModel from 'models/Book';
 import AuthorModel from 'models/Author';
-/**
-@constructor
-**/
-function Collector(type) {
-  if (!type || typeof type !== 'string') {
-    throw new Error('string型のtypeパラメータは必須');
-  }
-  this.type = type;
-
-  switch (type) {
-  case 'author':
-    this.save = this.saveAuthor;
-    this._Model = AuthorModel;
-    break;
-  case 'book':
-    this.save = this.saveBook;
-    this._Model = BookModel;
-    break;
-  default:
-    this.save = this.saveBook;
-    this._Model = BookModel;
-    break;
-  }
-
-  this.collections = [];
-  return this;
-}
 
 /**
 @param { Object } book - 保存用に正規化された書籍のデータ
 @param { Function } done - 完了時に呼ばれるコールバック関数
 **/
-Collector.prototype.saveBook = function saveBook(book, done) {
+function saveBook(book, done) {
   // 必須パラメータの検証
   if (typeof book !== 'object' || util.isArray(book)) { throw new Error('saveBook method required Object parametor.'); }
   if (typeof done !== 'function' || !done) { throw new Error('saveBook method required Function parametor.'); }
@@ -89,14 +62,14 @@ Collector.prototype.saveBook = function saveBook(book, done) {
       done(null, newBook);
     });
   });
-};
+}
 
 
 /**
 @param { String } author - 保存する著者の名前
 @param { Function } done - 完了時に呼ばれるコールバック関数
 **/
-Collector.prototype.saveAuthor = function saveAuthor(author, done) {
+function saveAuthor(author, done) {
   const conditions = {
     name: author,
   };
@@ -124,8 +97,35 @@ Collector.prototype.saveAuthor = function saveAuthor(author, done) {
       done(null, newAuthor);
     });
   });
-};
+}
 
+/**
+@constructor
+**/
+function Collector(type) {
+  if (!type || typeof type !== 'string') {
+    throw new Error('string型のtypeパラメータは必須');
+  }
+  this.type = type;
+
+  switch (type) {
+  case 'author':
+    this.save = saveAuthor;
+    this._Model = AuthorModel;
+    break;
+  case 'book':
+    this.save = saveBook;
+    this._Model = BookModel;
+    break;
+  default:
+    this.save = saveBook;
+    this._Model = BookModel;
+    break;
+  }
+
+  this.collections = [];
+  return this;
+}
 
 /**
 @param { Array } collections
@@ -166,12 +166,12 @@ Collector.prototype.saveCollections = function saveCollections(collections, done
 @param { Object } update
 @param { Function } done - 完了時に呼ばれるコールバック関数
 **/
-Collector.prototype.updateItem = function(item, update, done){
-  if(!item._id){
+Collector.prototype.updateItem = function updateItem(item, update, done) {
+  if (!item._id) {
     throw new Error('itemには_idが必要');
   }
-  var query = { _id: item._id };
-  var options = { upsert: true };
+  const query = { _id: item._id };
+  const options = { upsert: true };
 
   this._Model.findOneAndUpdate(query, update, options, function(err){
     if(err){
@@ -188,8 +188,8 @@ Collector.prototype.updateItem = function(item, update, done){
 @param { Object } update
 @param { Function } done - 完了時に呼ばれるコールバック関数
 **/
-Collector.prototype.updateCollections = function(collections, update, done){
-  var _self = this;
+Collector.prototype.updateCollections = function updateCollections(collections, update, done) {
+  const _self = this;
   Q.all(
     collections.map(function(item){
       var d = Q.defer();
