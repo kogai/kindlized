@@ -1,7 +1,9 @@
 import assert from 'power-assert';
 import mockgoose from 'mockgoose';
+import moment from 'moment-timezone';
 import Collector from 'classes/Collector';
 const AuthorCollector = Collector('author');
+const BookCollector = Collector('book');
 
 describe('/classes/Collector', ()=> {
   it('著者を保存できる', (done)=> {
@@ -22,6 +24,36 @@ describe('/classes/Collector', ()=> {
       assert(savedAuthors[2].pageId === 3);
       done();
     });
+  });
+
+  it('著者を保存できる', (done)=> {
+    const book = {
+      ASIN: 'BASKETBALL',
+      author: '井上雄彦',
+      title: 'SLAM DUNK',
+    };
+
+    BookCollector.save(book, (err, savedBook)=> {
+      assert(err === null);
+      assert(savedBook.ASIN[0] === book.ASIN);
+      assert(savedBook.author[0] === book.author);
+      assert(savedBook.title[0] === book.title);
+      assert(savedBook.publisher[0] === '');
+      assert(savedBook.publicationDate[0] === '');
+      assert(savedBook.price[0] === '');
+      assert(savedBook.url[0] === '');
+      assert(savedBook.images === '');
+      assert(savedBook.isKindlized === false);
+      assert(savedBook.isKindlizedUrl === false);
+      // assert(savedBook.modifiedLog.AddBookAt === '');
+      // assert(savedBook.modifiedLog.InspectKindlizeAt === initialLibrarianTime);
+      // assert(savedBook.modifiedLog.AddASINAt === initialLibrarianTime);
+      // assert(savedBook.modifiedLog.UpdateUrlAt === initialLibrarianTime);
+      done();
+    });
+  });
+  it('保存時の必須パラメータを検証できる', (done)=> {
+    done();
   });
 
   afterEach(()=> {

@@ -41,33 +41,36 @@ function Collector(type) {
 @param { Object } book - 保存用に正規化された書籍のデータ
 @param { Function } done - 完了時に呼ばれるコールバック関数
 **/
-Collector.prototype.saveBook = function(book, done){
+Collector.prototype.saveBook = function saveBook(book, done) {
   // 必須パラメータの検証
-  if(typeof book !== 'object' || util.isArray(book)){ throw new Error('saveBook method required Object parametor.'); }
-  if(typeof done !== 'function' || !done){ throw new Error('saveBook method required Function parametor.'); }
+  if (typeof book !== 'object' || util.isArray(book)) { throw new Error('saveBook method required Object parametor.'); }
+  if (typeof done !== 'function' || !done) { throw new Error('saveBook method required Function parametor.'); }
 
   // 必須項目の検証
-  if(!book.ASIN){ throw new Error('book param required ASIN property.'); }
-  if(!book.author){ throw new Error('book param required author property.'); }
-  if(!book.title){ throw new Error('book param required title property.'); }
+  if (!book.ASIN) { throw new Error('book param required ASIN property.'); }
+  if (!book.author) { throw new Error('book param required author property.'); }
+  if (!book.title) { throw new Error('book param required title property.'); }
 
-  var conditions = {
-    ASIN: book.ASIN
+  const conditions = {
+    ASIN: book.ASIN,
   };
-  var BookList = this._Model;
+  const BookList = this._Model;
 
-  BookList.findOne(conditions, function(err, existBook){
+  BookList.findOne(conditions, (err, existBook)=> {
     // 既に書籍が存在していたらエラーハンドリングに回す
-    if(err){ return done(err); }
-    if(existBook){
+    if (err) {
+      return done(err);
+    }
+    if (existBook) {
       log.warn.info('登録済みの書籍:' + existBook.title);
       return done();
     }
 
-    var newBook = new BookList({
+    const initialLibrarianTime = moment('2000-01-01');
+    const newBook = new BookList({
       ASIN: book.ASIN,
       AuthorityASIN: book.AuthorityASIN || [''],
-      author: book.author || undefined,
+      author: book.author,
       title: book.title,
       publisher: book.publisher || [''],
       publicationDate: book.publicationDate || [''],
@@ -78,13 +81,15 @@ Collector.prototype.saveBook = function(book, done){
       isKindlizedUrl: book.isKindlizedUrl || false,
       modifiedLog: {
         AddBookAt: moment(),
-        InspectKindlizeAt: moment('2000-01-01'),
-        AddASINAt: moment('2000-01-01'),
-        UpdateUrlAt: moment('2000-01-01')
-      }
+        InspectKindlizeAt: initialLibrarianTime,
+        AddASINAt: initialLibrarianTime,
+        UpdateUrlAt: initialLibrarianTime,
+      },
     });
-    newBook.save(function(err){
-      if(err){ return done(err); }
+    newBook.save((saveError)=> {
+      if (saveError) {
+        return done(saveError);
+      }
       done(null, newBook);
     });
   });
