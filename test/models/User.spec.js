@@ -66,4 +66,29 @@ describe('/models/User', ()=> {
       });
     });
   });
+
+  it('パスワードが同一でも異なったハッシュが生成される', (done)=> {
+    const accounts = [
+      { mail: 'toguroani@jump.com', password: 'toguroteam' },
+      { mail: 'togurootouto@jump.com', password: 'toguroteam' },
+    ];
+    Promise.map(accounts, (account)=> {
+      return new Promise((resolve, reject)=> {
+        const user = new UserModel(account);
+        user.save((saveError)=> {
+          if (saveError) {
+            return reject(saveError);
+          }
+          resolve();
+        });
+      });
+    })
+    .then(()=> {
+      UserModel.find({}, (queryError, users)=> {
+        assert(queryError === null);
+        assert(users[0].password !== users[1].password);
+        done();
+      });
+    });
+  });
 });
