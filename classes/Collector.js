@@ -100,6 +100,32 @@ function saveAuthor(author, done) {
 }
 
 /**
+@param { Object } item
+@param { Object } update
+@param { Function } done - 完了時に呼ばれるコールバック関数
+**/
+function updateItem(item, update, model, done) {
+  if (!item._id) {
+    throw new Error('itemには_idが必要');
+  }
+  const query = { _id: item._id };
+  const options = { upsert: true };
+
+  model.findOneAndUpdate(query, update, options, (err)=> {
+    if (err) {
+      return done(err);
+    }
+    if (item.name) {
+      log.info('更新:' + item.name);
+    }
+    if (item.title) {
+      log.info('更新:' + item.title);
+    }
+    done(null);
+  });
+}
+
+/**
 @constructor
 **/
 function Collector(type) {
@@ -160,30 +186,6 @@ Collector.prototype.saveCollections = function saveCollections(collections, done
   });
 };
 
-
-/**
-@param { Object } item
-@param { Object } update
-@param { Function } done - 完了時に呼ばれるコールバック関数
-**/
-Collector.prototype.updateItem = function updateItem(item, update, done) {
-  if (!item._id) {
-    throw new Error('itemには_idが必要');
-  }
-  const query = { _id: item._id };
-  const options = { upsert: true };
-
-  this._Model.findOneAndUpdate(query, update, options, function(err){
-    if(err){
-      return done(err);
-    }
-    if(item.name){ log.info("更新:" + item.name); }
-    if(item.title){ log.info("更新:" + item.title); }
-    done(null);
-  });
-};
-
-
 /**
 @param { Object } update
 @param { Function } done - 完了時に呼ばれるコールバック関数
@@ -191,25 +193,25 @@ Collector.prototype.updateItem = function updateItem(item, update, done) {
 Collector.prototype.updateCollections = function updateCollections(collections, update, done) {
   const _self = this;
   Q.all(
-    collections.map(function(item){
-      var d = Q.defer();
-      _self.updateItem(item, update, function(err){
-        if(err){
-          return d.reject(err);
+    collections.map((item)=> {
+      const deffered = Q.defer();
+      updateItem(item, update, _self._Model, (err)=> {
+        if (err) {
+          return deffered.reject(err);
         }
-        d.resolve();
+        deffered.resolve();
       });
-      return d.promise;
+      return deffered.promise;
     })
   )
-  .then(function(){
-    done();
+  .then(()=> {
+    return done(null);
   })
-  .fail(function(err){
-    done(err);
+  .fail((err)=> {
+    return done(err);
   });
 };
 
-module.exports = function(type){
+export default function(type) {
   return new Collector(type);
-};
+}
