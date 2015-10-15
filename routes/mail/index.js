@@ -1,9 +1,7 @@
 import request from 'superagent';
-import log from 'common/log';
 const slackPostAPI = process.env.KINDLIZED_SLACK;
 
 export default function(req, res) {
-  log.info(req);
   const mandrillEvents = req.body.mandrill_events;
   let mandrillBody;
   let mandrillHtml;
@@ -11,8 +9,7 @@ export default function(req, res) {
   try {
     mandrillBody = JSON.parse(mandrillEvents);
   } catch (err) {
-    log.info(err);
-    return res.send('no');
+    return res.status(500).send(err);
   } finally {
     mandrillHtml = mandrillBody[0].msg.html;
   }
@@ -24,7 +21,6 @@ export default function(req, res) {
   })
   .end((err, ret)=> {
     if (err) {
-      log.info(err);
       return res.status(500).send(err);
     }
     res.status(200).send(ret.text);
