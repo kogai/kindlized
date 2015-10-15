@@ -7,7 +7,7 @@ var request = require('superagent');
 var log = require('common/log');
 
 function Utils(){
-  this.slackAPI = require('credential.js').slack;
+  this.slackAPI = process.env.KINDLIZED_SLACK;
 }
 
 

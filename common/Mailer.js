@@ -2,8 +2,7 @@ const nodemailer = require('nodemailer');
 const mandrillTransport = require('nodemailer-mandrill-transport');
 const emailTemplates = require('email-templates');
 const templatesDir = require('path').resolve(__dirname, '..', 'email-templates');
-
-const credentialMandrill = require('common/makeCredential')('mandrill');
+const credentialMandrill = process.env.KINDLIZED_MANDRILL;
 
 function Mailer(opts) {
   this.UserCollections = require('models/User');

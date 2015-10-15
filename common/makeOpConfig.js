@@ -1,26 +1,8 @@
-let credential;
-let AWSAccessKeyId;
-let AWSSecretAccessKey;
-let AWSassociatesId;
-
-if (process.env.AWSAccessKeyId || process.env.CI) {
-  // heroku用変数
-  AWSAccessKeyId = process.env.AWSAccessKeyId;
-  AWSSecretAccessKey = process.env.AWSSecretAccessKey;
-  AWSassociatesId = process.env.AWSassociatesId;
-} else {
-  // サービスサーバー用変数
-  credential = require('credential');
-  AWSAccessKeyId = credential.amazon.AWSAccessKeyId;
-  AWSSecretAccessKey = credential.amazon.AWSSecretAccessKey;
-  AWSassociatesId = credential.amazon.AWSassociatesId;
-}
-
 export default ()=> {
   return {
     endPoint: 'ecs.amazonaws.jp',
-    awsId: AWSAccessKeyId,
-    awsSecret: AWSSecretAccessKey,
-    assocId: AWSassociatesId,
+    awsId: process.env.KINDLIZED_AWS_ACCESS_KEY_ID,
+    awsSecret: process.env.KINDLIZED_AWS_SECRET_KEY_ID,
+    assocId: process.env.KINDLIZED_AWS_SSSOCIATES_ID,
   };
 };

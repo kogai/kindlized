@@ -1,13 +1,14 @@
-"use strict";
+import mongoose from 'mongoose';
+import mockgoose from 'mockgoose';
+import Promise from 'bluebird';
+import bcrypt from 'bcryptjs';
+import { SALT_WORK_FACTOR } from 'common/constant';
+if (process.env.NODE_ENV === 'test') {
+  mockgoose(mongoose);
+}
 
-var mongoose = require('mongoose');
-var mongodb = require('common/makeCredential')('mongodb');
-var db = mongoose.createConnection(mongodb);
-
-var Q = require('q');
-var bcrypt = require('bcryptjs');
-var SALT_WORK_FACTOR = require('common/constant').SALT_WORK_FACTOR;
-var Utils = require('common/Utils');
+const mongodbCredential = process.env.KINDLIZED_MONGODB;
+const db = mongoose.createConnection(mongodbCredential);
 
 /**
 @example
@@ -33,12 +34,12 @@ var Utils = require('common/Utils');
 }
 **/
 
-var UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   mail: {
     type: String,
     index: {
-      unique: true
-    }
+      unique: true,
+    },
   },
   password: String,
   verifyId: String,
@@ -59,44 +60,44 @@ UserSchema.methods.comparePassword = (candidatePassword, hashedPassword, done)=>
   });
 };
 
+function generateSalt(rawPassword) {
+  return new Promise((resolve, reject)=> {
+    bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt)=> {
+      if (err) {
+        return reject(err);
+      }
+      resolve({ rawPassword, salt });
+    });
+  });
+}
 
+function hashPassword({ rawPassword, salt }) {
+  return new Promise((resolve, reject)=> {
+    bcrypt.hash(rawPassword, salt, (err, hash)=> {
+      if (err) {
+        return reject(err);
+      }
+      resolve(hash);
+    });
+  });
+}
 
-UserSchema.pre('save', function(next) {
-  var _user = this;
-
+UserSchema.pre('save', function preSave(next) {
+  const _user = this;
   // only hash the password if it has been modified (or is new)
-  if (!_user.isModified('password')){
+  if (!_user.isModified('password')) {
     return next();
   }
 
-  var generateSalt = function() {
-    var d = Q.defer();
-    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-      if(err){
-        return next(err);
-      }
-
-      d.resolve(salt);
-    });
-    return d.promise;
-  };
-
-  var hashPassword = function(salt) {
-    var d = Q.defer();
-    bcrypt.hash(_user.password, salt, function(err, hash) {
-      if (err){
-        return next(err);
-      }
-
-      _user.password = hash;
-      d.resolve(hash);
-    });
-    return d.promise;
-  };
-
-  generateSalt()
+  generateSalt(_user.password)
   .then(hashPassword)
-  .done(function(hash) {
+  .then((hash)=> {
+    _user.password = hash;
+  })
+  .catch((err)=> {
+    return next(err);
+  })
+  .finally(()=> {
     next();
   });
 });

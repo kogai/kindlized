@@ -7,16 +7,18 @@
     "node": "4.1.2"
   },
   "scripts": {
-    "test": "npm run test:unit && npm run eslint",
-    "test:unit": "$(npm bin)/mocha --recursive --compilers js:espower-babel/guess",
+    "start": "NODE_PATH=./ $(npm bin)/node-dev bin/www",
+    "test": "npm run test:unit",
+    "test:unit": "NODE_ENV=test $(npm bin)/mocha --recursive --compilers js:espower-babel/guess",
+    "test:unit:watch": "NODE_ENV=test $(npm bin)/mocha --recursive --watch --compilers js:espower-babel/guess",
     "eslint": "$(npm bin)/eslint .",
     "doc": "$(npm bin)/jsdoc common/*.js Librarian/*.js Bots/*.js",
-    "start": "NODE_PATH=./ $(npm bin)/node-dev bin/www",
     "librarian": "NODE_PATH=./ $(npm bin)/node-dev Librarian/",
     "postman": "NODE_PATH=./ $(npm bin)/node-dev Postman/",
     "deploy": "rsync -r --exclude='.git/' --exclude='node_modules' --exclude='logs/' ./ root@128.199.88.174:/vagrant/",
     "pm2:restart": "$(npm bin)/pm2 restart",
     "pm2:stop": "$(npm bin)/pm2 stop",
+    "pm2:logs": "$(npm bin)/pm2 logs",
     "pm2:restartall": "$(npm bin)/pm2 restart all",
     "pm2:stopall": "$(npm bin)/pm2 stop all",
     "pm2:kill": "$(npm bin)/pm2 kill"
@@ -104,12 +106,14 @@
     "heapdump": "^0.3.6",
     "licensify": "^1.0.0",
     "lodash": "^3.10.1",
+    "mockgoose": "^4.0.2",
     "nib": "^1.1.0",
     "nock": "^2.15.0",
     "node-dev": "^2.7.1",
     "power-assert": "^1.1.0",
     "should": "^4.3.0",
     "supertest": "^0.15.0",
+    "supertest-session": "^1.1.2",
     "vinyl-source-stream": "^1.0.0",
     "webdriver-manager": "^7.0.1"
   }

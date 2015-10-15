@@ -1,12 +1,18 @@
-"use strict";
+import mongoose from 'mongoose';
+import mockgoose from 'mockgoose';
 
-var MakeModel = require('common/makeModel');
+if (process.env.NODE_ENV === 'test') {
+  mockgoose(mongoose);
+}
 
-var AuthBotSchema = {
+const mongodbCredential = process.env.KINDLIZED_MONGODB;
+const db = mongoose.createConnection(mongodbCredential);
+
+const AuthBotSchema = {
   screen_name: String,
   user: Object,
   accessToken: String,
-  accessTokenSecret: String
+  accessTokenSecret: String,
 };
 
-module.exports = new MakeModel('AuthBot', AuthBotSchema);
+export default db.model('AuthBot', AuthBotSchema);

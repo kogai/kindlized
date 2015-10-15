@@ -1,6 +1,5 @@
 require('babel/register');
 
-const twitterCredential = require('common/makeCredential')('twitter');
 const log = require('common/log');
 
 const TwitterBot = require('Bots/TwitterBot');
@@ -14,8 +13,8 @@ Bots.AuthServer.listen(4000, ()=> {
 });
 
 Bots.TwitterBot = TwitterBot({
-  consumer_key: twitterCredential.consumerKey,
-  consumer_secret: twitterCredential.consumerSecret,
+  consumer_key: process.env.KINDLIZED_TW_CONSUMER_KEY,
+  consumer_secret: process.env.KINDLIZED_TW_CONSUMER_SECRET,
   screen_name: 'info_kindlize',
 }, (err)=> {
   if (err) {

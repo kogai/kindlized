@@ -1,13 +1,17 @@
-"use strict";
+import mongoose from 'mongoose';
+import mockgoose from 'mockgoose';
+if (process.env.NODE_ENV === 'test') {
+  mockgoose(mongoose);
+}
+const mongodbCredential = process.env.KINDLIZED_MONGODB;
+const db = mongoose.createConnection(mongodbCredential);
 
-var MakeModel = require('common/makeModel');
-
-var bookrSchema = {
+const BookSchema = new mongoose.Schema({
   ASIN: {
     type: Array,
     index: {
-      unique: true
-    }
+      unique: true,
+    },
   },
   AuthorityASIN: Array,
   author: Array,
@@ -17,15 +21,15 @@ var bookrSchema = {
   price: Array,
   url: Array,
   images: String,
-	modifiedLog: {
-		AddBookAt: Date,
-		InspectKindlizeAt: Date,
-		AddASINAt: Date,
-		RepairImgAt: Date,
-		UpdateUrlAt: Date
-	},
+  modifiedLog: {
+    AddBookAt: Date,
+    InspectKindlizeAt: Date,
+    AddASINAt: Date,
+    RepairImgAt: Date,
+    UpdateUrlAt: Date,
+  },
   isKindlized: Boolean,
-  isKindlizedUrl: Boolean
-};
+  isKindlizedUrl: Boolean,
+});
 
-module.exports = new MakeModel('Book', bookrSchema);
+export default db.model('Book', BookSchema);
