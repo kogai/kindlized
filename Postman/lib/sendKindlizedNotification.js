@@ -20,7 +20,6 @@ module.exports = function(user) {
       text: user.sendHtml,
       html: user.sendHtml
     });
-
     notifyMailer.send(function(err, info) {
       if (err) {
         user.info = err;
@@ -29,7 +28,7 @@ module.exports = function(user) {
       d.resolve(user);
     });
 
-  }else  {
+  } else {
     d.resolve(user);
   }
 

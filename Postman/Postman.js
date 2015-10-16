@@ -23,7 +23,6 @@ function Postman() {
   this._defer = this.Librarian.defer;
 }
 
-
 Postman.prototype.fetch = function fetch(done) {
   const _self = this;
   this.User.find(this.conditions, (err, users)=> {
@@ -34,7 +33,6 @@ Postman.prototype.fetch = function fetch(done) {
     done(null, users);
   });
 };
-
 
 Postman.prototype.sent = function sent(done) {
   Q.all(this.users.map(MailToUser.send))
