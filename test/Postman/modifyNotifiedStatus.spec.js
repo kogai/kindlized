@@ -11,7 +11,7 @@ import modifyNotifiedStatus from 'Postman/lib/modifyNotifiedStatus';
 const BookCollector = Collector('book');
 
 describe('/Postman/lib/modifyNotifiedStatus', ()=> {
-  before((done)=> {
+  beforeEach((done)=> {
     const books = [
       {
         ASIN: 'BASKETBALL',
@@ -68,7 +68,42 @@ describe('/Postman/lib/modifyNotifiedStatus', ()=> {
     });
   });
 
-  after(()=> {
+  it('複数のユーザーにメール配信後にステータスが更新される', (done)=> {
+    BookModel.find({}, (findError, books)=> {
+      const user = new UserModel({
+        mail: 'slumdunk@jump.com',
+        password: 'tensaidesukara',
+      });
+
+      user.save((saveError, savedUser)=> {
+        const UserUtils = User(savedUser._id.toString());
+        Promise.reduce(books, (total, item)=> {
+          return new Promise((resolve)=> {
+            UserUtils.saveBook(item, resolve);
+          });
+        }, null)
+        .then(()=> {
+          UserModel.find({}, (err, users)=> {
+            BookModel.find({}, (bookError2, books2)=> {
+              users[0].kindlizedList = books2;
+              modifyNotifiedStatus(users[0])
+              .then(()=> {
+                UserModel.find({}, (modifiedError, modifiedUsers)=> {
+                  console.log(modifiedUsers);
+                  assert(modifiedUsers[0].bookList[0].isNotified === true);
+                  assert(modifiedUsers[0].bookList[1].isNotified === true);
+                  assert(modifiedUsers[0].bookList[2].isNotified === true);
+                  done();
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+
+  afterEach(()=> {
     mockgoose.reset();
   });
 });
