@@ -1,29 +1,29 @@
-var log4js = require('log4js');
-var log4js_extend = require('log4js-extend');
-var moment = require('moment-timezone');
+import log4js from 'log4js';
+import log4js_extend from 'log4js-extend';
+import moment from 'moment-timezone';
 
-var configure = {
+const configure = {
   debug: {
     type: 'console',
-    category: 'debug'
+    category: 'debug',
   },
   warn: {
     type: 'file',
     category: 'warn',
-    filename: process.env.NODE_PATH + 'logs/' + moment().format('YYYYMMDD') + '.log'
-  }
+    filename: `${process.env.NODE_PATH}logs/${moment().format('YYYYMMDD')}.log`,
+  },
 };
 
 log4js.configure({
   appenders: [
     configure.debug,
-    configure.warn
-  ]
+    configure.warn,
+  ],
 });
 
 log4js_extend(log4js, {
   path: __dirname,
-  format: '[@file:@line:@column]'
+  format: '[@file:@line:@column]',
 });
 
 module.exports = log4js.getLogger('debug');
