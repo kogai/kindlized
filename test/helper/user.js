@@ -1,5 +1,7 @@
 import Promise from 'bluebird';
 import UserModel from 'models/User';
+import User from 'common/User';
+import { createAndFindBooks } from 'test/helper/book';
 
 const defaultAccount = {
   mail: 'dragonball@jump.com',
@@ -13,7 +15,7 @@ function createUser(account = defaultAccount) {
   });
 }
 
-function createUsers(numberOfUsers = 100) {
+function createUsers(numberOfUsers = 10) {
   const users = Array.from(new Array(numberOfUsers), (value, index) => index);
   return Promise.reduce(users, (total, userIndex)=> {
     return new Promise((resolve)=> {
@@ -26,7 +28,7 @@ function createUsers(numberOfUsers = 100) {
   }, null);
 }
 
-function createAndFindUsers(numberOfUsers = 100) {
+function createAndFindUsers(numberOfUsers = 10) {
   return new Promise((resolve)=> {
     createUsers(numberOfUsers)
       .then(()=> {
@@ -37,8 +39,56 @@ function createAndFindUsers(numberOfUsers = 100) {
   });
 }
 
+function filterKindlized(rawBooks) {
+  return rawBooks.filter((book)=> {
+    if (book.isKindlized) {
+      return book;
+    }
+  });
+}
+
+function createAndRegisterBookList(numberOfUsers = 10) {
+  return new Promise((registerResolve)=> {
+    createAndFindUsers(numberOfUsers)
+    .then((users)=> {
+      createAndFindBooks(numberOfUsers)
+      .then((books)=> {
+        Promise.reduce(users, (total, user)=> {
+          const UserUtils = User(user._id.toString());
+          return new Promise((updatesResolve)=> {
+            Promise.reduce(filterKindlized(books), (totalbook, book)=> {
+              return new Promise((resolve)=> {
+                UserUtils.saveBook(book, resolve);
+              });
+            }, null)
+            .then(()=> {
+              updatesResolve();
+            });
+          });
+        }, null)
+        .then(registerResolve);
+      });
+    });
+  });
+}
+
 export {
   createUser,
   createUsers,
   createAndFindUsers,
+  createAndRegisterBookList,
 };
+
+/*
+user.save((err, savedUser)=> {
+  const UserUtils = User(savedUser._id.toString());
+  Promise.reduce(savedBooks, (total, item)=> {
+    return new Promise((resolve)=> {
+      UserUtils.saveBook(item, resolve);
+    });
+  }, null)
+  .then(()=> {
+    done();
+  });
+});
+*/

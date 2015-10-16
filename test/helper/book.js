@@ -23,6 +23,7 @@ function createBooks(numberOfBooks = 100) {
       ASIN: `${bookIndex}-${defaultBook.ASIN}`,
       author: `${bookIndex}-${defaultBook.author}`,
       title: `${bookIndex}-${defaultBook.title}`,
+      isKindlized: bookIndex % 2 === 0,
     };
   });
   return new Promise((resolve)=> {
