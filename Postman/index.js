@@ -19,3 +19,7 @@ function registerJob(cronTime, onTick) {
 // ジョブ登録
 registerJob(morning, Postman.run.bind(Postman));
 registerJob(jobPerWeek, runPostSeries);
+
+if (process.env.NODE_ENV === 'development') {
+  Postman.run.bind(Postman)();
+}

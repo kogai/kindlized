@@ -27,7 +27,7 @@ describe('/classes/Collector', ()=> {
     });
   });
 
-  it('著者を保存できる', (done)=> {
+  it('書籍を保存できる', (done)=> {
     const book = {
       ASIN: 'BASKETBALL',
       author: '井上雄彦',

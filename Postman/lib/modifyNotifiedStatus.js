@@ -1,36 +1,30 @@
-'use strict';
+import Promise from 'bluebird';
+import UserModel from 'models/User';
+import log from 'common/log';
 
-// userモデルのbookListのisNotifiedをtrueに変更
-
-var Q = require('q');
-var modelUser = require( 'models/User' );
-
-module.exports = function(user) {
-  var d = Q.defer();
-
-  var kindlizedList = user.kindlizedList;
-  var bookList = user.bookList;
-  var _id = user._id;
-  var notifiedBookIds = [];
-  var i, j, k;
-  for (i = 0; i < kindlizedList.length; i++) {
-     notifiedBookIds.push( kindlizedList[i]._id );
-   }
-
-  for (j = 0; j < bookList.length; j++) {
-    for (k = 0; k < notifiedBookIds.length; k++) {
-      if ( bookList[j].bookId.toString() === notifiedBookIds[k].toString() ) {
-         bookList[j].isNotified = true;
-       }
+export default function({ kindlizedList, bookList, _id }) {
+  return new Promise((resolve, reject)=> {
+    const notifiedBookIDs = kindlizedList.map(kindlizedBook => kindlizedBook._id);
+    const modifiedBookList = bookList.map((book)=> {
+      notifiedBookIDs.forEach((notifiedBookID)=> {
+        if (book.bookId.toString() === notifiedBookID.toString()) {
+          book.isNotified = true;
+        }
+      });
+      return book;
+    });
+    const conditions = { _id: _id };
+    const update = { bookList: modifiedBookList };
+    if (process.env.NODE_ENV !== 'test') {
+      log.info(notifiedBookIDs);
+      log.info(modifiedBookList);
+      log.info(conditions);
     }
-  }
-
-  modelUser.findOneAndUpdate( { _id: _id }, { bookList: bookList }, function( err, user ) {
-    if (err) {
-      return d.reject(err);
-    }
-    d.resolve(user);
+    UserModel.findOneAndUpdate(conditions, update, (err, savedUser)=> {
+      if (err) {
+        return reject(err);
+      }
+      resolve(savedUser);
+    });
   });
-
-  return d.promise;
-};
+}
