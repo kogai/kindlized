@@ -47,16 +47,30 @@ function filterKindlized(rawBooks) {
   });
 }
 
-function createAndRegisterBookList(numberOfUsers = 10) {
+function createAndRegisterBookList(numberOfUsers = 10, onlyKindlized = true) {
   return new Promise((registerResolve)=> {
     createAndFindUsers(numberOfUsers)
     .then((users)=> {
-      createAndFindBooks(numberOfUsers)
+      createAndFindBooks()
       .then((books)=> {
         Promise.reduce(users, (total, user)=> {
           const UserUtils = User(user._id.toString());
           return new Promise((updatesResolve)=> {
-            Promise.reduce(filterKindlized(books), (totalbook, book)=> {
+            let registerBooks;
+            if (onlyKindlized) {
+              registerBooks = filterKindlized(books);
+            } else {
+              registerBooks = books;
+            }
+            /* ページネーションのテストのため15件の書籍を登録する
+            [
+              '0-SLAM DUNK', '1-SLAM DUNK', '10-SLAM DUNK', '11-SLAM DUNK', '12-SLAM DUNK',
+              '13-SLAM DUNK', '14-SLAM DUNK', '2-SLAM DUNK', '3-SLAM DUNK', '4-SLAM DUNK',
+              '5-SLAM DUNK', '6-SLAM DUNK', '7-SLAM DUNK', '8-SLAM DUNK', '9-SLAM DUNK',
+            ]
+            */
+            registerBooks.length = 15;
+            Promise.reduce(registerBooks, (totalbook, book)=> {
               return new Promise((resolve)=> {
                 UserUtils.saveBook(book, resolve);
               });
@@ -73,22 +87,9 @@ function createAndRegisterBookList(numberOfUsers = 10) {
 }
 
 export {
+  defaultAccount,
   createUser,
   createUsers,
   createAndFindUsers,
   createAndRegisterBookList,
 };
-
-/*
-user.save((err, savedUser)=> {
-  const UserUtils = User(savedUser._id.toString());
-  Promise.reduce(savedBooks, (total, item)=> {
-    return new Promise((resolve)=> {
-      UserUtils.saveBook(item, resolve);
-    });
-  }, null)
-  .then(()=> {
-    done();
-  });
-});
-*/
