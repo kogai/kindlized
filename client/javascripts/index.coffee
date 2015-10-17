@@ -3,6 +3,7 @@ account = require('./controllers/account')
 analytics = require('./controllers/analytics')
 search = require('./controllers/search')
 reload = require('./controllers/reload')
+seriesList = require('./directives/series-list')
 
 angular.module('App',[])
   .config([
@@ -28,3 +29,4 @@ angular.module('App',[])
     'reload',
     ['$scope', '$window', reload]
   )
+  .directive('seriesList', seriesList)

@@ -1,0 +1,15 @@
+<section ng-if="seriesList.length > 0" class="l-mt-20">
+  <h2 class="l-mb-10">メール通知登録済みのシリーズ</h2>
+  <ul class="series-list">
+    <li
+      ng-repeat="series in seriesList"
+      ng-click="deleteSeries(series.seriesKeyword, $index)"
+      ng-mouseenter="showDeletableMsg($index)"
+      ng-mouseleave="hiddenDeletableMsg($index)"
+      class="btn btn-default btn-sm series-list__item"
+    >
+      <span ng-if="!series.isShowMsg">『{{ series.seriesKeyword }}』シリーズ</span>
+      <span ng-if="series.isShowMsg">登録を解除</span>
+    </li>
+  </ul>
+</section>

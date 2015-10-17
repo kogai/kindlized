@@ -36,6 +36,12 @@ gulp.task 'browserify', ->
   .pipe source('bundle.min.js')
   .pipe gulp.dest './public/javascripts/'
 
+gulp.task 'copy', ->
+  gulp.src([
+    './client/javascripts/views/*.html'
+  ])
+  .pipe gulp.dest './public/views/'
+
 gulp.task 'watch', ->
   gulp.watch [
     './client/stylus/*.styl'
@@ -51,10 +57,14 @@ gulp.task 'watch', ->
   ],[
     'browserify'
   ]
+  gulp.watch [
+    './client/javascripts/views/*.html'
+  ],['copy']
   return
 
 gulp.task 'default', [
   'browserify'
   'stylus'
+  'copy'
   'watch'
 ]

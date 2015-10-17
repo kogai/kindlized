@@ -4,14 +4,16 @@ block content
   div( ng-controller="app" )
     include ./app/modify
     include ./app/search
+
+    series-list
     
-    div( ng-if="isWaiting" class="l-mt-10" )
+    div(ng-if="isWaiting" class="l-mt-10")
       |検索中...
 
-    h2( ng-if="showSuggestedBooks" class="l-mt-10 l-mb-10")
+    h2(ng-if="showSuggestedBooks" class="l-mt-10 l-mb-10")
       |検索結果
     
-    div(ng-if="showSuggestedBooks" )
+    div(ng-if="showSuggestedBooks")
       .panel.panel-default
         table.table.m-table
           thead
@@ -59,13 +61,13 @@ block content
                     |メール通知登録済みです
                   span.is-sp
                     |通知登録済
-  
+    
     .l-clr.l-mt-40.l-mb-10
       .l-left
         |メール通知登録済みの書籍
       .l-right
         include partials/pager
-            
+
     .panel.panel-default
       table.table.m-table
         thead

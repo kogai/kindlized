@@ -79,7 +79,11 @@ export default {
     if (!userSession) {
       return res.status(500).send();
     }
+
     const seriesKeyword = req.body.query;
+    if (!seriesKeyword) {
+      return res.status(500).send();
+    }
     const conditions = { _id: userSession };
     const findOne = Promise.promisify(UserModel.findOne.bind(UserModel));
 
