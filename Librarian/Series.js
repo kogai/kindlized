@@ -159,10 +159,10 @@ Series.prototype._trimChar = function _trimChar(title) {
 書籍シリーズの保存メソッド
 **/
 Series.prototype.saveSeries = function saveSeries(title, done) {
-  var _self = this;
-  title = this._trimChar(title);
+  const _self = this;
+  const seriesKeyword = this._trimChar(title);
 
-  this.Collections.findOne({ seriesKeyword: title }, function(err, series) {
+  this.Collections.findOne({ seriesKeyword }, (err, series)=> {
     if (err) {
       return done(err);
     }
@@ -170,21 +170,20 @@ Series.prototype.saveSeries = function saveSeries(title, done) {
       return done(null, series);
     }
 
-    var query = new RegExp(escape(title));
-
-    _self.BookList.find({ title: query }, function(err, books) {
-      if (err) {
-        return done(err);
+    const query = new RegExp(escape(seriesKeyword));
+    _self.BookList.find({ title: query }, (findError, books)=> {
+      if (findError) {
+        return done(findError);
       }
       var contains = books.map(function(book) {
         return {
           _id: book._id,
           title: book.title,
-          url: book.url[0]
+          url: book.url[0],
         };
       });
       var newSeries = new _self.Collections({
-        seriesKeyword: title,
+        seriesKeyword: seriesKeyword,
         lastModified: moment(),
         recentCount: books.length,
         recentContains: contains,

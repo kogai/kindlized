@@ -1,58 +1,55 @@
-'use strict';
+import moment from 'moment-timezone';
+import UserModel from 'models/User';
+import SeriesClass from 'Librarian/Series';
+import log from 'common/log';
+const Series = SeriesClass();
 
-var moment = require('moment-timezone');
+module.exports = (req, res)=> {
+  const userSession = req.session.passport.user;
+  if (!userSession) {
+    return res.status(500).send();
+  }
+  const query = req.body.query;
 
-var User = require('models/User');
-var Series = require('Librarian/Series')();
-var log = require('common/log');
-
-module.exports = function(req, res) {
-  var query = req.body.query;
-
-  Series.saveSeries(query, function(err, newSeries) {
+  Series.saveSeries(query, (err, newSeries)=> {
     if (err) {
-      return log.info(err);
+      log.info(err);
+      return res.status(500).send(err);
     }
+    const resMessage = `『${newSeries.seriesKeyword}』を登録しました。`;
+    const existMessage = `『${newSeries.seriesKeyword}』は登録済みです。`;
 
-    var resMessage = '『' + newSeries.seriesKeyword + '』を登録しました。';
-    var existMessage = '『' + newSeries.seriesKeyword + '』は登録済みです。';
-
-    if (process.env.NODE_ENV === 'development') {
-      req.session.passport = {
-        user: '55098ed6c0fa27f716c0717e'
-      };
-    }
-
-    var conditions = {
-      _id: req.session.passport.user,
+    const conditions = {
+      _id: userSession,
       'seriesList.seriesKeyword': {
-        $nin: [ newSeries.seriesKeyword ]
-      }
+        $nin: [ newSeries.seriesKeyword ],
+      },
     };
-
-    var update = {
-      'modifiedLog.seriesListAt': moment(),
+    const update = {
+      modifiedLog: {
+        seriesListAt: moment(),
+      },
       $push: {
         seriesList: {
           _id: newSeries._id,
-          seriesKeyword: newSeries.seriesKeyword
-        }
-      }
+          seriesKeyword: newSeries.seriesKeyword,
+        },
+      },
     };
+    const option = { new: true };
 
-    var option = { new: true };
-
-    User.findOneAndUpdate(conditions, update, option, function(err, user) {
-      if (err) {
-        return log.info(err);
+    UserModel.findOneAndUpdate(conditions, update, option, (updateError, user)=> {
+      if (updateError) {
+        log.info(updateError);
+        return res.status(500).send(updateError);
       }
       if (user) {
         res.send({
-          message: resMessage
+          message: resMessage,
         });
-      }else  {
+      } else {
         res.send({
-          message: existMessage
+          message: existMessage,
         });
       }
     });
