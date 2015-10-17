@@ -11,18 +11,15 @@ var localPassport = login.localPassport;
 const UserCollections = require('models/User');
 const Utils = require('common/Utils')();
 
-router.get('/login/success', function(req, res) {
+router.get('/login/success', (req, res)=> {
   res.redirect(303, '/');
 });
 
-router.post(
-  '/login',
-  localPassport.authenticate(
-    'local', {
-      successRedirect: '/',
-      failureRedirect: '/account/fail'
-    }
-  )
+router.post('/login',
+  localPassport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/account/fail',
+  })
 );
 
 router.post('/logout', function(req, res) {
@@ -36,7 +33,7 @@ router.get('/verify', function(req, res) {
   let updates = { isVerified: true };
   let options = {
     new: true,
-    upsert: true
+    upsert: true,
   };
   UserCollections.findOneAndUpdate(conditions, updates, options, function(err, savedUser) {
     if (err) {

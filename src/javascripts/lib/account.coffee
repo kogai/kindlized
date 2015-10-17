@@ -26,21 +26,21 @@ module.exports = ( $scope, $http, $window, $location ) ->
       return
     return
 
-  $scope.login = ( mail, password ) ->
+  $scope.login = (mail, password) ->
     $scope.isSending = true
     httpOpt =
-      method : 'post'
-      url : '/account/login'
-      data : {
+      method: 'post'
+      url: '/account/login'
+      data: {
         mail: mail
         password: password
       }
 
-    $http( httpOpt )
-    .success ( statusMessage ) ->
+    $http(httpOpt)
+    .success (statusMessage) ->
       $window.location.href = '/'
       return
-    .then ( statusMessage )->
+    .then (statusMessage)->
       $scope.statusMessage = 'ログイン完了'
       return
     return
@@ -51,7 +51,7 @@ module.exports = ( $scope, $http, $window, $location ) ->
       method : 'post'
       url : '/account/logout'
 
-    $http( httpOpt )
+    $http(httpOpt)
     .success ( statusMessage ) ->
       $scope.statusMessage = statusMessage
       $window.location.href = '/account'
