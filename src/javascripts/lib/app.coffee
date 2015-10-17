@@ -99,13 +99,13 @@ module.exports = ($scope, $filter, $http) ->
       return
     return
 
-  $scope.registBook = ( newBook, $index ) ->
+  $scope.registBook = (newBook, $index) ->
     $scope.bookListInDB[ $index ].isRegisterd = true
-    $scope.bookListInUser.push( $scope.bookListInDB[ $index ] )
+    $scope.bookListInUser.push($scope.bookListInDB[$index])
     httpOpt =
-      method : 'post'
-      url : '/api/user/book'
-      data : { newBook: newBook }
+      method: 'post'
+      url: '/api/user/book'
+      data: { newBook: newBook }
 
     $http( httpOpt )
     .success ( data, status ) ->

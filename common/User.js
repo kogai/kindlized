@@ -25,15 +25,15 @@ class User {
     this.BookCollections.findOne({
       ASIN: book.ASIN,
     }, function(err, searchedBook) {
-      let newBook = {
+      const newBook = {
         bookId: searchedBook._id,
         title: searchedBook.title[0],
-        isNotified: false
+        isNotified: false,
       };
-      let updates = {
+      const updates = {
         $push: {
-          bookList: newBook
-        }
+          bookList: newBook,
+        },
       };
       _self.UserCollections.findOne(conditions, function(err, user) {
         if (err) {

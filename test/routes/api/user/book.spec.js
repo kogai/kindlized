@@ -1,10 +1,11 @@
 import assert from 'power-assert';
 import mockgoose from 'mockgoose';
+import UserModel from 'models/User';
 import {
   getReq,
   loginReq,
 } from 'test/helper/request';
-import { createAndRegisterBookList } from 'test/helper/user';
+import { defaultAccount, createAndRegisterBookList } from 'test/helper/user';
 import { defaultBook } from 'test/helper/book';
 
 const endpoint = '/api/user/book';
@@ -60,12 +61,57 @@ describe('/routes/api/user/book', function withTimeout() {
       });
     });
   });
-
 /*
-  it.only('通知済みの書籍は取得されない', (done)=> {
+  it('通知済みの書籍は取得されない', (done)=> {
+    const conditions = { mail: `0-${defaultAccount.mail}`};
+    UserModel.findOne(conditions, (_, user)=> {
+      const update = user.bookList.map((book)=> {
+        book.isNotified = true;
+        return book;
+      });
+      UserModel.findOneAndUpdate(conditions, update, ()=> {
+        loginReq()
+        .then((appSession)=> {
+          appSession.get(endpoint).end((err, ret)=> {
+            assert(ret.status === 200);
+            assert(ret.body.books.length === 0);
+            assert(ret.body.maxCount === 0);
+            done();
+          });
+        });
+      });
+    });
+  });
+*/
+  it('書籍が保存できる', (done)=> {
+    loginReq()
+    .then((appSession)=> {
+      appSession.post(endpoint).send({
+        newBook: { ASIN: `15-${defaultBook.ASIN}` },
+      }).end(()=> {
+        const conditions = { mail: `0-${defaultAccount.mail}`};
+        UserModel.findOne(conditions, (_, user)=> {
+          const hasAddedBooks = user.bookList.filter((book)=> {
+            if (book.title === `15-${defaultBook.title}`) {
+              return book;
+            }
+          });
+          assert(hasAddedBooks[0].title === `15-${defaultBook.title}`);
+          assert(typeof hasAddedBooks[0].isNotified === 'boolean');
+          assert(typeof hasAddedBooks[0].bookId === 'object');
+          done();
+        });
+      });
+    });
+  });
+/*
+  it.only('書籍の保存後に正規化された書籍をレスポンスする', (done)=> {
   });
 
-  it.only('書籍が保存できる', (done)=> {
+  it.only('書籍は重複して登録できない', (done)=> {
+  });
+
+  it.only('DBに無い書籍は登録できない', (done)=> {
   });
 
   it.only('書籍が削除できる', (done)=> {
