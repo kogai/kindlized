@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "NODE_PATH=./ $(npm bin)/node-dev bin/www",
+    "gulp": "$(npm bin)/gulp",
     "test": "npm run test:unit",
     "test:unit": "NODE_ENV=test $(npm bin)/mocha --recursive --compilers js:espower-babel/guess",
     "test:unit:watch": "NODE_ENV=test $(npm bin)/mocha --recursive --watch --compilers js:espower-babel/guess",
@@ -56,6 +57,7 @@
     "log4js": "^0.6.22",
     "log4js-extend": "^0.1.2",
     "mocha": "^2.0.1",
+    "mockgoose": "^4.0.2",
     "moment-timezone": "^0.3.0",
     "mongoose": "^4.0.3",
     "mongoose-unique-validator": "^0.4.1",
@@ -109,7 +111,6 @@
     "heapdump": "^0.3.6",
     "licensify": "^1.0.0",
     "lodash": "^3.10.1",
-    "mockgoose": "^4.0.2",
     "nib": "^1.1.0",
     "nock": "^2.15.0",
     "node-dev": "^2.7.1",
