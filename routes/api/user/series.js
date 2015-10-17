@@ -6,6 +6,22 @@ import log from 'common/log';
 const Series = SeriesClass();
 
 export default {
+  get(req, res) {
+    const userSession = req.session.passport.user;
+    if (!userSession) {
+      return res.status(500).send();
+    }
+    const conditions = { _id: userSession };
+    UserModel.findOne(conditions, (err, user)=> {
+      if (err) {
+        return res.status(500).send();
+      }
+      res.status(200).send({
+        seriesList: user.seriesList,
+      });
+    });
+  },
+
   post(req, res) {
     const userSession = req.session.passport.user;
     if (!userSession) {
@@ -57,6 +73,7 @@ export default {
       });
     });
   },
+
   delete(req, res) {
     const userSession = req.session.passport.user;
     if (!userSession) {

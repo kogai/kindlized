@@ -17,8 +17,8 @@ watch = require 'gulp-watch'
 
 gulp.task 'stylus', ->
   gulp.src './client/stylus/index.styl'
-  .pipe( sourcemaps.init() )
-  .pipe( stylus({
+  .pipe(sourcemaps.init())
+  .pipe(stylus({
     use: nib()
     compress: true
   }))

@@ -23,6 +23,25 @@ describe('/routes/api/user/book', function withTimeout() {
     mockgoose.reset();
   });
 
+  it('シリーズが取得できる', (done)=> {
+    const payload = { query: `0-${defaultBook.title} (10)` };
+    let appSession;
+    loginReq()
+    .then((_appSession)=> {
+      appSession = _appSession;
+      return new Promise(resolve => appSession.post(endpoint).send(payload).end(resolve));
+    })
+    .then(()=> {
+      appSession.get(endpoint).end((err, ret)=> {
+        assert(err === null);
+        assert(ret.status === 200);
+        assert(ret.body.seriesList.length === 1);
+        assert(ret.body.seriesList[0].seriesKeyword === `0-${defaultBook.title}`);
+        done();
+      });
+    });
+  });
+
   it('シリーズが保存できる', (done)=> {
     const payload = { query: `0-${defaultBook.title} (10)` };
     const conditions = { mail: `0-${defaultAccount.mail}`};
@@ -49,9 +68,7 @@ describe('/routes/api/user/book', function withTimeout() {
     loginReq()
     .then((_appSession)=> {
       appSession = _appSession;
-      return new Promise((resolve)=> {
-        appSession.post(endpoint).send(payload).end(resolve);
-      });
+      return new Promise(resolve => appSession.post(endpoint).send(payload).end(resolve));
     })
     .then(()=> {
       const deletePayload = { query: `0-${defaultBook.title}` };
