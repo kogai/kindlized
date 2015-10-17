@@ -5,7 +5,8 @@ import BookModel from 'models/Book';
 import modifyNotifiedStatus from 'Postman/lib/modifyNotifiedStatus';
 import { createAndRegisterBookList } from 'test/helper/user';
 
-describe('/Postman/lib/modifyNotifiedStatus', ()=> {
+describe('/Postman/lib/modifyNotifiedStatus', function withTimeout() {
+  this.timeout(5000);
   beforeEach((done)=> {
     createAndRegisterBookList(5).then(done);
   });
