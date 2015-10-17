@@ -99,30 +99,30 @@ module.exports = ($scope, $filter, $http) ->
       return
     return
 
-  $scope.registBook = ( newBook, $index ) ->
-    $scope.bookListInDB[ $index ].isRegisterd = true
-    $scope.bookListInUser.push( $scope.bookListInDB[ $index ] )
+  $scope.registBook = (newBook, $index) ->
+    $scope.bookListInDB[$index].isRegisterd = true
     httpOpt =
-      method : 'post'
-      url : '/api/user/book'
-      data : { newBook: newBook }
+      method: 'post'
+      url: '/api/user/book'
+      data: { newBook: newBook }
 
     $http( httpOpt )
-    .success ( data, status ) ->
+    .success (data, status) ->
+      $scope.bookListInUser.unshift(data.newBook)
       return
     .then ->
       return
     return
 
-  $scope.unRegistBook = ( $index ) ->
+  $scope.unRegistBook = ($index) ->
     deleteBookId = $scope.bookListInUser[$index]._id
     $scope.bookListInUser.splice($index, 1)
 
     # 更新したモデルをDBに保存
     $http({
       method: 'delete'
-      url : '/api/user/book'
-      params : { deleteBookId: deleteBookId }
+      url: '/api/user/book'
+      params: { deleteBookId: deleteBookId }
     })
     .success () ->
       return

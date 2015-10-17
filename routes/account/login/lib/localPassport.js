@@ -8,47 +8,47 @@ const LocalStrategyField = {
   passwordField: 'password',
 };
 
-var LocalStrategyCallBack = function( mail, password, done ) {
-  var fetchUser = function( mail, password, done ) {
+function LocalStrategyCallBack(mail, password, done) {
+  function fetchUser(mail, password, done) {
     var d = Q.defer();
-    modelUser.findOne({ mail: mail }, function( err, user) {
+    modelUser.findOne({ mail: mail }, function(err, user) {
       if (err) {
-        console.log( 'LocalStrategyCallBackのエラー', err );
+        console.log('LocalStrategyCallBackのエラー', err);
         return done(err);
       }
       if (!user) {
-        return done(null, false, { message: 'ユーザーIDが間違っています。' });
+        console.log('存在しないユーザーです');
+        return done(null, false, { message: '存在しないユーザーです' });
       }
       d.resolve({
         password: password,
-        user:user,
-        done:done
+        user: user,
+        done: done,
       });
     });
     return d.promise;
-  };
+  }
 
-  var comparePassword = function( data ) {
+  function comparePassword(data) {
     var password = data.password;
     var user = data.user;
     var done = data.done;
 
-    user.comparePassword( password , user.password, function(err, isMatch) {
+    user.comparePassword(password, user.password, function(err, isMatch) {
       if (err) return done(err);
       if (isMatch) {
-            return done( null, user );
-          }else  {
-            return done( null, false, { message: 'パスワードが間違っています。' } );
-          }
+        return done( null, user );
+      }
+      done( null, false, { message: 'パスワードが間違っています。' } );
     });
-  };
+  }
 
-  fetchUser( mail, password, done )
-  .done( comparePassword );
-};
+  fetchUser(mail, password, done)
+  .done(comparePassword);
+}
 
 passport.use(
-    new LocalStrategy( LocalStrategyField, LocalStrategyCallBack )
+  new LocalStrategy(LocalStrategyField, LocalStrategyCallBack)
 );
 
 module.exports = passport;

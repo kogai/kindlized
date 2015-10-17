@@ -43,6 +43,7 @@ function createAndFindBooks(numberOfBooks = 100) {
 }
 
 export {
+  defaultBook,
   createBook,
   createBooks,
   createAndFindBooks,
