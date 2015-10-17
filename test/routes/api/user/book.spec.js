@@ -105,7 +105,7 @@ describe('/routes/api/user/book', function withTimeout() {
     });
   });
 
-  it.only('書籍が削除できる', (done)=> {
+  it('書籍が削除できる', (done)=> {
     loginReq()
     .then((appSession)=> {
       const conditions = { mail: `0-${defaultAccount.mail}`};
@@ -115,7 +115,7 @@ describe('/routes/api/user/book', function withTimeout() {
             return book;
           }
         });
-        appSession.del(endpoint).query({
+        appSession.delete(endpoint).query({
           deleteBookId: hasAddedBooks[0].bookId.toString(),
         }).end(()=> {
           UserModel.findOne(conditions, (__, reducedUser)=> {

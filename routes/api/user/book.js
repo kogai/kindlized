@@ -1,64 +1,62 @@
-'use strict';
+import log from 'common/log';
+import User from 'common/User';
+import BookClass from 'common/Book';
+const Book = BookClass();
 
-const log = require('common/log');
-const User = require('common/User');
-const Book = require('common/Book')();
-
-module.exports = {
-  get: function(req, res) {
+export default {
+  get(req, res) {
     if (!req.session.passport.user) {
       return res.status(500).send();
     }
-    let user = User(req.session.passport.user);
-    let page = Number(req.query.page);
+    const user = User(req.session.passport.user);
+    const page = Number(req.query.page);
 
-    user.fetchRegisteredBooks(function(err, bookList) {
+    user.fetchRegisteredBooks((err, bookList)=> {
       if (err) {
         return log.info(err);
       }
 
-      let conditions = {
-        _id: { $in: bookList.map(function(book) { return book.bookId; }) }
+      const conditions = {
+        _id: { $in: bookList.map((book)=> { return book.bookId; }) },
       };
       if (page) {
         // クエリパラメータにpageの指定があればそのページを返す
-        Book.fetchPage(conditions, page, function(err, books, hasNext) {
-          if (err) {
-            return log.info(err);
+        Book.fetchPage(conditions, page, (fetchError, books, hasNext)=> {
+          if (fetchError) {
+            return log.info(fetchError);
           }
           res.send({
             maxCount: bookList.length,
-            books: books.map(function(book) {
+            books: books.map((book)=> {
               return Book.sanitizeForClient(book);
             }),
-            hasNext: hasNext
+            hasNext: hasNext,
           });
         });
       } else {
         // クエリパラメータがなければ全件を返す
-        Book.fetchAll(conditions, function(err, books) {
-          if (err) {
-            return log.info(err);
+        Book.fetchAll(conditions, (fetchError, books)=> {
+          if (fetchError) {
+            return log.info(fetchError);
           }
           res.send({
             maxCount: bookList.length,
-            books: books.map(function(book) {
+            books: books.map((book)=> {
               return Book.sanitizeForClient(book);
-            })
+            }),
           });
         });
       }
     });
   },
 
-  post: function(req, res) {
+  post(req, res) {
     if (!req.session.passport.user) {
       return res.status(500).send();
     }
-    let user = User(req.session.passport.user);
-    let book = req.body.newBook;
-
-    user.saveBook(book, function(err, savedUser) {
+    const user = User(req.session.passport.user);
+    const book = req.body.newBook;
+    user.saveBook(book, (err, savedUser)=> {
       if (err) {
         return log.info(err);
       }
@@ -66,18 +64,18 @@ module.exports = {
         return log.info(savedUser);
       }
       res.send({
-        newBook: book
+        newBook: book,
       });
     });
   },
 
-  delete: function(req, res) {
+  delete(req, res) {
     if (!req.session.passport.user) {
       return res.status(500).send();
     }
-    let user = User(req.session.passport.user);
-    let deleteBookId = req.query.deleteBookId;
-    user.reduceBook(deleteBookId, function(err, savedUser) {
+    const user = User(req.session.passport.user);
+    const deleteBookId = req.query.deleteBookId;
+    user.reduceBook(deleteBookId, (err)=> {
       if (err) {
         return log.info(err);
       }
