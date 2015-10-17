@@ -61,15 +61,17 @@ describe('/routes/api/user/book', function withTimeout() {
       });
     });
   });
-/*
+
   it('通知済みの書籍は取得されない', (done)=> {
     const conditions = { mail: `0-${defaultAccount.mail}`};
     UserModel.findOne(conditions, (_, user)=> {
-      const update = user.bookList.map((book)=> {
-        book.isNotified = true;
-        return book;
-      });
-      UserModel.findOneAndUpdate(conditions, update, ()=> {
+      const update = {
+        bookList: user.bookList.map((book)=> {
+          book.isNotified = true;
+          return book;
+        }),
+      };
+      UserModel.findOneAndUpdate(conditions, update, {}, ()=> {
         loginReq()
         .then((appSession)=> {
           appSession.get(endpoint).end((err, ret)=> {
@@ -82,7 +84,7 @@ describe('/routes/api/user/book', function withTimeout() {
       });
     });
   });
-*/
+
   it('書籍が保存できる', (done)=> {
     loginReq()
     .then((appSession)=> {

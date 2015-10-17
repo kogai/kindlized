@@ -11,13 +11,18 @@ export default {
     const user = User(req.session.passport.user);
     const page = Number(req.query.page);
 
-    user.fetchRegisteredBooks((err, bookList)=> {
+    user.fetchRegisteredBooks((err, rawBookList)=> {
       if (err) {
-        return log.info(err);
+        return res.status(500).send();
       }
+      const bookList = rawBookList.filter((book)=> {
+        if (!book.isNotified) {
+          return book;
+        }
+      });
 
       const conditions = {
-        _id: { $in: bookList.map((book)=> { return book.bookId; }) },
+        _id: { $in: bookList.map(book => book.bookId) },
       };
       if (page) {
         // クエリパラメータにpageの指定があればそのページを返す
