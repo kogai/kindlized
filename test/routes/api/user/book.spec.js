@@ -105,6 +105,20 @@ describe('/routes/api/user/book', function withTimeout() {
     });
   });
 
+  it('書籍の保存後に正規化された書籍をレスポンスする', (done)=> {
+    loginReq()
+    .then((appSession)=> {
+      appSession.post(endpoint).send({
+        newBook: { ASIN: `15-${defaultBook.ASIN}` },
+      }).end((err, ret)=> {
+        assert(err === null);
+        assert(ret.status === 200);
+        assert(typeof ret.body.newBook.title === 'string');
+        done();
+      });
+    });
+  });
+
   it('書籍が削除できる', (done)=> {
     loginReq()
     .then((appSession)=> {
@@ -128,9 +142,6 @@ describe('/routes/api/user/book', function withTimeout() {
     });
   });
 /*
-  it.only('書籍の保存後に正規化された書籍をレスポンスする', (done)=> {
-  });
-
   it.only('書籍は重複して登録できない', (done)=> {
   });
 

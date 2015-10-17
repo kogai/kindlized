@@ -56,7 +56,7 @@ export default {
     }
     const user = User(req.session.passport.user);
     const book = req.body.newBook;
-    user.saveBook(book, (err, savedUser)=> {
+    user.saveBook(book, (err, savedUser, registeredBook)=> {
       if (err) {
         return log.info(err);
       }
@@ -64,7 +64,7 @@ export default {
         return log.info(savedUser);
       }
       res.send({
-        newBook: book,
+        newBook: Book.sanitizeForClient(registeredBook),
       });
     });
   },

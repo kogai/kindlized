@@ -100,15 +100,15 @@ module.exports = ($scope, $filter, $http) ->
     return
 
   $scope.registBook = (newBook, $index) ->
-    $scope.bookListInDB[ $index ].isRegisterd = true
-    $scope.bookListInUser.push($scope.bookListInDB[$index])
+    $scope.bookListInDB[$index].isRegisterd = true
     httpOpt =
       method: 'post'
       url: '/api/user/book'
       data: { newBook: newBook }
 
     $http( httpOpt )
-    .success ( data, status ) ->
+    .success (data, status) ->
+      $scope.bookListInUser.unshift(data.newBook)
       return
     .then ->
       return

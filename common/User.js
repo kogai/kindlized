@@ -48,7 +48,7 @@ class User {
           if (err) {
             return done(err);
           }
-          done(null, savedUser);
+          done(null, savedUser, searchedBook);
         });
       });
     });
