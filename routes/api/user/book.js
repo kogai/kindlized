@@ -34,7 +34,7 @@ module.exports = {
             hasNext: hasNext
           });
         });
-      }else  {
+      } else {
         // クエリパラメータがなければ全件を返す
         Book.fetchAll(conditions, function(err, books) {
           if (err) {
