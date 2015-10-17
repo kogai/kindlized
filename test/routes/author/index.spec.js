@@ -1,4 +1,6 @@
 import assert from 'power-assert';
+import request from 'supertest';
+import app from 'app.js';
 import AutherModel from 'models/Author';
 
 describe('/routes/author', ()=> {
