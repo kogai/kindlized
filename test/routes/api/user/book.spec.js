@@ -104,6 +104,29 @@ describe('/routes/api/user/book', function withTimeout() {
       });
     });
   });
+
+  it.only('書籍が削除できる', (done)=> {
+    loginReq()
+    .then((appSession)=> {
+      const conditions = { mail: `0-${defaultAccount.mail}`};
+      UserModel.findOne(conditions, (_, user)=> {
+        const hasAddedBooks = user.bookList.filter((book)=> {
+          if (book.title === `0-${defaultBook.title}`) {
+            return book;
+          }
+        });
+        appSession.del(endpoint).query({
+          deleteBookId: hasAddedBooks[0].bookId.toString(),
+        }).end(()=> {
+          UserModel.findOne(conditions, (__, reducedUser)=> {
+            assert(reducedUser.bookList.length === 14);
+            assert(reducedUser.bookList[0].title === `1-${defaultBook.title}`);
+            done();
+          });
+        });
+      });
+    });
+  });
 /*
   it.only('書籍の保存後に正規化された書籍をレスポンスする', (done)=> {
   });
@@ -112,9 +135,6 @@ describe('/routes/api/user/book', function withTimeout() {
   });
 
   it.only('DBに無い書籍は登録できない', (done)=> {
-  });
-
-  it.only('書籍が削除できる', (done)=> {
   });
 */
 });
