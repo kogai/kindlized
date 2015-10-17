@@ -1,4 +1,3 @@
-import log from 'common/log';
 import User from 'common/User';
 import Book from 'common/Book';
 

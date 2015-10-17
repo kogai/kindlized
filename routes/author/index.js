@@ -1,6 +1,5 @@
 import Author from 'models/Author';
 import Booklist from 'models/Book';
-import _ from 'underscore';
 import Q from 'q';
 
 export default function(req, res) {
@@ -78,22 +77,22 @@ export default function(req, res) {
   }
 
 
-  var handleAuthorRoute = function() {
-    var author = authors['1'];
-    var authorPrev = authors['0'];
-    var authorNext = authors['2'];
+  function handleAuthorRoute() {
+    const author = authors['1'];
+    let authorPrev = authors['0'];
+    let authorNext = authors['2'];
     if (authorPrev === null) {
       authorPrev = {
         pageId: null,
         name: null,
-        isNotExist: true
+        isNotExist: true,
       };
     }
     if (authorNext === null) {
       authorNext = {
         pageId: null,
         name: null,
-        isNotExist: true
+        isNotExist: true,
       };
     }
     if (!author) {
@@ -102,27 +101,26 @@ export default function(req, res) {
       });
     }
     Booklist.find({
-      author: author.name
-    }, function(err, books) {
+      author: author.name,
+    }, (err, books)=> {
       if (err) {
         console.log(err);
       }
-      books = encodeImgSrc(books);
+      const safeImgBooks = encodeImgSrc(books);
       const title = `${author.name}先生のKindle化された著書`;
       res.render('author', {
         title: title,
         description: `${title}の一覧ページです`,
-        books: books,
+        books: safeImgBooks,
         isLogined: isLogined,
-        kindlizedBooks: (function(books) {
-          books = books.map(function(book) {
+        kindlizedBooks: ((_books)=> {
+          const kindlizedBooks = _books.filter((book)=> {
             if (book.isKindlized) {
               return book;
             }
           });
-          books = _.compact(books);
-          return books;
-        }(books)),
+          return kindlizedBooks;
+        }(safeImgBooks)),
         pager: {
           prev: {
             pageId: authorPrev.pageId,
@@ -137,7 +135,7 @@ export default function(req, res) {
         },
       });
     });
-  };
+  }
 
   countAuthors()
   .then(getAuthorParallel)
