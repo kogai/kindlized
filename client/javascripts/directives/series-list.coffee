@@ -7,10 +7,10 @@ module.exports = ($http)->
     scope.seriesList = []
 
     scope.showDeletableMsg = (index)->
-      scope.seriesList[index].isShowMsg = true
+      scope.seriesList[index].isShowMsg = true if scope.seriesList[index]
 
     scope.hiddenDeletableMsg = (index)->
-      scope.seriesList[index].isShowMsg = false
+      scope.seriesList[index].isShowMsg = false if scope.seriesList[index]
 
     scope.deleteSeries = (seriesKeyword, seriesIndex)->
       request.del('/api/user/series')
