@@ -1,4 +1,3 @@
-import log from 'common/log';
 import User from 'common/User';
 import Book from 'common/Book';
 
@@ -7,7 +6,6 @@ const bookClass = Book();
 export default {
   get: (req, res)=> {
     const userSession = process.env.NODE_ENV === 'development' ? '55098ed6c0fa27f716c0717e' : req.session.passport.user;
-
     if (!userSession) return res.status(500).send();
 
     const user = User(userSession);

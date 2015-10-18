@@ -1,24 +1,24 @@
-gulp        = require 'gulp'
-stylus      = require 'gulp-stylus'
-nib         = require 'nib'
-sourcemaps  = require 'gulp-sourcemaps'
+gulp = require 'gulp'
+stylus = require 'gulp-stylus'
+nib = require 'nib'
+sourcemaps = require 'gulp-sourcemaps'
 
 # browserify
-browserify  = require 'browserify'
-debowerify  = require 'debowerify'
-licensify   = require 'licensify'
-source      = require 'vinyl-source-stream'
-streamify   = require 'gulp-streamify'
-uglify      = require 'gulp-uglify'
-coffeelint  = require 'gulp-coffeelint'
+browserify = require 'browserify'
+debowerify = require 'debowerify'
+licensify = require 'licensify'
+source = require 'vinyl-source-stream'
+streamify = require 'gulp-streamify'
+uglify = require 'gulp-uglify'
+coffeelint = require 'gulp-coffeelint'
 
 # watch
-watch     = require 'gulp-watch'
+watch = require 'gulp-watch'
 
 gulp.task 'stylus', ->
-  gulp.src './src/stylus/index.styl'
-  .pipe( sourcemaps.init() )
-  .pipe( stylus({
+  gulp.src './client/stylus/index.styl'
+  .pipe(sourcemaps.init())
+  .pipe(stylus({
     use: nib()
     compress: true
   }))
@@ -27,7 +27,7 @@ gulp.task 'stylus', ->
 
 gulp.task 'browserify', ->
   browserify
-    entries: ['./src/javascripts/index.coffee']
+    entries: ['./client/javascripts/index.coffee']
     extensions: ['.coffee', '.js']
   .plugin licensify
   .transform 'coffeeify'
@@ -36,26 +36,35 @@ gulp.task 'browserify', ->
   .pipe source('bundle.min.js')
   .pipe gulp.dest './public/javascripts/'
 
+gulp.task 'copy', ->
+  gulp.src([
+    './client/javascripts/views/*.html'
+  ])
+  .pipe gulp.dest './public/views/'
 
 gulp.task 'watch', ->
   gulp.watch [
-   './src/stylus/*.styl'
-   './src/stylus/**/*.styl'
-   './src/stylus/**/**/*.styl'
+    './client/stylus/*.styl'
+    './client/stylus/**/*.styl'
+    './client/stylus/**/**/*.styl'
   ],[
-   'stylus'
+    'stylus'
   ]
   gulp.watch [
-    './src/javascripts/*.coffee'
-    './src/javascripts/**/*.coffee'
-    './src/javascripts/**/**/*.coffee'
+    './client/javascripts/*.coffee'
+    './client/javascripts/**/*.coffee'
+    './client/javascripts/**/**/*.coffee'
   ],[
     'browserify'
   ]
+  gulp.watch [
+    './client/javascripts/views/*.html'
+  ],['copy']
   return
 
 gulp.task 'default', [
   'browserify'
   'stylus'
+  'copy'
   'watch'
 ]

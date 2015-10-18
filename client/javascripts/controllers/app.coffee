@@ -1,7 +1,7 @@
 _ = require('underscore')
 imageStrModifyer = require('./imageStrModifyer')
 
-module.exports = ($scope, $filter, $http) ->
+module.exports = ($scope, $filter, $http, $rootScope) ->
   $scope.editable = false
   $scope.maxCount = 0
   $scope.pagenation = []
@@ -127,4 +127,15 @@ module.exports = ($scope, $filter, $http) ->
     .success () ->
       return
     return
-  return
+
+  $scope.registerSeries = (book, $index)->
+    $http
+      method: 'post'
+      url: '/api/user/series'
+      data:
+        query: book.title[0]
+    .then (ret)->
+      $scope.bookListInDB[$index].isRegisterdSeries = true
+      $scope.bookListInDB[$index].seriesMessage = ret.data.message
+      $rootScope.$broadcast 'registerSeries', ret.data.series if ret.data.status == 'ok'
+    .catch (err) ->

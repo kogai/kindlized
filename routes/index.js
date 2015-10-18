@@ -33,6 +33,8 @@ router.delete('/api/user/book', api.user.book.delete);
 // router.get('/api/user/count', api.user.count.get);
 router.get('/api/user/book/:page', api.user.page.get);
 
-router.post('/api/user/series', api.user.series);
+router.get('/api/user/series', api.user.series.get);
+router.post('/api/user/series', api.user.series.post);
+router.delete('/api/user/series', api.user.series.delete);
 
 module.exports = router;
