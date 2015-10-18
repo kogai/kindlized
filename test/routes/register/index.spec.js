@@ -1,5 +1,6 @@
 import assert from 'power-assert';
 import mockgoose from 'mockgoose';
+import escape from 'escape-regexp';
 import {
   getReq,
   loginReq,
@@ -48,7 +49,7 @@ describe('/routes/register', function withTimeout() {
     });
   });
 
-  it.only('ログイン状態ではリダイレクトされない', (done)=> {
+  it('ログイン状態ではリダイレクトされない', (done)=> {
     loginReq().then((appSession)=> {
       appSession
       .get(uri)
@@ -58,6 +59,8 @@ describe('/routes/register', function withTimeout() {
         assert(ret.status === 200);
         assert(ret.redirect === false);
         assert(ret.text.match(/通知登録完了\ \|\ kindle化した書籍の通知サービス/));
+        const titleString = new RegExp(escape(`15-${defaultBook.title}のkindle化通知登録が完了しました。`));
+        assert(ret.text.match(titleString));
         done();
       });
     });
@@ -96,6 +99,25 @@ describe('/routes/register', function withTimeout() {
           assert(hasAddedBooks[0].title === `15-${defaultBook.title}`);
           assert(typeof hasAddedBooks[0].isNotified === 'boolean');
           assert(typeof hasAddedBooks[0].bookId === 'object');
+          done();
+        });
+      });
+    });
+  });
+
+  it('DBに存在しないASINをクエリに持った書籍は登録できない', (done)=> {
+    const notExist = { ASIN: `100-${defaultBook.ASIN}` };
+    loginReq().then((appSession)=> {
+      appSession
+      .get(uri)
+      .query(notExist)
+      .end((err, ret)=> {
+        assert(err === null);
+        assert(ret.status === 303);
+        assert(ret.redirect === true);
+        assert(ret.header.location === '/');
+        UserModel.findOne(conditions, (_, user)=> {
+          assert(user.bookList.length === 15);
           done();
         });
       });
