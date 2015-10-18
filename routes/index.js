@@ -1,6 +1,7 @@
 import express from 'express';
 const router = express.Router();
 
+import register from 'routes/register';
 import author from 'routes/author';
 import mail from 'routes/mail';
 import api from 'routes/api';
@@ -17,6 +18,7 @@ router.get('/', (req, res)=> {
   }
 });
 
+router.get('/register', register.get);
 router.get('/author/*', author);
 router.post('/mail', mail);
 

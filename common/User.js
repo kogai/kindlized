@@ -16,11 +16,9 @@ class User {
   @param { Function } done - 完了後に呼ばれるコールバック関数
   **/
   saveBook(book, done) {
-    let _self = this;
-    let conditions = { _id: this.userId };
-    let options = {
-      upsert: true
-    };
+    const _self = this;
+    const conditions = { _id: this.userId };
+    const options = { upsert: true };
 
     this.BookCollections.findOne({
       ASIN: book.ASIN,
@@ -78,11 +76,6 @@ class User {
       });
     });
   }
-
-  saveSeries(seriesKeyword) {
-
-  }
-
 
   /**
   @param { Function } done - 完了後に呼ばれるコールバック関数

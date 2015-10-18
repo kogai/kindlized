@@ -3,3 +3,5 @@
 	-var book = books[i]
 		|#{ book.url }
 		|#{ book.title }
+		|この書籍がkindle化されたら通知する
+		|http://kindlize.it/register?ASIN=#{ book.ASIN }
