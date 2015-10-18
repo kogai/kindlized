@@ -24,28 +24,13 @@ describe('/routes/register', function withTimeout() {
     mockgoose.reset();
   });
 
-  it.only('未ログイン状態ではログインページにリダイレクトされる', (done)=> {
+  it('未ログイン状態ではログインページにリダイレクトされる', (done)=> {
     getReq(uri).then(({err, ret})=> {
       assert(err === null);
       assert(ret.status === 303);
       assert(ret.redirect === true);
       assert(ret.header.location === '/account/login');
       done();
-    });
-  });
-
-  it('ログイン状態ではリダイレクトされない', (done)=> {
-    loginReq().then((appSession)=> {
-      appSession
-      .get(uri)
-      .query(payload)
-      .end((err, ret)=> {
-        assert(err === null);
-        assert(ret.status === 200);
-        assert(ret.redirect === false);
-        assert(ret.text.match(/通知登録完了\ \|\ kindle化した書籍の通知サービス/));
-        done();
-      });
     });
   });
 
@@ -58,6 +43,21 @@ describe('/routes/register', function withTimeout() {
         assert(ret.status === 303);
         assert(ret.redirect === true);
         assert(ret.header.location === '/');
+        done();
+      });
+    });
+  });
+
+  it.only('ログイン状態ではリダイレクトされない', (done)=> {
+    loginReq().then((appSession)=> {
+      appSession
+      .get(uri)
+      .query(payload)
+      .end((err, ret)=> {
+        assert(err === null);
+        assert(ret.status === 200);
+        assert(ret.redirect === false);
+        assert(ret.text.match(/通知登録完了\ \|\ kindle化した書籍の通知サービス/));
         done();
       });
     });
