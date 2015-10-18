@@ -27,3 +27,5 @@ module.exports = ($http)->
       scope.seriesList = ret.data.seriesList
     .catch (err) ->
       scope.seriesList = []
+
+    scope.$on 'registerSeries', (event, payload)-> scope.seriesList.unshift payload

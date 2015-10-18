@@ -24,43 +24,41 @@ block content
           tbody
             tr(ng-repeat="bookInDB in bookListInDB")
               td
-                a( href="{{ bookInDB.url[0] }}" target="_blank" style='display:block;' )
+                a(href="{{ bookInDB.url[0] }}" target="_blank" style='display:block;')
                   img(ng-src="{{bookInDB.images}}")
                 |{{ bookInDB.title[0] }}
 
               td
                 div( ng-if="!bookInDB.isKindlized" ).label.label-danger.m-icon-book
-                  span.is-pc
-                    |Kindle版がありません
-                  span.is-sp
-                    |未Kindle
+                  span.is-pc Kindle版がありません
+                  span.is-sp 未Kindle
                   
                 div( ng-if="bookInDB.isKindlized" ).label.label-success.m-icon-book
-                  span.is-pc
-                    |Kindle化済み
-                  span.is-sp
-                    |Kindle済
-                
+                  span.is-pc Kindle化済み
+                  span.is-sp Kindle済
               td
                 a( href="{{ bookInDB.url[0] }}" target="_blank" ng-if="bookInDB.isKindlized" ).btn.btn-default.m-icon-buy
-                  span.is-pc
-                    |Amazonで購入する
-                  span.is-sp
-                    |購入
+                  span.is-pc Amazonで購入する
+                  span.is-sp 購入
                 button(
                   type="button"
                   ng-click="registBook(bookInDB, $index)"
                   ng-if="!bookInDB.isKindlized && !bookInDB.isRegisterd"
                 ).btn.btn-default.m-icon-ok
-                  span.is-pc
-                    |メール通知登録
-                  span.is-sp
-                    |通知登録
-                .label.label-info.m-icon-ok( ng-if="bookInDB.isRegisterd" )
-                  span.is-pc
-                    |メール通知登録済みです
-                  span.is-sp
-                    |通知登録済
+                  span.is-pc メール通知登録
+                  span.is-sp 通知登録
+                .label.label-info.m-icon-ok(ng-if="bookInDB.isRegisterd")
+                  span.is-pc メール通知登録済みです
+                  span.is-sp 通知登録済
+
+                button(
+                  type="button"
+                  ng-click="registerSeries(bookInDB, $index)"
+                  ng-if="!bookInDB.isRegisterdSeries"
+                ).btn.btn-default.m-icon-ok.l-ml-5
+                  span 新刊通知登録
+                .label.label-info.m-icon-ok.l-ml-5(ng-if="bookInDB.isRegisterdSeries")
+                  span {{ bookInDB.seriesMessage }}
     
     .l-clr.l-mt-40.l-mb-10
       .l-left

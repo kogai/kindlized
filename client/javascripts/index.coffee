@@ -15,7 +15,7 @@ angular.module('App',[])
   ])
   .controller(
     'app',
-    ['$scope', '$filter', '$http', app]
+    ['$scope', '$filter', '$http', '$rootScope', app]
   )
   .controller(
     'account',

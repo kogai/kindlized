@@ -63,11 +63,18 @@ export default {
         }
         if (user) {
           res.send({
+            status: 'ok',
             message: resMessage,
+            series: {
+              _id: newSeries._id,
+              seriesKeyword: newSeries.seriesKeyword,
+            },
           });
         } else {
           res.send({
+            status: 'ng',
             message: existMessage,
+            series: {},
           });
         }
       });
