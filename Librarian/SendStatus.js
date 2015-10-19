@@ -16,16 +16,16 @@ class SendStatus {
             $or: [
               { images: null },
               { images: { $exists: false } },
-              { $where: 'this.images == 0' }
+              { $where: 'this.images == 0' },
             ]
           },
           {
             $or: [
               { 'modifiedLog.RepairImgAt': { $exists: false } },
-              { 'modifiedLog.RepairImgAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
-            ]
-          }
-        ]
+              { 'modifiedLog.RepairImgAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } },
+            ],
+          },
+        ],
       },
       InspectKindlize: {
         $and: [
@@ -36,10 +36,10 @@ class SendStatus {
           {
             $or: [
               { 'modifiedLog.InspectKindlizeAt': { $exists: false } },
-              { 'modifiedLog.InspectKindlizeAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
-            ]
-          }
-        ]
+              { 'modifiedLog.InspectKindlizeAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } },
+            ],
+          },
+        ],
       },
       AddASIN: {
         $and: [
@@ -49,16 +49,16 @@ class SendStatus {
               { AuthorityASIN: [''] },
               { AuthorityASIN: undefined },
               { AuthorityASIN: 'UNDEFINED' },
-              { AuthorityASIN: ['UNDEFINED'] }
-            ]
+              { AuthorityASIN: ['UNDEFINED'] },
+            ],
           },
           {
             $or: [
               { 'modifiedLog.AddASINAt': { $exists: false } },
-              { 'modifiedLog.AddASINAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
-            ]
-          }
-        ]
+              { 'modifiedLog.AddASINAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } },
+            ],
+          },
+        ],
       },
       UpdateUrl: {
         $and: [
@@ -67,11 +67,11 @@ class SendStatus {
           {
             $or: [
               { 'modifiedLog.UpdateUrlAt': { $exists: false } },
-              { 'modifiedLog.UpdateUrlAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
-            ]
-          }
-        ]
-      }
+              { 'modifiedLog.UpdateUrlAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } },
+            ],
+          },
+        ],
+      },
     };
   }
 
@@ -79,7 +79,7 @@ class SendStatus {
     let val;
     for (val in this.conditions) {
       if (this.conditions.hasOwnProperty(val)) {
-        let _val = val;
+        const _val = val;
         Book.count(this.conditions[val], function(err, count) {
           if (err) {
             return log.info(err);
