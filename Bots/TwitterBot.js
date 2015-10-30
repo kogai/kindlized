@@ -30,7 +30,7 @@ function TwitterBot(credentials, callback) {
 
   // ユーザーアカウント名が渡されていればDBをルックアップ
   if (credentials.screen_name) {
-    var _self = this;
+    const _self = this;
     AuthBot.findOne({ screen_name: credentials.screen_name }, function(err, bot) {
       if (err) {
         return callback(err);
@@ -47,7 +47,7 @@ function TwitterBot(credentials, callback) {
       callback(null, _self.client);
       return _self;
     });
-  }else  {
+  } else {
     this.client = new Twitter({
       consumer_key: this.consumer_key,
       consumer_secret: this.consumer_secret,

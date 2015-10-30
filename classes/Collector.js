@@ -31,8 +31,8 @@ function saveBook(book, done) {
       return done(err);
     }
     if (existBook) {
-      log.warn.info('登録済みの書籍:' + existBook.title);
-      return done();
+      log.info('登録済みの書籍:' + existBook.title);
+      return done(null, null);
     }
 
     const initialLibrarianTime = moment('2000-01-01');
@@ -173,7 +173,9 @@ Collector.prototype.saveCollections = function saveCollections(collections, done
         if (err) {
           return reject(err);
         }
-        savedItems.push(savedItem);
+        if (savedItem) {
+          savedItems.push(savedItem);
+        }
         resolve();
       });
     });

@@ -3,7 +3,6 @@ import escape from 'escape-regexp';
 import Q from 'q';
 
 import Librarian from 'Librarian/Librarian';
-import { PERIODICAL_DAY } from 'common/constant';
 import log from 'common/log';
 
 /**
@@ -14,9 +13,7 @@ function Series() {
   this.BookList = require('models/Book');
   this.Librarian = new Librarian();
   this._defer = this.Librarian.defer;
-  this.conditions = {
-    lastModified: { '$lte': moment().subtract(PERIODICAL_DAY, 'days') },
-  };
+  this.conditions = {};
   this.series = [];
 }
 
