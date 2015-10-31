@@ -1,12 +1,8 @@
-'use strict';
+import express from 'express';
+const router = express.Router();
 
-var Q = require('q');
-var express = require('express');
-var router = express.Router();
-
-var regist = require('routes/account/regist');
-var login = require('routes/account/login');
-var localPassport = login.localPassport;
+import regist from 'routes/account/regist';
+import {localPassport} from 'routes/account/login';
 
 const UserCollections = require('models/User');
 const Utils = require('common/Utils')();
@@ -22,20 +18,20 @@ router.post('/login',
   })
 );
 
-router.post('/logout', function(req, res) {
+router.post('/logout', (req, res)=> {
   delete req.session.passport.user;
   res.send('ログアウト完了しました。');
 });
 
-router.get('/verify', function(req, res) {
-  let verifyId = req.query.id;
-  let conditions = { verifyId: verifyId };
-  let updates = { isVerified: true };
-  let options = {
+router.get('/verify', (req, res)=> {
+  const verifyId = req.query.id;
+  const conditions = { verifyId: verifyId };
+  const updates = { isVerified: true };
+  const options = {
     new: true,
     upsert: true,
   };
-  UserCollections.findOneAndUpdate(conditions, updates, options, function(err, savedUser) {
+  UserCollections.findOneAndUpdate(conditions, updates, options, (err, savedUser)=> {
     if (err) {
       Utils.postSlack(err);
       return res.status(403).send('認証は拒否されました。');
@@ -45,26 +41,30 @@ router.get('/verify', function(req, res) {
   });
 });
 
-router.post('/regist', function(req, res) {
+router.post('/regist', (req, res)=> {
   regist({
     res: res,
-    req: req
+    req: req,
   });
 });
 
-router.get('/login', function(req, res) {
+router.get('/login', (req, res)=> {
+  const isLogin = req.session.passport.user;
+  if (isLogin) {
+    return res.redirect(303, '/');
+  }
   res.render('login', {
-    title: 'ログイン'
+    title: 'ログイン',
   });
 });
 
-router.get('/register', function(req, res) {
+router.get('/register', (req, res)=> {
   res.render('register', {
-    title: 'アカウント登録'
+    title: 'アカウント登録',
   });
 });
 
-router.get('/', function(req, res) {
+router.get('/', (req, res)=> {
   res.redirect( 303, '/account/register');
 });
 
