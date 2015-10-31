@@ -1,13 +1,13 @@
-'use strict';
+import Q from 'q';
+import uuid from 'node-uuid';
+import validator from 'validator';
 
-var Q = require('q');
-var uuid = require('node-uuid');
-var nodemailer = require('nodemailer');
+import User from 'models/User';
+import constant from 'common/constant';
+import Mailer from 'common/Mailer';
+import log from 'common/log';
 
-var User = require('models/User');
-var mailInfo = require('common/constant').mail.info;
-var Mailer = require('common/Mailer');
-var log = require('common/log');
+const mailInfo = constant.mail.info;
 
 var makeNewUserModel = function(data) {
   var d = Q.defer();
@@ -61,35 +61,39 @@ var makeMailTemplate = function(data) {
 };
 
 var sendVerifyMail = function(data) {
-  var d = Q.defer();
+  const deffered = Q.defer();
 
-  if (data.isRegisterd) {
-    var verifyMailer = Mailer({
-      from: mailInfo,
-      to: data.mail,
-      subject: '[kindlize.it]アカウント認証',
-      text: data.sendHtml,
-      html: data.sendHtml
-    });
+  if (process.env.NODE_ENV === 'test') {
+    console.log('...テスト環境ではメール送信をスキップする');
+    deffered.resolve(data);
+  } else {
+    if (data.isRegisterd) {
+      const verifyMailer = Mailer({
+        from: mailInfo,
+        to: data.mail,
+        subject: '[kindlize.it]アカウント認証',
+        text: data.sendHtml,
+        html: data.sendHtml
+      });
 
-    verifyMailer.send(function(error, info) {
-      if (error) {
-        d.reject(error);
-      }
-      d.resolve(data);
-    });
-  }else  {
-    d.resolve(data);
+      verifyMailer.send(function(error, info) {
+        if (error) {
+          deffered.reject(error);
+        }
+        deffered.resolve(data);
+      });
+    } else {
+      deffered.resolve(data);
+    }
   }
-
-  return d.promise;
+  return deffered.promise;
 };
 
 var renderRouter = function(data) {
   var res = data.res;
   var d = Q.defer();
 
-  var statusMessage = 'アカウントの登録に成功しました。\n登録したメールアドレスに確認メールを送信しています。';
+  const statusMessage = 'アカウントの登録に成功しました。\n登録したメールアドレスに確認メールを送信しています。';
   res.send(statusMessage);
   d.resolve(data);
 
@@ -100,7 +104,7 @@ var renderFailRouter = function(data) {
   var res = data.res;
   var d = Q.defer();
 
-  var statusMessage = 'アカウントの登録に失敗しました。\n登録済みのメールアドレスです。';
+  const statusMessage = 'アカウントの登録に失敗しました。\n登録済みのメールアドレスです。';
   res.send(statusMessage);
   d.resolve(data);
 
@@ -108,12 +112,16 @@ var renderFailRouter = function(data) {
 };
 
 module.exports = function(data) {
+  const candicdateMail = data.req.body.mail;
+  if (!validator.isEmail(candicdateMail)) {
+    return data.res.send('アカウントの登録に失敗しました。\nメールアドレスの形式が誤っています。');
+  }
   makeNewUserModel(data)
   .then(makeMailTemplate)
   .then(sendVerifyMail)
   .then(renderRouter)
   .fail(renderFailRouter)
-  .done(function(data) {
-    log.info(data.mail + ':新規ユーザー登録完了');
+  .done(({mail})=> {
+    log.info(`新規ユーザー登録完了: ${mail}`);
   });
 };

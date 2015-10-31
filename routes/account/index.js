@@ -42,6 +42,14 @@ router.get('/verify', (req, res)=> {
 });
 
 router.post('/regist', (req, res)=> {
+  // 廃止予定のエンドポイント
+  regist({
+    res: res,
+    req: req,
+  });
+});
+
+router.post('/register', (req, res)=> {
   regist({
     res: res,
     req: req,
@@ -59,6 +67,10 @@ router.get('/login', (req, res)=> {
 });
 
 router.get('/register', (req, res)=> {
+  const isLogin = req.session.passport.user;
+  if (isLogin) {
+    return res.redirect(303, '/');
+  }
   res.render('register', {
     title: 'アカウント登録',
   });
