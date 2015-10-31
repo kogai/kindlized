@@ -78,6 +78,7 @@ Mailer.prototype.createTemplate = function createTemplate(type, books, done) {
 
         return {
           title: book.title,
+          ASIN: book.ASIN,
           url: book.url,
           img: img,
         };
