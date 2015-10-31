@@ -10,22 +10,6 @@ module.exports = ( $scope, $http, $window, $location ) ->
   $scope.toggleBtn = () ->
     $scope.isRegist = !$scope.isRegist
 
-  $scope.regist = (mail, password) ->
-    $scope.isSending = true
-    httpOpt =
-      method: 'post'
-      url: '/account/regist'
-      data: {
-        mail: mail
-        password: password
-      }
-
-    $http(httpOpt)
-    .success (statusMessage) ->
-      $scope.statusMessage = statusMessage
-      return
-    return
-
   $scope.login = (mail, password) ->
     $scope.isSending = true
     httpOpt =
@@ -52,7 +36,7 @@ module.exports = ( $scope, $http, $window, $location ) ->
       url : '/account/logout'
 
     $http(httpOpt)
-    .success ( statusMessage ) ->
+    .success (statusMessage) ->
       $scope.statusMessage = statusMessage
       $window.location.href = '/account'
       return
