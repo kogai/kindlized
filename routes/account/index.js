@@ -1,7 +1,6 @@
 import express from 'express';
 const router = express.Router();
 
-import regist from 'routes/account/regist';
 import {localPassport} from 'routes/account/login';
 
 const UserCollections = require('models/User');
@@ -41,21 +40,6 @@ router.get('/verify', (req, res)=> {
   });
 });
 
-router.post('/regist', (req, res)=> {
-  // 廃止予定のエンドポイント
-  regist({
-    res: res,
-    req: req,
-  });
-});
-
-router.post('/register', (req, res)=> {
-  regist({
-    res: res,
-    req: req,
-  });
-});
-
 router.get('/login', (req, res)=> {
   const isLogin = req.session.passport.user;
   if (isLogin) {
@@ -63,16 +47,6 @@ router.get('/login', (req, res)=> {
   }
   res.render('login', {
     title: 'ログイン',
-  });
-});
-
-router.get('/register', (req, res)=> {
-  const isLogin = req.session.passport.user;
-  if (isLogin) {
-    return res.redirect(303, '/');
-  }
-  res.render('register', {
-    title: 'アカウント登録',
   });
 });
 
