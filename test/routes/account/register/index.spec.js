@@ -1,6 +1,8 @@
 import assert from 'power-assert';
 import mockgoose from 'mockgoose';
 
+import UserModel from 'models/User';
+
 import {
   getReq,
   postReq,
@@ -59,14 +61,18 @@ describe('/routes/account/register', function withTimeout() {
       assert(err === null);
       assert(ret.status === 200);
       assert(ret.text.match(/アカウントの登録に成功しました。\n登録したメールアドレスに確認メールを送信しています/));
-      done();
+      UserModel.findOne({mail: newAccount.mail}, (_, user)=> {
+        assert(user.mail === newAccount.mail);
+        assert(user.isVerified === false);
+        done();
+      });
     });
   });
 
   it('既にアカウントが存在しているメールアドレスではアカウントが登録できない', (done)=> {
     postReq(uri, account).then(({err, ret})=> {
       assert(err === null);
-      assert(ret.status === 200);
+      assert(ret.status === 403);
       assert(ret.text.match(/アカウントの登録に失敗しました。\n登録済みのメールアドレスです。/));
       done();
     });
@@ -79,7 +85,7 @@ describe('/routes/account/register', function withTimeout() {
     };
     postReq(uri, invalidAccount).then(({err, ret})=> {
       assert(err === null);
-      assert(ret.status === 200);
+      assert(ret.status === 403);
       assert(ret.text.match(/アカウントの登録に失敗しました。\nメールアドレスの形式が誤っています。/));
       done();
     });

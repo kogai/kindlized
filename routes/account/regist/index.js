@@ -105,7 +105,7 @@ var renderFailRouter = function(data) {
   var d = Q.defer();
 
   const statusMessage = 'アカウントの登録に失敗しました。\n登録済みのメールアドレスです。';
-  res.send(statusMessage);
+  res.status(403).send(statusMessage);
   d.resolve(data);
 
   return d.promise;
@@ -114,7 +114,7 @@ var renderFailRouter = function(data) {
 module.exports = function(data) {
   const candicdateMail = data.req.body.mail;
   if (!validator.isEmail(candicdateMail)) {
-    return data.res.send('アカウントの登録に失敗しました。\nメールアドレスの形式が誤っています。');
+    return data.res.status(403).send('アカウントの登録に失敗しました。\nメールアドレスの形式が誤っています。');
   }
   makeNewUserModel(data)
   .then(makeMailTemplate)
