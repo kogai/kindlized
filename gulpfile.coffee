@@ -2,10 +2,10 @@ gulp = require 'gulp'
 stylus = require 'gulp-stylus'
 nib = require 'nib'
 sourcemaps = require 'gulp-sourcemaps'
+server = require 'gulp-develop-server'
 
 # browserify
 browserify = require 'browserify'
-debowerify = require 'debowerify'
 licensify = require 'licensify'
 source = require 'vinyl-source-stream'
 streamify = require 'gulp-streamify'
@@ -14,6 +14,20 @@ coffeelint = require 'gulp-coffeelint'
 
 # watch
 watch = require 'gulp-watch'
+
+src =
+  server: [
+    'models/*'
+    'models/**/*'
+    'models/**/**/*'
+    'routes/*'
+    'routes/**/*'
+    'routes/**/**/*'
+  ]
+
+gulp.task 'server', ->
+  server.listen
+    path: 'bin/www'
 
 gulp.task 'stylus', ->
   gulp.src './client/stylus/index.styl'
@@ -31,7 +45,6 @@ gulp.task 'browserify', ->
     extensions: ['.coffee', '.js']
   .plugin licensify
   .transform 'coffeeify'
-  .transform 'debowerify'
   .bundle()
   .pipe source('bundle.min.js')
   .pipe gulp.dest './public/javascripts/'
@@ -43,6 +56,7 @@ gulp.task 'copy', ->
   .pipe gulp.dest './public/views/'
 
 gulp.task 'watch', ->
+  gulp.watch(src.server, server.restart)
   gulp.watch [
     './client/stylus/*.styl'
     './client/stylus/**/*.styl'
@@ -62,9 +76,14 @@ gulp.task 'watch', ->
   ],['copy']
   return
 
-gulp.task 'default', [
+gulp.task 'compile', [
   'browserify'
   'stylus'
   'copy'
+]
+
+gulp.task 'default', [
+  'compile'
+  'server'
   'watch'
 ]
