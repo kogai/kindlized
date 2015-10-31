@@ -15,8 +15,15 @@ function getReq(endpoint = '/', queries = {}) {
   });
 }
 
-function postReq() {
-
+function postReq(endpoint = '/', payload = {}) {
+  return new Promise((resolve)=> {
+    request(app)
+      .post(endpoint)
+      .send(payload)
+      .end((err, ret)=> {
+        resolve({err, ret});
+      });
+  });
 }
 
 function putReq() {

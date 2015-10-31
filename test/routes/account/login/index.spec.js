@@ -1,20 +1,21 @@
 import assert from 'power-assert';
 import mockgoose from 'mockgoose';
-// import escape from 'escape-regexp';
+
 import {
   getReq,
-  // loginReq,
+  postReq,
+  loginReq,
 } from 'test/helper/request';
 import {
-  // defaultAccount,
+  defaultAccount,
   createAndRegisterBookList,
 } from 'test/helper/user';
-// import { defaultBook } from 'test/helper/book';
-// import UserModel from 'models/User';
 
 const uri = '/account/login';
-// const payload = { ASIN: `15-${defaultBook.ASIN}` };
-// const conditions = { mail: `0-${defaultAccount.mail}`};
+const account = {
+  mail: `0-${defaultAccount.mail}`,
+  password: `0-${defaultAccount.password}`,
+};
 
 describe('/routes/account/login', function withTimeout() {
   this.timeout(5000);
@@ -25,7 +26,7 @@ describe('/routes/account/login', function withTimeout() {
     mockgoose.reset();
   });
 
-  it.only('意図したコンテンツを配信している', (done)=> {
+  it('意図したコンテンツを配信している', (done)=> {
     getReq(uri).then(({err, ret})=> {
       assert(err === null);
       assert(ret.status === 200);
@@ -36,6 +37,50 @@ describe('/routes/account/login', function withTimeout() {
   });
 
   it('ログイン状態ではリダイレクトされる', (done)=> {
-    done();
+    loginReq().then((appSession)=> {
+      appSession
+      .get(uri)
+      .end((err, ret)=> {
+        assert(err === null);
+        assert(ret.status === 303);
+        assert(ret.redirect === true);
+        assert(ret.header.location === '/');
+        done();
+      });
+    });
+  });
+
+  it('正しい入力でログインできる', (done)=> {
+    postReq(uri, account).then(({err, ret})=> {
+      assert(err === null);
+      assert(ret.status === 302);
+      assert(ret.redirect === true);
+      assert(ret.header.location === '/');
+      done();
+    });
+  });
+
+  it('誤ったパスワードではログインできない', (done)=> {
+    const invalidAccount = Object.create(account);
+    invalidAccount.password = `1-${defaultAccount.password}`;
+    postReq(uri, invalidAccount).then(({err, ret})=> {
+      assert(err === null);
+      assert(ret.status === 302);
+      assert(ret.redirect === true);
+      assert(ret.header.location === '/account/fail');
+      done();
+    });
+  });
+
+  it('存在しないアカウントのメールアドレスではログインできない', (done)=> {
+    const invalidAccount = Object.create(account);
+    invalidAccount.mail = 'isNotExist@test.com';
+    postReq(uri, invalidAccount).then(({err, ret})=> {
+      assert(err === null);
+      assert(ret.status === 302);
+      assert(ret.redirect === true);
+      assert(ret.header.location === '/account/fail');
+      done();
+    });
   });
 });
