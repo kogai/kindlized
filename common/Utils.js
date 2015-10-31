@@ -1,10 +1,6 @@
-'use strict';
-
-var Q = require('q');
-var _ = require('underscore');
-var request = require('superagent');
-
-var log = require('common/log');
+import Q from 'q';
+import _ from 'underscore';
+import request from 'superagent';
 
 function Utils() {
   this.slackAPI = process.env.KINDLIZED_SLACK;
@@ -65,23 +61,23 @@ Utils.prototype.map = function(collections, method, done) {
 /**
 @param { String } msg - Slackに通知するメッセージ
 **/
-Utils.prototype.postSlack = function(msg, done) {
+Utils.prototype.postSlack = function postSlack(msg, done = function callback() {}) {
+  if (process.env.NODE_ENV === 'test') {
+    return done(null);
+  }
   request
   .post(this.slackAPI)
   .send({
-    text: msg
+    text: msg,
   })
-  .end(function(err, ret) {
+  .end((err, ret)=> {
     if (err) {
       return done(err);
     }
-    if (done) {
-      return done(null, ret);
-    }
+    done(null, ret);
   });
 };
 
-
-module.exports = function() {
+export default function() {
   return new Utils();
-};
+}

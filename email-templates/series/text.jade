@@ -1,7 +1,7 @@
 |登録していたシリーズに新刊が発行されました。
 -for(var i = 0; i < books.length; i++)
-	-var book = books[i]
-		|#{ book.url }
-		|#{ book.title }
-		|この書籍がkindle化されたら通知する
-		|http://kindlize.it/register?ASIN=#{ book.ASIN }
+  -var book = books[i]
+    |#{ book.url }
+    |#{ book.title }
+    |この書籍がkindle化されたら通知する
+    |http://kindlize.it/register?ASIN=#{ book.ASIN }

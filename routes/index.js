@@ -5,6 +5,7 @@ import register from 'routes/register';
 import author from 'routes/author';
 import mail from 'routes/mail';
 import api from 'routes/api';
+import accountRegister from 'routes/account/register';
 
 router.get('/', (req, res)=> {
   const isLogin = req.session.passport.user;
@@ -21,6 +22,9 @@ router.get('/', (req, res)=> {
 router.get('/register', register.get);
 router.get('/author/*', author);
 router.post('/mail', mail);
+
+router.get('/account/register', accountRegister.get);
+router.post('/account/register', accountRegister.post);
 
 router.get('/api/search/db', api.search.db);
 router.get('/api/search/amazon', api.search.amazon);

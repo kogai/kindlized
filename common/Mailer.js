@@ -97,6 +97,27 @@ Mailer.prototype.createTemplate = function createTemplate(type, books, done) {
   });
 };
 
+Mailer.prototype.createRegisterTemplate = function createRegisterTemplate(verifyLink, done) {
+  const type = 'register';
+  emailTemplates(templatesDir, (err, template)=> {
+    if (err) {
+      return done(err);
+    }
+    const templateArgv = {
+      verifyLink,
+    };
+
+    template(type, templateArgv, (templateError, html, text)=> {
+      if (templateError) {
+        return done(templateError);
+      }
+      this.html = html;
+      this.text = text;
+      done(null);
+    });
+  });
+};
+
 export default function(opts = {}) {
   return new Mailer(opts);
 }
