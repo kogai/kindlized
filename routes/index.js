@@ -5,6 +5,7 @@ import register from 'routes/register';
 import author from 'routes/author';
 import mail from 'routes/mail';
 import api from 'routes/api';
+import accountLogin from 'routes/account/login';
 import accountRegister from 'routes/account/register';
 
 router.get('/', (req, res)=> {
@@ -22,6 +23,10 @@ router.get('/', (req, res)=> {
 router.get('/register', register.get);
 router.get('/author/*', author);
 router.post('/mail', mail);
+
+router.get('/account/login', accountLogin.get);
+router.post('/account/login', accountLogin.post);
+router.get('/account/login/success', accountLogin.success.get);
 
 router.get('/account/register', accountRegister.get);
 router.post('/account/register', accountRegister.post);

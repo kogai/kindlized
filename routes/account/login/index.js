@@ -5,6 +5,23 @@ import passPortSerialize from 'routes/account/login/lib/passPortSerialize';
 localPassport.serializeUser( passPortSerialize.serialize );
 localPassport.deserializeUser( passPortSerialize.deSerialize );
 
-module.exports = {
-  localPassport: localPassport,
+export default {
+  get(req, res) {
+    const isLogin = req.session.passport.user;
+    if (isLogin) {
+      return res.redirect(303, '/');
+    }
+    res.render('login', {
+      title: 'ログイン',
+    });
+  },
+  post: localPassport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/account/fail',
+  }),
+  success: {
+    get(req, res) {
+      res.redirect(303, '/');
+    },
+  },
 };
