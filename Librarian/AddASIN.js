@@ -1,19 +1,17 @@
 'use strict';
 
-var util = require('util');
-var Q = require('q');
-var moment = require('moment-timezone');
-var io = require('socket.io-client');
-var socket = io.connect('http://127.0.0.1:' + 5000, { reconnect: true });
+const util = require('util');
+const Q = require('q');
+const moment = require('moment-timezone');
 
-var Librarian = require('Librarian/Librarian');
-var PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
-var log = require('common/log');
+const Librarian = require('Librarian/Librarian');
+const PERIODICAL_DAY = require('common/constant').PERIODICAL_DAY;
+const log = require('common/log');
 
 /**
-@constructor
-@classdesc Librarianクラスの継承クラス<br>AuthorityASINの更新を行う
-@extends Librarian
+* @constructor
+* @classdesc Librarianクラスの継承クラス<br>AuthorityASINの更新を行う
+* @extends Librarian
 **/
 function AddASIN(opts) {
   Librarian.call(this, opts);
@@ -26,12 +24,13 @@ util.inherits(AddASIN, Librarian);
   @param { Object } book - 書籍データのオブジェクト
   @return { Object } modifiedBook 書籍データのオブジェクト
 **/
-AddASIN.prototype._updates = function(book) {
-  var d = Q.defer();
+AddASIN.prototype._updates = function updates(book) {
+  const d = Q.defer();
 
-  var AuthorityASIN, Items;
+  let AuthorityASIN;
+  let Items;
 
-  try  {
+  try {
     Items = book.res.ItemLookupResponse.Items;
     Items.map(function(item) {
       if (item.Item[0].RelatedItems[0].RelationshipType[0] === 'AuthorityTitle') {
@@ -39,18 +38,17 @@ AddASIN.prototype._updates = function(book) {
       }
     });
     log.info('AuthorityASIN 更新:' + book.title);
-    // socket.emit('librarian-addASIN', book);
-  }catch (e) {
+  } catch (error) {
     AuthorityASIN = undefined;
     log.info('AuthorityASIN 未更新:' + book.title);
   }
 
-  var update = {
+  const update = {
     AuthorityASIN: AuthorityASIN,
-    'modifiedLog.AddASINAt': moment()
+    'modifiedLog.AddASINAt': moment(),
   };
 
-  var options = { new: true };
+  const options = { new: true };
 
   this.update(book, update, options, function(err, modifiedBook) {
     if (err) {
@@ -80,8 +78,8 @@ AddASIN.prototype.cron = function() {
   return d.promise;
 };
 
-module.exports = function(opts) {
-  var _opts = opts || {};
+module.exports = function createAddASIN(opts) {
+  const _opts = opts || {};
 
   _opts.conditions = {
     $and: [
@@ -91,21 +89,24 @@ module.exports = function(opts) {
           { AuthorityASIN: [''] },
           { AuthorityASIN: undefined },
           { AuthorityASIN: 'UNDEFINED' },
-          { AuthorityASIN: ['UNDEFINED'] }
-        ]
+          { AuthorityASIN: ['UNDEFINED'] },
+        ],
       },
       {
         $or: [
           { 'modifiedLog.AddASINAt': { $exists: false } },
-          { 'modifiedLog.AddASINAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } }
-        ]
-      }
-    ]
+          { 'modifiedLog.AddASINAt': { '$lte': moment().subtract(PERIODICAL_DAY, 'days') } },
+        ],
+      },
+    ],
   };
 
   _opts.amazonConditions = {
     RelationshipType: 'AuthorityTitle',
-    ResponseGroup: 'RelatedItems'
+    ResponseGroup: 'RelatedItems',
+  };
+  _opts.sort = {
+    'modifiedLog.AddASINAt': 1,
   };
 
   return new AddASIN(_opts);

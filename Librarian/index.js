@@ -21,9 +21,9 @@ const cronTimePerWeek = '0 0 9 * * 5';
 function libraryHandler() {
   const _addBook = AddBook.cron.bind(AddBook)();
   const _repairImg = RepairImg.cron.bind(RepairImg);
-  const _inspectKindlize = InspectKindlize.cron.bind(InspectKindlize);
   const _addAsin = AddASIN.cron.bind(AddASIN);
   const _updateUrl = UpdateUrl.cron.bind(UpdateUrl);
+  const _inspectKindlize = InspectKindlize.cron.bind(InspectKindlize);
 
   Q.when()
   .then(_addBook)

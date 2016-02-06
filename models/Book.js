@@ -27,6 +27,7 @@ const BookSchema = new mongoose.Schema({
     AddASINAt: Date,
     RepairImgAt: Date,
     UpdateUrlAt: Date,
+    updateWordAt: Date,
   },
   isKindlized: Boolean,
   isKindlizedUrl: Boolean,
