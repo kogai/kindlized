@@ -8,11 +8,14 @@ import api from 'routes/api';
 import accountLogin from 'routes/account/login';
 import accountRegister from 'routes/account/register';
 
+import series from 'routes/series';
+
 router.get('/', (req, res)=> {
   const isLogin = req.session.passport.user;
   if (isLogin) {
     res.render('index', {
       title: 'ホーム',
+      entrypoint: 'home',
       isLogin: true,
     });
   } else {
@@ -20,6 +23,7 @@ router.get('/', (req, res)=> {
   }
 });
 
+router.get('/series', series.get);
 router.get('/register', register.get);
 router.get('/author/*', author);
 router.post('/mail', mail);

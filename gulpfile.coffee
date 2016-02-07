@@ -41,10 +41,9 @@ gulp.task 'stylus', ->
 
 gulp.task 'browserify', ->
   browserify
-    entries: ['./client/javascripts/index.coffee']
-    extensions: ['.coffee', '.js']
-  .plugin licensify
-  .transform 'coffeeify'
+    entries: ['./client/app.js']
+    extensions: ['.js']
+  .transform 'babelify'
   .bundle()
   .pipe source('bundle.min.js')
   .pipe gulp.dest './public/javascripts/'

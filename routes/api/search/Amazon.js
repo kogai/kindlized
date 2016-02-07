@@ -1,32 +1,26 @@
-'use strict';
+import _ from 'underscore';
 
-var _ = require('underscore');
+import Operator from 'common/Operator';
+import BookClass from 'common/Book';
 
-var Operator = require('common/Operator');
-var BookCollector = require('classes/Collector')('book');
-var AuthorCollector = require('classes/Collector')('author');
+const bookInstance = BookClass();
+const BookCollector = require('classes/Collector')('book');
+const AuthorCollector = require('classes/Collector')('author');
 
-var log = require('common/log');
+import log from 'common/log';
 
-module.exports = function(req, res) {
-  var query = req.query.query;
-
-  var searchOperator = Operator({
+export default function(req, res) {
+  const query = req.query.query;
+  const searchOperator = Operator({
     type: 'Title',
-    query: query
+    query: query,
   });
 
-  searchOperator.run(function(err, books) {
-
-    books.map(function(book) {
-      return log.info(book.title);
-    });
-
-    if (books) {
-      res.send(books);
-    }else  {
-      res.send([]);
+  searchOperator.run((err, books = [])=> {
+    if (err) {
+      return log.info(err);
     }
+    res.send(books.map((b)=> bookInstance.sanitizeForClient(b)));
 
     // 書籍の登録処理
     BookCollector.saveCollections(books, function(err, savedBooks) {
@@ -57,8 +51,5 @@ module.exports = function(req, res) {
       }
       log.info(savedAuthors);
     });
-
-    searchOperator = null;
-    books = null;
   });
-};
+}

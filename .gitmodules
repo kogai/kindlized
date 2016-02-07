@@ -1,0 +1,3 @@
+[submodule "kindlized-spa"]
+	path = kindlized-spa
+	url = git@github.com:kogai/kindlized-spa.git

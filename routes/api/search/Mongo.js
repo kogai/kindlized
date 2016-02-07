@@ -1,22 +1,20 @@
-'use strict';
+import escape from 'escape-regexp';
+import BookList from 'models/Book';
+import log from 'common/log';
+import BookClass from 'common/Book';
 
-var escape = require('escape-regexp');
+const bookInstance = BookClass();
 
-var BookList = require('models/Book');
-var log = require('common/log');
+export default function(req, res) {
+  const query = escape(req.query.query);
+  const queryRegExp = new RegExp(query);
 
-module.exports = function(req, res) {
-  var query = escape(req.query.query);
-  var queryRegExp = new RegExp(query);
-
-  var conditions = {
-    title: queryRegExp
-  };
-
-  BookList.find(conditions, function(err, books) {
+  BookList.find({
+    title: queryRegExp,
+  }, (err, books)=> {
     if (err) {
       return log.info(err);
     }
-    res.send(books);
+    res.send(books.map((b)=> bookInstance.sanitizeForClient(b)));
   });
-};
+}

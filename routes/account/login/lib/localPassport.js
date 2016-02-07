@@ -9,6 +9,7 @@ const LocalStrategyField = {
 };
 
 function LocalStrategyCallBack(mail, password, done) {
+  console.log(mail, password);
   function fetchUser(mail, password, done) {
     var d = Q.defer();
     modelUser.findOne({ mail: mail }, function(err, user) {
