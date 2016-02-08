@@ -50,6 +50,7 @@ router.get('/api/user/book/:page', api.user.page.get);
 
 router.get('/api/user/series', api.user.series.get);
 router.post('/api/user/series', api.user.series.post);
+router.put('/api/user/series', api.user.series.put);
 router.delete('/api/user/series', api.user.series.delete);
 
 module.exports = router;
