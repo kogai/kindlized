@@ -1,11 +1,22 @@
 machine:
+  services:
+    - docker
   timezone:
-    Asia/Tokyo
-  node:
-    version: 4.2.0
+    - Asia/Tokyo
 
-deployment:
-  staging:
-    branch: develop
-    commands:
-      - ./sh/github.sh
+dependencies:
+  override:
+    - docker info
+    - docker build -t kindlized-client ./client
+    - docker build -t kindlized-server ./server
+
+# test:
+#   override:
+#     - bundle
+#     - bundle exec rspec
+
+# deployment:
+#   staging:
+#     branch: master
+#     commands:
+#       - rm -rf .tmp

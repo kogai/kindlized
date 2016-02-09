@@ -1,0 +1,22 @@
+client:
+  build: ./client
+  # volumes:
+  #   - ./client/font-svgs/:/app/font-svgs
+  #   - ./client/images/:/app/images
+  #   - ./client/javascripts/:/app/javascripts
+  #   - ./client/stylesheets/:/app/stylesheets
+  #   - ./client/tasks/:/app/tasks
+  #   - ./client/views/:/app/views
+
+database:
+  build: ./database
+
+server:
+  build: ./server
+  command: 'scripts/start-server.sh'
+  volumes:
+    - ./server/:/app
+  ports:
+    - "3000:3000"
+  links:
+    - database
