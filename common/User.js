@@ -1,5 +1,3 @@
-'use strict';
-
 const _ = require('underscore');
 const log = require('common/log');
 
@@ -110,23 +108,20 @@ class User {
   @param { Function } done - 完了後に呼ばれるコールバック関数
   **/
   modifiyProfile(property, data, done) {
-    let conditions = { _id: this.userId };
-    let updates = {};
+    const conditions = { _id: this.userId };
+    const updates = {};
     updates[property] = data;
-    let options = {
-      upsert: true
+    const options = {
+      upsert: true,
     };
 
-    this.UserCollections.findOneAndUpdate(conditions, updates, options, function(err, savedUser) {
+    this.UserCollections.findOneAndUpdate(conditions, updates, options, (err)=> {
       if (err) {
         return done(err);
       }
-      done(null, savedUser);
+      done(null);
     });
-
   }
 }
 
-module.exports = function(userId) {
-  return new User(userId);
-};
+export default (userId)=> new User(userId);

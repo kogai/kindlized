@@ -28,7 +28,15 @@ router.get('/verify', (req, res)=> {
 });
 
 router.get('/', (req, res)=> {
-  res.redirect( 303, '/account/register');
+  const isLogin = req.session.passport.user;
+  if (!isLogin) {
+    return res.redirect(303, '/account/login');
+  }
+  res.render('index', {
+    title: 'アカウント',
+    entrypoint: 'account',
+    isLogin: true,
+  });
 });
 
 module.exports = router;

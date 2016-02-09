@@ -17,7 +17,7 @@ module.exports = {
       if (err) {
         return log.info(err);
       }
-      let ret = {};
+      const ret = {};
       ret[props] = user[props];
       res.send(ret);
     });
@@ -27,15 +27,15 @@ module.exports = {
     if (!req.session.passport.user) {
       return res.status(500).send();
     }
-    let user = User(req.session.passport.user);
-    let property = req.body.property;
-    let data = req.body.data;
+    const user = User(req.session.passport.user);
+    const property = req.body.property;
+    const data = req.body.data;
 
-    user.modifiyProfile(property, data, function(err, savedUser) {
+    user.modifiyProfile(property, data, (err)=> {
       if (err) {
         return res.status(500).send('何か間違いが起こっています。');
       }
       res.status(200).send(property + 'の編集に成功しました。');
     });
-  }
+  },
 };
