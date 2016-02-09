@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+require('babel/register');
+
+const cluster = require('cluster');
+const cpus = require('os').cpus();
+const app = require('app.js');
+const sitemap = require('express-sitemap')({ url: 'kindlize.it' });
+
+function main() {
+  if (cluster.isMaster) {
+    return cpus.forEach(()=> {
+      cluster.fork();
+    });
+  }
+
+  app.set('port', process.env.PORT || 3000);
+  sitemap.generate4(app, [
+    '/',
+    '/account/',
+    '/author/',
+  ]);
+  sitemap.XMLtoFile('./public/sitemap.xml');
+
+  const server = app.listen(app.get('port'), ()=> {
+    console.log('Server listening on port ' + server.address().port);
+  });
+}
+
+main();

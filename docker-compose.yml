@@ -1,22 +1,26 @@
 client:
   build: ./client
-  # volumes:
-  #   - ./client/font-svgs/:/app/font-svgs
-  #   - ./client/images/:/app/images
-  #   - ./client/javascripts/:/app/javascripts
-  #   - ./client/stylesheets/:/app/stylesheets
-  #   - ./client/tasks/:/app/tasks
-  #   - ./client/views/:/app/views
+  volumes:
+    - ./client/app/:/kindlized-client/app
+    - ./server/public/:/kindlized-client/public
 
 database:
   build: ./database
 
 server:
   build: ./server
-  command: 'scripts/start-server.sh'
+  command: 'npm start'
   volumes:
-    - ./server/:/app
+    - ./server/:/kindlized-server
   ports:
     - "3000:3000"
   links:
     - database
+  volumes_from:
+    - client
+#     - bundle
+#
+# bundle:
+#   image: busybox
+#   volumes:
+#     - /bundle

@@ -10,9 +10,7 @@ exports.IS_DEVELOPMENT = IS_DEVELOPMENT;
 exports.IS_PRODUCTION = IS_PRODUCTION;
 
 const srcRoot = '.';
-const destRoot = IS_DEVELOPMENT ? '../public' : './.tmp';
-
-exports.builded = './.production';
+const destRoot = './public';
 
 const srcPath = {
   root: srcRoot,
