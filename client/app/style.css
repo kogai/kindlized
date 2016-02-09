@@ -1,0 +1,16 @@
+ul li, ol li {
+  list-style-type: none;
+}
+
+.label {
+  display: inline-block;
+  margin: 2px;
+}
+
+.thumbnail {
+  padding-top: 16px;
+}
+
+.nav-pills > li > a {
+  border-radius: 0 3px 3px 0;
+}
