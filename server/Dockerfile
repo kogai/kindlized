@@ -11,6 +11,6 @@ RUN npm install
 ADD . /kindlized-server
 
 ENV NODE_ENV container
-ENV NODE_PATH /kindlized-server
+ENV NODE_PATH /kindlized-server/
 
-CMD npm start
+CMD npm run dev
