@@ -18,6 +18,7 @@
     "librarian": "NODE_PATH=./ $(npm bin)/node-dev Librarian/",
     "postman": "NODE_PATH=./ $(npm bin)/node-dev Postman/",
     "deploy": "rsync -r --exclude='.git/' --exclude='node_modules' --exclude='logs/' ./ root@128.199.88.174:/vagrant/",
+    "pm2:start": "$(npm bin)/pm2 start --no-daemon pm2.json",
     "pm2:restart": "$(npm bin)/pm2 restart",
     "pm2:info": "$(npm bin)/pm2 info",
     "pm2:list": "$(npm bin)/pm2 list",

@@ -2,53 +2,53 @@
   "apps": [
     {
       "exec_mode": "fork_mode",
-      "script": "/vagrant/bin/www",
+      "script": "/kindlized-server/bin/www",
       "name": "App",
       "node_args": [ "--harmony" ],
       "env": {
         "PORT": 80,
         "NODE_ENV": "production",
-        "NODE_PATH": "/vagrant/"
+        "NODE_PATH": "/kindlized-server/"
       },
-      "error_file": "/vagrant/logs/app-err.log",
-      "out_file": "/vagrant/logs/app-out.log"
+      "error_file": "/kindlized-server/logs/app-err.log",
+      "out_file": "/kindlized-server/logs/app-out.log"
     },
     {
       "exec_mode": "fork_mode",
-      "script": "/vagrant/Librarian/",
+      "script": "/kindlized-server/Librarian/",
       "name": "Librarian",
       "max_memory_restart": "400M",
       "node_args": [ "--harmony" ],
       "env": {
         "NODE_ENV": "production",
-        "NODE_PATH": "/vagrant/"
+        "NODE_PATH": "/kindlized-server/"
       },
-      "error_file": "/vagrant/logs/Librarian-err.log",
-      "out_file": "/vagrant/logs/Librarian-out.log"
+      "error_file": "/kindlized-server/logs/Librarian-err.log",
+      "out_file": "/kindlized-server/logs/Librarian-out.log"
     },
     {
       "exec_mode": "fork_mode",
-      "script": "/vagrant/Bots/",
+      "script": "/kindlized-server/Bots/",
       "name": "Bots",
       "node_args": [ "--harmony" ],
       "env": {
         "NODE_ENV": "production",
-        "NODE_PATH": "/vagrant/"
+        "NODE_PATH": "/kindlized-server/"
       },
-      "error_file": "/vagrant/logs/Bots.err.log",
-      "out_file": "/vagrant/logs/Bots.out.log"
+      "error_file": "/kindlized-server/logs/Bots.err.log",
+      "out_file": "/kindlized-server/logs/Bots.out.log"
     },
     {
       "exec_mode": "fork_mode",
-      "script": "/vagrant/Postman/",
+      "script": "/kindlized-server/Postman/",
       "name": "Postman",
       "node_args": [ "--harmony" ],
       "env": {
         "NODE_ENV": "production",
-        "NODE_PATH": "/vagrant/"
+        "NODE_PATH": "/kindlized-server/"
       },
-      "error_file": "/vagrant/logs/Postman.err.log",
-      "out_file": "/vagrant/logs/Postman.out.log"
+      "error_file": "/kindlized-server/logs/Postman.err.log",
+      "out_file": "/kindlized-server/logs/Postman.out.log"
     }
   ]
 }

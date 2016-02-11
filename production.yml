@@ -2,15 +2,23 @@ client:
   extends:
     file: docker-compose.yml
     service: client
-  command: ['npm', 'run', build]
+  command: ['npm', 'run', 'build']
 
-database:
+mongo:
+  build: ./mongo
+  links:
+    - mongod
+  environment:
+  - DOCKER_IP=${DOCKER_IP}
+
+mongod:
   extends:
     file: docker-compose.yml
-    service: database
+    service: mongod
 
 server:
   build: ./server
+  command: ['npm', 'run', 'pm2:start']
   ports:
     - "80:3000"
   links:
