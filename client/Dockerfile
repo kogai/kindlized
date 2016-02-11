@@ -13,4 +13,4 @@ ADD . /kindlized-client
 ENV NODE_ENV container
 ENV NODE_PATH /kindlized-client
 
-ENTRYPOINT ["npm", "run", "dev"]
+CMD ["npm", "run", "dev"]

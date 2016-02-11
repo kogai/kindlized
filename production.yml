@@ -1,27 +1,16 @@
 client:
-  build: ./client
-  volumes:
-    - ./client/app/:/kindlized-client/app
-    - ./client/images/:/kindlized-client/images
-    - ./client/tasks/:/kindlized-client/tasks
-    - ./server/public/:/kindlized-client/public
+  extends:
+    file: docker-compose.yml
+    service: client
+  command: ['npm', 'run', build]
 
 database:
-  image: mongo:3.0.9
-  ports:
-    - "27017:27017"
-
-backup:
-  build: ./backup
-  links:
-    - database
-  environment:
-  - DOCKER_IP=${DOCKER_IP}
+  extends:
+    file: docker-compose.yml
+    service: database
 
 server:
   build: ./server
-  volumes:
-    - ./server/:/kindlized-server
   ports:
     - "80:3000"
   links:
@@ -43,9 +32,3 @@ server:
   - KINDLIZED_MONGODB=mongodb://${DOCKER_IP}:27017/kindlized
   volumes_from:
     - client
-    - modules
-
-modules:
-  image: busybox
-  volumes:
-    - /node_modules
