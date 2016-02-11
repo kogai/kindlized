@@ -3,9 +3,7 @@
 import { dom } from 'deku';
 import {
   createStore,
-  // applyMiddleware,
 } from 'redux';
-// import reduxThunk from 'redux-thunk';
 
 import rootReducer from 'app/reducers/rootReducer';
 
@@ -13,9 +11,11 @@ const { createRenderer } = dom;
 
 export function renderIntoDocument(instance) {
   const store = createStore(rootReducer);
-  // const store = createStore(rootReducer, applyMiddleware(reduxThunk));
   const render = createRenderer(document.body, store.dispatch);
-  return render(instance, store.getState());
+  return {
+    node: render(instance, store.getState()),
+    store,
+  };
 }
 
 

@@ -9,13 +9,13 @@ dependencies:
     - docker build -t kindlized-client ./client
     - docker build -t kindlized-server ./server
 
-# test:
-#   override:
-#     - bundle
-#     - bundle exec rspec
+test:
+  override:
+    - docker run -t kindlized-client npm test
+    # - docker run -t kindlized-server npm test
 
-# deployment:
-#   staging:
-#     branch: master
-#     commands:
-#       - rm -rf .tmp
+deployment:
+  staging:
+    branch: master
+    commands:
+      - echo DEPLOYMENT PROCESS START...

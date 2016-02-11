@@ -6,7 +6,7 @@ const mock = {
 };
 
 describe('Test', ()=> {
-  it('Should work', ()=> {
+  it('Should: work', ()=> {
     assert(mock.mock.mock === true);
   });
 });

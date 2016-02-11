@@ -8,8 +8,10 @@
     "dev": "npm run gulp dev",
     "build": "npm run gulp build",
     "gulp": "$(npm bin)/gulp",
+    "lint": "$(npm bin)/eslint .",
     "karma": "$(npm bin)/karma start karma.conf.js",
-    "test": "npm run karma"
+    "test": "npm run test:unit",
+    "test:unit": "npm run karma"
   },
   "author": "",
   "license": "ISC",
