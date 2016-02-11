@@ -2,18 +2,21 @@ client:
   build: ./client
   volumes:
     - ./client/app/:/kindlized-client/app
+    - ./client/images/:/kindlized-client/images
+    - ./client/tasks/:/kindlized-client/tasks
     - ./server/public/:/kindlized-client/public
+  volumes_from:
+    - modules
 
 database:
   build: ./database
 
 server:
   build: ./server
-  command: 'npm start'
   volumes:
     - ./server/:/kindlized-server
   ports:
-    - "3000:3000"
+    - "80:3000"
   links:
     - database
   environment:
@@ -34,9 +37,9 @@ server:
   - KINDLIZED_MONGODB=${KINDLIZED_MONGODB}
   volumes_from:
     - client
-#     - bundle
+    - modules
 
-# bundle:
-#   image: busybox
-#   volumes:
-#     - /bundle
+modules:
+  image: busybox
+  volumes:
+    - /node_modules

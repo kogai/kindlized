@@ -17,6 +17,7 @@ html
     .container-fluid
       -if(isServer)
         include header
+      #is-login(data-islogin='#{isLogin}')
       block content
     noscript
       iframe(src='//www.googletagmanager.com/ns.html?id=GTM-T37HW2', height='0', width='0', style='display:none;visibility:hidden')

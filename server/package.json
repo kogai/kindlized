@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "bin/www",
-    "dev": "$(npm bin)/node-dev bin/www",
+    "dev": "$(npm bin)/nodemon --legacy-watch bin/www",
     "gulp": "$(npm bin)/gulp",
     "build": "$(npm bin)/browserify client/app.js -t babelify -o public/javascripts/bundle.min.js",
     "test": "npm run test:unit",
@@ -96,7 +96,7 @@
     "espower-babel": "^3.3.0",
     "lodash": "^3.10.1",
     "nock": "^2.15.0",
-    "node-dev": "^2.7.1",
+    "nodemon": "^1.8.1",
     "page": "^1.6.4",
     "power-assert": "^1.1.0",
     "supertest": "^0.15.0",

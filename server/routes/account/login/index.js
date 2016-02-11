@@ -13,7 +13,8 @@ export default {
     }
     res.render('login', {
       title: 'ログイン',
-      isServer: true,
+      entrypoint: 'with-server',
+      isLogin: false,
     });
   },
   post: localPassport.authenticate('local', {

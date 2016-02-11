@@ -1,10 +1,11 @@
 import {
+  INSPECT_LOGIN_STATE,
   LOG_OUT, EMAIL_RECIEVE,
   EMAIL_INPUT, EMAIL_MODIFY,
 } from 'app/actionCreators/actionTypes';
 
 const initialState = {
-  isLogin: true,
+  isLogin: false,
   mailAddress: '',
   textContainer: '',
   isValid: false,
@@ -35,6 +36,11 @@ const initialState = {
 
 export default function editReducer(state = initialState, action) {
   switch (action.type) {
+    case INSPECT_LOGIN_STATE:
+      return Object.assign({}, state, {
+        isLogin: action.body.isLogin,
+      });
+
     case EMAIL_RECIEVE:
       return Object.assign({}, state, {
         mailAddress: action.body.mailAddress,

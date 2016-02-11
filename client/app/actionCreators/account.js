@@ -2,6 +2,7 @@ import 'whatwg-fetch';
 import validator from 'validator';
 
 import {
+  INSPECT_LOGIN_STATE,
   LOG_OUT, EMAIL_RECIEVE,
   EMAIL_INPUT, EMAIL_MODIFY,
 } from 'app/actionCreators/actionTypes';
@@ -15,6 +16,16 @@ export const logout = (dispatch)=> ()=> {
     type: LOG_OUT,
   }))
   .catch((error)=> console.log(error));
+};
+
+export const inspectLoginState = (dispatch)=> ()=> {
+  const isLogin = document.getElementById('is-login').dataset.islogin === 'true';
+  dispatch({
+    type: INSPECT_LOGIN_STATE,
+    body: {
+      isLogin,
+    },
+  });
 };
 
 export const emailFetch = (dispatch)=> ()=> {

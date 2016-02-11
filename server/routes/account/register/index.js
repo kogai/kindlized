@@ -88,6 +88,7 @@ export default {
     }
     res.render('register', {
       title: 'アカウント登録',
+      entrypoint: 'with-server',
       message: '',
     });
   },

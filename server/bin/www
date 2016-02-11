@@ -7,21 +7,14 @@ const cpus = require('os').cpus();
 const app = require('app.js');
 const sitemap = require('express-sitemap')({ url: 'kindlize.it' });
 
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
 function forkWorker() {
   const worker = cluster.fork();
   worker.send({ workerId: worker.id });
 }
 
-function main() {
-  if (cluster.isMaster) {
-    cluster.on('exit', (worker, code, signal) => {
-      console.log(`Worker ${worker.id} died with code ${signal || code}.\nRestarting...`);
-      forkWorker();
-    });
-
-    return cpus.forEach(forkWorker);
-  }
-
+function startServer() {
   app.set('port', process.env.PORT || 3000);
   sitemap.generate4(app, [
     '/',
@@ -36,6 +29,18 @@ function main() {
       console.log(`Server listening with worker-id ${msg.workerId}`);
     }
   });
+}
+
+function main() {
+  if (IS_PRODUCTION && cluster.isMaster) {
+    cluster.on('exit', (worker, code, signal) => {
+      console.log(`Worker ${worker.id} died with code ${signal || code}.\nRestarting...`);
+      forkWorker();
+    });
+
+    return cpus.forEach(forkWorker);
+  }
+  startServer();
 }
 
 main();

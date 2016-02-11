@@ -1,19 +1,18 @@
 const spawn = require('child_process').spawn;
-const command = process.argv[2];
+const target = process.argv[3];
+const baseCommand = process.argv[4] === 'install' ? [] : ['run'];
+const commands = baseCommand.concat(process.argv.slice(4));
 
-const client = spawn('npm', ['run', command], { cwd: './client' });
-const server = spawn('npm', ['run', command], { cwd: './server' });
+const spawned = spawn('npm', commands, { cwd: `./${target}` });
 
-[client, server].forEach((p)=> {
-  p.stdout.on('data', (data) => {
-    process.stdout.write(data);
-  });
+spawned.stdout.on('data', (data) => {
+  process.stdout.write(data);
+});
 
-  p.stderr.on('data', (data) => {
-    process.stderr.write(data);
-  });
+spawned.stderr.on('data', (data) => {
+  process.stderr.write(data);
+});
 
-  p.on('exit', (code) => {
-    console.log(`Child exited with code ${code}`);
-  });
+spawned.on('exit', (code) => {
+  console.log(`Child exited with code ${code}`);
 });

@@ -2,8 +2,8 @@
 
 import { element } from 'deku';
 import AccountButton from 'app/components/AccountButton';
+import { inspectLoginState } from 'app/actionCreators/account';
 import { objectToCss } from 'app/utils';
-import { logout } from 'app/actionCreators/account';
 
 const headerStyle = objectToCss({
   display: 'flex',
@@ -35,6 +35,10 @@ const listStyle = objectToCss({
   marginLeft: '10px',
 });
 
+function onCreate({ dispatch }) {
+  inspectLoginState(dispatch)();
+}
+
 function render({ context }) {
   return (
     <header style={ headerStyle }>
@@ -61,5 +65,6 @@ function render({ context }) {
 }
 
 export default {
+  onCreate,
   render,
 };
