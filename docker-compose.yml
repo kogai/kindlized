@@ -9,7 +9,16 @@ client:
     - modules
 
 database:
-  build: ./database
+  image: mongo:3.0.9
+  ports:
+    - "27017:27017"
+
+backup:
+  build: ./backup
+  links:
+    - database
+  environment:
+  - DB_HOST=${DOCKER_IP}
 
 server:
   build: ./server
@@ -34,7 +43,7 @@ server:
   - KINDLIZED_SLACK=${KINDLIZED_SLACK}
   - KINDLIZED_SESSION=${KINDLIZED_SESSION}
   - KINDLIZED_NEWRELIC=${KINDLIZED_NEWRELIC}
-  - KINDLIZED_MONGODB=${KINDLIZED_MONGODB}
+  - KINDLIZED_MONGODB=mongodb://${DOCKER_IP}:27017/kindlized
   volumes_from:
     - client
     - modules

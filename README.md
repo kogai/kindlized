@@ -13,5 +13,5 @@ Amazonに出品されている物理書籍のKindle化(kindlized)を調べるサ
 開発用サーバーの起動
 
 ```sh
-vagrant up
+docker-compose up server client
 ```

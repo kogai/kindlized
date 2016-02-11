@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npm run gulp",
     "dev": "npm run gulp dev",
+    "build": "npm run gulp build",
     "gulp": "$(npm bin)/gulp",
     "karma": "$(npm bin)/karma start karma.conf.js",
     "test": "npm run karma"
