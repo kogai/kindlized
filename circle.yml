@@ -6,8 +6,18 @@ machine:
 dependencies:
   override:
     - docker info
+    - mkdir -p ~/docker;
+
+    - if [[ -e ~/docker/image.client.tar ]]; then docker load -i ~/docker/image.client.tar; fi
     - docker build -t kindlized-client ./client
+    - docker save circleci/kindlized-client > ~/docker/image.client.tar
+
+    - if [[ -e ~/docker/image.server.tar ]]; then docker load -i ~/docker/image.server.tar; fi
     - docker build -t kindlized-server ./server
+    - docker save circleci/kindlized-server > ~/docker/image.server.tar
+
+  cache_directories:
+    - "~/docker"
 
 test:
   override:
