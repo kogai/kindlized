@@ -6,49 +6,58 @@ import { element } from 'deku';
 
 import { renderIntoDocument, createFakeEvent } from 'test/helpers/simulateDOM';
 import InputBox from 'app/components/InputBox';
-import { editSeries, editInput } from 'app/actionCreators/edit';
+import { searchClick, searchInput } from 'app/actionCreators/search';
 
 describe('Components: InputBox', ()=> {
   const iconTypeMock = 'edit';
   const nameMock = 'nameMock';
-  let node, button, input, clickSpy, onInputSpy;
+  let node, store, button, input, clickSpy, onInputSpy;
   beforeEach(()=> {
-    clickSpy = sinon.spy(editSeries);
-    onInputSpy = sinon.spy(editInput);
-    node = renderIntoDocument(
+    clickSpy = sinon.spy(searchClick);
+    onInputSpy = sinon.spy(searchInput);
+    const root = renderIntoDocument(
       <InputBox
         name={ nameMock }
+        editable={ {} }
         onClick={ clickSpy } onInput={ onInputSpy }
         type={ iconTypeMock }
+        icon={ iconTypeMock }
       />
     );
+    node = root.node;
+    store = root.store;
 
     input = node.querySelector('input');
     button = node.querySelector('button');
   });
 
-  it('Should render name prop', ()=> {
+  it('Should: Render name prop', ()=> {
     assert(button.innerHTML.match(nameMock));
     assert(button.className.match('btn'));
   });
 
-  it('Can fire Action with onClick', ()=> {
+  it('Can: Fire Action with onClick', ()=> {
     button.click();
     assert(clickSpy.called);
   });
 
-  it('Can Input text', ()=> {
+  it('Can: Input text', ()=> {
     const text = 'abcdef';
     const inputEvent = createFakeEvent('input', input, text);
     input.dispatchEvent(inputEvent);
     assert(onInputSpy.called);
   });
 
-  it.only('Should text inputed is delete when onClick called', ()=> {
-
+  it('Should: Reset inputed text when onClick called', ()=> {
+    const text = 'abcdef';
+    const inputEvent = createFakeEvent('input', input, text);
+    input.dispatchEvent(inputEvent);
+    assert(store.getState().search.body === 'abcdef');
+    button.click();
+    assert(store.getState().search.body === '');
   });
 
   /*
-  it.only('Should text inputed pass to onClick', ()=> {});
+  it.only('Should: text inputed pass to onClick', ()=> {});
   */
 });

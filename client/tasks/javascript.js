@@ -9,6 +9,7 @@ const merge = require('merge-stream');
 const config = require('tasks/config');
 const srcPath = config.srcPath;
 const destPath = config.destPath;
+const IS_DEVELOPMENT = config.IS_DEVELOPMENT;
 
 function handleErrors() {
   const args = Array.prototype.slice.call(arguments);
@@ -24,13 +25,14 @@ module.exports = function javascript() {
     'home',
     'series',
     'account',
+    'with-server',
   ];
 
-  const bundles$ = bundles.map((bundle)=> {
-    const b = browserify({
+  const bundles$ = bundles.map((bundle)=> (
+    browserify({
       entries: `${srcPath.entries}/${bundle}.js`,
       extensions: ['.js'],
-      debug: process.env.NODE_ENV !== 'production',
+      debug: IS_DEVELOPMENT,
     })
     .transform('babelify')
     .transform('envify')
@@ -38,10 +40,8 @@ module.exports = function javascript() {
     .on('error', handleErrors)
     .pipe(plumber())
     .pipe(source(`${bundle}.bundle.min.js`))
-    .pipe(gulp.dest(destPath.app));
-
-    return b;
-  });
+    .pipe(gulp.dest(destPath.app))
+  ));
 
   return merge(bundles$).pipe(connect.reload());
 };

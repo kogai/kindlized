@@ -110,6 +110,7 @@ export default function(req, res) {
       const title = `${author.name}先生のKindle化された著書`;
       res.render('author', {
         title: title,
+        entrypoint: 'with-server',
         description: `${title}の一覧ページです`,
         books: safeImgBooks,
         isLogined: isLogined,

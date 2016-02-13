@@ -5,7 +5,7 @@ import { logout } from 'app/actionCreators/account';
 
 function render({ dispatch, props }) {
   return (
-    <li style={ props.style }>
+    <li class="Header-menu__list">
     {
       props.methodName ? (
         <button onClick={ logout(dispatch) } class={ `btn btn-${props.class}` }>

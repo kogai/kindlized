@@ -2,21 +2,10 @@
 
 import { element } from 'deku';
 
-// import { editInput } from 'app/actionCreators/edit';
 import { toggleSeries, editSeries, inputEditSeries, deleteSeries } from 'app/actionCreators/series';
 import { objectToCss } from 'app/utils';
 
 import InputBox from 'app/components/InputBox';
-
-const listStyle = objectToCss({
-  display: 'flex',
-  alignItems: 'center',
-});
-
-const buttonsStyle = objectToCss({
-  flex: 2,
-  textAlign: 'right',
-});
 
 const buttonStyle = objectToCss({
   marginLeft: '6px',
@@ -37,9 +26,9 @@ function render({ dispatch, props }) {
           type="edit"
           icon="edit"
         /> :
-        <div style={ listStyle }>
-          { props.name }
-          <div style={ buttonsStyle }>
+        <div class="Series-list">
+          <div class="Series-list__title">{ props.name }</div>
+          <div class="Series-list__buttons">
             <button
               style={ buttonStyle } class="btn btn-default btn-sm"
               onClick={ toggleSeries(dispatch, props) }

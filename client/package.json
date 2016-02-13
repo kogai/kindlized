@@ -6,9 +6,12 @@
   "scripts": {
     "start": "npm run gulp",
     "dev": "npm run gulp dev",
+    "build": "npm run gulp build",
     "gulp": "$(npm bin)/gulp",
+    "lint": "$(npm bin)/eslint .",
     "karma": "$(npm bin)/karma start karma.conf.js",
-    "test": "npm run karma"
+    "test": "npm run test:unit",
+    "test:unit": "npm run karma"
   },
   "author": "",
   "license": "ISC",
@@ -58,7 +61,6 @@
     "redux-thunk": "^1.0.3",
     "run-sequence": "^1.1.5",
     "sinon": "^1.17.3",
-    "superagent": "^1.7.2",
     "uglify": "^0.1.5",
     "validator": "^4.7.1",
     "vinyl-source-stream": "^1.1.0",

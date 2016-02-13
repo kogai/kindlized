@@ -1,11 +1,31 @@
 machine:
-  timezone:
-    Asia/Tokyo
-  node:
-    version: 4.2.0
+  services:
+    - docker
+  timezone: Asia/Tokyo
+
+dependencies:
+  override:
+    - docker info
+    - mkdir -p ~/docker;
+
+    - if [[ -e ~/docker/image.client.tar ]]; then docker load -i ~/docker/image.client.tar; fi
+    - docker build -t kindlized-client ./client
+    - docker save -t kindlized-client > ~/docker/image.client.tar
+
+    - if [[ -e ~/docker/image.server.tar ]]; then docker load -i ~/docker/image.server.tar; fi
+    - docker build -t kindlized-server ./server
+    - docker save -t kindlized-server > ~/docker/image.server.tar
+
+  cache_directories:
+    - "~/docker"
+
+test:
+  override:
+    - docker run -t kindlized-client npm test
+    - docker run -t kindlized-server npm test
 
 deployment:
   staging:
-    branch: develop
+    branch: master
     commands:
-      - ./sh/github.sh
+      - echo DEPLOYMENT PROCESS START...

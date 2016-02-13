@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+require('babel/register');
+
+const app = require('app.js');
+const sitemap = require('express-sitemap')({ url: 'kindlize.it' });
+
+
+function main() {
+  app.set('port', process.env.PORT || 3000);
+  sitemap.generate4(app, [
+    '/',
+    '/account/',
+    '/author/',
+  ]);
+  sitemap.XMLtoFile('./public/sitemap.xml');
+
+  app.listen(app.get('port'));
+  process.on('message', (msg)=> {
+    if (msg.workerId) {
+      console.log(`Server listening with worker-id ${msg.workerId}`);
+    }
+  });
+}
+
+main();

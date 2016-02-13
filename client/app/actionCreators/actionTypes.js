@@ -25,4 +25,5 @@ export const EMAIL_RECIEVE = 'EMAIL_RECIEVE';
 export const EMAIL_INPUT = 'EMAIL_INPUT';
 export const EMAIL_MODIFY = 'EMAIL_MODIFY';
 
+export const INSPECT_LOGIN_STATE = 'INSPECT_LOGIN_STATE';
 export const LOG_OUT = 'LOG_OUT';

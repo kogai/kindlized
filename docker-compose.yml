@@ -1,0 +1,45 @@
+client:
+  build: ./client
+  volumes:
+    - ./client/app/:/kindlized-client/app
+    - ./client/images/:/kindlized-client/images
+    - ./client/tasks/:/kindlized-client/tasks
+    - ./server/public/:/kindlized-client/public
+
+mongo:
+  build: ./mongo
+  links:
+    - mongod
+  environment:
+  - DOCKER_IP=${DOCKER_IP}
+
+mongod:
+  image: mongo:3.0.9
+  ports:
+    - "27017:27017"
+
+server:
+  build: ./server
+  volumes:
+    - ./server/:/kindlized-server
+  ports:
+    - "80:3000"
+  links:
+    - mongod
+  environment:
+  - KINDLIZED_AWS_ACCESS_KEY_ID=${KINDLIZED_AWS_ACCESS_KEY_ID}
+  - KINDLIZED_AWS_SECRET_KEY_ID=${KINDLIZED_AWS_SECRET_KEY_ID}
+  - KINDLIZED_AWS_SSSOCIATES_ID=${KINDLIZED_AWS_SSSOCIATES_ID}
+  - KINDLIZED_TW_CONSUMER_KEY=${KINDLIZED_TW_CONSUMER_KEY}
+  - KINDLIZED_TW_CONSUMER_SECRET=${KINDLIZED_TW_CONSUMER_SECRET}
+  - KINDLIZED_TW_CALLBACK=${KINDLIZED_TW_CALLBACK}
+  - KINDLIZED_TW_ACCESS_TOKEN=${KINDLIZED_TW_ACCESS_TOKEN}
+  - KINDLIZED_TW_ACCESS_TOKEN_SECRET=${KINDLIZED_TW_ACCESS_TOKEN_SECRET}
+  - KINDLIZED_GMAIL_USER=${KINDLIZED_GMAIL_USER}
+  - KINDLIZED_GMAIL_PASSWORD=${KINDLIZED_GMAIL_PASSWORD}
+  - KINDLIZED_MANDRILL=${KINDLIZED_MANDRILL}
+  - KINDLIZED_SLACK=${KINDLIZED_SLACK}
+  - KINDLIZED_SESSION=${KINDLIZED_SESSION}
+  - KINDLIZED_MONGODB=mongodb://${DOCKER_IP}:27017/kindlized
+  volumes_from:
+    - client

@@ -1,5 +1,5 @@
 import 'whatwg-fetch';
-
+import Promise from 'bluebird';
 import { SEARCH_INPUT, SEARCH_CLICK, SEARCH_RECIEVE } from 'app/actionCreators/actionTypes';
 
 function requestPromise(endpoint, input, dispatch) {
