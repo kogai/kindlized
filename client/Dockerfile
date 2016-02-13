@@ -11,6 +11,8 @@ RUN npm install
 ADD . /kindlized-client
 
 ENV NODE_ENV container
-ENV NODE_PATH /kindlized-client
+ENV NODE_PATH /kindlized-client/
+
+RUN npm run build
 
 CMD ["npm", "run", "dev"]

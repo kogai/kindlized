@@ -10,11 +10,11 @@ dependencies:
 
     - if [[ -e ~/docker/image.client.tar ]]; then docker load -i ~/docker/image.client.tar; fi
     - docker build -t kindlized-client ./client
-    - docker save circleci/kindlized-client > ~/docker/image.client.tar
+    - docker save -t kindlized-client > ~/docker/image.client.tar
 
     - if [[ -e ~/docker/image.server.tar ]]; then docker load -i ~/docker/image.server.tar; fi
     - docker build -t kindlized-server ./server
-    - docker save circleci/kindlized-server > ~/docker/image.server.tar
+    - docker save -t kindlized-server > ~/docker/image.server.tar
 
   cache_directories:
     - "~/docker"
@@ -22,7 +22,7 @@ dependencies:
 test:
   override:
     - docker run -t kindlized-client npm test
-    # - docker run -t kindlized-server npm test
+    - docker run -t kindlized-server npm test
 
 deployment:
   staging:

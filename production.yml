@@ -1,8 +1,5 @@
 client:
-  extends:
-    file: docker-compose.yml
-    service: client
-  command: ['npm', 'run', 'build']
+  build: ./client
 
 mongo:
   build: ./mongo
@@ -12,18 +9,16 @@ mongo:
   - DOCKER_IP=${DOCKER_IP}
 
 mongod:
-  extends:
-    file: docker-compose.yml
-    service: mongod
-  restart: always
+  image: mongo:3.0.9
+  ports:
+    - "27017:27017"
 
 server:
   build: ./server
-  command: ['npm', 'run', 'pm2:start']
   ports:
     - "80:3000"
   links:
-    - database
+    - mongod
   environment:
   - KINDLIZED_AWS_ACCESS_KEY_ID=${KINDLIZED_AWS_ACCESS_KEY_ID}
   - KINDLIZED_AWS_SECRET_KEY_ID=${KINDLIZED_AWS_SECRET_KEY_ID}
@@ -41,4 +36,6 @@ server:
   - KINDLIZED_MONGODB=mongodb://${DOCKER_IP}:27017/kindlized
   volumes_from:
     - client
+  command: ['npm', 'run', 'pm2:start']
   restart: always
+

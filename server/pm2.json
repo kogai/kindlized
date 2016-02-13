@@ -6,7 +6,7 @@
       "name": "App",
       "node_args": [ "--harmony" ],
       "env": {
-        "PORT": 80,
+        "PORT": 3000,
         "NODE_ENV": "production",
         "NODE_PATH": "/kindlized-server/"
       },
