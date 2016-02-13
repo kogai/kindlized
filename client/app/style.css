@@ -20,6 +20,13 @@ ul li, ol li {
   border-radius: 0;
 }
 
+@media screen and (max-device-width: 640px) {
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 /** Header */
 
 .Header {
@@ -43,7 +50,7 @@ ul li, ol li {
 
 .Header-menu {
   flex: 2;
-  text-align: left;
+  text-align: right;
   padding-right: 10px;
 }
 
@@ -131,4 +138,12 @@ ul li, ol li {
 .Series-list__buttons {
   flex: 1;
   text-align: right;
+}
+
+
+/** Pagenation */
+
+.Pagenation {
+  margin-bottom: 10px;
+  text-align: center;
 }

@@ -7,6 +7,7 @@ then
   echo ""
   echo "rmiall - Remove all the docker images."
   echo "clean - Remove all worthless images like old cache."
+  echo "deploy Build asset files and deploy."
   echo "npm [server/client] [command] - run npm command."
   echo "exit - Stop and Remove Docker Processes. Run this command when you quit."
   echo ""
@@ -20,6 +21,9 @@ rmiall) echo "Removing All the Docker Images"
     ;;
 clean) echo "Removing All Worthless Images"
     sh scripts/clean.sh
+    ;;
+deploy) echo "deploy Build asset files and deploy."
+    scripts/deploy.sh
     ;;
 npm) echo "run npm command"
     node scripts/npm $*

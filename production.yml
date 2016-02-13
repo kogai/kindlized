@@ -34,8 +34,6 @@ server:
   - KINDLIZED_SLACK=${KINDLIZED_SLACK}
   - KINDLIZED_SESSION=${KINDLIZED_SESSION}
   - KINDLIZED_MONGODB=mongodb://${DOCKER_IP}:27017/kindlized
-  volumes_from:
-    - client
   command: ['npm', 'run', 'pm2:start']
   restart: always
 

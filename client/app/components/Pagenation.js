@@ -1,17 +1,11 @@
 /** @jsx element */
 
 import { element } from 'deku';
-import { objectToCss } from 'app/utils';
-
 import { fetchBooks } from 'app/actionCreators/books';
-
-const pagenationStyle = objectToCss({
-  textAlign: 'center',
-});
 
 function render({ context, dispatch }) {
   return (
-    <div style={ pagenationStyle }>
+    <div class="Pagenation">
       <ul class="btn-group">
         {
           context.page.pagenation.map((p)=> (
