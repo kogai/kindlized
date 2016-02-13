@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
-'use strict';
-
 require('babel/register');
 
 const debug = require('debug')('init');
 const app = require('app.js');
 const sitemap = require('express-sitemap')({
-  url: "kindlize.it"
+  url: 'kindlize.it',
 });
 
 app.set('port', process.env.PORT || 3000);
@@ -19,6 +17,6 @@ sitemap.generate4(app, [
 ]);
 sitemap.XMLtoFile('./public/sitemap.xml');
 
-const server = app.listen(app.get('port'), function() {
+const server = app.listen(app.get('port'), ()=> {
   debug('Express server listening on port ' + server.address().port);
 });

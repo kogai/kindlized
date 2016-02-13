@@ -1,0 +1,49 @@
+{
+  "extends": "airbnb",
+  "plugins": ["deku"],
+  "ecmaFeatures": {
+    "jsx": true
+  },
+  "env": {
+    "mocha": true
+  },
+  "rules": {
+    "deku/display-name": 1,
+    "deku/jsx-boolean-value": 1,
+    "deku/jsx-max-props-per-line": [
+      1, "maximum": 3
+    ],
+    "deku/jsx-no-duplicate-props": 1,
+    "deku/jsx-no-undef": 1,
+    "deku/jsx-quotes": 1,
+    "deku/jsx-uses-deku": 1,
+    "deku/jsx-uses-vars": 1,
+    "deku/no-danger": 1,
+    "deku/no-did-mount-set-state": 1,
+    "deku/no-did-update-set-state": 1,
+    "deku/no-multi-comp": 1,
+    "deku/no-unknown-property": 1,
+    "react/no-unknown-property": 0,
+    "react/prop-types": 0,
+    "deku/prop-types": 1,
+    "deku/deku-in-jsx-scope": 1,
+    "deku/require-extension": 1,
+    "deku/self-closing-comp": 1,
+    "deku/sort-comp": 1,
+    "deku/wrap-multilines": 1,
+    "camelcase": 0,
+    "no-console": 0,
+    "no-alert": 0,
+    "one-var": 0,
+    "arrow-spacing": [
+      2,
+      { "before": false, "after": true }
+    ],
+    "id-length": [
+      0,
+      {
+        "exceptions": ["_", "$", "i", "j", "k", "b"]
+      }
+    ]
+  }
+}

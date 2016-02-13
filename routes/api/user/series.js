@@ -81,6 +81,35 @@ export default {
     });
   },
 
+  put(req, res) {
+    const userSession = req.session.passport.user;
+    if (!userSession) {
+      return res.status(500).send();
+    }
+
+    const beforeEdit = req.body.name;
+    const afterEdit = req.body.textContainer;
+    const saveSeries = Promise.promisify(Series.saveSeries.bind(Series));
+    const findOne = Promise.promisify(UserModel.findOne.bind(UserModel));
+    const findOneAndUpdate = Promise.promisify(UserModel.findOneAndUpdate.bind(UserModel));
+
+    saveSeries(beforeEdit)
+    .then(()=> findOne({ _id: userSession }))
+    .then((user)=> {
+      const update = {
+        seriesList: user.seriesList
+          .map((s)=> (
+            s.seriesKeyword === beforeEdit ?
+            { seriesKeyword: afterEdit } : s
+          )),
+      };
+      return findOneAndUpdate({ _id: userSession }, update);
+    })
+    .then(()=> findOne({ _id: userSession }))
+    .then((user)=> res.status(200).send(user.seriesList))
+    .catch((err)=> res.status(500).send(err));
+  },
+
   delete(req, res) {
     const userSession = req.session.passport.user;
     if (!userSession) {

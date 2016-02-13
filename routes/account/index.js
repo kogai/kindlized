@@ -1,21 +1,8 @@
 import express from 'express';
 const router = express.Router();
 
-import {localPassport} from 'routes/account/login';
-
 const UserCollections = require('models/User');
 const Utils = require('common/Utils')();
-
-router.get('/login/success', (req, res)=> {
-  res.redirect(303, '/');
-});
-
-router.post('/login',
-  localPassport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/account/fail',
-  })
-);
 
 router.post('/logout', (req, res)=> {
   delete req.session.passport.user;
@@ -40,18 +27,16 @@ router.get('/verify', (req, res)=> {
   });
 });
 
-router.get('/login', (req, res)=> {
-  const isLogin = req.session.passport.user;
-  if (isLogin) {
-    return res.redirect(303, '/');
-  }
-  res.render('login', {
-    title: 'ログイン',
-  });
-});
-
 router.get('/', (req, res)=> {
-  res.redirect( 303, '/account/register');
+  const isLogin = req.session.passport.user;
+  if (!isLogin) {
+    return res.redirect(303, '/account/login');
+  }
+  res.render('index', {
+    title: 'アカウント',
+    entrypoint: 'account',
+    isLogin: true,
+  });
 });
 
 module.exports = router;

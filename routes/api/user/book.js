@@ -60,7 +60,7 @@ export default {
       return res.status(500).send();
     }
     const user = User(req.session.passport.user);
-    const book = req.body.newBook;
+    const book = req.body;
     user.saveBook(book, (err, savedUser, registeredBook)=> {
       if (err) {
         return log.info(err);
@@ -69,7 +69,7 @@ export default {
         return log.info(savedUser);
       }
       res.send({
-        newBook: Book.sanitizeForClient(registeredBook),
+        book: Book.sanitizeForClient(registeredBook),
       });
     });
   },
@@ -79,7 +79,8 @@ export default {
       return res.status(500).send();
     }
     const user = User(req.session.passport.user);
-    const deleteBookId = req.query.deleteBookId;
+    console.log(req.query);
+    const deleteBookId = req.query._id;
     user.reduceBook(deleteBookId, (err)=> {
       if (err) {
         return log.info(err);

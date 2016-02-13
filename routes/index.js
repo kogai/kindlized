@@ -5,13 +5,17 @@ import register from 'routes/register';
 import author from 'routes/author';
 import mail from 'routes/mail';
 import api from 'routes/api';
+import accountLogin from 'routes/account/login';
 import accountRegister from 'routes/account/register';
+
+import series from 'routes/series';
 
 router.get('/', (req, res)=> {
   const isLogin = req.session.passport.user;
   if (isLogin) {
     res.render('index', {
       title: 'ホーム',
+      entrypoint: 'home',
       isLogin: true,
     });
   } else {
@@ -19,9 +23,14 @@ router.get('/', (req, res)=> {
   }
 });
 
+router.get('/series', series.get);
 router.get('/register', register.get);
 router.get('/author/*', author);
 router.post('/mail', mail);
+
+router.get('/account/login', accountLogin.get);
+router.post('/account/login', accountLogin.post);
+router.get('/account/login/success', accountLogin.success.get);
 
 router.get('/account/register', accountRegister.get);
 router.post('/account/register', accountRegister.post);
@@ -41,6 +50,7 @@ router.get('/api/user/book/:page', api.user.page.get);
 
 router.get('/api/user/series', api.user.series.get);
 router.post('/api/user/series', api.user.series.post);
+router.put('/api/user/series', api.user.series.put);
 router.delete('/api/user/series', api.user.series.delete);
 
 module.exports = router;

@@ -9,7 +9,6 @@ class Book {
     this.BookCollections = require('models/Book');
   }
 
-
   /**
   @param { Objcet } conditions
   @param { Number } page
@@ -67,6 +66,7 @@ class Book {
     let sanitizedBook = {
       _id: book._id,
       url: book.url[0],
+      ASIN: book.ASIN[0],
       title: book.title[0],
       isKindlized: book.isKindlized
     };
