@@ -13,12 +13,18 @@ mongod:
   ports:
     - "27017:27017"
 
+redis:
+  image: redis:3.0.7
+  ports:
+    - "6379:6379"
+
 server:
   build: ./server
   ports:
     - "80:3000"
   links:
     - mongod
+    - redis
   environment:
   - KINDLIZED_AWS_ACCESS_KEY_ID=${KINDLIZED_AWS_ACCESS_KEY_ID}
   - KINDLIZED_AWS_SECRET_KEY_ID=${KINDLIZED_AWS_SECRET_KEY_ID}
@@ -34,6 +40,7 @@ server:
   - KINDLIZED_SLACK=${KINDLIZED_SLACK}
   - KINDLIZED_SESSION=${KINDLIZED_SESSION}
   - KINDLIZED_MONGODB=mongodb://${DOCKER_IP}:27017/kindlized
+  - DOCKER_IP=${DOCKER_IP}
   command: ['npm', 'run', 'pm2:start']
   restart: always
 
