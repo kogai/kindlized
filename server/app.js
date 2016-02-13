@@ -7,8 +7,11 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import routes from 'routes/';
 import account from 'routes/account';
+import redis from 'connect-redis';
 
-const sessinCredential = process.env.KINDLIZED_SESSION;
+const RedisStore = redis(session);
+
+const SESSION_CREDENTIAL = process.env.KINDLIZED_SESSION;
 const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
@@ -21,8 +24,13 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 app.use(cookieParser());
+
 app.use(session({
-  secret: sessinCredential,
+  store: new RedisStore({
+    host: process.env.DOCKER_IP,
+    port: 6379,
+  }),
+  secret: SESSION_CREDENTIAL,
   cookie: {
     maxAge: 30 * 24 * 60 * 60 * 1000,
   },
