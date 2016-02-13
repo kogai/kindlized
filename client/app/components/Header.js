@@ -3,37 +3,6 @@
 import { element } from 'deku';
 import AccountButton from 'app/components/AccountButton';
 import { inspectLoginState } from 'app/actionCreators/account';
-import { objectToCss } from 'app/utils';
-
-const headerStyle = objectToCss({
-  display: 'flex',
-  alignItems: 'center',
-  padding: '10px',
-});
-
-const logoStyle = objectToCss({
-  fontSize: '30px',
-  fontFamily: '"Pacifico",cursive',
-  margin: 0,
-  marginRight: '10px',
-});
-
-const discriptionStyle = objectToCss({
-  display: 'inline-block',
-  fontSize: '12px',
-  color: '#666',
-});
-
-const menuStyle = objectToCss({
-  flex: 2,
-  textAlign: 'right',
-  paddingRight: '10px',
-});
-
-const listStyle = objectToCss({
-  display: 'inline-block',
-  marginLeft: '10px',
-});
 
 function onCreate({ dispatch }) {
   inspectLoginState(dispatch)();
@@ -41,12 +10,12 @@ function onCreate({ dispatch }) {
 
 function render({ context }) {
   return (
-    <header style={ headerStyle }>
-      <h1 style={ logoStyle }><a href="/">Kindlized</a></h1>
-      <span style={ discriptionStyle }>kindle化した書籍の通知サービス</span>
-      <section style={ menuStyle }>
+    <header class="Header">
+      <h1 class="Header__logo"><a href="/">Kindlized</a></h1>
+      <span class="Header__discription">kindle化した書籍の通知サービス</span>
+      <section class="Header-menu">
         <ul>
-          <li style={ listStyle }><a href="https://twitter.com/iamchawan" target="_blank">お問い合わせ</a></li>
+          <li class="Header-menu__list"><a href="https://twitter.com/iamchawan" target="_blank">お問い合わせ</a></li>
           {
             context.account.button
             .filter((m)=> m.isLogin === context.account.isLogin)
@@ -55,7 +24,6 @@ function render({ context }) {
               methodName={ b.methodName }
               class={ b.class }
               name={ b.name }
-              style={ listStyle }
             />)
           }
         </ul>

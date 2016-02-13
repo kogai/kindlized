@@ -6,7 +6,7 @@ import Menu from 'app/components/Menu';
 
 function render({ props, context }) {
   return (
-    <ul class="nav nav-pills nav-stacked">
+    <ul class="nav nav-pills nav-stacked Menu">
       {
         context.menus.map((m)=> <Menu
           isActive={ props.activePath === m.link }
