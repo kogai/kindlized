@@ -5,6 +5,9 @@ mongod:
   build: ./mongod
   ports:
     - "27017:27017"
+  environment:
+  - KINDLIZED_MONGODB_USER=${KINDLIZED_MONGODB_USER}
+  - KINDLIZED_MONGODB_PASS=${KINDLIZED_MONGODB_PASS}
 
 redis:
   image: redis:3.0.7
@@ -32,7 +35,7 @@ server:
   - KINDLIZED_MANDRILL=${KINDLIZED_MANDRILL}
   - KINDLIZED_SLACK=${KINDLIZED_SLACK}
   - KINDLIZED_SESSION=${KINDLIZED_SESSION}
-  - KINDLIZED_MONGODB=mongodb://${DOCKER_IP}:27017/kindlized
+  - KINDLIZED_MONGODB=mongodb://${KINDLIZED_MONGODB_USER}:${KINDLIZED_MONGODB_PASS}@${DOCKER_IP}:27017/kindlized
   - DOCKER_IP=${DOCKER_IP}
   command: ['npm', 'run', 'pm2:start']
   restart: always
