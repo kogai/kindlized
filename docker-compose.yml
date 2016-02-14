@@ -6,15 +6,8 @@ client:
     - ./client/tasks/:/kindlized-client/tasks
     - ./server/public/:/kindlized-client/public
 
-mongo:
-  build: ./mongo
-  links:
-    - mongod
-  environment:
-  - DOCKER_IP=${DOCKER_IP}
-
 mongod:
-  image: mongo:3.0.9
+  build: ./mongod
   ports:
     - "27017:27017"
 

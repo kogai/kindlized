@@ -19,13 +19,16 @@ docker-compose up server client
 ### DBへのログイン
 
 ```bash
-docker-compose up -d mognod # mongodを立ち上げてから
-docker-compose run mongo mongo --host $DOCKER_IP
+# 事前にmongod(mongodb daemon)を立ち上げておく
+docker-compose up -d mognod
+```
+
+```bash
+docker-compose run mongod mongo --host $DOCKER_IP
 ```
 
 ### DBバックアップのリストア
 
 ```bash
-docker-compose up -d mognod # mongodを立ち上げてから
-docker-compose run mongo mongorestore -h $DOCKER_IP:27017 --db kindlized /tmp/dump
+docker-compose run mongod mongorestore -h $DOCKER_IP:27017 --db kindlized /tmp/dump
 ```
