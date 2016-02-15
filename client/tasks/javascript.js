@@ -1,9 +1,12 @@
 const gulp = require('gulp');
 const plumber = require('gulp-plumber');
+const uglify = require('gulp-uglify');
 const notify = require('gulp-notify');
+const gutil = require('gulp-util');
 const connect = require('gulp-connect');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
 const merge = require('merge-stream');
 
 const config = require('tasks/config');
@@ -40,6 +43,8 @@ module.exports = function javascript() {
     .on('error', handleErrors)
     .pipe(plumber())
     .pipe(source(`${bundle}.bundle.min.js`))
+    .pipe(buffer())
+    .pipe(IS_DEVELOPMENT ? gutil.noop() : uglify())
     .pipe(gulp.dest(destPath.app))
   ));
 

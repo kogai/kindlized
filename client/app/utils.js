@@ -7,3 +7,6 @@ export function objectToCss(obj) {
 
   return keys.reduce((styles, key)=> `${styles} ${hyphenate(key)}: ${addPx(key, obj[key])};`, '');
 }
+
+export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+export const IS_PRODUCTION = process.env.NODE_ENV === 'production';

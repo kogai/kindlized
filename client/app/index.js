@@ -5,14 +5,17 @@ import {
   createStore,
   applyMiddleware,
 } from 'redux';
-// import reduxThunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 
 import rootReducer from 'app/reducers/rootReducer';
+import { IS_PRODUCTION } from 'app/utils';
 
 const { createRenderer } = dom;
 
-const store = createStore(rootReducer, applyMiddleware(createLogger()));
+const store = createStore(
+  rootReducer,
+  IS_PRODUCTION ? undefined : applyMiddleware(createLogger())
+);
 const rootNode = document.getElementById('root');
 const render = createRenderer(rootNode, store.dispatch);
 
