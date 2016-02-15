@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { SEARCH_INPUT, SEARCH_CLICK, SEARCH_RECIEVE } from 'app/actionCreators/actionTypes';
 
 const initialState = {
@@ -23,7 +24,7 @@ export default function searchReducer(state = initialState, action) {
     case SEARCH_RECIEVE:
       return {
         body: state.body,
-        books: state.books.concat(action.books)
+        books: _.uniq(state.books.concat(action.books), 'title')
           .map((b)=> (Object.assign({}, b, {
             isRegisterd: true,
           }))),

@@ -4,7 +4,7 @@ import { element } from 'deku';
 import Validation from 'app/components/Validation';
 
 function render({ props, dispatch }) {
-  const inputValue = props.editable.textContainer;
+  const inputValue = props.editable.textContainer || props.editable.body;
   return (
     <section>
       <div class="input-group">

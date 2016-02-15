@@ -18,7 +18,7 @@ module.exports = (config)=> {
     frameworks: ['mocha', 'browserify'],
     autoWatch: !process.env.CI,
     reporters: ['mocha'],
-    browsers: process.env.CI ? ['PhantomJS', 'Chrome', 'Firefox'] : ['PhantomJS'],
+    browsers: process.env.CI ? ['PhantomJS', 'Chrome', 'Firefox'] : ['Chrome'],
     plugins: [
       require('karma-browserify'),
       require('karma-mocha'),
